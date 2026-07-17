@@ -289,15 +289,15 @@ export const submitSellerReview = createServerFn({ method: "POST" })
   });
 
 export const listSellerReviews = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => z.object({ seller_id: z.string().uuid(), limit: z.number().int().max(50).default(20) }).parse(raw))
-  .handler(async ({ data, context }) => {
-    const { data: rows, error } = await context.supabase.from("seller_reviews")
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const { data: rows, error } = await sb.from("seller_reviews")
       .select("*").eq("seller_id", data.seller_id).order("created_at", { ascending: false }).limit(data.limit);
     if (error) throw new Error(error.message);
     const rids = Array.from(new Set((rows ?? []).map((r) => r.reviewer_id)));
     const { data: revs } = rids.length
-      ? await context.supabase.from("profiles").select("id, handle, display_name, avatar_url").in("id", rids)
+      ? await sb.from("profiles").select("id, handle, display_name, avatar_url").in("id", rids)
       : { data: [] as any[] };
     const byId = new Map((revs ?? []).map((r) => [r.id, r]));
     return (rows ?? []).map((r) => ({ ...r, reviewer: byId.get(r.reviewer_id) ?? null }));
@@ -305,20 +305,22 @@ export const listSellerReviews = createServerFn({ method: "GET" })
 
 /* ================= SELLER PROFILE ================= */
 export const getSellerProfile = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const userId = await getOptionalUserId();
     const sel = (s: string): string => s;
     const [{ data: profile }, { data: active }, followState] = await Promise.all([
-      context.supabase.from("profiles")
+      sb.from("profiles")
         .select("id, handle, display_name, avatar_url, bio, tier, is_verified, followers_count, listings_count, seller_rating_avg, seller_reviews_count, created_at, location")
         .eq("id", data.id).maybeSingle(),
-      context.supabase.from("listings").select(sel(LISTING_SELECT))
+      sb.from("listings").select(sel(LISTING_SELECT))
         .eq("seller_id", data.id).eq("status", "active").order("published_at", { ascending: false }).limit(30),
-      context.supabase.from("follows").select("follower_id")
-        .eq("follower_id", context.userId).eq("followee_id", data.id).maybeSingle(),
+      userId
+        ? sb.from("follows").select("follower_id").eq("follower_id", userId).eq("followee_id", data.id).maybeSingle()
+        : Promise.resolve({ data: null } as any),
     ]);
-    return { profile, active_listings: active ?? [], following: !!followState.data };
+    return { profile, active_listings: active ?? [], following: !!(followState as any)?.data };
   });
 
 /* ================= SELLER DASHBOARD ================= */
