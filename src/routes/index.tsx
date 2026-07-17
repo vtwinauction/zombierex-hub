@@ -288,7 +288,7 @@ function ReelTile({ reel, tall }: { reel: (typeof reels)[number]; tall?: boolean
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)" }} />
       <div className="absolute inset-x-0 bottom-0 p-4 text-white">
         <p className="text-base font-semibold leading-tight">{reel.user.handle}</p>
-        <p className="mono-num text-xs mt-1" style={{ color: "rgba(255,255,255,0.75)" }}>{fmt(reel.views)} views</p>
+        <p className="mono-num text-xs mt-1" style={{ color: "rgba(255,255,255,0.75)" }}>{reel.views} views</p>
       </div>
       <span className="mono-caps absolute right-3 top-3 px-2 py-1" style={{ background: "rgba(0,0,0,0.55)", color: "white", fontSize: 10 }}>
         ▶ {String(reel.duration).padStart(2, "0")}s
