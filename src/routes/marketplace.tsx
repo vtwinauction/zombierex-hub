@@ -69,7 +69,7 @@ function MarketplacePage() {
 
       <div className="flex items-end justify-between px-4 pt-6">
         <div>
-          <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{(data ?? []).length} LISTINGS</p>
+          <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{rows.length} LISTINGS</p>
           <h1 className="serif mt-2 text-4xl italic" style={{ color: "var(--color-ink)" }}>Marketplace</h1>
         </div>
         <Link to="/marketplace/new" className="btn-neon" style={{ padding: "10px 14px", fontSize: 10 }}>
@@ -146,7 +146,7 @@ function MarketplacePage() {
 
       <div className="px-4 pt-4 grid grid-cols-2 gap-3">
         {isLoading && <p className="col-span-2 mono-tag" style={{ color: "var(--color-titanium)" }}>LOADING…</p>}
-        {!isLoading && (data ?? []).length === 0 && (
+        {!isLoading && rows.length === 0 && (
           <div className="col-span-2 border border-dashed p-6 text-center" style={{ borderColor: "var(--color-hair-strong)" }}>
             <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>NO LISTINGS YET</p>
             <Link to="/marketplace/new" className="btn-neon mt-4 inline-block" style={{ padding: "10px 14px", fontSize: 11 }}>
