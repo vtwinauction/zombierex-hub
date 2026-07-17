@@ -27,6 +27,7 @@ import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
+import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 
 const SearchRoute = SearchRouteImport.update({
@@ -122,6 +123,12 @@ const AuthenticatedCheckoutPaymentIdRoute =
     path: '/checkout/$paymentId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAdminVendorsRoute =
+  AuthenticatedAdminVendorsRouteImport.update({
+    id: '/vendors',
+    path: '/vendors',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const ApiPublicWebhooksPaymentsRoute =
   ApiPublicWebhooksPaymentsRouteImport.update({
     id: '/api/public/webhooks/payments',
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/admin/vendors': typeof AuthenticatedAdminVendorsRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -159,6 +167,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/admin/vendors': typeof AuthenticatedAdminVendorsRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -181,6 +190,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRoute
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/admin'
     | '/vendor'
+    | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/vendor/apply'
     | '/vendor/plans'
@@ -221,6 +232,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/search'
+    | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/vendor/apply'
     | '/vendor/plans'
@@ -242,6 +254,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/_authenticated/admin'
     | '/_authenticated/vendor'
+    | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
@@ -394,6 +407,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCheckoutPaymentIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin/vendors': {
+      id: '/_authenticated/admin/vendors'
+      path: '/vendors'
+      fullPath: '/admin/vendors'
+      preLoaderRoute: typeof AuthenticatedAdminVendorsRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/public/webhooks/payments': {
       id: '/api/public/webhooks/payments'
       path: '/api/public/webhooks/payments'
@@ -405,10 +425,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminVendorsRoute: typeof AuthenticatedAdminVendorsRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminVendorsRoute: AuthenticatedAdminVendorsRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
