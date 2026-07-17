@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { getBusinessDashboard } from "@/lib/business.functions";
 
-export const Route = createFileRoute("/_authenticated/business")({
+export const Route = createFileRoute("/_authenticated/business/")({
   head: () => ({ meta: [{ title: "Business dashboard · ZOMBIEREX" }] }),
   component: BusinessDashboard,
 });

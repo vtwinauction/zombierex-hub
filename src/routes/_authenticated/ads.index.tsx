@@ -3,7 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listMyCampaigns, updateCampaignStatus } from "@/lib/ads.functions";
 
-export const Route = createFileRoute("/_authenticated/ads")({
+export const Route = createFileRoute("/_authenticated/ads/")({
   head: () => ({ meta: [{ title: "Ads Manager · ZOMBIEREX" }] }),
   component: AdsManager,
 });
