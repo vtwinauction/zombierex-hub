@@ -48,8 +48,6 @@ export const getBusinessBySlug = createServerFn({ method: "GET" })
     const ratings = (reviewSummary ?? []).map((r: any) => r.rating);
     const avg = ratings.length ? ratings.reduce((a: number, b: number) => a + b, 0) / ratings.length : 0;
 
-    // Fire and forget view bump
-    await sb.rpc("noop" as any).then(() => {}, () => {});
 
     return {
       vendor: v,
