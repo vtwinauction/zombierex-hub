@@ -126,13 +126,13 @@
 @utility label-slash {
   position: relative;
   padding-left: 14px;
-}
-@utility label-slash::before {
-  content: "//";
-  position: absolute; left: 0; top: 0;
-  font-family: var(--font-mono);
-  color: var(--color-signal);
-  font-weight: 700;
+  &::before {
+    content: "//";
+    position: absolute; left: 0; top: 0;
+    font-family: var(--font-mono);
+    color: var(--color-signal);
+    font-weight: 700;
+  }
 }
 
 @utility scanline {
