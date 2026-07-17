@@ -59,6 +59,13 @@ export type Database = {
             referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "advertisements_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       analytics_events: {
@@ -185,6 +192,13 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
             referencedColumns: ["id"]
           },
         ]
@@ -890,6 +904,13 @@ export type Database = {
             referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "orders_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       payments: {
@@ -1106,6 +1127,13 @@ export type Database = {
             referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "products_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -1308,6 +1336,13 @@ export type Database = {
             referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "reviews_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       services: {
@@ -1350,6 +1385,13 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1447,6 +1489,13 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1560,6 +1609,13 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_staff_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
             referencedColumns: ["id"]
           },
         ]
@@ -1695,7 +1751,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      vendors_public: {
+        Row: {
+          business_name: string | null
+          business_type: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          description: string | null
+          id: string | null
+          is_verified: boolean | null
+          lat: number | null
+          lng: number | null
+          operating_hours: Json | null
+          region: string | null
+          service_areas: string[] | null
+          slug: string | null
+          socials: Json | null
+          verification_status: string | null
+          website: string | null
+        }
+        Insert: {
+          business_name?: string | null
+          business_type?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          operating_hours?: Json | null
+          region?: string | null
+          service_areas?: string[] | null
+          slug?: string | null
+          socials?: Json | null
+          verification_status?: string | null
+          website?: string | null
+        }
+        Update: {
+          business_name?: string | null
+          business_type?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string | null
+          is_verified?: boolean | null
+          lat?: number | null
+          lng?: number | null
+          operating_hours?: Json | null
+          region?: string | null
+          service_areas?: string[] | null
+          slug?: string | null
+          socials?: Json | null
+          verification_status?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_any_role: {
