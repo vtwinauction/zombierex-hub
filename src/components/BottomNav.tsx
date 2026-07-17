@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
+// menu route lives at /menu (authenticated hub)
 
 type NavItem = {
   to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor";

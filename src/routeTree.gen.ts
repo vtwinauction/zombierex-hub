@@ -30,6 +30,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
+import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
@@ -148,6 +149,11 @@ const AuthenticatedVendorApplyRoute =
     path: '/apply',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedPostNewRoute = AuthenticatedPostNewRouteImport.update({
+  id: '/post/new',
+  path: '/post/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCommunitiesCreateRoute =
   AuthenticatedCommunitiesCreateRouteImport.update({
     id: '/communities/create',
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -292,6 +300,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/communities/create'
+    | '/post/new'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/communities/create'
+    | '/post/new'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/communities/create'
+    | '/_authenticated/post/new'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
@@ -570,6 +582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
     }
+    '/_authenticated/post/new': {
+      id: '/_authenticated/post/new'
+      path: '/post/new'
+      fullPath: '/post/new'
+      preLoaderRoute: typeof AuthenticatedPostNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/communities/create': {
       id: '/_authenticated/communities/create'
       path: '/communities/create'
@@ -691,6 +710,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
+  AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -703,6 +723,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
+  AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
