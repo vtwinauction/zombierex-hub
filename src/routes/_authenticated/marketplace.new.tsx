@@ -133,17 +133,17 @@ function NewListing() {
       </div>
 
       <Section title="ESSENTIALS">
-        <Input label="TITLE *" value={form.title} onChange={(v) => set("title", v)} placeholder="2022 Kawasaki Ninja ZX-6R" />
-        <TextArea label="DESCRIPTION" value={form.description} onChange={(v) => set("description", v)} placeholder="History, mods, service records…" />
+        <Input label="TITLE *" value={form.title} onChange={(v: string) => set("title", v)} placeholder="2022 Kawasaki Ninja ZX-6R" />
+        <TextArea label="DESCRIPTION" value={form.description} onChange={(v: string) => set("description", v)} placeholder="History, mods, service records…" />
         <Row>
-          <Select label="CATEGORY *" value={form.category} onChange={(v) => set("category", v)}
+          <Select label="CATEGORY *" value={form.category} onChange={(v: string) => set("category", v)}
             options={LISTING_CATEGORIES.map((c) => [c, c.replace("_"," ")])} />
-          <Select label="CONDITION *" value={form.condition} onChange={(v) => set("condition", v)}
+          <Select label="CONDITION *" value={form.condition} onChange={(v: string) => set("condition", v)}
             options={LISTING_CONDITIONS.map((c) => [c, c.replace("_"," ")])} />
         </Row>
         <Row>
-          <Input label="PRICE *" type="number" value={form.price_cents} onChange={(v) => set("price_cents", v)} placeholder="9500" />
-          <Input label="CURRENCY" value={form.currency} onChange={(v) => set("currency", v.toUpperCase())} placeholder="USD" />
+          <Input label="PRICE *" type="number" value={form.price_cents} onChange={(v: string) => set("price_cents", v)} placeholder="9500" />
+          <Input label="CURRENCY" value={form.currency} onChange={(v: string) => set("currency", v.toUpperCase())} placeholder="USD" />
         </Row>
         <label className="mt-3 flex items-center gap-2">
           <input type="checkbox" checked={form.is_negotiable} onChange={(e) => set("is_negotiable", e.target.checked)} />
@@ -153,32 +153,32 @@ function NewListing() {
 
       <Section title="VEHICLE DETAILS">
         <Row>
-          <Input label="BRAND" value={form.brand} onChange={(v) => set("brand", v)} placeholder="Kawasaki" />
-          <Input label="MODEL" value={form.model} onChange={(v) => set("model", v)} placeholder="ZX-6R" />
+          <Input label="BRAND" value={form.brand} onChange={(v: string) => set("brand", v)} placeholder="Kawasaki" />
+          <Input label="MODEL" value={form.model} onChange={(v: string) => set("model", v)} placeholder="ZX-6R" />
         </Row>
         <Row>
-          <Input label="YEAR" type="number" value={form.year} onChange={(v) => set("year", v)} placeholder="2022" />
-          <Input label="MILEAGE (km)" type="number" value={form.mileage_km} onChange={(v) => set("mileage_km", v)} placeholder="7800" />
+          <Input label="YEAR" type="number" value={form.year} onChange={(v: string) => set("year", v)} placeholder="2022" />
+          <Input label="MILEAGE (km)" type="number" value={form.mileage_km} onChange={(v: string) => set("mileage_km", v)} placeholder="7800" />
         </Row>
         <Row>
-          <Input label="ENGINE (cc)" type="number" value={form.engine_cc} onChange={(v) => set("engine_cc", v)} placeholder="636" />
-          <Input label="COLOR" value={form.color} onChange={(v) => set("color", v)} placeholder="Lime Green" />
+          <Input label="ENGINE (cc)" type="number" value={form.engine_cc} onChange={(v: string) => set("engine_cc", v)} placeholder="636" />
+          <Input label="COLOR" value={form.color} onChange={(v: string) => set("color", v)} placeholder="Lime Green" />
         </Row>
         <Row>
-          <Select label="FUEL" value={form.fuel_type} onChange={(v) => set("fuel_type", v)}
+          <Select label="FUEL" value={form.fuel_type} onChange={(v: string) => set("fuel_type", v)}
             options={LISTING_FUELS.map((c) => [c, c])} />
-          <Select label="TRANSMISSION" value={form.transmission} onChange={(v) => set("transmission", v)}
+          <Select label="TRANSMISSION" value={form.transmission} onChange={(v: string) => set("transmission", v)}
             options={LISTING_TRANSMISSIONS.map((c) => [c, c])} />
         </Row>
-        <Input label="VIN (optional)" value={form.vin} onChange={(v) => set("vin", v)} placeholder="17-char VIN" />
+        <Input label="VIN (optional)" value={form.vin} onChange={(v: string) => set("vin", v)} placeholder="17-char VIN" />
       </Section>
 
       <Section title="LOCATION">
         <Row>
-          <Input label="CITY" value={form.city} onChange={(v) => set("city", v)} placeholder="Los Angeles" />
-          <Input label="REGION" value={form.region} onChange={(v) => set("region", v)} placeholder="CA" />
+          <Input label="CITY" value={form.city} onChange={(v: string) => set("city", v)} placeholder="Los Angeles" />
+          <Input label="REGION" value={form.region} onChange={(v: string) => set("region", v)} placeholder="CA" />
         </Row>
-        <Input label="COUNTRY" value={form.country} onChange={(v) => set("country", v)} placeholder="USA" />
+        <Input label="COUNTRY" value={form.country} onChange={(v: string) => set("country", v)} placeholder="USA" />
       </Section>
 
       {err && <p className="mx-4 mt-4 mono-tag" style={{ color: "#ff6b6b" }}>ERR · {err}</p>}
