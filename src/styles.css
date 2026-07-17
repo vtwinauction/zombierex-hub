@@ -103,8 +103,8 @@
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
-    font-family: var(--font-editorial);
-    font-weight: 400;
+    font-family: var(--font-sans);
+    font-weight: 600;
     letter-spacing: -0.02em;
   }
   .mono { font-family: var(--font-mono); }
