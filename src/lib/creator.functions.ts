@@ -85,7 +85,7 @@ export const updateMyCreatorProfile = createServerFn({ method: "POST" })
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = { ...data };
+    const patch: any = { ...data };
     if (patch.portfolio_url === "") patch.portfolio_url = null;
     if (patch.collab_email === "") patch.collab_email = null;
     const { data: row, error } = await context.supabase
