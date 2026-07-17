@@ -67,7 +67,7 @@ function extFor(contentType: string): string {
 
 export type UploadOptions = {
   userId: string;
-  bucket?: "posts" | "avatars" | "vehicles";
+  bucket?: "posts" | "avatars" | "vehicles" | "marketplace";
   onProgress?: (p: UploadProgress) => void;
   signal?: AbortSignal;
 };
