@@ -262,7 +262,9 @@ function CommunityDetail() {
             )}
             {challenges.length === 0 && <EmptyState label="No active challenges." />}
             {challenges.map((c) => (
-              <div key={c.id} className="overflow-hidden" style={{ borderRadius: 12, border: "1px solid var(--color-hair)", background: "var(--color-graphite)" }}>
+              <Link key={c.id} to="/communities/$slug/challenges/$challengeId" params={{ slug, challengeId: c.id }}
+                className="tap block overflow-hidden" style={{ borderRadius: 12, border: "1px solid var(--color-hair)", background: "var(--color-graphite)" }}>
+
                 {c.cover_url && <img src={c.cover_url} alt="" className="aspect-[16/9] w-full object-cover" />}
                 <div className="p-3">
                   <p className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>
