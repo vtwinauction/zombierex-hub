@@ -11,20 +11,20 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { SideRail } from "@/components/SideRail";
+import { BottomNav } from "@/components/BottomNav";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="panel clip-chamfer max-w-md p-8 text-center">
-        <p className="mono-caps text-ash">ERR · 404 · SIGNAL LOST</p>
-        <h1 className="font-display mt-3 text-4xl uppercase tracking-wide">Off the map</h1>
-        <p className="mt-3 text-sm text-ash">This grid coordinate is empty.</p>
+      <div className="card-surface max-w-md p-8 text-center">
+        <p className="mono-caps text-ash">404 · Signal lost</p>
+        <h1 className="mt-3 text-3xl">Off the map</h1>
+        <p className="mt-2 text-sm text-ash">This coordinate is empty.</p>
         <Link
           to="/"
-          className="tap clip-chamfer-sm mono-caps mt-6 inline-flex items-center border border-ink bg-ink px-5 py-3 font-bold text-bone"
+          className="tap mt-6 inline-flex items-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-bone"
         >
-          RETURN TO DECK
+          Back to Home
         </Link>
       </div>
     </div>
@@ -40,17 +40,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="panel clip-chamfer max-w-md p-8 text-center">
-        <p className="mono-caps text-warn">ERR · SYS FAULT</p>
-        <h1 className="font-display mt-3 text-3xl uppercase tracking-wide">Backfire detected</h1>
+      <div className="card-surface max-w-md p-8 text-center">
+        <p className="mono-caps" style={{ color: "var(--color-heat)" }}>System fault</p>
+        <h1 className="mt-3 text-3xl">Something backfired</h1>
         <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => { router.invalidate(); reset(); }}
-            className="tap clip-chamfer-sm mono-caps border border-ink bg-signal px-5 py-3 font-bold text-ink"
+            className="tap rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-bone"
           >
-            RETRY
+            Retry
           </button>
-          <a href="/" className="tap clip-chamfer-sm mono-caps border border-ink px-5 py-3 font-bold">DECK</a>
+          <a href="/" className="tap rounded-full border border-hair px-5 py-2.5 text-sm font-semibold">Home</a>
         </div>
       </div>
     </div>
@@ -62,13 +62,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#0d0f14" },
-      { title: "ZOMBIEREX — Motorsport HUD for riders & drivers" },
-      { name: "description", content: "A telemetry-grade social platform for motorcycle & car culture. Command deck, missions, arsenal, dossier." },
+      { name: "theme-color", content: "#ffffff" },
+      { title: "ZOMBIEREX — The social platform for riders & drivers" },
+      { name: "description", content: "Short-form videos, stories, events, marketplace and garage — built for motorcycle and automotive culture." },
       { name: "author", content: "ZOMBIEREX" },
       { property: "og:site_name", content: "ZOMBIEREX" },
       { property: "og:title", content: "ZOMBIEREX — Ride. Rev. Resurrect." },
-      { property: "og:description", content: "Telemetry-grade social platform for motorcycle & car culture." },
+      { property: "og:description", content: "Short-form video, stories, events, garage — the social platform for motorcycle & car culture." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@zombierex" },
@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -106,11 +106,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="grain min-h-screen bg-background text-foreground">
-        <SideRail />
-        <main className="ml-12 min-h-screen">
+      <div className="relative min-h-[100svh] bg-background text-foreground">
+        <main className="min-h-[100svh]">
           <Outlet />
         </main>
+        <BottomNav />
       </div>
     </QueryClientProvider>
   );
