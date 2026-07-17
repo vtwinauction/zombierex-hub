@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { brand } from "@/lib/mock-data";
-import { IconEnginePulse, IconGauge } from "./icons/RexIcons";
+import { Bell, MessageCircle } from "lucide-react";
 
 /**
  * Editorial masthead — sticky, glassy obsidian bar.
