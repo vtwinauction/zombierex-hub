@@ -6,17 +6,17 @@
      Off-black surface, bone ink, 1px hairlines, technical mono
      ============================================================ */
 
-  --color-bone: oklch(0.07 0.004 260);          /* primary surface — near-black */
-  --color-ink: oklch(0.97 0.003 90);            /* primary text — bone white */
-  --color-ash: oklch(0.62 0.010 260);           /* muted text */
-  --color-mist: oklch(0.12 0.005 260);          /* elevated surface */
-  --color-hair: oklch(0.22 0.006 260);          /* hairline / divider */
-  --color-hair-soft: oklch(0.16 0.005 260);
-  --color-signal: oklch(0.88 0.24 130);         /* toxic-lime brand */
-  --color-signal-deep: oklch(0.72 0.22 138);
-  --color-heat: oklch(0.66 0.24 25);            /* alert / bid red */
-  --color-cool: oklch(0.70 0.15 240);
-  --color-plum: oklch(0.52 0.16 320);
+  --color-bone: oklch(0.97 0.012 75);           /* primary surface — warm cream */
+  --color-ink: oklch(0.22 0.018 60);            /* primary text — warm charcoal */
+  --color-ash: oklch(0.55 0.018 60);            /* muted text */
+  --color-mist: oklch(0.94 0.014 75);           /* elevated surface */
+  --color-hair: oklch(0.86 0.014 70);           /* hairline / divider */
+  --color-hair-soft: oklch(0.91 0.012 70);
+  --color-signal: oklch(0.74 0.17 55);          /* warm amber — friendly accent */
+  --color-signal-deep: oklch(0.62 0.18 40);
+  --color-heat: oklch(0.66 0.19 25);            /* softened brand red */
+  --color-cool: oklch(0.70 0.13 220);
+  --color-plum: oklch(0.58 0.14 340);
 
   --color-background: var(--color-bone);
   --color-foreground: var(--color-ink);
@@ -55,7 +55,8 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 2px;
+  --radius: 12px;
+
 }
 
 @layer base {
