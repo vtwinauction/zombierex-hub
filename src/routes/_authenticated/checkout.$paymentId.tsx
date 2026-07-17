@@ -20,18 +20,13 @@ function CheckoutPage() {
   const [err, setErr] = useState<string | null>(null);
   const qc = useQueryClient();
   const nav = useNavigate();
+  const confirmFn = useServerFn(confirmMockPayment);
 
   async function simulate(outcome: "succeeded" | "failed") {
     setBusy(outcome === "succeeded" ? "pay" : "fail");
     setErr(null);
     try {
-      // Client hits its own webhook via the dev signer server fn.
-      const res = await fetch("/api/public/webhooks/payments/dev-sign", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ payment_id: payment.id, status: outcome }),
-      });
-      if (!res.ok) throw new Error(await res.text());
+      await confirmFn({ data: { payment_id: payment.id, outcome } });
       await qc.invalidateQueries({ queryKey: ["payment", payment.id] });
       await qc.invalidateQueries({ queryKey: ["my-subscription"] });
       if (outcome === "succeeded") nav({ to: "/vendor" });
