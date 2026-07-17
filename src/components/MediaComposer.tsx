@@ -254,7 +254,7 @@ export function MediaComposer({ onDone }: Props) {
       // If scheduled → keep as draft, don't publish yet.
       if (scheduleAt) {
         const draft = saveDraft({
-          id: savedDraftId ?? undefined,
+          ...(savedDraftId ? { id: savedDraftId } : {}),
           caption,
           kind: kind === "video" ? "video" : "photo",
           media: uploaded.map((u) => ({ url: u.url, contentType: u.contentType, path: u.path })),
@@ -282,7 +282,7 @@ export function MediaComposer({ onDone }: Props) {
 
   const draftSave = () => {
     const draft = saveDraft({
-      id: savedDraftId ?? undefined,
+      ...(savedDraftId ? { id: savedDraftId } : {}),
       caption,
       kind: (items[0]?.kind === "video" ? "video" : "photo") as PostDraft["kind"],
       media: items.map((m) => ({ url: m.previewUrl, contentType: m.file.type })),
