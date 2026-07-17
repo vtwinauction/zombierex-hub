@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
+import { PostCard } from "@/components/PostCard";
 import { events, listings, myVehicles, posts, clubs, me } from "@/lib/mock-data";
 import { ArrowUpRight, Flame, Gauge, MapPin, Sparkles, TrendingUp, Users2, Wrench, Zap } from "lucide-react";
 
