@@ -92,6 +92,7 @@ function HomePage() {
         <div className="relative z-10 -mt-5 px-4">
           <InteractionBar
             variant="dark"
+            targetId={`reel:${featured.id}`}
             counts={{
               likes: featured.likes,
               comments: featured.comments,
