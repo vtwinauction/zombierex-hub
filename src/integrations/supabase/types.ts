@@ -625,6 +625,172 @@ export type Database = {
           },
         ]
       }
+      event_announcements: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          event_id: string
+          id: string
+          title: string | null
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          event_id: string
+          id?: string
+          title?: string | null
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_announcements_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_checkins: {
+        Row: {
+          created_at: string
+          event_id: string
+          lat: number | null
+          lng: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          lat?: number | null
+          lng?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          lat?: number | null
+          lng?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_checkins_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_comments: {
+        Row: {
+          body: string
+          created_at: string
+          event_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          event_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          event_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_comments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_invites: {
+        Row: {
+          created_at: string
+          event_id: string
+          invitee_id: string
+          inviter_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          invitee_id: string
+          inviter_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          invitee_id?: string
+          inviter_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_invites_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_photos: {
+        Row: {
+          caption: string | null
+          created_at: string
+          event_id: string
+          id: string
+          media_type: string
+          media_url: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          event_id: string
+          id?: string
+          media_type?: string
+          media_url: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          event_id?: string
+          id?: string
+          media_type?: string
+          media_url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_photos_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       event_rsvps: {
         Row: {
           created_at: string
@@ -663,8 +829,15 @@ export type Database = {
       }
       events: {
         Row: {
+          address: string | null
+          cancelled_at: string | null
+          category: string
           club_id: string | null
+          comments_count: number
+          contact_email: string | null
+          contact_phone: string | null
           cover_url: string | null
+          cover_video_url: string | null
           created_at: string
           description: string | null
           ends_at: string | null
@@ -672,17 +845,32 @@ export type Database = {
           gps_lat: number | null
           gps_lng: number | null
           guest_limit: number | null
+          hashtags: string[]
           host_id: string
           id: string
+          is_featured: boolean
           location: string | null
+          max_attendees: number | null
+          photos_count: number
           rsvp_count: number
+          rules: string | null
           starts_at: string
+          status: string
+          timezone: string | null
           title: string
           updated_at: string
+          visibility: string
         }
         Insert: {
+          address?: string | null
+          cancelled_at?: string | null
+          category?: string
           club_id?: string | null
+          comments_count?: number
+          contact_email?: string | null
+          contact_phone?: string | null
           cover_url?: string | null
+          cover_video_url?: string | null
           created_at?: string
           description?: string | null
           ends_at?: string | null
@@ -690,17 +878,32 @@ export type Database = {
           gps_lat?: number | null
           gps_lng?: number | null
           guest_limit?: number | null
+          hashtags?: string[]
           host_id: string
           id?: string
+          is_featured?: boolean
           location?: string | null
+          max_attendees?: number | null
+          photos_count?: number
           rsvp_count?: number
+          rules?: string | null
           starts_at: string
+          status?: string
+          timezone?: string | null
           title: string
           updated_at?: string
+          visibility?: string
         }
         Update: {
+          address?: string | null
+          cancelled_at?: string | null
+          category?: string
           club_id?: string | null
+          comments_count?: number
+          contact_email?: string | null
+          contact_phone?: string | null
           cover_url?: string | null
+          cover_video_url?: string | null
           created_at?: string
           description?: string | null
           ends_at?: string | null
@@ -708,13 +911,21 @@ export type Database = {
           gps_lat?: number | null
           gps_lng?: number | null
           guest_limit?: number | null
+          hashtags?: string[]
           host_id?: string
           id?: string
+          is_featured?: boolean
           location?: string | null
+          max_attendees?: number | null
+          photos_count?: number
           rsvp_count?: number
+          rules?: string | null
           starts_at?: string
+          status?: string
+          timezone?: string | null
           title?: string
           updated_at?: string
+          visibility?: string
         }
         Relationships: [
           {
