@@ -1,68 +1,68 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StatusHUD } from "@/components/StatusHUD";
-import { Panel, SlashHeader, DataChip, AngularButton } from "@/components/hud";
+import { MapPin, CalendarDays, Users2, Route as RouteIcon } from "lucide-react";
 import { events } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/events")({
-  head: () => ({ meta: [{ title: "MISSIONS · ZOMBIEREX" }] }),
-  component: MissionsPage,
+  head: () => ({ meta: [{ title: "Events · ZOMBIEREX" }] }),
+  component: EventsPage,
 });
 
-function MissionsPage() {
+const TABS = ["Upcoming", "Nearby", "Rallies", "Track"] as const;
+
+function EventsPage() {
   return (
-    <div className="pb-10">
-      <StatusHUD title="MISSIONS" code="02" />
-
-      <div className="space-y-4 px-3 pt-4">
-        <div className="flex gap-2">
-          <AngularButton variant="solid" size="sm" active>ALL</AngularButton>
-          <AngularButton size="sm">RIDES</AngularButton>
-          <AngularButton size="sm">MEETS</AngularButton>
-          <AngularButton size="sm">RALLY</AngularButton>
+    <div className="pb-28">
+      <header className="sticky top-0 z-30 bg-bone/70 pt-[max(env(safe-area-inset-top),12px)] backdrop-blur-lg">
+        <div className="flex items-center justify-between px-4 pb-3">
+          <h1 className="text-2xl font-semibold tracking-tight">Events</h1>
+          <button className="tap rounded-full bg-ink px-4 py-2 text-[12px] font-semibold text-bone">+ Host</button>
         </div>
-
-        <SlashHeader label="OPEN MISSIONS" count={events.length} />
-
-        <div className="relative space-y-3 pl-6">
-          {/* Timeline vertical rule */}
-          <div className="rule-tick-v absolute bottom-2 left-2 top-2 opacity-40" />
-
-          {events.map((e) => (
-            <div key={e.id} className="relative">
-              <span className="clip-hex absolute -left-4 top-4 h-3 w-3 bg-signal border border-ink" />
-              <Panel className="grid grid-cols-[80px_1fr] overflow-hidden">
-                <div className="panel-ink flex flex-col items-center justify-center py-2 text-center">
-                  <span className="mono-caps text-signal">{e.date.split(" · ")[0]}</span>
-                  <span className="font-display text-3xl text-bone leading-none">
-                    {e.date.split(" · ")[1].split(" ")[1]}
-                  </span>
-                  <span className="mono-caps text-bone/60 mt-1">{e.time}</span>
-                </div>
-                <div className="p-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="font-display text-sm uppercase leading-tight">{e.title}</p>
-                      <p className="mono-caps text-ash mt-0.5 truncate">{e.location}</p>
-                    </div>
-                    <span className="clip-tag mono-caps bg-ink px-2 py-0.5 text-[9px] text-bone">
-                      {e.kind.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    <DataChip k="DIST" v={e.distance.replace(" away", "")} tone="signal" />
-                    <DataChip k="CREW" v={e.club} />
-                    <DataChip k="RIDR" v={e.attending} />
-                  </div>
-                  <div className="mt-3 flex items-center gap-2">
-                    <AngularButton variant="signal" size="sm">◇ JOIN</AngularButton>
-                    <AngularButton size="sm">⇢ SHARE</AngularButton>
-                  </div>
-                </div>
-              </Panel>
-            </div>
+        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-3">
+          {TABS.map((t, i) => (
+            <button key={t} className={`tap shrink-0 rounded-full px-4 py-1.5 text-[12px] font-semibold ${i === 0 ? "bg-ink text-bone" : "border border-hair bg-white"}`}>{t}</button>
           ))}
+        </div>
+      </header>
+
+      <div className="space-y-4 px-4 pt-4">
+        {events.map((e) => (
+          <article key={e.id} className="overflow-hidden rounded-3xl border border-hair bg-white">
+            <div className="relative h-40">
+              <img src={e.cover} alt="" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 gradient-ink" />
+              <span className="chip-dark absolute left-3 top-3">{e.kind}</span>
+              <div className="absolute inset-x-3 bottom-3 flex items-end justify-between text-white">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-white/80">{e.date} · {e.time}</p>
+                  <h3 className="mt-0.5 text-xl font-semibold leading-tight">{e.title}</h3>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 p-4">
+              <MetaItem icon={<MapPin className="h-3.5 w-3.5" />} label={e.location} />
+              <MetaItem icon={<RouteIcon className="h-3.5 w-3.5" />} label={e.distance} />
+              <MetaItem icon={<Users2 className="h-3.5 w-3.5" />} label={`${e.attending}`} />
+              <button className="tap ml-auto rounded-full bg-ink px-4 py-2 text-[12px] font-semibold text-bone">
+                Join ride
+              </button>
+            </div>
+          </article>
+        ))}
+        <div className="rounded-3xl border border-dashed border-hair p-6 text-center">
+          <CalendarDays className="mx-auto h-6 w-6 text-ash" />
+          <p className="mt-2 text-sm font-medium">Nothing else on your radar</p>
+          <p className="text-[12px] text-ash">Follow more crews to see their meets & rallies.</p>
         </div>
       </div>
     </div>
+  );
+}
+
+function MetaItem({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <span className="inline-flex items-center gap-1 text-[11px] text-ash">
+      {icon}
+      {label}
+    </span>
   );
 }

@@ -1,192 +1,204 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { StatusHUD } from "@/components/StatusHUD";
-import { Panel, SlashHeader, HexChip, GaugeRing, DataChip, AngularButton, TickBar } from "@/components/hud";
-import { me, myVehicles, achievements, workshopHistory, rider, posts } from "@/lib/mock-data";
+import { Settings, Share2, MapPin, Trophy, Wrench, Flame, Bolt, Route as RouteIcon, Medal, Grid3x3, Play } from "lucide-react";
+import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "DOSSIER · ZOMBIEREX" }] }),
-  component: DossierPage,
+  head: () => ({ meta: [{ title: "Garage · ZOMBIEREX" }] }),
+  component: ProfilePage,
 });
 
-const TABS = ["OVERVIEW", "GARAGE", "TROPHIES", "WORKSHOP", "POSTS"] as const;
-type Tab = typeof TABS[number];
+const TABS = ["Reels", "Garage", "Trophies", "Workshop"] as const;
+type Tab = (typeof TABS)[number];
 
-function DossierPage() {
-  const [tab, setTab] = useState<Tab>("OVERVIEW");
+const ACH_ICON = { trophy: Trophy, flame: Flame, bolt: Bolt, route: RouteIcon, wrench: Wrench, medal: Medal };
+
+function ProfilePage() {
+  const [tab, setTab] = useState<Tab>("Reels");
   const bike = myVehicles[0];
+  const xpPct = Math.min(100, (rider.xp / rider.xpToNext) * 100);
 
   return (
-    <div className="pb-10">
-      <StatusHUD title="DOSSIER" code="07" />
+    <div className="pb-28">
+      {/* Cover / hero */}
+      <div className="relative h-52 w-full overflow-hidden">
+        <img src={bike.cover} alt="" className="ken-burns h-full w-full object-cover" />
+        <div className="absolute inset-0" style={{
+          background: "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.05) 40%, var(--color-bone) 100%)",
+        }} />
+        <div className="absolute inset-x-0 top-0 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),12px)]">
+          <button className="tap grid h-9 w-9 place-items-center rounded-full bg-white/90 backdrop-blur">
+            <Share2 className="h-[18px] w-[18px]" />
+          </button>
+          <button className="tap grid h-9 w-9 place-items-center rounded-full bg-white/90 backdrop-blur">
+            <Settings className="h-[18px] w-[18px]" />
+          </button>
+        </div>
+      </div>
 
-      <div className="px-3 pt-4">
-        {/* IDENTITY CARD */}
-        <Panel variant="ink" className="grid grid-cols-[80px_1fr] overflow-hidden">
-          <div className="flex items-center justify-center border-r border-signal/30 py-4">
-            <HexChip src={me.avatar} size={64} live />
-          </div>
-          <div className="p-3">
-            <p className="mono-caps text-signal">// RIDER · LVL {rider.level}</p>
-            <p className="font-display mt-1 text-xl uppercase leading-none">{me.name}</p>
-            <p className="mono-caps text-bone/60 mt-1">{me.handle} · {me.location}</p>
-            <div className="mt-3">
-              <div className="mono-caps text-bone/60 mb-1 flex justify-between">
-                <span>{rider.title}</span>
-                <span className="mono-num">{rider.xp}/{rider.xpToNext}</span>
-              </div>
-              <TickBar value={rider.xp} max={rider.xpToNext} />
+      <div className="-mt-14 px-4">
+        <div className="flex items-end gap-3">
+          <div className="story-ring">
+            <div className="rounded-full bg-bone p-[3px]">
+              <img src={me.avatar} alt="" className="h-[92px] w-[92px] rounded-full object-cover" />
             </div>
           </div>
-        </Panel>
+          <div className="mb-2 flex-1">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-semibold tracking-tight">{me.name}</h1>
+              <span className="grid h-4 w-4 place-items-center rounded-full text-[10px] font-bold text-ink" style={{ background: "var(--color-signal)" }}>✓</span>
+            </div>
+            <p className="text-[12px] text-ash">{me.handle} · <MapPin className="inline h-3 w-3" /> {me.location}</p>
+          </div>
+        </div>
 
-        {/* TAB RAIL */}
-        <div className="scrollbar-none mt-4 flex gap-1 overflow-x-auto pb-1">
+        {/* Level card */}
+        <div className="card-surface mt-4 p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-ash">Rider Level</p>
+              <p className="text-lg font-semibold">Lv {rider.level} · {rider.title}</p>
+            </div>
+            <span className="mono-num text-[12px] font-semibold text-ash">
+              {rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} XP
+            </span>
+          </div>
+          <div className="mt-3 h-2 overflow-hidden rounded-full bg-mist">
+            <div className="h-full rounded-full" style={{ width: `${xpPct}%`, background: "linear-gradient(90deg, var(--color-signal), var(--color-signal-deep))" }} />
+          </div>
+        </div>
+
+        {/* Stats row */}
+        <div className="mt-3 grid grid-cols-3 gap-2">
+          <Stat label="Followers" value="12.4K" />
+          <Stat label="Rides" value="47" />
+          <Stat label="Miles" value="8,912" />
+        </div>
+
+        <div className="mt-4 flex gap-2">
+          <button className="tap flex-1 rounded-full bg-ink py-2.5 text-[13px] font-semibold text-bone">Edit profile</button>
+          <button className="tap flex-1 rounded-full border border-hair bg-white py-2.5 text-[13px] font-semibold">Share</button>
+        </div>
+
+        {/* Tabs */}
+        <div className="mt-5 flex gap-1 border-b border-hair">
           {TABS.map((t) => (
-            <AngularButton key={t} size="sm" variant={tab === t ? "solid" : "ghost"} onClick={() => setTab(t)}>
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`relative flex-1 py-2.5 text-[12.5px] font-semibold transition ${tab === t ? "text-ink" : "text-ash"}`}
+            >
               {t}
-            </AngularButton>
+              {tab === t && <span className="absolute inset-x-4 -bottom-px h-[2px] rounded-full bg-ink" />}
+            </button>
           ))}
         </div>
 
-        <div className="mt-4">
-          {tab === "OVERVIEW" && (
-            <div className="space-y-4">
-              <SlashHeader label="TELEMETRY" />
-              <Panel className="flex items-center justify-around p-3">
-                <GaugeRing value={1245} max={2000} label="MILES · MO" unit="MI" />
-                <GaugeRing value={47} max={60} label="RIDES · YR" unit="RUN" />
-                <GaugeRing value={rider.level} max={30} label="LEVEL" unit="LVL" />
-              </Panel>
-
-              <SlashHeader label="STATUS" />
-              <div className="grid grid-cols-2 gap-2">
-                <MiniStat label="TROPHIES" value={`${achievements.filter(a => a.earned).length}/${achievements.length}`} />
-                <MiniStat label="WRENCHES" value={workshopHistory.filter(w => w.status === "done").length} />
-                <MiniStat label="CREWS" value="4" />
-                <MiniStat label="RANK" value={`#${rider.level}`} tone />
+        {tab === "Reels" && (
+          <div className="mt-4 grid grid-cols-3 gap-1.5">
+            {reels.map((r) => (
+              <div key={r.id} className="relative aspect-[3/4] overflow-hidden rounded-xl bg-ink">
+                <img src={r.poster} alt="" className="h-full w-full object-cover" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
+                <span className="absolute bottom-1.5 left-1.5 inline-flex items-center gap-1 text-[10px] font-bold text-white">
+                  <Play className="h-3 w-3 fill-white" /> {r.views}
+                </span>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
+        )}
 
-          {tab === "GARAGE" && (
-            <div className="space-y-3">
-              <SlashHeader label="UNITS" count={myVehicles.length} />
-              {myVehicles.map((v) => (
-                <Panel key={v.id} className="overflow-hidden">
-                  <div className="relative">
-                    <img src={v.cover} alt="" className="h-40 w-full object-cover" />
-                    <div className="panel-ink absolute inset-x-0 bottom-0 flex items-center justify-between px-3 py-2">
-                      <span className="font-display text-sm uppercase">{v.name}</span>
-                      <span className="mono-num text-signal">{v.hp}HP</span>
-                    </div>
+        {tab === "Garage" && (
+          <div className="mt-4 space-y-3">
+            {myVehicles.map((v) => (
+              <div key={v.id} className="overflow-hidden rounded-3xl border border-hair bg-white">
+                <img src={v.cover} alt="" className="h-40 w-full object-cover" />
+                <div className="space-y-2 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-base font-semibold">{v.name}</p>
+                    <span className="chip">{v.year}</span>
                   </div>
-                  <div className="p-3">
-                    <div className="flex flex-wrap gap-1">
-                      <DataChip k="TYPE" v={v.type} />
-                      <DataChip k="YEAR" v={v.year} />
-                      <DataChip k="MODS" v={v.mods.length} tone="signal" />
-                    </div>
-                    <ul className="mt-3 space-y-1">
-                      {v.mods.map((m) => (
-                        <li key={m} className="mono-caps flex items-center gap-2 text-[10px]">
-                          <span className="text-signal">▸</span>
-                          <span className="text-ink">{m}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <MiniStat k="HP" v={v.hp} />
+                    <MiniStat k="Type" v={v.type} />
+                    <MiniStat k="Mods" v={v.mods.length} />
                   </div>
-                </Panel>
-              ))}
-            </div>
-          )}
-
-          {tab === "TROPHIES" && (
-            <div className="space-y-3">
-              <SlashHeader label="TROPHIES" count={`${achievements.filter(a => a.earned).length}`} />
-              <div className="grid grid-cols-3 gap-2">
-                {achievements.map((a) => {
-                  const rarity =
-                    a.rarity === "legendary" ? "bg-warn text-bone" :
-                    a.rarity === "rare" ? "bg-signal text-ink" : "bg-mist text-ink";
-                  return (
-                    <div key={a.id} className="flex flex-col items-center">
-                      <div
-                        className={`clip-hex flex h-16 w-14 items-center justify-center border border-ink ${
-                          a.earned ? rarity : "bg-mist/50 text-ash grayscale"
-                        }`}
-                      >
-                        <span className="font-display text-xl">
-                          {a.icon === "trophy" ? "♆" : a.icon === "flame" ? "⌬" : a.icon === "bolt" ? "⚡" : a.icon === "route" ? "◈" : a.icon === "wrench" ? "⚙" : "✦"}
-                        </span>
-                      </div>
-                      <p className={`font-display mt-1 text-center text-[10px] uppercase leading-tight ${a.earned ? "text-ink" : "text-ash"}`}>
-                        {a.title}
-                      </p>
-                      <p className="mono-caps text-ash text-[8px]">{a.rarity}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {tab === "WORKSHOP" && (
-            <div className="space-y-3">
-              <SlashHeader label="SERVICE LOG" count={workshopHistory.length} />
-              <div className="space-y-2">
-                {workshopHistory.map((w) => (
-                  <Panel key={w.id} className="grid grid-cols-[56px_1fr] overflow-hidden">
-                    <div className={`flex flex-col items-center justify-center py-2 ${w.status === "upcoming" ? "bg-warn text-bone" : "bg-ink text-bone"}`}>
-                      <span className="mono-caps text-[9px] opacity-80">{w.date.split(" ")[0]}</span>
-                      <span className="font-display text-lg leading-none">{w.date.split(" ")[1]}</span>
-                    </div>
-                    <div className="p-2">
-                      <p className="font-display text-xs uppercase leading-tight">{w.title}</p>
-                      <p className="mono-caps text-ash mt-0.5">{w.shop}</p>
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        <DataChip k="MI" v={w.mileage.replace(" mi", "")} />
-                        <DataChip k="COST" v={w.cost} tone={w.status === "upcoming" ? "warn" : "default"} />
-                        <DataChip k="STAT" v={w.status.toUpperCase()} tone={w.status === "done" ? "signal" : "warn"} />
-                      </div>
-                    </div>
-                  </Panel>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {tab === "POSTS" && (
-            <div className="grid grid-cols-3 gap-1">
-              {[...posts, ...posts].map((p, i) => (
-                <div key={i} className="relative aspect-square border border-ink">
-                  <img src={p.image} alt="" className="h-full w-full object-cover" />
-                  <span className="mono-num absolute bottom-0.5 right-0.5 bg-ink/80 px-1 text-[9px] text-bone">
-                    ✚{p.likes > 999 ? `${(p.likes/1000).toFixed(1)}k` : p.likes}
-                  </span>
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {v.mods.map((m) => (
+                      <span key={m} className="chip"><Grid3x3 className="h-3 w-3 text-ash" />{m}</span>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
+            ))}
+          </div>
+        )}
 
-        <div className="mt-6 flex justify-center gap-2">
-          <AngularButton variant="signal" size="sm">◇ EDIT DOSSIER</AngularButton>
-          <AngularButton size="sm">⚙ SETTINGS</AngularButton>
-        </div>
+        {tab === "Trophies" && (
+          <div className="mt-4 grid grid-cols-3 gap-3">
+            {achievements.map((a) => {
+              const Icon = ACH_ICON[a.icon];
+              const tone = a.rarity === "legendary" ? "var(--color-signal)"
+                : a.rarity === "rare" ? "var(--color-cool)"
+                : "var(--color-mist)";
+              return (
+                <div key={a.id} className={`rounded-2xl border border-hair bg-white p-3 text-center ${a.earned ? "" : "opacity-45"}`}>
+                  <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl" style={{ background: tone }}>
+                    <Icon className="h-6 w-6 text-ink" />
+                  </div>
+                  <p className="mt-2 text-[12px] font-semibold leading-tight">{a.title}</p>
+                  <p className="mt-0.5 text-[10px] text-ash">{a.detail}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
-        {/* Reference so bike var isn't unused when tab != GARAGE */}
-        <p className="sr-only">{bike.name}</p>
+        {tab === "Workshop" && (
+          <ul className="mt-4 space-y-2">
+            {workshopHistory.map((w) => (
+              <li key={w.id} className="flex items-start gap-3 rounded-2xl border border-hair bg-white p-3">
+                <div className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl" style={{
+                  background: w.status === "upcoming" ? "color-mix(in oklab, var(--color-heat) 15%, white)" : "var(--color-mist)",
+                }}>
+                  <Wrench className="h-5 w-5 text-ink" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[13px] font-semibold">{w.title}</p>
+                    <span className="text-[11px] font-semibold text-ash">{w.date}</span>
+                  </div>
+                  <p className="text-[11px] text-ash">{w.shop} · {w.mileage}</p>
+                  <div className="mt-1 flex items-center justify-between">
+                    <span className={`text-[10px] font-bold uppercase tracking-wide`} style={{ color: w.status === "upcoming" ? "var(--color-heat)" : "var(--color-signal-deep)" }}>
+                      {w.status}
+                    </span>
+                    <span className="text-[12px] font-bold">{w.cost}</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
 }
 
-function MiniStat({ label, value, tone }: { label: string; value: string | number; tone?: boolean }) {
+function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <Panel variant={tone ? "signal" : "bone"} className="p-2">
-      <p className="mono-caps opacity-70">{label}</p>
-      <p className="font-display mono-num mt-1 text-xl leading-none">{value}</p>
-    </Panel>
+    <div className="card-surface p-3 text-center">
+      <p className="text-lg font-semibold">{value}</p>
+      <p className="text-[10.5px] font-semibold uppercase tracking-wider text-ash">{label}</p>
+    </div>
+  );
+}
+
+function MiniStat({ k, v }: { k: string; v: string | number }) {
+  return (
+    <div className="rounded-xl bg-mist p-2">
+      <p className="text-[10px] font-semibold uppercase tracking-wider text-ash">{k}</p>
+      <p className="text-sm font-semibold">{v}</p>
+    </div>
   );
 }

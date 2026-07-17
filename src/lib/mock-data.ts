@@ -205,3 +205,101 @@ export const rider = {
   xp: 8420,
   xpToNext: 12000,
 };
+
+/* ============ REELS (short-form video) ============ */
+
+export type Reel = {
+  id: string;
+  user: User;
+  vehicle?: Vehicle;
+  poster: string;
+  caption: string;
+  hashtags: string[];
+  location?: string;
+  music: { title: string; artist: string };
+  likes: number;
+  comments: number;
+  shares: number;
+  views: string;
+  followed?: boolean;
+  duration: number; // seconds
+  taggedProduct?: { name: string; price: string };
+};
+
+export const reels: Reel[] = [
+  {
+    id: "r1",
+    user: users[0],
+    vehicle: vehicles[0],
+    poster: bike1,
+    caption: "3AM. Empty canyon. Just me and the MT-09 breathing through the Akra.",
+    hashtags: ["#nightride", "#mt09", "#canyoncarver", "#zombierex"],
+    location: "Angeles Crest, CA",
+    music: { title: "Neon Requiem", artist: "GHOSTWAVE" },
+    likes: 48210, comments: 1284, shares: 942, views: "612K",
+    duration: 18,
+    taggedProduct: { name: "Akrapovic Full System", price: "$1,890" },
+  },
+  {
+    id: "r2",
+    user: users[1],
+    vehicle: vehicles[1],
+    poster: car1,
+    caption: "Widebody breathes different when the sun drops. Berlin, we ride Saturday.",
+    hashtags: ["#widebody", "#gt86", "#jdm", "#meet"],
+    location: "Tempelhof, Berlin",
+    music: { title: "Iron Lung", artist: "SUBFRQ"},
+    likes: 91240, comments: 3120, shares: 4210, views: "1.4M",
+    followed: true,
+    duration: 22,
+  },
+  {
+    id: "r3",
+    user: users[2],
+    poster: partCarb,
+    caption: "40mm PWK teardown → rebuild in 90 seconds. She fires first kick now.",
+    hashtags: ["#restoration", "#wrenchlife", "#carb"],
+    location: "Austin, TX",
+    music: { title: "Grease Sonata", artist: "OTIS"},
+    likes: 12480, comments: 486, shares: 210, views: "94K",
+    duration: 26,
+    taggedProduct: { name: "PWK 40 Rebuild Kit", price: "$74" },
+  },
+  {
+    id: "r4",
+    user: users[0],
+    vehicle: vehicles[0],
+    poster: eventRide,
+    caption: "Rolled in with 40 bikes. Grave Digger rally is coming — don't miss it.",
+    hashtags: ["#rally", "#gravedigger", "#groupride"],
+    location: "Death Valley, NV",
+    music: { title: "Kickstart Hymn", artist: "REX/ORCHESTRA"},
+    likes: 26480, comments: 812, shares: 620, views: "310K",
+    duration: 30,
+  },
+];
+
+/* ============ STORIES ============ */
+
+export type StoryKind = "photo" | "video" | "poll" | "question" | "ride" | "event";
+
+export type Story = {
+  id: string;
+  user: User;
+  kind: StoryKind;
+  cover: string;
+  seen?: boolean;
+  live?: boolean;
+  label?: string;
+};
+
+export const storiesV2: Story[] = [
+  { id: "st0", user: me, kind: "photo", cover: avatar1, label: "Your story" },
+  { id: "st1", user: users[0], kind: "video", cover: bike1, live: true, label: "LIVE · Canyon" },
+  { id: "st2", user: users[1], kind: "ride", cover: car1, label: "Rolling · 42km" },
+  { id: "st3", user: users[2], kind: "poll", cover: partCarb, label: "Which carb?" },
+  { id: "st4", user: users[0], kind: "event", cover: eventRide, label: "Rally Sat" },
+  { id: "st5", user: users[1], kind: "question", cover: avatar2, seen: true, label: "Ask me" },
+  { id: "st6", user: users[2], kind: "photo", cover: avatar3, seen: true },
+];
+
