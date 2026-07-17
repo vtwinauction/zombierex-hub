@@ -431,12 +431,60 @@ export const challengeLeaderboard = createServerFn({ method: "GET" })
   .inputValidator((raw) => z.object({ challenge_id: z.string().uuid() }).parse(raw))
   .handler(async ({ data }) => {
     const sb = serverPublic();
-    const { data: rows, error } = await sb.from("challenge_entries")
+    const { data: entries, error } = await sb.from("challenge_entries")
       .select("id, user_id, post_id, votes_count, created_at")
       .eq("challenge_id", data.challenge_id)
       .order("votes_count", { ascending: false })
+      .order("created_at", { ascending: true })
       .limit(50);
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    const rows = entries ?? [];
+    if (rows.length === 0) return [];
+    const postIds = rows.map((e) => e.post_id);
+    const { data: posts } = await sb.from("posts")
+      .select("id, caption, media_url, thumbnail_url, kind, author_id")
+      .in("id", postIds);
+    const byId = new Map((posts ?? []).map((p) => [p.id, p]));
+    return rows.map((e) => ({ ...e, post: byId.get(e.post_id) ?? null }));
   });
+
+export const toggleChallengeVote = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({ entry_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { data: existing } = await context.supabase.from("challenge_entry_votes")
+      .select("id").eq("entry_id", data.entry_id).eq("user_id", context.userId).maybeSingle();
+    if (existing) {
+      const { error } = await context.supabase.from("challenge_entry_votes")
+        .delete().eq("id", existing.id);
+      if (error) throw new Error(error.message);
+      return { voted: false as const };
+    }
+    const { error } = await context.supabase.from("challenge_entry_votes")
+      .insert({ entry_id: data.entry_id, user_id: context.userId });
+    if (error && !error.message.includes("duplicate")) throw new Error(error.message);
+    return { voted: true as const };
+  });
+
+export const getChallenge = createServerFn({ method: "GET" })
+  .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data }) => {
+    const sb = serverPublic();
+    const { data: row, error } = await sb.from("weekly_challenges")
+      .select("id, club_id, title, description, hashtag, prize, cover_url, starts_at, ends_at, entries_count, is_active")
+      .eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const myChallengeVotes = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({ entry_ids: z.array(z.string().uuid()).max(100) }).parse(raw))
+  .handler(async ({ data, context }) => {
+    if (data.entry_ids.length === 0) return [] as string[];
+    const { data: rows } = await context.supabase.from("challenge_entry_votes")
+      .select("entry_id").eq("user_id", context.userId).in("entry_id", data.entry_ids);
+    return (rows ?? []).map((r) => r.entry_id);
+  });
+
 
