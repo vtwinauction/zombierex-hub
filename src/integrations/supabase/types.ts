@@ -1389,34 +1389,43 @@ export type Database = {
       }
       subscriptions: {
         Row: {
+          cancel_at_period_end: boolean
           created_at: string
           current_period_end: string | null
           external_ref: string | null
           id: string
           plan_id: string
           status: string
+          trial_ends_at: string | null
           updated_at: string
           user_id: string
+          vendor_id: string | null
         }
         Insert: {
+          cancel_at_period_end?: boolean
           created_at?: string
           current_period_end?: string | null
           external_ref?: string | null
           id?: string
           plan_id: string
           status?: string
+          trial_ends_at?: string | null
           updated_at?: string
           user_id: string
+          vendor_id?: string | null
         }
         Update: {
+          cancel_at_period_end?: boolean
           created_at?: string
           current_period_end?: string | null
           external_ref?: string | null
           id?: string
           plan_id?: string
           status?: string
+          trial_ends_at?: string | null
           updated_at?: string
           user_id?: string
+          vendor_id?: string | null
         }
         Relationships: [
           {
@@ -1431,6 +1440,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subscriptions_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
         ]
@@ -1550,42 +1566,127 @@ export type Database = {
       }
       vendors: {
         Row: {
+          address_line1: string | null
+          address_line2: string | null
           business_name: string
+          business_type: string
+          city: string | null
+          country: string | null
+          cover_url: string | null
           created_at: string
           description: string | null
+          email: string | null
           id: string
           is_verified: boolean
+          lat: number | null
+          legal_name: string | null
+          lng: number | null
           logo_url: string | null
+          operating_hours: Json
           owner_id: string
+          owner_name: string | null
+          phone: string | null
+          postal_code: string | null
+          region: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          service_areas: string[]
           slug: string
+          socials: Json
+          submitted_at: string | null
+          tax_number: string | null
+          trade_license_no: string | null
           updated_at: string
+          verification_docs: Json
+          verification_notes: string | null
+          verification_status: string
+          website: string | null
         }
         Insert: {
+          address_line1?: string | null
+          address_line2?: string | null
           business_name: string
+          business_type?: string
+          city?: string | null
+          country?: string | null
+          cover_url?: string | null
           created_at?: string
           description?: string | null
+          email?: string | null
           id?: string
           is_verified?: boolean
+          lat?: number | null
+          legal_name?: string | null
+          lng?: number | null
           logo_url?: string | null
+          operating_hours?: Json
           owner_id: string
+          owner_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_areas?: string[]
           slug: string
+          socials?: Json
+          submitted_at?: string | null
+          tax_number?: string | null
+          trade_license_no?: string | null
           updated_at?: string
+          verification_docs?: Json
+          verification_notes?: string | null
+          verification_status?: string
+          website?: string | null
         }
         Update: {
+          address_line1?: string | null
+          address_line2?: string | null
           business_name?: string
+          business_type?: string
+          city?: string | null
+          country?: string | null
+          cover_url?: string | null
           created_at?: string
           description?: string | null
+          email?: string | null
           id?: string
           is_verified?: boolean
+          lat?: number | null
+          legal_name?: string | null
+          lng?: number | null
           logo_url?: string | null
+          operating_hours?: Json
           owner_id?: string
+          owner_name?: string | null
+          phone?: string | null
+          postal_code?: string | null
+          region?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          service_areas?: string[]
           slug?: string
+          socials?: Json
+          submitted_at?: string | null
+          tax_number?: string | null
+          trade_license_no?: string | null
           updated_at?: string
+          verification_docs?: Json
+          verification_notes?: string | null
+          verification_status?: string
+          website?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "vendors_owner_id_fkey"
             columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendors_reviewed_by_fkey"
+            columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]

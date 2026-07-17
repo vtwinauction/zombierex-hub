@@ -3,7 +3,7 @@ import type { ComponentType } from "react";
 import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
 
 type NavItem = {
-  to: "/" | "/search" | "/marketplace" | "/profile";
+  to: "/" | "/search" | "/marketplace" | "/profile" | "/vendor";
   label: string;
   icon: ComponentType<{ className?: string }>;
 };
@@ -14,6 +14,7 @@ const LEFT: NavItem[] = [
 ];
 const RIGHT: NavItem[] = [
   { to: "/marketplace", label: "Vault",    icon: IconMarket },
+  { to: "/vendor",      label: "Business", icon: IconGarage },
   { to: "/profile",     label: "Garage",   icon: IconHelmet },
 ];
 
