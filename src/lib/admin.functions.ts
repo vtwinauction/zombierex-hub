@@ -88,16 +88,15 @@ export const adminSetVendorStatus = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context.supabase, context.userId);
 
-    const patch: Record<string, unknown> = {
-      verification_status: data.status,
-      verification_notes: data.notes ?? null,
-      reviewed_at: new Date().toISOString(),
-      reviewed_by: context.userId,
-      is_verified: data.status === "approved",
-    };
     const { data: row, error } = await context.supabase
       .from("vendors")
-      .update(patch)
+      .update({
+        verification_status: data.status,
+        verification_notes: data.notes ?? null,
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: context.userId,
+        is_verified: data.status === "approved",
+      })
       .eq("id", data.id)
       .select("id, owner_id, business_name, verification_status, is_verified")
       .single();
