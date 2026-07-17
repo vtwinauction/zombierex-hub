@@ -35,6 +35,7 @@ import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
+import { Route as AuthenticatedCreatorDashboardRouteImport } from './routes/_authenticated/creator.dashboard'
 import { Route as AuthenticatedCreatorApplyRouteImport } from './routes/_authenticated/creator.apply'
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
@@ -179,6 +180,12 @@ const AuthenticatedEventsIdRoute = AuthenticatedEventsIdRouteImport.update({
   path: '/events/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCreatorDashboardRoute =
+  AuthenticatedCreatorDashboardRouteImport.update({
+    id: '/creator/dashboard',
+    path: '/creator/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCreatorApplyRoute =
   AuthenticatedCreatorApplyRouteImport.update({
     id: '/creator/apply',
@@ -268,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -304,6 +312,7 @@ export interface FileRoutesByTo {
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -344,6 +353,7 @@ export interface FileRoutesById {
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/_authenticated/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/_authenticated/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
@@ -384,6 +394,7 @@ export interface FileRouteTypes {
     | '/checkout/$paymentId'
     | '/communities/create'
     | '/creator/apply'
+    | '/creator/dashboard'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -420,6 +431,7 @@ export interface FileRouteTypes {
     | '/checkout/$paymentId'
     | '/communities/create'
     | '/creator/apply'
+    | '/creator/dashboard'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -459,6 +471,7 @@ export interface FileRouteTypes {
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/communities/create'
     | '/_authenticated/creator/apply'
+    | '/_authenticated/creator/dashboard'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
     | '/_authenticated/post/new'
@@ -679,6 +692,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEventsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/creator/dashboard': {
+      id: '/_authenticated/creator/dashboard'
+      path: '/creator/dashboard'
+      fullPath: '/creator/dashboard'
+      preLoaderRoute: typeof AuthenticatedCreatorDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/creator/apply': {
       id: '/_authenticated/creator/apply'
       path: '/creator/apply'
@@ -809,6 +829,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
   AuthenticatedCreatorApplyRoute: typeof AuthenticatedCreatorApplyRoute
+  AuthenticatedCreatorDashboardRoute: typeof AuthenticatedCreatorDashboardRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
@@ -826,6 +847,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
   AuthenticatedCreatorApplyRoute: AuthenticatedCreatorApplyRoute,
+  AuthenticatedCreatorDashboardRoute: AuthenticatedCreatorDashboardRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
