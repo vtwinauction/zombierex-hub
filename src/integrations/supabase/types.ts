@@ -454,6 +454,68 @@ export type Database = {
           },
         ]
       }
+      collab_requests: {
+        Row: {
+          brand_name: string
+          brand_website: string | null
+          budget_cents: number | null
+          campaign_type: string | null
+          created_at: string
+          creator_id: string
+          currency: string | null
+          id: string
+          message: string
+          read_at: string | null
+          responded_at: string | null
+          sender_id: string
+          status: string
+          subject: string
+          updated_at: string
+        }
+        Insert: {
+          brand_name: string
+          brand_website?: string | null
+          budget_cents?: number | null
+          campaign_type?: string | null
+          created_at?: string
+          creator_id: string
+          currency?: string | null
+          id?: string
+          message: string
+          read_at?: string | null
+          responded_at?: string | null
+          sender_id: string
+          status?: string
+          subject: string
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          brand_website?: string | null
+          budget_cents?: number | null
+          campaign_type?: string | null
+          created_at?: string
+          creator_id?: string
+          currency?: string | null
+          id?: string
+          message?: string
+          read_at?: string | null
+          responded_at?: string | null
+          sender_id?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collab_requests_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creator_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       comments: {
         Row: {
           author_id: string
@@ -586,6 +648,218 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_profiles: {
+        Row: {
+          accepts_collabs: boolean
+          approved_at: string | null
+          category: string
+          collab_email: string | null
+          created_at: string
+          featured_post_ids: string[] | null
+          id: string
+          is_featured: boolean
+          is_verified: boolean
+          portfolio_url: string | null
+          social_links: Json | null
+          status: string
+          subscribers_count: number
+          tagline: string | null
+          tips_total_cents: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accepts_collabs?: boolean
+          approved_at?: string | null
+          category?: string
+          collab_email?: string | null
+          created_at?: string
+          featured_post_ids?: string[] | null
+          id?: string
+          is_featured?: boolean
+          is_verified?: boolean
+          portfolio_url?: string | null
+          social_links?: Json | null
+          status?: string
+          subscribers_count?: number
+          tagline?: string | null
+          tips_total_cents?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accepts_collabs?: boolean
+          approved_at?: string | null
+          category?: string
+          collab_email?: string | null
+          created_at?: string
+          featured_post_ids?: string[] | null
+          id?: string
+          is_featured?: boolean
+          is_verified?: boolean
+          portfolio_url?: string | null
+          social_links?: Json | null
+          status?: string
+          subscribers_count?: number
+          tagline?: string | null
+          tips_total_cents?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      creator_subscriptions: {
+        Row: {
+          cancelled_at: string | null
+          created_at: string
+          creator_id: string
+          current_period_end: string | null
+          id: string
+          status: string
+          subscriber_id: string
+          tier_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          cancelled_at?: string | null
+          created_at?: string
+          creator_id: string
+          current_period_end?: string | null
+          id?: string
+          status?: string
+          subscriber_id: string
+          tier_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cancelled_at?: string | null
+          created_at?: string
+          creator_id?: string
+          current_period_end?: string | null
+          id?: string
+          status?: string
+          subscriber_id?: string
+          tier_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_subscriptions_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creator_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_subscriptions_tier_id_fkey"
+            columns: ["tier_id"]
+            isOneToOne: false
+            referencedRelation: "creator_tiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_tiers: {
+        Row: {
+          benefits: string[]
+          created_at: string
+          creator_id: string
+          currency: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          price_cents: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          benefits?: string[]
+          created_at?: string
+          creator_id: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          price_cents: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          benefits?: string[]
+          created_at?: string
+          creator_id?: string
+          currency?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          price_cents?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_tiers_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creator_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      creator_tips: {
+        Row: {
+          amount_cents: number
+          context: string | null
+          created_at: string
+          creator_id: string
+          currency: string
+          id: string
+          message: string | null
+          post_id: string | null
+          supporter_id: string
+        }
+        Insert: {
+          amount_cents: number
+          context?: string | null
+          created_at?: string
+          creator_id: string
+          currency?: string
+          id?: string
+          message?: string | null
+          post_id?: string | null
+          supporter_id: string
+        }
+        Update: {
+          amount_cents?: number
+          context?: string | null
+          created_at?: string
+          creator_id?: string
+          currency?: string
+          id?: string
+          message?: string | null
+          post_id?: string | null
+          supporter_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creator_tips_creator_id_fkey"
+            columns: ["creator_id"]
+            isOneToOne: false
+            referencedRelation: "creator_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "creator_tips_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
             referencedColumns: ["id"]
           },
         ]
@@ -1365,6 +1639,56 @@ export type Database = {
           },
         ]
       }
+      post_drafts: {
+        Row: {
+          author_id: string
+          caption: string | null
+          club_id: string | null
+          created_at: string
+          hashtags: string[]
+          id: string
+          is_subscribers_only: boolean
+          kind: string
+          media_urls: string[]
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          author_id: string
+          caption?: string | null
+          club_id?: string | null
+          created_at?: string
+          hashtags?: string[]
+          id?: string
+          is_subscribers_only?: boolean
+          kind?: string
+          media_urls?: string[]
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          author_id?: string
+          caption?: string | null
+          club_id?: string | null
+          created_at?: string
+          hashtags?: string[]
+          id?: string
+          is_subscribers_only?: boolean
+          kind?: string
+          media_urls?: string[]
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_drafts_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       post_hashtags: {
         Row: {
           hashtag_id: string
@@ -1751,6 +2075,75 @@ export type Database = {
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheduled_posts: {
+        Row: {
+          author_id: string
+          caption: string | null
+          club_id: string | null
+          created_at: string
+          error: string | null
+          hashtags: string[]
+          id: string
+          is_subscribers_only: boolean
+          kind: string
+          media_urls: string[]
+          publish_at: string
+          published_post_id: string | null
+          status: string
+          updated_at: string
+          visibility: string
+        }
+        Insert: {
+          author_id: string
+          caption?: string | null
+          club_id?: string | null
+          created_at?: string
+          error?: string | null
+          hashtags?: string[]
+          id?: string
+          is_subscribers_only?: boolean
+          kind?: string
+          media_urls?: string[]
+          publish_at: string
+          published_post_id?: string | null
+          status?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Update: {
+          author_id?: string
+          caption?: string | null
+          club_id?: string | null
+          created_at?: string
+          error?: string | null
+          hashtags?: string[]
+          id?: string
+          is_subscribers_only?: boolean
+          kind?: string
+          media_urls?: string[]
+          publish_at?: string
+          published_post_id?: string | null
+          status?: string
+          updated_at?: string
+          visibility?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_posts_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_posts_published_post_id_fkey"
+            columns: ["published_post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
             referencedColumns: ["id"]
           },
         ]

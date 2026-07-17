@@ -17,10 +17,12 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EventsRouteImport } from './routes/events'
+import { Route as CreatorsRouteImport } from './routes/creators'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
+import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -34,6 +36,10 @@ import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
+import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
+import { Route as AuthenticatedCreatorDashboardRouteImport } from './routes/_authenticated/creator.dashboard'
+import { Route as AuthenticatedCreatorCollabsRouteImport } from './routes/_authenticated/creator.collabs'
+import { Route as AuthenticatedCreatorApplyRouteImport } from './routes/_authenticated/creator.apply'
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
@@ -85,6 +91,11 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreatorsRoute = CreatorsRouteImport.update({
+  id: '/creators',
+  path: '/creators',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -102,6 +113,11 @@ const IndexRoute = IndexRouteImport.update({
 const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
   id: '/communities/',
   path: '/communities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorIdRoute = CreatorIdRouteImport.update({
+  id: '/creator/$id',
+  path: '/creator/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CommunitiesSlugRoute = CommunitiesSlugRouteImport.update({
@@ -172,6 +188,30 @@ const AuthenticatedEventsIdRoute = AuthenticatedEventsIdRouteImport.update({
   path: '/events/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCreatorTiersRoute =
+  AuthenticatedCreatorTiersRouteImport.update({
+    id: '/creator/tiers',
+    path: '/creator/tiers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCreatorDashboardRoute =
+  AuthenticatedCreatorDashboardRouteImport.update({
+    id: '/creator/dashboard',
+    path: '/creator/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCreatorCollabsRoute =
+  AuthenticatedCreatorCollabsRouteImport.update({
+    id: '/creator/collabs',
+    path: '/creator/collabs',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCreatorApplyRoute =
+  AuthenticatedCreatorApplyRouteImport.update({
+    id: '/creator/apply',
+    path: '/creator/apply',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCommunitiesCreateRoute =
   AuthenticatedCommunitiesCreateRouteImport.update({
     id: '/communities/create',
@@ -236,6 +276,7 @@ const AuthenticatedCommunitiesSlugChallengesNewRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -249,10 +290,15 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
+  '/creator/$id': typeof CreatorIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
+  '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -272,6 +318,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -283,10 +330,15 @@ export interface FileRoutesByTo {
   '/menu': typeof AuthenticatedMenuRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
+  '/creator/$id': typeof CreatorIdRoute
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
+  '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -308,6 +360,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -321,10 +374,15 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
+  '/creator/$id': typeof CreatorIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
+  '/_authenticated/creator/apply': typeof AuthenticatedCreatorApplyRoute
+  '/_authenticated/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
+  '/_authenticated/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
@@ -346,6 +404,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/creators'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -359,10 +418,15 @@ export interface FileRouteTypes {
     | '/settings'
     | '/vendor'
     | '/communities/$slug'
+    | '/creator/$id'
     | '/communities/'
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/communities/create'
+    | '/creator/apply'
+    | '/creator/collabs'
+    | '/creator/dashboard'
+    | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -382,6 +446,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/creators'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -393,10 +458,15 @@ export interface FileRouteTypes {
     | '/menu'
     | '/settings'
     | '/communities/$slug'
+    | '/creator/$id'
     | '/communities'
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/communities/create'
+    | '/creator/apply'
+    | '/creator/collabs'
+    | '/creator/dashboard'
+    | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -417,6 +487,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/creators'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -430,10 +501,15 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/vendor'
     | '/communities/$slug'
+    | '/creator/$id'
     | '/communities/'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/communities/create'
+    | '/_authenticated/creator/apply'
+    | '/_authenticated/creator/collabs'
+    | '/_authenticated/creator/dashboard'
+    | '/_authenticated/creator/tiers'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
     | '/_authenticated/post/new'
@@ -455,6 +531,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CreatorsRoute: typeof CreatorsRoute
   EventsRoute: typeof EventsRoute
   MarketplaceRoute: typeof MarketplaceRoute
   MessagesRoute: typeof MessagesRoute
@@ -464,6 +541,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   CommunitiesSlugRoute: typeof CommunitiesSlugRouteWithChildren
+  CreatorIdRoute: typeof CreatorIdRoute
   CommunitiesIndexRoute: typeof CommunitiesIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
@@ -527,6 +605,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/creators': {
+      id: '/creators'
+      path: '/creators'
+      fullPath: '/creators'
+      preLoaderRoute: typeof CreatorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -553,6 +638,13 @@ declare module '@tanstack/react-router' {
       path: '/communities'
       fullPath: '/communities/'
       preLoaderRoute: typeof CommunitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator/$id': {
+      id: '/creator/$id'
+      path: '/creator/$id'
+      fullPath: '/creator/$id'
+      preLoaderRoute: typeof CreatorIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/communities/$slug': {
@@ -644,6 +736,34 @@ declare module '@tanstack/react-router' {
       path: '/events/$id'
       fullPath: '/events/$id'
       preLoaderRoute: typeof AuthenticatedEventsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/creator/tiers': {
+      id: '/_authenticated/creator/tiers'
+      path: '/creator/tiers'
+      fullPath: '/creator/tiers'
+      preLoaderRoute: typeof AuthenticatedCreatorTiersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/creator/dashboard': {
+      id: '/_authenticated/creator/dashboard'
+      path: '/creator/dashboard'
+      fullPath: '/creator/dashboard'
+      preLoaderRoute: typeof AuthenticatedCreatorDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/creator/collabs': {
+      id: '/_authenticated/creator/collabs'
+      path: '/creator/collabs'
+      fullPath: '/creator/collabs'
+      preLoaderRoute: typeof AuthenticatedCreatorCollabsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/creator/apply': {
+      id: '/_authenticated/creator/apply'
+      path: '/creator/apply'
+      fullPath: '/creator/apply'
+      preLoaderRoute: typeof AuthenticatedCreatorApplyRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/communities/create': {
@@ -768,6 +888,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
+  AuthenticatedCreatorApplyRoute: typeof AuthenticatedCreatorApplyRoute
+  AuthenticatedCreatorCollabsRoute: typeof AuthenticatedCreatorCollabsRoute
+  AuthenticatedCreatorDashboardRoute: typeof AuthenticatedCreatorDashboardRoute
+  AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
@@ -784,6 +908,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
+  AuthenticatedCreatorApplyRoute: AuthenticatedCreatorApplyRoute,
+  AuthenticatedCreatorCollabsRoute: AuthenticatedCreatorCollabsRoute,
+  AuthenticatedCreatorDashboardRoute: AuthenticatedCreatorDashboardRoute,
+  AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
@@ -817,6 +945,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CreatorsRoute: CreatorsRoute,
   EventsRoute: EventsRoute,
   MarketplaceRoute: MarketplaceRoute,
   MessagesRoute: MessagesRoute,
@@ -826,6 +955,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   CommunitiesSlugRoute: CommunitiesSlugRouteWithChildren,
+  CreatorIdRoute: CreatorIdRoute,
   CommunitiesIndexRoute: CommunitiesIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
