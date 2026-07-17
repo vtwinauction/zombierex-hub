@@ -1,222 +1,157 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { TopBar } from "@/components/TopBar";
-import { PostCard } from "@/components/PostCard";
-import { events, listings, myVehicles, posts, clubs, me } from "@/lib/mock-data";
-import { ArrowUpRight, Flame, Gauge, MapPin, Sparkles, TrendingUp, Users2, Wrench, Zap } from "lucide-react";
+import { StatusHUD } from "@/components/StatusHUD";
+import { TelemetryPost } from "@/components/TelemetryPost";
+import { Panel, SlashHeader, DataChip, HexChip, TickBar } from "@/components/hud";
+import { posts, events, myVehicles, rider, clubs } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
-  component: HubPage,
+  head: () => ({
+    meta: [
+      { title: "COMMAND DECK · ZOMBIEREX" },
+      { name: "description", content: "Live telemetry, missions and community stream." },
+    ],
+  }),
+  component: DeckPage,
 });
 
-function HubPage() {
-  const featuredBuild = posts[1];
+function DeckPage() {
+  const primary = myVehicles[0];
   const nextEvent = events[0];
-  const marketPick = listings[1];
-  const featuredClub = clubs[0];
-  const myBike = myVehicles[0];
 
   return (
-    <>
-      <TopBar showLogo />
+    <div className="pb-10">
+      <StatusHUD title="COMMAND" code="01" />
 
-      {/* Greeting */}
-      <section className="px-5 pt-2">
-        <div className="flex items-end justify-between gap-4">
-          <div className="min-w-0">
-            <p className="text-mono-caps text-muted-foreground">Friday · Nov 21</p>
-            <h1 className="mt-2 font-display text-[32px] leading-[1.05] tracking-[-0.02em]">
-              Good morning,<br />
-              <span className="text-muted-foreground">rider_x.</span>
-            </h1>
-          </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5">
-            <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-primary)", boxShadow: "0 0 8px var(--color-primary)" }} />
-            <span className="text-mono-caps">Live</span>
-          </span>
-        </div>
-      </section>
-
-      {/* BENTO GRID */}
-      <section className="mt-6 grid grid-cols-6 gap-3 px-5">
-        {/* MY GARAGE — hero tile */}
-        <Link
-          to="/profile"
-          className="group relative col-span-6 overflow-hidden rounded-[28px] bg-foreground p-5 text-background"
-          style={{ minHeight: 220 }}
-        >
-          <div
-            className="absolute inset-0 opacity-70"
-            style={{ backgroundImage: `url(${myBike.cover})`, backgroundSize: "cover", backgroundPosition: "center" }}
-          />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.12 0.01 240 / 0.3), oklch(0.08 0.01 240 / 0.85))" }} />
-          <div className="relative flex h-full flex-col justify-between" style={{ minHeight: 190 }}>
-            <div className="flex items-start justify-between">
-              <span className="text-mono-caps text-white/70">Your garage · 1 bike</span>
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-white/10 backdrop-blur">
-                <ArrowUpRight className="h-4 w-4" />
-              </span>
-            </div>
-            <div>
-              <p className="text-mono-caps" style={{ color: "var(--color-primary)" }}>{myBike.year} · {myBike.type}</p>
-              <h2 className="mt-1 font-display text-[30px] leading-none tracking-tight">{myBike.name}</h2>
-              <div className="mt-4 flex items-center gap-4 text-[12px]">
-                <StatChip icon={<Gauge className="h-3.5 w-3.5" />} label={`${myBike.hp} HP`} />
-                <StatChip icon={<Wrench className="h-3.5 w-3.5" />} label={`${myBike.mods.length} mods`} />
-                <StatChip icon={<Zap className="h-3.5 w-3.5" />} label="18k mi" />
-              </div>
-            </div>
-          </div>
-        </Link>
-
-        {/* NEXT RIDE */}
-        <Link to="/events" className="col-span-4 overflow-hidden rounded-[24px] border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-mono-caps text-muted-foreground">Next ride</span>
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-muted">
-              <ArrowUpRight className="h-3.5 w-3.5" />
-            </span>
-          </div>
-          <p className="mt-3 font-display text-[13px] leading-none" style={{ color: "var(--color-primary)" }}>{nextEvent.date}</p>
-          <h3 className="mt-1.5 font-display text-[19px] leading-tight tracking-tight">{nextEvent.title}</h3>
-          <div className="mt-3 flex items-center gap-3 text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{nextEvent.location}</span>
-            <span>·</span>
-            <span>{nextEvent.attending} going</span>
-          </div>
-        </Link>
-
-        {/* WEEK STATS */}
-        <div className="col-span-2 flex flex-col justify-between overflow-hidden rounded-[24px] p-4" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
-          <span className="text-mono-caps opacity-60">This week</span>
-          <div>
-            <p className="font-display text-[36px] leading-none tracking-tight">247</p>
-            <p className="mt-1 text-[11px] opacity-70">miles ridden</p>
-            <div className="mt-3 flex h-1 w-full items-center gap-1">
-              {[0.4, 0.7, 0.3, 0.9, 0.5, 0.8, 1].map((v, i) => (
-                <span key={i} className="w-full rounded-full" style={{ height: `${v * 20}px`, background: "var(--color-primary)", opacity: 0.4 + v * 0.6 }} />
+      {/* Marquee ticker */}
+      <div className="overflow-hidden border-b border-ink bg-ink text-bone">
+        <div className="marquee mono-caps flex whitespace-nowrap py-1 text-[10px]">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <span key={i} className="flex shrink-0">
+              {[
+                "◇ CANYON DEVILS · SAT 20:00",
+                "▲ 3 NEW ARSENAL DROPS",
+                "◈ 12 SIGNALS PENDING",
+                "⌘ WIDEBODY MEET · BERLIN",
+                "⬢ WORKSHOP DUE · 20K MI",
+              ].map((t) => (
+                <span key={t} className="px-6 text-signal">{t}</span>
               ))}
-            </div>
-          </div>
-        </div>
-
-        {/* TRENDING BUILD */}
-        <div className="col-span-6 overflow-hidden rounded-[24px] border border-border bg-card">
-          <div className="flex items-center justify-between px-4 py-3">
-            <span className="inline-flex items-center gap-1.5 text-mono-caps text-muted-foreground">
-              <TrendingUp className="h-3.5 w-3.5" style={{ color: "var(--color-primary)" }} /> Trending build
             </span>
-            <span className="text-mono-caps text-muted-foreground">{featuredBuild.likes.toLocaleString()} ❤</span>
-          </div>
-          <div className="relative aspect-[16/10] w-full overflow-hidden">
-            <img src={featuredBuild.image} alt="" loading="lazy" className="h-full w-full object-cover" />
-            <div className="absolute inset-x-4 bottom-4 flex items-end justify-between gap-3">
-              <div className="max-w-[70%]">
-                <p className="font-display text-[11px]" style={{ color: "var(--color-primary)", textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}>{featuredBuild.vehicle?.year} · {featuredBuild.vehicle?.hp} HP</p>
-                <h3 className="mt-1 font-display text-[22px] leading-tight tracking-tight text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.55)" }}>{featuredBuild.vehicle?.name}</h3>
-              </div>
-              <span className="grid h-10 w-10 place-items-center rounded-full bg-white/95 backdrop-blur">
-                <ArrowUpRight className="h-4 w-4 text-foreground" />
-              </span>
-            </div>
-          </div>
-          <p className="px-4 py-3 text-[13px] leading-snug text-muted-foreground">"{featuredBuild.caption}"</p>
+          ))}
         </div>
-
-        {/* MARKETPLACE PICK */}
-        <Link to="/marketplace" className="col-span-3 overflow-hidden rounded-[24px] border border-border bg-card">
-          <div className="relative aspect-square w-full overflow-hidden">
-            <img src={marketPick.image} alt="" loading="lazy" className="h-full w-full object-cover" />
-            <span className="absolute left-2.5 top-2.5 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-medium backdrop-blur">
-              {marketPick.condition}
-            </span>
-          </div>
-          <div className="p-3">
-            <span className="text-mono-caps text-muted-foreground">Market pick</span>
-            <p className="mt-1.5 line-clamp-2 text-[13px] leading-tight">{marketPick.title}</p>
-            <p className="mt-2 font-display text-[18px] leading-none tracking-tight">{marketPick.price}</p>
-          </div>
-        </Link>
-
-        {/* CLUB */}
-        <Link to="/profile" className="col-span-3 flex flex-col overflow-hidden rounded-[24px] p-4" style={{ background: "var(--color-surface-2)" }}>
-          <span className="text-mono-caps text-muted-foreground">Your club</span>
-          <div className="mt-2 flex-1">
-            <img src={featuredClub.cover} alt="" loading="lazy" className="h-16 w-16 rounded-2xl object-cover" />
-            <h3 className="mt-3 font-display text-[19px] leading-tight tracking-tight">{featuredClub.name}</h3>
-            <p className="mt-1 text-[11px] text-muted-foreground">{featuredClub.city}</p>
-          </div>
-          <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
-            <span className="flex items-center gap-1 text-[11px] text-muted-foreground"><Users2 className="h-3 w-3" />{featuredClub.members.toLocaleString()}</span>
-            <span className="text-mono-caps" style={{ color: "var(--color-primary)" }}>3 new</span>
-          </div>
-        </Link>
-
-        {/* FRIENDS ACTIVITY */}
-        <div className="col-span-6 overflow-hidden rounded-[24px] border border-border bg-card p-4">
-          <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 text-mono-caps text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5" style={{ color: "var(--color-primary)" }} /> Friends activity
-            </span>
-            <button className="text-mono-caps text-muted-foreground">See all</button>
-          </div>
-          <ul className="mt-3 space-y-3">
-            {posts.slice(0, 3).map((p) => (
-              <li key={p.id} className="flex items-center gap-3">
-                <img src={p.user.avatar} alt="" className="h-10 w-10 shrink-0 rounded-full object-cover" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px]"><span className="font-medium">{p.user.name}</span> <span className="text-muted-foreground">posted a new build</span></p>
-                  <p className="text-mono-caps text-muted-foreground">{p.timeAgo} ago · {p.likes.toLocaleString()} ❤</p>
-                </div>
-                <img src={p.image} alt="" className="h-11 w-11 shrink-0 rounded-xl object-cover" />
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* WORKSHOPS RECO */}
-        <div className="col-span-6 overflow-hidden rounded-[24px] p-5" style={{ background: "linear-gradient(135deg, oklch(0.82 0.2 152 / 0.18), oklch(0.82 0.2 152 / 0.04))" }}>
-          <div className="flex items-center gap-2">
-            <span className="grid h-8 w-8 place-items-center rounded-full" style={{ background: "var(--color-primary)", color: "var(--color-primary-foreground)" }}>
-              <Wrench className="h-4 w-4" />
-            </span>
-            <span className="text-mono-caps">Workshops near {me.location.split(",")[0]}</span>
-          </div>
-          <h3 className="mt-3 font-display text-[22px] leading-tight tracking-tight">Book your next service — 3 verified shops within 5 mi</h3>
-          <div className="mt-4 flex items-center gap-2">
-            <button className="rounded-full bg-foreground px-5 py-2.5 font-display text-[13px] text-background">Browse workshops</button>
-            <button className="rounded-full border border-border bg-card/60 px-4 py-2.5 font-display text-[13px]">Later</button>
-          </div>
-        </div>
-      </section>
-
-      {/* Community feed */}
-      <section className="mt-10">
-        <div className="mb-4 flex items-end justify-between px-5">
-          <div>
-            <span className="text-mono-caps text-muted-foreground">The paddock</span>
-            <h2 className="mt-2 font-display text-[24px] leading-none tracking-tight">Fresh from the community</h2>
-          </div>
-          <button className="text-mono-caps text-muted-foreground">Filter</button>
-        </div>
-
-        <div className="flex flex-col">
-          {posts.map((p) => <PostCard key={p.id} post={p} />)}
-        </div>
-      </section>
-
-      <div className="mt-6 flex items-center justify-center gap-2 px-5 pb-4">
-        <Flame className="h-3.5 w-3.5" style={{ color: "var(--color-primary)" }} />
-        <p className="text-mono-caps text-muted-foreground">You're all caught up · Pull for more</p>
       </div>
-    </>
+
+      <div className="space-y-5 px-3 pt-4">
+        {/* PRIMARY UNIT */}
+        <section>
+          <SlashHeader label="PRIMARY UNIT" right={
+            <Link to="/profile" className="mono-caps text-ash tap">GARAGE →</Link>
+          } />
+          <Panel className="mt-3 grid grid-cols-[1fr_112px] overflow-hidden">
+            <div className="relative">
+              <img src={primary.cover} alt="" className="h-40 w-full object-cover" />
+              <div className="scanline absolute inset-0" />
+              <div className="absolute left-2 top-2 flex flex-col gap-1">
+                <span className="clip-tag mono-caps bg-signal px-2 py-0.5 text-[9px] font-bold text-ink">
+                  ACTIVE
+                </span>
+                <span className="mono-caps bg-ink/80 px-2 py-0.5 text-[9px] text-bone">{primary.type.toUpperCase()}</span>
+              </div>
+              <div className="panel-ink absolute inset-x-0 bottom-0 flex items-center justify-between px-2 py-1.5">
+                <span className="font-display text-xs uppercase">{primary.name}</span>
+                <span className="mono-num text-signal text-[10px]">{primary.year}</span>
+              </div>
+            </div>
+            <div className="flex flex-col items-stretch justify-between border-l border-ink bg-mist p-2">
+              <Stat k="HP" v={primary.hp} />
+              <Stat k="MI" v="17,840" />
+              <Stat k="MODS" v={primary.mods.length} accent />
+            </div>
+          </Panel>
+        </section>
+
+        {/* TELEMETRY GRID */}
+        <section className="grid grid-cols-3 gap-2">
+          <MetricTile label="RIDES" value="47" hint="+3 WK" />
+          <MetricTile label="MILES" value="1.2k" hint="THIS MO" />
+          <MetricTile label="RANK" value={`#${rider.level}`} hint={rider.title} tone="signal" />
+        </section>
+
+        {/* NEXT MISSION */}
+        <section>
+          <SlashHeader label="NEXT MISSION" right={
+            <Link to="/events" className="mono-caps text-ash tap">ALL →</Link>
+          } />
+          <Panel variant="ink" className="mt-3 grid grid-cols-[70px_1fr] overflow-hidden">
+            <div className="flex flex-col items-center justify-center border-r border-signal/40 py-3">
+              <span className="mono-caps text-signal">{nextEvent.date.split(" · ")[0]}</span>
+              <span className="font-display text-signal text-3xl leading-none">{nextEvent.date.split(" · ")[1].split(" ")[1]}</span>
+              <span className="mono-caps text-bone/60 mt-1">{nextEvent.time}</span>
+            </div>
+            <div className="flex flex-col justify-between p-3">
+              <div>
+                <p className="font-display text-base uppercase leading-tight">{nextEvent.title}</p>
+                <p className="mono-caps text-bone/60 mt-1">{nextEvent.location}</p>
+              </div>
+              <div className="mt-3 flex items-center gap-2">
+                <DataChip k="DIST" v={nextEvent.distance.replace(" away", "")} tone="signal" />
+                <DataChip k="RIDR" v={nextEvent.attending} />
+              </div>
+            </div>
+          </Panel>
+        </section>
+
+        {/* CLUBS */}
+        <section>
+          <SlashHeader label="CREWS" count={clubs.length} />
+          <div className="scrollbar-none mt-3 flex gap-2 overflow-x-auto">
+            {clubs.map((c) => (
+              <div key={c.id} className="panel clip-chamfer-sm w-40 shrink-0">
+                <img src={c.cover} alt="" className="h-16 w-full object-cover" />
+                <div className="p-2">
+                  <p className="font-display text-xs uppercase leading-tight">{c.name}</p>
+                  <div className="mono-caps text-ash mt-1 flex items-center justify-between">
+                    <span>{c.tag}</span>
+                    <span className="mono-num">{c.members}</span>
+                  </div>
+                  <TickBar value={Math.min(c.members, 3500)} max={3500} className="mt-1.5" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SIGNAL STREAM (feed) */}
+        <section>
+          <SlashHeader label="SIGNAL STREAM" count={posts.length} right={
+            <span className="mono-caps text-ash">LIVE</span>
+          } />
+          <div className="mt-3 space-y-4">
+            {posts.map((p, i) => (
+              <TelemetryPost key={p.id} post={p} index={i} />
+            ))}
+          </div>
+        </section>
+      </div>
+    </div>
   );
 }
 
-function StatChip({ icon, label }: { icon: React.ReactNode; label: string }) {
+function Stat({ k, v, accent }: { k: string; v: string | number; accent?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 backdrop-blur">
-      {icon}
-      <span className="text-mono-caps">{label}</span>
-    </span>
+    <div className={`border-b border-ink/20 py-1 last:border-b-0 ${accent ? "text-warn" : ""}`}>
+      <p className="mono-caps text-ash">{k}</p>
+      <p className="mono-num text-lg font-bold leading-tight">{v}</p>
+    </div>
+  );
+}
+
+function MetricTile({ label, value, hint, tone }: { label: string; value: string; hint: string; tone?: "signal" }) {
+  return (
+    <Panel variant={tone === "signal" ? "signal" : "bone"} className="p-2">
+      <p className="mono-caps opacity-70">{label}</p>
+      <p className="font-display mt-1 text-2xl leading-none">{value}</p>
+      <p className="mono-caps mt-1 opacity-60">{hint}</p>
+    </Panel>
   );
 }

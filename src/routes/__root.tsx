@@ -11,23 +11,21 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { BottomNav } from "@/components/BottomNav";
+import { SideRail } from "@/components/SideRail";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="max-w-md text-center">
-        <p className="text-mono-caps text-muted-foreground">Error · 404</p>
-        <h1 className="mt-3 font-display text-5xl tracking-tight">Off the map</h1>
-        <p className="mt-3 text-sm text-muted-foreground">This route doesn't exist. Let's get you back on the tarmac.</p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-full bg-foreground px-6 py-3 font-display text-sm text-background transition-transform hover:scale-[1.02]"
-          >
-            Return home
-          </Link>
-        </div>
+      <div className="panel clip-chamfer max-w-md p-8 text-center">
+        <p className="mono-caps text-ash">ERR · 404 · SIGNAL LOST</p>
+        <h1 className="font-display mt-3 text-4xl uppercase tracking-wide">Off the map</h1>
+        <p className="mt-3 text-sm text-ash">This grid coordinate is empty.</p>
+        <Link
+          to="/"
+          className="tap clip-chamfer-sm mono-caps mt-6 inline-flex items-center border border-ink bg-ink px-5 py-3 font-bold text-bone"
+        >
+          RETURN TO DECK
+        </Link>
       </div>
     </div>
   );
@@ -42,17 +40,17 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <div className="max-w-md text-center">
-        <p className="text-mono-caps text-muted-foreground">Something backfired</p>
-        <h1 className="mt-3 font-display text-3xl tracking-tight">Give it another kick</h1>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+      <div className="panel clip-chamfer max-w-md p-8 text-center">
+        <p className="mono-caps text-warn">ERR · SYS FAULT</p>
+        <h1 className="font-display mt-3 text-3xl uppercase tracking-wide">Backfire detected</h1>
+        <div className="mt-6 flex justify-center gap-2">
           <button
             onClick={() => { router.invalidate(); reset(); }}
-            className="rounded-full bg-foreground px-6 py-3 font-display text-sm text-background"
+            className="tap clip-chamfer-sm mono-caps border border-ink bg-signal px-5 py-3 font-bold text-ink"
           >
-            Retry
+            RETRY
           </button>
-          <a href="/" className="rounded-full border border-border px-6 py-3 font-display text-sm">Go home</a>
+          <a href="/" className="tap clip-chamfer-sm mono-caps border border-ink px-5 py-3 font-bold">DECK</a>
         </div>
       </div>
     </div>
@@ -64,13 +62,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#fafbfc" },
-      { title: "ZOMBIEREX — The motorcycle & car culture platform" },
-      { name: "description", content: "A premium platform for riders and drivers. Garage, rides, marketplace, workshops, clubs — all in one place." },
+      { name: "theme-color", content: "#0d0f14" },
+      { title: "ZOMBIEREX — Motorsport HUD for riders & drivers" },
+      { name: "description", content: "A telemetry-grade social platform for motorcycle & car culture. Command deck, missions, arsenal, dossier." },
       { name: "author", content: "ZOMBIEREX" },
       { property: "og:site_name", content: "ZOMBIEREX" },
       { property: "og:title", content: "ZOMBIEREX — Ride. Rev. Resurrect." },
-      { property: "og:description", content: "The premium motorcycle & car culture platform." },
+      { property: "og:description", content: "Telemetry-grade social platform for motorcycle & car culture." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@zombierex" },
@@ -80,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -108,11 +106,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="min-h-screen bg-background text-foreground">
-        <div className="mx-auto max-w-screen-sm pb-28">
+      <div className="grain min-h-screen bg-background text-foreground">
+        <SideRail />
+        <main className="ml-12 min-h-screen">
           <Outlet />
-        </div>
-        <BottomNav />
+        </main>
       </div>
     </QueryClientProvider>
   );
