@@ -138,13 +138,12 @@ export function InteractionBar({
                 aria-pressed={active}
                 className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
               >
-                <Icon
-                  size={18}
+                <span
                   className="transition-transform duration-200 ease-out group-active:scale-90"
-                  style={{
-                    color: accent ? "var(--color-neon)" : idleColor,
-                  }}
-                />
+                  style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
+                >
+                  <Icon size={18} />
+                </span>
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
