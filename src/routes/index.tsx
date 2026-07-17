@@ -230,7 +230,8 @@ function HomePage() {
           <span className="absolute left-3 top-14 mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>
             ▶ Autoplay · {featured.duration}s
           </span>
-        </div>
+        </Link>
+
       </section>
 
       {/* ==================================================
