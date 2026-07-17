@@ -11,6 +11,10 @@ import {
 import { Plus, Bell, MessageCircle } from "lucide-react";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
 import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
+import { SponsoredCard } from "@/components/SponsoredCard";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { listSponsoredCreatives } from "@/lib/ads.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
