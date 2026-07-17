@@ -153,39 +153,39 @@
 /* ============ TYPOGRAPHY UTILITIES ============ */
 
 @utility mono-caps {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 600;
 }
 @utility mono-tag {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 600;
   color: var(--color-ash);
 }
 @utility mono-num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 @utility display-xl {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  font-style: italic;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
 }
 @utility display-numeral {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.85;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }
+
 
 /* ============ CHIPS & BUTTONS ============ */
 
