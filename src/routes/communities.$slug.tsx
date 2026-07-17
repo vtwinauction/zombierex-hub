@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
-import { getCommunityBySlug, joinCommunity, leaveCommunity } from "@/lib/communities.functions";
+import { getCommunityBySlug, joinCommunity, leaveCommunity, listChallenges, listCommunityBadges } from "@/lib/communities.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 
@@ -17,7 +17,8 @@ export const Route = createFileRoute("/communities/$slug")({
   component: CommunityDetail,
 });
 
-const TABS = ["Feed", "Events", "Members", "About"] as const;
+const TABS = ["Feed", "Events", "Challenges", "Members", "About"] as const;
+
 
 function CommunityDetail() {
   const { slug } = Route.useParams();

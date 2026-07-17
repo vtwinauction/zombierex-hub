@@ -37,6 +37,7 @@ import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
 import { Route as AuthenticatedCommunitiesSlugPostNewRouteImport } from './routes/_authenticated/communities.$slug.post.new'
 import { Route as AuthenticatedCommunitiesSlugEventsNewRouteImport } from './routes/_authenticated/communities.$slug.events.new'
+import { Route as AuthenticatedCommunitiesSlugChallengesNewRouteImport } from './routes/_authenticated/communities.$slug.challenges.new'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -188,6 +189,12 @@ const AuthenticatedCommunitiesSlugEventsNewRoute =
     path: '/communities/$slug/events/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCommunitiesSlugChallengesNewRoute =
+  AuthenticatedCommunitiesSlugChallengesNewRouteImport.update({
+    id: '/communities/$slug/challenges/new',
+    path: '/communities/$slug/challenges/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
@@ -242,6 +250,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
@@ -273,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/_authenticated/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/_authenticated/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/_authenticated/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
   fileRoutesByTo: FileRoutesByTo
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
   id:
@@ -361,6 +373,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/_authenticated/communities/$slug/challenges/new'
     | '/_authenticated/communities/$slug/events/new'
     | '/_authenticated/communities/$slug/post/new'
   fileRoutesById: FileRoutesById
@@ -581,6 +594,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunitiesSlugEventsNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/communities/$slug/challenges/new': {
+      id: '/_authenticated/communities/$slug/challenges/new'
+      path: '/communities/$slug/challenges/new'
+      fullPath: '/communities/$slug/challenges/new'
+      preLoaderRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -632,6 +652,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
   AuthenticatedCommunitiesSlugPostNewRoute: typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
@@ -643,6 +664,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedCommunitiesSlugChallengesNewRoute:
+    AuthenticatedCommunitiesSlugChallengesNewRoute,
   AuthenticatedCommunitiesSlugEventsNewRoute:
     AuthenticatedCommunitiesSlugEventsNewRoute,
   AuthenticatedCommunitiesSlugPostNewRoute:
