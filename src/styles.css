@@ -313,12 +313,12 @@
 
 /* Story rings */
 @utility story-ring {
-  padding: 2px;
+  padding: 2.5px;
   border-radius: 999px;
-  background: conic-gradient(from 210deg, var(--color-neon), var(--color-gunmetal), var(--color-neon));
+  background: conic-gradient(from 210deg, var(--color-neon) 0deg, var(--color-ember) 140deg, var(--color-neon-deep) 260deg, var(--color-neon) 360deg);
 }
-@utility story-ring-seen { padding: 2px; border-radius: 999px; background: var(--color-hair-strong); }
-@utility story-ring-live { padding: 2px; border-radius: 999px; background: conic-gradient(from 0deg, var(--color-ember), var(--color-obsidian), var(--color-ember)); }
+@utility story-ring-seen { padding: 2.5px; border-radius: 999px; background: var(--color-hair-strong); }
+@utility story-ring-live { padding: 2.5px; border-radius: 999px; background: conic-gradient(from 0deg, var(--color-ember), #ff9a3a, var(--color-ember)); }
 
 /* Rider badges */
 @utility badge-metal {

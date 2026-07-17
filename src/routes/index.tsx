@@ -1,15 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { StatusBar } from "@/components/StatusBar";
 import { InteractionBar } from "@/components/InteractionBar";
-import { RiderBadge, RiderMark, type RiderTier } from "@/components/RiderBadge";
-import { reels, storiesV2, listings, events, users } from "@/lib/mock-data";
-
+import { RiderMark } from "@/components/RiderBadge";
+import {
+  IconClaw,
+  IconVisor,
+  IconMechClaw,
+  IconBoneMark,
+  IconGauge,
+} from "@/components/icons/RexIcons";
+import brandLogo from "@/assets/zombierex-logo.png.asset.json";
+import { reels, storiesV2, posts, chats } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ZOMBIEREX — Broadcast" },
-      { name: "description", content: "Editorial broadcast for motorcycle & automotive culture. Machine of the day, garage transmissions, marketplace, meets." },
+      { title: "ZOMBIEREX — Feed" },
+      { name: "description", content: "Stories, reels & garage posts for motorcycle and automotive culture." },
     ],
   }),
   component: HomePage,
@@ -17,292 +23,390 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
   const featured = reels[1];
-  const secondaryReel = reels[0];
-  const marketFeatured = listings[0];
-  const issue = "N° 047";
+  const gridReels = [reels[0], reels[2], reels[3]];
 
   return (
-    <div className="pb-16">
-      <StatusBar index="01" section="HOME · TRANSMISSION" />
-
+    <div className="pb-24">
       {/* ==================================================
-         EDITORIAL MASTHEAD — Machine of the Day
-         Asymmetric split: serif title over cinematic image,
-         floating spec-card overlaps into next section.
+         TOP BAR — Instagram-style masthead
+         Logo left · camera + chat right (Snap DNA)
          ================================================== */}
-      <section className="rise relative pt-6">
-        {/* Issue / date rail */}
-        <div className="flex items-center gap-3 px-4">
-          <span className="mono-tag">Issue {issue}</span>
-          <span className="etch flex-1" />
-          <span className="mono-tag" style={{ color: "var(--color-neon)" }}>● Live · {featured.location}</span>
-        </div>
-
-        {/* Serif title */}
-        <div className="mt-4 px-4">
-          <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Machine of the day</p>
-          <h1 className="mt-1.5 serif text-[52px] leading-[0.9]" style={{ color: "var(--color-ink)" }}>
-            <span className="italic">The&nbsp;</span>
-            <span>{featured.vehicle?.name?.split(" ")[0]}</span>
-            <br />
-            <span className="italic" style={{ color: "var(--color-neon)" }}>{featured.vehicle?.name?.split(" ").slice(1).join(" ") || "Widebody"}</span>
+      <header
+        className="sticky top-0 z-40 flex items-center justify-between px-4 pb-3 pt-[max(env(safe-area-inset-top),12px)]"
+        style={{
+          background: "color-mix(in oklab, var(--color-obsidian) 82%, transparent)",
+          backdropFilter: "blur(18px) saturate(160%)",
+          borderBottom: "1px solid var(--color-hair)",
+        }}
+      >
+        <div className="flex items-center gap-2.5">
+          <div
+            className="grid h-8 w-8 place-items-center overflow-hidden rounded-full"
+            style={{ boxShadow: "0 0 0 1px rgba(198,255,61,0.35), 0 0 16px -4px rgba(198,255,61,0.45)" }}
+          >
+            <img src={brandLogo.url} alt="ZOMBIEREX" className="h-full w-full object-cover" />
+          </div>
+          <h1 className="serif text-[26px] italic leading-none" style={{ color: "var(--color-ink)" }}>
+            Zombierex
           </h1>
-          <p className="mt-3 max-w-[28ch] text-[13px] leading-snug" style={{ color: "var(--color-silver)" }}>
-            A widebody GT86 built between two winters in a Tempelhof hangar — 340&nbsp;hp, hand-flared arches, one obsession.
-          </p>
         </div>
-
-        {/* Cinematic asymmetric image + vertical spine label */}
-        <div className="relative mt-5 pl-4">
-          <Link to="/" className="tap group relative block">
-            <div className="relative aspect-[4/5] w-full overflow-hidden" style={{ borderTop: "1px solid var(--color-hair)", borderLeft: "1px solid var(--color-hair)", borderBottom: "1px solid var(--color-hair)" }}>
-              <img src={featured.poster} alt="" className="ken-burns h-full w-full object-cover" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, rgba(0,0,0,0.75) 100%)" }} />
-              {/* corner ticks */}
-              <span className="pointer-events-none absolute left-2 top-2 h-3 w-3 border-l border-t border-white/70" />
-              <span className="pointer-events-none absolute right-2 top-2 h-3 w-3 border-r border-t border-white/70" />
-              <span className="pointer-events-none absolute left-2 bottom-2 h-3 w-3 border-l border-b border-white/70" />
-              <span className="pointer-events-none absolute right-2 bottom-2 h-3 w-3 border-r border-b border-white/70" />
-
-              {/* caption plate */}
-              <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                <div className="flex items-end justify-between gap-4">
-                  <div>
-                    <p className="mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {featured.location}</p>
-                    <p className="serif mt-1 flex items-center gap-2 italic text-lg leading-tight">
-                      <span>Built by <span style={{ color: "var(--color-neon)" }}>{featured.user.handle}</span></span>
-                      <RiderMark tier="APEX_REX" />
-                    </p>
-                  </div>
-                  <span className="mono-caps px-2 py-1" style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.25)" }}>
-                    Watch →
-                  </span>
-                </div>
-              </div>
-            </div>
+        <div className="flex items-center gap-2">
+          <IconChip label="Capture"><IconLens18 /></IconChip>
+          <Link to="/notifications" aria-label="Signals" className="tap relative grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)" }}>
+            <IconClaw size={16} />
+            <span className="engine-pulse absolute right-1 top-1 h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-ember)" }} />
           </Link>
-
-          {/* vertical spine */}
-          <div className="pointer-events-none absolute left-0 top-0 flex h-full w-4 items-center justify-center">
-            <span className="spine">Zombierex · {issue} · Tempelhof</span>
-          </div>
+          <Link to="/messages" aria-label="Messages" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)" }}>
+            <IconGauge size={16} />
+          </Link>
         </div>
-
-        {/* ── Interaction Bar (Like · Comment · Views · Share · Save) ── */}
-        <div className="relative z-10 -mt-5 px-4">
-          <InteractionBar
-            variant="dark"
-            targetId={`reel:${featured.id}`}
-            counts={{
-              likes: featured.likes,
-              comments: featured.comments,
-              views: featured.views,
-              shares: featured.shares,
-            }}
-          />
-        </div>
-
-        {/* Floating spec card */}
-        <div className="relative mt-4 px-4">
-          <div className="surface-brushed lift-2 grid grid-cols-4 divide-x" style={{ borderRadius: 3, borderColor: "var(--color-hair-strong)" }}>
-            <Spec k="Power" v={`${featured.vehicle?.hp}`} u="hp" />
-            <Spec k="Torque" v="284" u="nm" />
-            <Spec k="0–100" v="4.2" u="s" />
-            <Spec k="Weight" v="1180" u="kg" accent />
-          </div>
-        </div>
-      </section>
-
+      </header>
 
       {/* ==================================================
-         GARAGE TRANSMISSIONS — stories rail
+         STORIES RAIL — IG + Snap hybrid
+         First tile is a camera-first "Your story" (Snap DNA)
+         Ring gradients use logo colors (neon → ember)
          ================================================== */}
-      <section className="mt-10">
-        <SectionHead kicker="Transmissions" title="From the garages" count={storiesV2.length} />
-        <div className="no-scrollbar mt-4 flex gap-3 overflow-x-auto px-4 pb-1">
+      <section className="mt-3">
+        <div className="no-scrollbar flex gap-3.5 overflow-x-auto px-4 pb-3">
           {storiesV2.map((s, i) => {
+            const isYou = i === 0;
             const ringClass = s.live ? "story-ring-live" : s.seen ? "story-ring-seen" : "story-ring";
             return (
-              <div key={s.id} className="shrink-0" style={{ width: 76 }}>
+              <button key={s.id} className="tap shrink-0 flex flex-col items-center" style={{ width: 68 }}>
                 <div className={ringClass}>
-                  <div style={{ background: "var(--color-obsidian)", padding: 2 }}>
-                    <div className="relative h-[70px] w-[70px] overflow-hidden">
+                  <div style={{ background: "var(--color-obsidian)", padding: 2, borderRadius: 999 }}>
+                    <div className="relative h-[60px] w-[60px] overflow-hidden rounded-full">
                       <img src={s.cover} alt="" className="h-full w-full object-cover" />
-                      {i === 0 && (
-                        <span className="absolute bottom-1 right-1 grid h-5 w-5 place-items-center" style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", fontSize: 13, fontWeight: 700 }}>+</span>
+                      {isYou && (
+                        <span
+                          className="absolute -bottom-0.5 -right-0.5 grid h-5 w-5 place-items-center rounded-full text-[13px] font-bold leading-none"
+                          style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", boxShadow: "0 0 0 2px var(--color-obsidian)" }}
+                        >
+                          +
+                        </span>
                       )}
                       {s.live && (
-                        <span className="absolute inset-x-0 bottom-0 py-0.5 text-center mono-tag" style={{ background: "var(--color-ember)", color: "white" }}>LIVE</span>
+                        <span
+                          className="absolute inset-x-1 bottom-1 rounded-sm py-[1px] text-center"
+                          style={{ background: "var(--color-ember)", color: "white", fontSize: 8, letterSpacing: "0.14em", fontWeight: 700, fontFamily: "var(--font-mono)" }}
+                        >
+                          LIVE
+                        </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <p className="mt-1.5 truncate text-center mono-tag">
-                  {i === 0 ? "You" : s.user.handle.replace("@","")}
+                <p className="mt-1.5 max-w-[64px] truncate text-[11px]" style={{ color: "var(--color-silver)" }}>
+                  {isYou ? "Your story" : s.user.handle.replace("@", "")}
                 </p>
-              </div>
+              </button>
             );
           })}
         </div>
+        <div style={{ height: 1, background: "var(--color-hair)" }} />
       </section>
 
       {/* ==================================================
-         BROADCAST — Editorial reel grid (asymmetric)
+         FEATURED REEL — TikTok DNA
+         Edge-to-edge vertical media, side action rail,
+         music ticker along the bottom.
          ================================================== */}
-      <section className="mt-10 px-4">
-        <SectionHead kicker="Broadcast" title="Watch tonight" link="/" />
-        <div className="mt-4 grid grid-cols-5 gap-2">
-          <div className="col-span-3">
-            <ReelTile reel={secondaryReel} tall />
+      <section className="mt-4 px-4">
+        <div className="mb-2 flex items-center justify-between">
+          <p className="mono-tag" style={{ color: "var(--color-neon)" }}>● For you · Reels</p>
+          <Link to="/" className="mono-tag" style={{ color: "var(--color-silver)" }}>See all →</Link>
+        </div>
+        <div
+          className="relative overflow-hidden"
+          style={{ aspectRatio: "9/14", borderRadius: 18, border: "1px solid var(--color-hair)" }}
+        >
+          <img src={featured.poster} alt="" className="ken-burns h-full w-full object-cover" />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 30%, rgba(0,0,0,0.85) 100%)" }} />
+
+          {/* top row — user + follow */}
+          <div className="absolute inset-x-3 top-3 flex items-center gap-2">
+            <img src={featured.user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" style={{ boxShadow: "0 0 0 1.5px var(--color-neon)" }} />
+            <div className="min-w-0 flex-1">
+              <p className="flex items-center gap-1.5 text-[13px] font-semibold text-white">
+                {featured.user.handle} <RiderMark tier="APEX_REX" />
+              </p>
+              <p className="mono-tag" style={{ color: "rgba(255,255,255,0.7)" }}>◎ {featured.location}</p>
+            </div>
+            <button
+              className="tap rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+              style={{ background: "var(--color-ember)", color: "white", letterSpacing: "0.14em" }}
+            >
+              Follow
+            </button>
           </div>
-          <div className="col-span-2 flex flex-col gap-2">
-            <ReelTile reel={reels[2]} />
-            <ReelTile reel={reels[3]} />
+
+          {/* TikTok-style right action rail */}
+          <div className="absolute bottom-20 right-3 flex flex-col items-center gap-4 text-white">
+            <RailBtn Icon={IconClaw} count={fmt(featured.likes)} active tint="var(--color-ember)" />
+            <RailBtn Icon={IconVisor} count={fmt(featured.comments)} />
+            <RailBtn Icon={IconBoneMark} count="Save" />
+            <RailBtn Icon={IconMechClaw} count={fmt(featured.shares)} />
+            <div className="mt-1 h-9 w-9 overflow-hidden rounded-full border-2 border-white" style={{ animation: "ken-burns 18s linear infinite" }}>
+              <img src={featured.user.avatar} alt="" className="h-full w-full object-cover" />
+            </div>
           </div>
+
+          {/* caption + music ticker */}
+          <div className="absolute inset-x-3 bottom-3 pr-16 text-white">
+            <p className="text-[13px] leading-snug">
+              {featured.caption}
+            </p>
+            <p className="mt-1.5 text-[11px]" style={{ color: "rgba(255,255,255,0.75)" }}>
+              {featured.hashtags.slice(0, 3).join(" ")}
+            </p>
+            <div className="mt-2.5 flex items-center gap-2 overflow-hidden">
+              <span
+                className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px]"
+                style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)" }}
+              >
+                ♫
+              </span>
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <p className="marquee whitespace-nowrap text-[11px]" style={{ color: "rgba(255,255,255,0.9)" }}>
+                  {featured.music.title} — {featured.music.artist} · original sound · {featured.views} views · &nbsp;
+                  {featured.music.title} — {featured.music.artist} ·&nbsp;
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* play indicator */}
+          <span className="absolute left-3 top-14 mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>
+            ▶ Autoplay · {featured.duration}s
+          </span>
         </div>
       </section>
 
       {/* ==================================================
-         THE VAULT — Editorial listing card (paper insert)
+         QUICK CHATS — Snap-style horizontal chat strip
          ================================================== */}
-      <section className="mt-10 px-4">
-        <SectionHead kicker="The Vault" title="Fresh in the market" link="/marketplace" />
-        <Link to="/marketplace" className="tap mt-4 block">
-          <article className="surface-paper lift-2 relative overflow-hidden" style={{ borderRadius: 2 }}>
-            <div className="grid grid-cols-5">
-              <div className="col-span-3 aspect-square overflow-hidden">
-                <img src={marketFeatured.image} alt="" className="h-full w-full object-cover" />
-              </div>
-              <div className="col-span-2 flex flex-col justify-between p-4" style={{ borderLeft: "1px solid #d9d4c6" }}>
-                <div>
-                  <p className="mono-tag" style={{ color: "#8a8577" }}>Lot 001 · {marketFeatured.category}</p>
-                  <p className="serif mt-2 text-[18px] italic leading-tight" style={{ color: "var(--color-obsidian)" }}>
-                    {marketFeatured.title}
-                  </p>
+      <section className="mt-8">
+        <div className="mb-3 flex items-end justify-between px-4">
+          <div>
+            <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Comms</p>
+            <h2 className="serif text-[20px] italic leading-none" style={{ color: "var(--color-ink)" }}>Recent chats</h2>
+          </div>
+          <Link to="/messages" className="mono-tag" style={{ color: "var(--color-neon)" }}>Open →</Link>
+        </div>
+        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4">
+          {chats.map((c) => (
+            <Link
+              key={c.id}
+              to="/messages"
+              className="tap shrink-0"
+              style={{ width: 168 }}
+            >
+              <div
+                className="flex flex-col items-start gap-2 p-3"
+                style={{
+                  background: c.unread > 0 ? "linear-gradient(160deg, rgba(198,255,61,0.10), rgba(255,91,58,0.06))" : "var(--color-graphite)",
+                  border: `1px solid ${c.unread > 0 ? "rgba(198,255,61,0.35)" : "var(--color-hair)"}`,
+                  borderRadius: 14,
+                }}
+              >
+                <div className="flex w-full items-center gap-2">
+                  <div className="relative">
+                    <img src={c.user.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
+                    {c.online && (
+                      <span
+                        className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full"
+                        style={{ background: "var(--color-neon)", boxShadow: "0 0 0 2px var(--color-graphite)" }}
+                      />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[12px] font-semibold" style={{ color: "var(--color-ink)" }}>
+                      {c.user.name}
+                    </p>
+                    <p className="mono-tag" style={{ fontSize: 8.5, color: "var(--color-titanium)" }}>{c.timeAgo}</p>
+                  </div>
+                  {c.unread > 0 && (
+                    <span
+                      className="grid h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] font-bold"
+                      style={{ background: "var(--color-ember)", color: "white" }}
+                    >
+                      {c.unread}
+                    </span>
+                  )}
                 </div>
-                <div>
-                  <p className="mono-tag" style={{ color: "#8a8577" }}>Asking</p>
-                  <p className="serif mt-1 text-4xl" style={{ color: "var(--color-obsidian)", lineHeight: 0.9 }}>{marketFeatured.price.replace("$","$")}</p>
-                  <p className="mono-tag mt-2" style={{ color: "#8a8577" }}>◎ {marketFeatured.location}</p>
-                </div>
+                <p className="line-clamp-2 text-[11.5px] leading-snug" style={{ color: "var(--color-silver)" }}>
+                  {c.lastMessage}
+                </p>
               </div>
-            </div>
-            {/* paper edge shadow */}
-            <span className="pointer-events-none absolute inset-x-0 top-0 h-1" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.08), transparent)" }} />
-          </article>
-        </Link>
-      </section>
-
-      {/* ==================================================
-         OPERATIONS — Meets timetable
-         ================================================== */}
-      <section className="mt-10">
-        <SectionHead kicker="Operations" title="Upcoming meets" link="/events" className="px-4" />
-        <div className="mt-3 hairline-t hairline-b">
-          {events.slice(0, 3).map((e, i) => (
-            <Link key={e.id} to="/events" className="tap grid grid-cols-[56px_1fr_auto] items-center gap-4 border-b border-hair px-4 py-4 last:border-b-0">
-              <span className="serif text-3xl italic" style={{ color: "var(--color-titanium)" }}>{String(i + 1).padStart(2, "0")}</span>
-              <div>
-                <p className="mono-tag">{e.date} · {e.time}</p>
-                <p className="serif mt-0.5 text-[17px] leading-tight" style={{ color: "var(--color-ink)" }}>{e.title}</p>
-                <p className="mono-tag mt-1" style={{ color: "var(--color-silver)" }}>◎ {e.location}</p>
-              </div>
-              <span className="mono-num text-sm font-semibold" style={{ color: "var(--color-neon)" }}>{e.attending}</span>
             </Link>
           ))}
         </div>
       </section>
 
       {/* ==================================================
-         PILOTS — Riders strip with rider status tiers
+         FEED — Instagram DNA
+         Square media · caption · InteractionBar
          ================================================== */}
-      <section className="mt-10 px-4">
-        <SectionHead kicker="Pilots" title="Signals nearby" />
-        <div className="mt-4 grid grid-cols-3 gap-2">
-          {users.map((u, i) => {
-            const tiers: RiderTier[] = ["APEX_REX", "LEGEND", "MASTER_BUILDER"];
-            const tier = tiers[i % tiers.length];
-            return (
-              <div key={u.id} className="surface-1 flex flex-col items-center p-3 text-center" style={{ borderRadius: 3 }}>
-                <div className="relative">
-                  <div className="mx-auto h-14 w-14 overflow-hidden hex-frame">
-                    <img src={u.avatar} alt="" className="h-full w-full object-cover" />
-                  </div>
-                  <span className="absolute -bottom-1 -right-1">
-                    <RiderMark tier={tier} />
-                  </span>
-                </div>
-                <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>P·{String(i + 1).padStart(2, "0")}</p>
-                <p className="serif mt-0.5 truncate text-[13px] italic" style={{ color: "var(--color-ink)" }}>{u.name}</p>
-                <div className="mt-1.5">
-                  <RiderBadge tier={tier} compact />
+      <section className="mt-8 space-y-6">
+        {posts.map((p, idx) => (
+          <article key={p.id} className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
+            {/* post header */}
+            <div className="flex items-center gap-2.5 px-4 pb-2.5">
+              <div className="story-ring">
+                <div style={{ background: "var(--color-obsidian)", padding: 1.5, borderRadius: 999 }}>
+                  <img src={p.user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
                 </div>
               </div>
-            );
-          })}
-        </div>
+              <div className="min-w-0 flex-1">
+                <p className="flex items-center gap-1.5 truncate text-[13px] font-semibold" style={{ color: "var(--color-ink)" }}>
+                  {p.user.handle}
+                  {p.user.verified && <RiderMark tier="LEGEND" />}
+                </p>
+                <p className="mono-tag" style={{ fontSize: 8.5 }}>◎ {p.user.location} · {p.timeAgo}</p>
+              </div>
+              <button aria-label="More" className="tap px-2 text-lg leading-none" style={{ color: "var(--color-silver)" }}>⋯</button>
+            </div>
+
+            {/* square media */}
+            <div className="relative">
+              <img src={p.image} alt="" className="block aspect-square w-full object-cover" />
+              {p.vehicle && (
+                <div
+                  className="absolute left-3 bottom-3 flex items-center gap-1.5 rounded-full px-2 py-1"
+                  style={{ background: "rgba(8,9,11,0.7)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.14)" }}
+                >
+                  <span style={{ color: "var(--color-neon)" }}>◇</span>
+                  <span className="text-[11px] font-semibold text-white">{p.vehicle.name}</span>
+                  <span className="mono-num text-[10px]" style={{ color: "var(--color-neon)" }}>{p.vehicle.hp}hp</span>
+                </div>
+              )}
+            </div>
+
+            {/* interaction bar */}
+            <div className="px-4 pt-3">
+              <InteractionBar
+                variant="dark"
+                targetId={`post:${p.id}`}
+                counts={{
+                  likes: p.likes,
+                  comments: p.comments,
+                  views: fmt(Math.round(p.likes * 6.2)),
+                  shares: Math.round(p.likes * 0.08),
+                }}
+              />
+            </div>
+
+            {/* caption */}
+            <div className="mt-3 px-4">
+              <p className="text-[13.5px] leading-snug" style={{ color: "var(--color-ink)" }}>
+                <span className="font-semibold">{p.user.handle}</span>{" "}
+                {p.caption}
+              </p>
+              <p className="mt-1 text-[12.5px]" style={{ color: "var(--color-neon)" }}>
+                {p.tags.join(" ")}
+              </p>
+              {p.comments > 0 && (
+                <button className="mt-1.5 text-[12px]" style={{ color: "var(--color-titanium)" }}>
+                  View all {p.comments} comments
+                </button>
+              )}
+            </div>
+          </article>
+        ))}
       </section>
 
-
-      {/* Colophon */}
-      <footer className="mt-14 px-4">
-        <div className="etch" />
-        <div className="mt-3 flex items-center justify-between">
-          <p className="mono-tag">© Zombierex · {issue}</p>
-          <p className="serif italic text-sm" style={{ color: "var(--color-titanium)" }}>
-            Ride. Rev. Resurrect.
-          </p>
+      {/* ==================================================
+         REEL GRID — TikTok "For You" tail
+         ================================================== */}
+      <section className="mt-10 px-4">
+        <div className="mb-3 flex items-end justify-between">
+          <div>
+            <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Discover</p>
+            <h2 className="serif text-[20px] italic leading-none" style={{ color: "var(--color-ink)" }}>More reels</h2>
+          </div>
+          <Link to="/search" className="mono-tag" style={{ color: "var(--color-neon)" }}>Explore →</Link>
         </div>
-      </footer>
+        <div className="grid grid-cols-3 gap-1">
+          {gridReels.map((r) => (
+            <Link key={r.id} to="/" className="tap relative block overflow-hidden" style={{ aspectRatio: "9/16", borderRadius: 8 }}>
+              <img src={r.poster} alt="" className="h-full w-full object-cover" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.85))" }} />
+              <div className="absolute inset-x-1.5 bottom-1.5 text-white">
+                <div className="flex items-center gap-1">
+                  <IconClaw size={11} />
+                  <span className="mono-num text-[10px]">{fmt(r.likes)}</span>
+                </div>
+              </div>
+              <span className="absolute right-1.5 top-1.5 mono-tag" style={{ background: "rgba(0,0,0,0.55)", color: "white", padding: "1px 4px", fontSize: 8 }}>
+                ▶ {r.duration}s
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
 
-function SectionHead({ kicker, title, link, count, className }: { kicker: string; title: string; link?: string; count?: number; className?: string }) {
-  return (
-    <div className={`flex items-end justify-between px-4 ${className ?? ""}`}>
-      <div>
-        <p className="mono-tag">{kicker}</p>
-        <h2 className="serif mt-0.5 text-[22px] italic leading-none" style={{ color: "var(--color-ink)" }}>{title}</h2>
-      </div>
-      {count != null && <span className="mono-num text-xs" style={{ color: "var(--color-titanium)" }}>{String(count).padStart(3, "0")}</span>}
-      {link && (
-        <Link to={link} className="mono-tag" style={{ color: "var(--color-neon)" }}>See all →</Link>
-      )}
-    </div>
-  );
-}
+/* -------- helpers -------- */
 
-function Spec({ k, v, u, accent }: { k: string; v: string | number; u?: string; accent?: boolean }) {
+function RailBtn({
+  Icon,
+  count,
+  active,
+  tint,
+}: {
+  Icon: React.ComponentType<{ size?: number }>;
+  count: string;
+  active?: boolean;
+  tint?: string;
+}) {
   return (
-    <div className="px-3 py-3">
-      <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 8.5 }}>{k}</p>
-      <p className="serif mt-1 text-2xl italic" style={{ color: accent ? "var(--color-neon)" : "var(--color-ink)", lineHeight: 0.9 }}>
-        {v}
-        {u && <span className="mono ml-1 text-[10px]" style={{ color: "var(--color-silver)" }}>{u}</span>}
-      </p>
-    </div>
-  );
-}
-
-function ReelTile({ reel, tall }: { reel: (typeof reels)[number]; tall?: boolean }) {
-  return (
-    <Link to="/" className="tap group relative block overflow-hidden" style={{ aspectRatio: tall ? "3/4" : "3/2", border: "1px solid var(--color-hair)" }}>
-      <img src={reel.poster} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)" }} />
-      <div className="absolute inset-x-0 bottom-0 p-2 text-white">
-        <p className="serif italic text-sm leading-none">{reel.user.handle}</p>
-        <p className="mono-num text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>{reel.views} views</p>
-      </div>
-      <span className="mono-caps absolute right-2 top-2 px-1.5 py-0.5" style={{ background: "rgba(0,0,0,0.55)", color: "white", fontSize: 8.5 }}>
-        ▶ {String(reel.duration).padStart(2, "0")}s
+    <button className="tap flex flex-col items-center gap-1">
+      <span
+        className="grid h-11 w-11 place-items-center rounded-full"
+        style={{
+          background: "rgba(0,0,0,0.35)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.15)",
+          color: active ? tint : "white",
+        }}
+      >
+        <Icon size={20} />
       </span>
-    </Link>
+      <span className="mono-num text-[10.5px] font-semibold" style={{ color: "white" }}>{count}</span>
+    </button>
+  );
+}
+
+function IconChip({ children }: { children: React.ReactNode; label?: string }) {
+  return (
+    <button
+      aria-label="Capture"
+      className="tap grid h-9 w-9 place-items-center rounded-full"
+      style={{
+        background: "linear-gradient(140deg, var(--color-neon) 0%, var(--color-neon-deep) 55%, var(--color-ember) 130%)",
+        color: "var(--color-obsidian)",
+        boxShadow: "0 6px 18px -6px rgba(198,255,61,0.6)",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+function IconLens18() {
+  return (
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </svg>
   );
 }
 
 function fmt(n: number) {
-  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + "M";
-  if (n >= 1_000) return (n / 1_000).toFixed(1) + "K";
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   return String(n);
 }
