@@ -28,7 +28,6 @@ import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
-import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
 
 const SearchRoute = SearchRouteImport.update({
@@ -130,12 +129,6 @@ const AuthenticatedAdminVendorsRoute =
     path: '/vendors',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
-const ApiPublicWebhooksPaymentsRoute =
-  ApiPublicWebhooksPaymentsRouteImport.update({
-    id: '/api/public/webhooks/payments',
-    path: '/api/public/webhooks/payments',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AuthenticatedAdminVendorsIdRoute =
   AuthenticatedAdminVendorsIdRouteImport.update({
     id: '/$id',
@@ -163,7 +156,6 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -183,7 +175,6 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -207,7 +198,6 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
-  '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,7 +221,6 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/vendor/'
     | '/admin/vendors/$id'
-    | '/api/public/webhooks/payments'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -251,7 +240,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/vendor'
     | '/admin/vendors/$id'
-    | '/api/public/webhooks/payments'
   id:
     | '__root__'
     | '/'
@@ -274,7 +262,6 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
-    | '/api/public/webhooks/payments'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -289,7 +276,6 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
-  ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -427,13 +413,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVendorsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
-    '/api/public/webhooks/payments': {
-      id: '/api/public/webhooks/payments'
-      path: '/api/public/webhooks/payments'
-      fullPath: '/api/public/webhooks/payments'
-      preLoaderRoute: typeof ApiPublicWebhooksPaymentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_authenticated/admin/vendors/$id': {
       id: '/_authenticated/admin/vendors/$id'
       path: '/$id'
@@ -513,7 +492,6 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
-  ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
