@@ -45,13 +45,14 @@ function NavPill({ item, active }: { item: Item; active: boolean }) {
   return (
     <Link
       to={item.to}
-      className="group relative flex items-center gap-2 rounded-full px-3.5 py-2.5 transition-colors"
+      className="group relative flex flex-col items-center gap-1 rounded-full px-3 py-1.5 transition-colors"
       style={active
-        ? { background: "var(--color-foreground)", color: "var(--color-background)" }
+        ? { color: "var(--color-foreground)" }
         : { color: "var(--color-muted-foreground)" }}
     >
-      <Icon className="h-[18px] w-[18px]" strokeWidth={active ? 2.4 : 2} />
-      <span className={`font-display text-[13px] leading-none ${active ? "inline" : "hidden"}`}>{item.label}</span>
+      <Icon className="h-[19px] w-[19px]" strokeWidth={active ? 2.4 : 2} />
+      <span className="font-display text-[10px] leading-none tracking-wide">{item.label}</span>
+      {active ? <span className="absolute -bottom-0.5 h-1 w-1 rounded-full" style={{ background: "var(--color-primary)" }} /> : null}
     </Link>
   );
 }

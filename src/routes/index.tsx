@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
+import { PostCard } from "@/components/PostCard";
 import { events, listings, myVehicles, posts, clubs, me } from "@/lib/mock-data";
 import { ArrowUpRight, Flame, Gauge, MapPin, Sparkles, TrendingUp, Users2, Wrench, Zap } from "lucide-react";
 
@@ -188,9 +189,24 @@ function HubPage() {
         </div>
       </section>
 
-      <div className="mt-10 flex items-center justify-center gap-2 px-5">
+      {/* Community feed */}
+      <section className="mt-10">
+        <div className="mb-4 flex items-end justify-between px-5">
+          <div>
+            <span className="text-mono-caps text-muted-foreground">The paddock</span>
+            <h2 className="mt-2 font-display text-[24px] leading-none tracking-tight">Fresh from the community</h2>
+          </div>
+          <button className="text-mono-caps text-muted-foreground">Filter</button>
+        </div>
+
+        <div className="flex flex-col">
+          {posts.map((p) => <PostCard key={p.id} post={p} />)}
+        </div>
+      </section>
+
+      <div className="mt-6 flex items-center justify-center gap-2 px-5 pb-4">
         <Flame className="h-3.5 w-3.5" style={{ color: "var(--color-primary)" }} />
-        <p className="text-mono-caps text-muted-foreground">End of feed · Pull for more</p>
+        <p className="text-mono-caps text-muted-foreground">You're all caught up · Pull for more</p>
       </div>
     </>
   );
