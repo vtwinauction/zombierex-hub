@@ -87,19 +87,19 @@ function ProfilePage() {
       </section>
 
 
-      {/* Tabs */}
-      <div className="mt-4 px-5">
-        <div className="flex items-center gap-1 rounded-full border border-border bg-card p-1">
+      {/* Tabs — horizontally scrollable pill row */}
+      <div className="mt-4">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto px-5 pb-1">
           {tabs.map((t) => {
             const on = tab === t;
             return (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className="flex-1 rounded-full py-2 font-display text-[12px] transition-colors"
+                className="tap-press shrink-0 rounded-full border px-4 py-2 font-display text-[12px] transition-colors"
                 style={on
-                  ? { background: "var(--color-foreground)", color: "var(--color-background)" }
-                  : { color: "var(--color-muted-foreground)" }}
+                  ? { background: "var(--color-foreground)", color: "var(--color-background)", borderColor: "var(--color-foreground)" }
+                  : { color: "var(--color-muted-foreground)", borderColor: "var(--color-border)", background: "var(--color-card)" }}
               >
                 {t}
               </button>
@@ -107,6 +107,7 @@ function ProfilePage() {
           })}
         </div>
       </div>
+
 
       {/* Tab content */}
       {tab === "Garage" ? (
