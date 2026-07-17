@@ -42,6 +42,13 @@ function HomePage() {
   const suggestedCreators = users.slice(0, 6);
   const suggestedClubs = clubs.slice(0, 4);
   const feedPosts = tab === "following" ? posts.filter((_, i) => i % 2 === 0) : posts;
+  const listAds = useServerFn(listSponsoredCreatives);
+  const sponsored = useQuery({
+    queryKey: ["ads", "feed"],
+    queryFn: () => listAds({ data: { placement: "feed", limit: 3 } }),
+    staleTime: 5 * 60_000,
+  });
+
 
 
   return (
