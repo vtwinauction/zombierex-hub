@@ -3123,57 +3123,99 @@ export type Database = {
     Views: {
       vendors_public: {
         Row: {
+          address_line1: string | null
           business_name: string | null
           business_type: string | null
           city: string | null
+          contact_channels: Json | null
           country: string | null
+          cover_url: string | null
           created_at: string | null
           description: string | null
+          email: string | null
+          followers_count: number | null
+          gallery: Json | null
           id: string | null
+          is_premium: boolean | null
           is_verified: boolean | null
           lat: number | null
           lng: number | null
+          logo_url: string | null
           operating_hours: Json | null
+          phone: string | null
+          portfolio: Json | null
+          premium_until: string | null
+          products_showcase: Json | null
+          profile_views_count: number | null
           region: string | null
           service_areas: string[] | null
+          services_showcase: Json | null
           slug: string | null
           socials: Json | null
           verification_status: string | null
           website: string | null
         }
         Insert: {
+          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
+          contact_channels?: Json | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
+          followers_count?: number | null
+          gallery?: Json | null
           id?: string | null
+          is_premium?: boolean | null
           is_verified?: boolean | null
           lat?: number | null
           lng?: number | null
+          logo_url?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          portfolio?: Json | null
+          premium_until?: string | null
+          products_showcase?: Json | null
+          profile_views_count?: number | null
           region?: string | null
           service_areas?: string[] | null
+          services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
           verification_status?: string | null
           website?: string | null
         }
         Update: {
+          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
+          contact_channels?: Json | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
+          followers_count?: number | null
+          gallery?: Json | null
           id?: string | null
+          is_premium?: boolean | null
           is_verified?: boolean | null
           lat?: number | null
           lng?: number | null
+          logo_url?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          portfolio?: Json | null
+          premium_until?: string | null
+          products_showcase?: Json | null
+          profile_views_count?: number | null
           region?: string | null
           service_areas?: string[] | null
+          services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
           verification_status?: string | null
