@@ -149,9 +149,11 @@ function ManageCommunity() {
   );
 }
 
-const btnPrimary = "tap rounded-full px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-wider";
-const btnGhost = "tap rounded-full px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-wider";
-const btnDanger = "tap rounded-full px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-wider";
+const baseBtn = "tap rounded-full px-3 py-1.5 text-[10.5px] font-bold uppercase tracking-wider";
+const btnPrimary = `${baseBtn} bg-[var(--color-neon)] text-[var(--color-obsidian)]`;
+const btnGhost = `${baseBtn} bg-transparent text-[var(--color-ink)] border border-[var(--color-hair-strong)]`;
+const btnDanger = `${baseBtn} bg-transparent text-[#ff8080] border border-[rgba(255,80,80,0.4)]`;
+
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
