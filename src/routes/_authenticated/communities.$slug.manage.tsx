@@ -135,24 +135,48 @@ function ManageCommunity() {
 
       <Section title={`Members · ${members.length}`}>
         {members.map((m) => (
-          <Row key={m.user_id}>
-            <div className="min-w-0 flex-1">
-              <p className="mono-num text-[11px]" style={{ color: "var(--color-ink)" }}>{m.user_id.slice(0, 8)}</p>
-              <p className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>{m.role.toUpperCase()}</p>
-            </div>
-            {m.role !== "owner" && (
-              <>
-                {m.role === "moderator" ? (
-                  <button className={btnGhost} onClick={() => roleMut.mutate({ user_id: m.user_id, role: "member" })}>Demote</button>
-                ) : (
-                  <button className={btnGhost} onClick={() => roleMut.mutate({ user_id: m.user_id, role: "moderator" })}>Promote</button>
-                )}
-                <button className={btnDanger} onClick={() => kickMut.mutate(m.user_id)}>Remove</button>
-              </>
+          <div key={m.user_id}>
+            <Row>
+              <div className="min-w-0 flex-1">
+                <p className="mono-num text-[11px]" style={{ color: "var(--color-ink)" }}>{m.user_id.slice(0, 8)}</p>
+                <p className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>{m.role.toUpperCase()}</p>
+              </div>
+              <button className={btnGhost} onClick={() => setPickerFor(pickerFor === m.user_id ? null : m.user_id)}>
+                🏅 Badge
+              </button>
+              {m.role !== "owner" && (
+                <>
+                  {m.role === "moderator" ? (
+                    <button className={btnGhost} onClick={() => roleMut.mutate({ user_id: m.user_id, role: "member" })}>Demote</button>
+                  ) : (
+                    <button className={btnGhost} onClick={() => roleMut.mutate({ user_id: m.user_id, role: "moderator" })}>Promote</button>
+                  )}
+                  <button className={btnDanger} onClick={() => kickMut.mutate(m.user_id)}>Remove</button>
+                </>
+              )}
+            </Row>
+            {pickerFor === m.user_id && (
+              <div className="mt-1.5 flex flex-wrap gap-1.5 rounded-lg px-3 py-2"
+                style={{ background: "var(--color-obsidian)", border: "1px solid var(--color-hair-strong)" }}>
+                {BADGE_PRESETS.map((b) => (
+                  <button key={b.code} className={btnGhost}
+                    onClick={() => awardMut.mutate({ user_id: m.user_id, code: b.code, label: b.label })}>
+                    {b.label}
+                  </button>
+                ))}
+              </div>
             )}
-          </Row>
+          </div>
         ))}
       </Section>
+
+      {toast && (
+        <div className="fixed inset-x-0 bottom-24 z-50 mx-auto w-max rounded-full px-4 py-2 mono-tag"
+          style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", fontSize: 10, letterSpacing: "0.14em" }}>
+          {toast}
+        </div>
+      )}
+
 
       <Section title="Recent posts">
         {community.posts.length === 0 && <Empty>No posts yet.</Empty>}
