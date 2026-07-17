@@ -1,126 +1,248 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
-import { listings } from "@/lib/mock-data";
+import { listListings, LISTING_CATEGORIES, LISTING_CONDITIONS } from "@/lib/marketplace.functions";
 
 export const Route = createFileRoute("/marketplace")({
-  head: () => ({ meta: [{ title: "The Vault · ZOMBIEREX" }, { name: "description", content: "Verified motorcycles, cars, parts, and gear — a curated editorial showroom." }] }),
+  head: () => ({
+    meta: [
+      { title: "Marketplace · ZOMBIEREX" },
+      { name: "description", content: "Buy and sell motorcycles, cars, parts, gear and services in the ZOMBIEREX community." },
+    ],
+  }),
   component: MarketplacePage,
 });
 
-const CATS = ["All", "Machines", "Parts", "Gear", "Wheels", "Apparel"] as const;
+const SCOPES = [
+  { id: "featured", label: "Featured" },
+  { id: "trending", label: "Trending" },
+  { id: "new", label: "New" },
+  { id: "nearby", label: "Nearby" },
+  { id: "recommended", label: "Picks" },
+  { id: "saved", label: "Saved" },
+  { id: "mine", label: "Mine" },
+] as const;
+
+const CAT_LABEL: Record<string, string> = {
+  motorcycle: "Motorcycles", car: "Cars", truck: "Trucks", scooter: "Scooters",
+  atv: "ATVs", boat: "Boats", other_vehicle: "Vehicles",
+  parts: "Parts", accessories: "Accessories", riding_gear: "Gear", apparel: "Apparel",
+  collectibles: "Collectibles", tools: "Tools", garage_equipment: "Garage",
+  electronics: "Electronics", services: "Services",
+};
+
+function fmtPrice(cents: number, currency = "USD") {
+  return new Intl.NumberFormat(undefined, { style: "currency", currency, maximumFractionDigits: 0 }).format(cents / 100);
+}
 
 function MarketplacePage() {
-  const [cat, setCat] = useState<typeof CATS[number]>("All");
-  const featured = listings[0];
-  const rest = listings.slice(1);
+  const [scope, setScope] = useState<(typeof SCOPES)[number]["id"]>("featured");
+  const [category, setCategory] = useState<string | undefined>();
+  const [search, setSearch] = useState("");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [priceMin, setPriceMin] = useState<string>("");
+  const [priceMax, setPriceMax] = useState<string>("");
+  const [yearMin, setYearMin] = useState<string>("");
+  const [condition, setCondition] = useState<string | undefined>();
+
+  const list = useServerFn(listListings);
+  const { data, isLoading } = useQuery({
+    queryKey: ["marketplace", scope, category, search, priceMin, priceMax, yearMin, condition],
+    queryFn: () => list({ data: {
+      scope, category: category as any, condition: condition as any,
+      search: search || undefined,
+      price_min: priceMin ? Number(priceMin) * 100 : undefined,
+      price_max: priceMax ? Number(priceMax) * 100 : undefined,
+      year_min: yearMin ? Number(yearMin) : undefined,
+    }}),
+  });
+
+  const featured = useMemo(() => (data ?? []).find((l: any) => l.is_featured) ?? (data ?? [])[0], [data]);
+  const rest = useMemo(() => (data ?? []).filter((l: any) => l.id !== featured?.id), [data, featured]);
 
   return (
-    <div className="pb-16">
-      <StatusBar index="04" section="VAULT · MARKETPLACE" />
+    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+      <StatusBar index="09" section="MARKETPLACE" />
 
-      {/* Editorial masthead */}
-      <section className="rise px-4 pt-6">
-        <div className="flex items-baseline gap-3">
-          <span className="mono-tag">Volume IV</span>
-          <span className="etch flex-1" />
-          <span className="mono-tag" style={{ color: "var(--color-neon)" }}>{String(listings.length).padStart(3, "0")} lots live</span>
+      <div className="flex items-end justify-between px-4 pt-6">
+        <div>
+          <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{(data ?? []).length} LISTINGS</p>
+          <h1 className="serif mt-2 text-4xl italic" style={{ color: "var(--color-ink)" }}>Marketplace</h1>
         </div>
-        <h1 className="serif mt-3 text-[68px] leading-[0.85]" style={{ color: "var(--color-ink)" }}>
-          The <span className="italic" style={{ color: "var(--color-neon)" }}>Vault</span>
-        </h1>
-        <p className="mt-3 max-w-[32ch] text-[13px] leading-snug" style={{ color: "var(--color-silver)" }}>
-          A curated showroom of verified machines, parts, and gear — inspected, catalogued, and released weekly.
-        </p>
+        <Link to="/marketplace/new" className="btn-neon" style={{ padding: "10px 14px", fontSize: 10 }}>
+          + LIST ITEM
+        </Link>
+      </div>
 
-        <div className="mt-6 flex items-center justify-between">
-          <p className="mono-tag">Sort · Latest drops</p>
-          <button className="btn-ghost" style={{ padding: "8px 12px", fontSize: 10 }}>+ List a lot</button>
+      <div className="px-4 pt-4 flex gap-2">
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search machines, parts, gear…"
+          className="flex-1 border px-3 py-3 text-sm"
+          style={{ background: "rgba(255,255,255,0.02)", borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}
+        />
+        <button onClick={() => setFiltersOpen((v) => !v)}
+          className="tap border px-3 mono-tag font-bold"
+          style={{ borderColor: "var(--color-hair-strong)", color: filtersOpen ? "#0a0a0a" : "var(--color-ink)", background: filtersOpen ? "var(--color-neon)" : "transparent" }}>
+          FILTERS
+        </button>
+      </div>
+
+      {filtersOpen && (
+        <div className="mx-4 mt-3 border p-3 space-y-3" style={{ borderColor: "var(--color-hair-strong)", background: "rgba(255,255,255,0.02)" }}>
+          <div className="grid grid-cols-2 gap-2">
+            <FilterInput label="MIN PRICE" value={priceMin} onChange={setPriceMin} type="number" placeholder="0" />
+            <FilterInput label="MAX PRICE" value={priceMax} onChange={setPriceMax} type="number" placeholder="—" />
+            <FilterInput label="YEAR ≥" value={yearMin} onChange={setYearMin} type="number" placeholder="2015" />
+            <label className="block">
+              <span className="mono-tag font-bold" style={{ color: "var(--color-titanium)" }}>CONDITION</span>
+              <select value={condition ?? ""} onChange={(e) => setCondition(e.target.value || undefined)}
+                className="mt-1 w-full border px-2 py-2 text-sm"
+                style={{ background: "rgba(255,255,255,0.03)", borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}>
+                <option value="">Any</option>
+                {LISTING_CONDITIONS.map((c) => <option key={c} value={c}>{c.replace("_"," ")}</option>)}
+              </select>
+            </label>
+          </div>
+          <button onClick={() => { setPriceMin(""); setPriceMax(""); setYearMin(""); setCondition(undefined); }}
+            className="mono-tag font-bold" style={{ color: "var(--color-neon)" }}>CLEAR ▸</button>
         </div>
-      </section>
+      )}
 
-      {/* Category rail — pill chips */}
-      <div className="no-scrollbar mt-4 flex gap-2 overflow-x-auto px-4">
-        {CATS.map((c) => (
-          <button
-            key={c}
-            onClick={() => setCat(c)}
-            className={`chip ${c === cat ? "chip-active" : ""} shrink-0`}
-          >
-            {c}
-          </button>
+      <div className="no-scrollbar mt-4 flex overflow-x-auto border-y" style={{ borderColor: "var(--color-hair)" }}>
+        {SCOPES.map((s) => {
+          const active = scope === s.id;
+          return (
+            <button key={s.id} onClick={() => setScope(s.id)}
+              className="tap relative shrink-0 border-r px-4 py-3 mono-tag font-bold"
+              style={{
+                borderColor: "var(--color-hair)",
+                color: active ? "var(--color-ink)" : "var(--color-titanium)",
+                background: active ? "rgba(255,255,255,0.03)" : "transparent",
+              }}>
+              {s.label.toUpperCase()}
+              {active && <span className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: "var(--color-neon)" }} />}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 py-3 border-b" style={{ borderColor: "var(--color-hair)" }}>
+        <ChipButton active={!category} onClick={() => setCategory(undefined)}>ALL</ChipButton>
+        {LISTING_CATEGORIES.map((c) => (
+          <ChipButton key={c} active={category === c} onClick={() => setCategory(c === category ? undefined : c)}>
+            {(CAT_LABEL[c] ?? c).toUpperCase()}
+          </ChipButton>
         ))}
       </div>
 
-      {/* Featured lot — cinematic full-bleed */}
-      <section className="mt-6">
-        <div className="px-4">
-          <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Lot № 001 · Featured</p>
-        </div>
-        <Link to="/marketplace" className="tap mt-3 block">
-          <article className="relative">
-            <div className="relative aspect-[4/5] w-full overflow-hidden" style={{ borderBottom: "1px solid var(--color-hair)", borderTop: "1px solid var(--color-hair)" }}>
-              <img src={featured.image} alt="" className="ken-burns h-full w-full object-cover" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 40%, rgba(0,0,0,0.9) 100%)" }} />
-              <span className="absolute left-3 top-3 mono-caps px-2 py-1" style={{ background: "rgba(0,0,0,0.6)", border: "1px solid rgba(255,255,255,0.3)", color: "white" }}>
-                ● {featured.condition}
-              </span>
-              <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                <p className="mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {featured.location}</p>
-                <h2 className="serif mt-2 text-3xl italic leading-tight">{featured.title}</h2>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 divide-x divide-hair surface-brushed" style={{ borderBottom: "1px solid var(--color-hair-strong)" }}>
-              <Cell k="Asking" v={featured.price} highlight />
-              <Cell k="Seller" v={featured.seller.handle} />
-              <Cell k="Action" v="Inspect →" />
-            </div>
-          </article>
-        </Link>
-      </section>
+      {featured && (
+        <FeaturedCard listing={featured} />
+      )}
 
-      {/* Showroom */}
-      <section className="mt-10 px-4 space-y-6">
-        <div className="flex items-baseline justify-between">
-          <p className="mono-tag">Showroom · {rest.length} lots</p>
-          <span className="etch flex-1 mx-3" />
-          <p className="mono-tag" style={{ color: "var(--color-silver)" }}>P. 02</p>
-        </div>
-        {rest.map((l, i) => (
-          <Link key={l.id} to="/marketplace" className="tap block">
-            <article className="surface-1 lift-1 overflow-hidden" style={{ borderRadius: 3 }}>
-              <div className="relative aspect-[16/10]">
-                <img src={l.image} alt="" className="h-full w-full object-cover" />
-                <span className="mono-caps absolute right-2 top-2 px-2 py-1" style={{ background: "rgba(0,0,0,0.6)", color: "white" }}>
-                  Lot № {String(i + 2).padStart(3, "0")}
-                </span>
-              </div>
-              <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-t border-hair p-4">
-                <div>
-                  <p className="mono-tag" style={{ color: "var(--color-silver)" }}>{l.category} · {l.condition}</p>
-                  <p className="serif mt-1 text-[18px] italic leading-tight" style={{ color: "var(--color-ink)" }}>{l.title}</p>
-                  <p className="mono-tag mt-2">◎ {l.location}</p>
-                </div>
-                <div className="text-right">
-                  <p className="mono-tag">USD</p>
-                  <p className="serif text-3xl italic" style={{ color: "var(--color-neon)", lineHeight: 0.9 }}>{l.price.replace("$", "$")}</p>
-                </div>
-              </div>
-            </article>
-          </Link>
-        ))}
-      </section>
+      <div className="px-4 pt-4 grid grid-cols-2 gap-3">
+        {isLoading && <p className="col-span-2 mono-tag" style={{ color: "var(--color-titanium)" }}>LOADING…</p>}
+        {!isLoading && (data ?? []).length === 0 && (
+          <div className="col-span-2 border border-dashed p-6 text-center" style={{ borderColor: "var(--color-hair-strong)" }}>
+            <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>NO LISTINGS YET</p>
+            <Link to="/marketplace/new" className="btn-neon mt-4 inline-block" style={{ padding: "10px 14px", fontSize: 11 }}>
+              CREATE THE FIRST ▸
+            </Link>
+          </div>
+        )}
+        {rest.map((l: any) => <ListingCard key={l.id} listing={l} />)}
+      </div>
     </div>
   );
 }
 
-function Cell({ k, v, highlight }: { k: string; v: string; highlight?: boolean }) {
+function ChipButton({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
-    <div className="px-3 py-3">
-      <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 8.5 }}>{k}</p>
-      <p className="serif mt-1 text-lg italic" style={{ color: highlight ? "var(--color-neon)" : "var(--color-ink)", lineHeight: 0.9 }}>
-        {v}
-      </p>
-    </div>
+    <button onClick={onClick}
+      className="tap shrink-0 border px-3 py-1.5 mono-tag font-bold"
+      style={{
+        borderColor: "var(--color-hair-strong)",
+        background: active ? "var(--color-neon)" : "transparent",
+        color: active ? "#0a0a0a" : "var(--color-ink)",
+      }}>
+      {children}
+    </button>
+  );
+}
+
+function FilterInput({ label, value, onChange, type = "text", placeholder }: any) {
+  return (
+    <label className="block">
+      <span className="mono-tag font-bold" style={{ color: "var(--color-titanium)" }}>{label}</span>
+      <input type={type} value={value} placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1 w-full border px-2 py-2 text-sm"
+        style={{ background: "rgba(255,255,255,0.03)", borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }} />
+    </label>
+  );
+}
+
+function FeaturedCard({ listing }: { listing: any }) {
+  return (
+    <Link to="/marketplace/$id" params={{ id: listing.id }} className="block px-4 pt-4">
+      <div className="relative overflow-hidden border" style={{ borderColor: "var(--color-hair-strong)" }}>
+        <div className="relative h-64 w-full">
+          {listing.hero_image_url ? (
+            <img src={listing.hero_image_url} className="h-full w-full object-cover" style={{ filter: "grayscale(0.15) contrast(1.1)" }} loading="lazy" />
+          ) : <div className="h-full w-full" style={{ background: "var(--color-slate)" }} />}
+          <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.9) 100%)" }} />
+          <span className="absolute left-3 top-3 mono-tag font-bold px-2 py-1"
+            style={{ background: "var(--color-neon)", color: "#0a0a0a" }}>
+            {listing.is_featured ? "FEATURED" : "TOP PICK"}
+          </span>
+          <div className="absolute inset-x-3 bottom-3">
+            <p className="mono-tag font-bold" style={{ color: "var(--color-neon)" }}>
+              {(CAT_LABEL[listing.category] ?? listing.category).toUpperCase()}
+              {listing.year && ` · ${listing.year}`}
+              {listing.brand && ` · ${String(listing.brand).toUpperCase()}`}
+            </p>
+            <h2 className="serif mt-1 text-2xl italic leading-tight" style={{ color: "var(--color-ink)" }}>
+              {listing.title}
+            </h2>
+            <div className="mt-2 flex items-center justify-between">
+              <p className="mono-num text-lg font-bold" style={{ color: "var(--color-ink)" }}>
+                {fmtPrice(listing.price_cents, listing.currency)}
+                {listing.is_negotiable && <span className="mono-tag ml-2" style={{ color: "var(--color-neon)" }}>OBO</span>}
+              </p>
+              {listing.city && <p className="mono-tag" style={{ color: "rgba(255,255,255,0.8)" }}>{listing.city.toUpperCase()}</p>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function ListingCard({ listing }: { listing: any }) {
+  return (
+    <Link to="/marketplace/$id" params={{ id: listing.id }} className="block border" style={{ borderColor: "var(--color-hair-strong)", background: "rgba(255,255,255,0.02)" }}>
+      <div className="relative">
+        {listing.hero_image_url ? (
+          <img src={listing.hero_image_url} className="aspect-square w-full object-cover" style={{ filter: "grayscale(0.15)" }} loading="lazy" />
+        ) : <div className="aspect-square w-full" style={{ background: "var(--color-slate)" }} />}
+        {listing.status === "sold" && (
+          <span className="absolute right-2 top-2 mono-tag font-bold px-2 py-0.5" style={{ background: "#ff3d3d", color: "#fff" }}>SOLD</span>
+        )}
+      </div>
+      <div className="p-2">
+        <p className="mono-tag" style={{ color: "var(--color-neon)" }}>
+          {(CAT_LABEL[listing.category] ?? listing.category).toUpperCase()}
+          {listing.year && ` · ${listing.year}`}
+        </p>
+        <p className="mt-0.5 text-xs font-bold truncate" style={{ color: "var(--color-ink)" }}>{listing.title}</p>
+        <p className="mono-num mt-1 text-sm font-bold" style={{ color: "var(--color-ink)" }}>
+          {fmtPrice(listing.price_cents, listing.currency)}
+        </p>
+        {listing.city && <p className="mono-tag mt-0.5" style={{ color: "var(--color-titanium)" }}>{listing.city.toUpperCase()}</p>}
+      </div>
+    </Link>
   );
 }
