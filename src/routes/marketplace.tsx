@@ -59,8 +59,9 @@ function MarketplacePage() {
     }}),
   });
 
-  const featured = useMemo(() => (data ?? []).find((l: any) => l.is_featured) ?? (data ?? [])[0], [data]);
-  const rest = useMemo(() => (data ?? []).filter((l: any) => l.id !== featured?.id), [data, featured]);
+  const rows = (data ?? []) as any[];
+  const featured = useMemo(() => rows.find((l: any) => l.is_featured) ?? rows[0], [rows]);
+  const rest = useMemo(() => rows.filter((l: any) => l.id !== featured?.id), [rows, featured]);
 
   return (
     <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
