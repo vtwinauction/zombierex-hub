@@ -1,20 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
-import { me, myVehicles, posts, clubs } from "@/lib/mock-data";
-import { Settings, MapPin, Gauge, Wrench, Plus, Users2, Trophy, Route as RouteIcon, Zap, ArrowUpRight } from "lucide-react";
+import { me, myVehicles, posts, clubs, achievements, workshopHistory, rider } from "@/lib/mock-data";
+import { Settings, MapPin, Gauge, Wrench, Plus, Users2, Trophy, Route as RouteIcon, Zap, ArrowUpRight, Flame, Medal, CheckCircle2, Clock } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "Garage — ZOMBIEREX" },
-      { name: "description", content: "Your digital garage: vehicles, achievements, ride stats." },
+      { name: "description", content: "Your digital garage: vehicles, achievements, ride stats, workshop history." },
     ],
   }),
   component: ProfilePage,
 });
 
-const tabs = ["Garage", "Rides", "Gallery", "Clubs"] as const;
+const tabs = ["Garage", "Rides", "Trophies", "Workshop", "Gallery", "Clubs"] as const;
 type Tab = (typeof tabs)[number];
 
 function ProfilePage() {
