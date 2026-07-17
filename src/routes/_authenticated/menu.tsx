@@ -33,6 +33,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { to: "/profile", label: "Garage (profile)" },
       { to: "/notifications", label: "Notifications" },
       { to: "/messages", label: "Messages" },
+      { to: "/settings", label: "Settings", hint: "Account · privacy · appearance" },
     ],
   },
   {

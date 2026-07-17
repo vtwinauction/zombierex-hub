@@ -23,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
@@ -109,6 +110,11 @@ const CommunitiesSlugRoute = CommunitiesSlugRouteImport.update({
 const AuthenticatedVendorRoute = AuthenticatedVendorRouteImport.update({
   id: '/vendor',
   path: '/vendor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMenuRoute = AuthenticatedMenuRouteImport.update({
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/menu': typeof AuthenticatedMenuRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities/': typeof CommunitiesIndexRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities/': typeof CommunitiesIndexRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/admin'
     | '/menu'
+    | '/settings'
     | '/vendor'
     | '/communities/$slug'
     | '/communities/'
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/menu'
+    | '/settings'
     | '/communities/$slug'
     | '/communities'
     | '/admin/vendors'
@@ -394,6 +405,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/_authenticated/admin'
     | '/_authenticated/menu'
+    | '/_authenticated/settings'
     | '/_authenticated/vendor'
     | '/communities/$slug'
     | '/communities/'
@@ -531,6 +543,13 @@ declare module '@tanstack/react-router' {
       path: '/vendor'
       fullPath: '/vendor'
       preLoaderRoute: typeof AuthenticatedVendorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/menu': {
@@ -707,6 +726,7 @@ const AuthenticatedVendorRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
@@ -720,6 +740,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
@@ -770,13 +791,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
