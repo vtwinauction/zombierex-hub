@@ -17,10 +17,10 @@ import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EventsRouteImport } from './routes/events'
-import { Route as CommunitiesRouteImport } from './routes/communities'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
@@ -73,11 +73,6 @@ const EventsRoute = EventsRouteImport.update({
   path: '/events',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CommunitiesRoute = CommunitiesRouteImport.update({
-  id: '/communities',
-  path: '/communities',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -90,6 +85,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
+  id: '/communities/',
+  path: '/communities/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedVendorRoute = AuthenticatedVendorRouteImport.update({
@@ -158,7 +158,6 @@ const AuthenticatedAdminVendorsIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/communities': typeof CommunitiesRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -169,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -182,7 +182,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/communities': typeof CommunitiesRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -191,6 +190,7 @@ export interface FileRoutesByTo {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -206,7 +206,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/communities': typeof CommunitiesRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
   '/messages': typeof MessagesRoute
@@ -217,6 +216,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -232,7 +232,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/communities'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -243,6 +242,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/admin'
     | '/vendor'
+    | '/communities/'
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/vendor/apply'
@@ -256,7 +256,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/communities'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -265,6 +264,7 @@ export interface FileRouteTypes {
     | '/reels'
     | '/reset-password'
     | '/search'
+    | '/communities'
     | '/admin/vendors'
     | '/checkout/$paymentId'
     | '/vendor/apply'
@@ -279,7 +279,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/communities'
     | '/events'
     | '/marketplace'
     | '/messages'
@@ -290,6 +289,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/_authenticated/admin'
     | '/_authenticated/vendor'
+    | '/communities/'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/vendor/apply'
@@ -305,7 +305,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  CommunitiesRoute: typeof CommunitiesRoute
   EventsRoute: typeof EventsRoute
   MarketplaceRoute: typeof MarketplaceRoute
   MessagesRoute: typeof MessagesRoute
@@ -314,6 +313,7 @@ export interface RootRouteChildren {
   ReelsRoute: typeof ReelsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
+  CommunitiesIndexRoute: typeof CommunitiesIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
 }
@@ -376,13 +376,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/communities': {
-      id: '/communities'
-      path: '/communities'
-      fullPath: '/communities'
-      preLoaderRoute: typeof CommunitiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -402,6 +395,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/communities/': {
+      id: '/communities/'
+      path: '/communities'
+      fullPath: '/communities/'
+      preLoaderRoute: typeof CommunitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/vendor': {
@@ -545,7 +545,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  CommunitiesRoute: CommunitiesRoute,
   EventsRoute: EventsRoute,
   MarketplaceRoute: MarketplaceRoute,
   MessagesRoute: MessagesRoute,
@@ -554,6 +553,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReelsRoute: ReelsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
+  CommunitiesIndexRoute: CommunitiesIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
 }

@@ -6,7 +6,7 @@ import { StatusBar } from "@/components/StatusBar";
 import { discoverCommunities, CATEGORIES } from "@/lib/communities.functions";
 import { clubs as mockClubs } from "@/lib/mock-data";
 
-export const Route = createFileRoute("/communities")({
+export const Route = createFileRoute("/communities/")({
   head: () => ({
     meta: [
       { title: "Communities · ZOMBIEREX" },
