@@ -36,8 +36,7 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const payload: Record<string, unknown> = { ...data };
-    if (payload.website === "") payload.website = null;
+    const payload = { ...data, website: data.website === "" ? null : data.website };
     const { data: row, error } = await context.supabase
       .from("profiles")
       .update(payload)
