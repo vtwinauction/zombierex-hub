@@ -50,6 +50,34 @@ function CommunityDetail() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["community", slug] }),
   });
 
+  const clubId = data?.club.id;
+
+  // Realtime: refresh feed when a new post lands in this club
+  useEffect(() => {
+    if (!clubId) return;
+    const ch = supabase
+      .channel(`club-${clubId}`)
+      .on("postgres_changes",
+        { event: "INSERT", schema: "public", table: "posts", filter: `club_id=eq.${clubId}` },
+        () => { qc.invalidateQueries({ queryKey: ["community", slug] }); })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [clubId, qc, slug]);
+
+  const fetchChallenges = useServerFn(listChallenges);
+  const fetchBadges = useServerFn(listCommunityBadges);
+  const { data: challenges = [] } = useQuery({
+    queryKey: ["community-challenges", clubId],
+    queryFn: () => fetchChallenges({ data: { club_id: clubId!, active_only: true } }),
+    enabled: !!clubId,
+  });
+  const { data: badges = [] } = useQuery({
+    queryKey: ["community-badges", clubId],
+    queryFn: () => fetchBadges({ data: { club_id: clubId! } }),
+    enabled: !!clubId,
+  });
+
+
   if (isPending) {
     return (
       <div className="grid min-h-[60vh] place-items-center">
