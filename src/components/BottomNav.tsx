@@ -96,15 +96,16 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
       style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}
     >
       <Icon className="h-5 w-5" />
-      <span className="mono-tag" style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}>
-        {item.index}·{item.label}
+      <span className="text-[11px] font-semibold tracking-tight">
+        {item.label}
       </span>
       {active && (
         <span
-          className="absolute top-0 h-[2px] w-8"
+          className="absolute top-1.5 h-1 w-1 rounded-full"
           style={{ background: "var(--color-signal)" }}
         />
       )}
     </Link>
   );
 }
+
