@@ -97,7 +97,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative min-h-[100svh] bg-background text-foreground">
-        <main className="min-h-[100svh] pb-[calc(64px+env(safe-area-inset-bottom))]">
+        <main className="min-h-[100svh] pr-[calc(72px+env(safe-area-inset-right))]">
           <Outlet />
         </main>
         <BottomNav />
