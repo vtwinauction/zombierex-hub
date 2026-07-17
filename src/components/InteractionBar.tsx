@@ -1,4 +1,4 @@
-import { type ComponentType } from "react";
+import { Fragment, type ComponentType } from "react";
 import {
   IconClaw,
   IconVisor,
