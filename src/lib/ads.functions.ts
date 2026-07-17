@@ -90,13 +90,13 @@ export const createCampaign = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: camp, error } = await context.supabase.from("ad_campaigns").insert({
       owner_id: context.userId,
-      ...data.campaign,
+      ...(data.campaign as any),
       status: "draft",
-    }).select().single();
+    } as any).select().single();
     if (error) throw new Error(error.message);
     const { error: cErr } = await context.supabase.from("ad_creatives").insert({
-      campaign_id: camp.id, ...data.creative,
-    });
+      campaign_id: camp.id, ...(data.creative as any),
+    } as any);
     if (cErr) throw new Error(cErr.message);
     return camp;
   });
