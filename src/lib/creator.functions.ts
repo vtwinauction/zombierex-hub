@@ -136,7 +136,7 @@ export const listCreators = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     let q = context.supabase
       .from("creator_profiles")
-      .select("id, user_id, category, tagline, is_verified, is_featured, subscribers_count, tips_total_cents, created_at, profiles:profiles!creator_profiles_user_id_fkey(handle, display_name, avatar_url, tier, followers_count, location)")
+      .select("id, user_id, category, tagline, is_verified, is_featured, subscribers_count, tips_total_cents, created_at")
       .eq("status", "approved")
       .limit(data.limit);
 
@@ -150,8 +150,16 @@ export const listCreators = createServerFn({ method: "GET" })
 
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    const ids = (rows ?? []).map((r) => r.user_id);
+    if (!ids.length) return [];
+    const { data: profiles } = await context.supabase
+      .from("profiles")
+      .select("id, handle, display_name, avatar_url, tier, followers_count, location")
+      .in("id", ids);
+    const byId = new Map((profiles ?? []).map((p) => [p.id, p]));
+    return (rows ?? []).map((r) => ({ ...r, profiles: byId.get(r.user_id) ?? null }));
   });
+
 
 /* ============ TIERS ============ */
 const TierInput = z.object({
