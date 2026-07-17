@@ -27,7 +27,7 @@ function ProfilePage() {
 
       {/* Cockpit header */}
       <section className="px-5">
-        <div className="rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
+        <div className="rex-rise overflow-hidden rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="relative">
@@ -45,13 +45,32 @@ function ProfilePage() {
                 </p>
               </div>
             </div>
-            <button aria-label="Settings" className="grid h-10 w-10 place-items-center rounded-full border border-border">
+            <button aria-label="Settings" className="tap-press grid h-10 w-10 place-items-center rounded-full border border-border">
               <Settings className="h-4 w-4" />
             </button>
           </div>
 
+          {/* Level bar */}
+          <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="grid h-7 w-7 place-items-center rounded-lg font-display text-[11px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
+                  L{rider.level}
+                </span>
+                <div>
+                  <p className="font-display text-[13px] leading-none">{rider.title}</p>
+                  <p className="mt-1 text-mono-caps text-muted-foreground">{rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} xp</p>
+                </div>
+              </div>
+              <span className="text-mono-caps" style={{ color: "var(--color-primary)" }}>Next: L{rider.level + 1}</span>
+            </div>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-background">
+              <div className="h-full rounded-full" style={{ width: `${(rider.xp / rider.xpToNext) * 100}%`, background: "var(--gradient-toxic)" }} />
+            </div>
+          </div>
+
           {/* Cockpit stats */}
-          <div className="mt-5 grid grid-cols-4 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <Cockpit label="Rides" value="37" />
             <Cockpit label="Miles" value="18k" />
             <Cockpit label="Bikes" value="1" />
@@ -59,13 +78,14 @@ function ProfilePage() {
           </div>
 
           <div className="mt-4 flex items-center gap-2">
-            <button className="flex-1 rounded-full py-2.5 font-display text-[13px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
+            <button className="tap-press flex-1 rounded-full py-2.5 font-display text-[13px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
               Edit profile
             </button>
-            <button className="rounded-full border border-border px-5 py-2.5 font-display text-[13px]">Share</button>
+            <button className="tap-press rounded-full border border-border px-5 py-2.5 font-display text-[13px]">Share</button>
           </div>
         </div>
       </section>
+
 
       {/* Tabs */}
       <div className="mt-4 px-5">
