@@ -38,48 +38,48 @@ function loadPrefs(): Prefs {
 }
 function savePrefs(p: Prefs) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch { /* quota */ } }
 
-const SECTIONS: Array<{ id: string; title: string; items: Array<{ label: string; hint?: string; kind: string }> }> = [
-  { id: "account", title: "Account", items: [
-    { label: "Profile", hint: "Name, handle, bio, avatar", kind: "profile" },
-    { label: "Email address", hint: "Change your sign-in email", kind: "email" },
-    { label: "Change password", kind: "password" },
-    { label: "Connected accounts", hint: "Google, Apple, Instagram", kind: "connected" },
+const SECTIONS: Array<{ id: string; title: string; hint: string; items: Array<{ label: string; hint?: string; kind: string }> }> = [
+  { id: "account", title: "Account", hint: "Your profile and sign-in details", items: [
+    { label: "Edit profile", hint: "Name, username, bio and photo", kind: "profile" },
+    { label: "Email address", hint: "The email you use to sign in", kind: "email" },
+    { label: "Password", hint: "Change your password", kind: "password" },
+    { label: "Connected accounts", hint: "Google, Apple and Instagram", kind: "connected" },
   ]},
-  { id: "privacy", title: "Privacy", items: [
-    { label: "Private account", kind: "toggle-private" },
-    { label: "Who can message you", kind: "select-messages" },
-    { label: "Blocked users", kind: "blocked" },
-    { label: "Content preferences", hint: "Muted keywords, sensitive content", kind: "content-prefs" },
+  { id: "privacy", title: "Privacy", hint: "Who can see and contact you", items: [
+    { label: "Private account", hint: "Only approved followers can see your posts", kind: "toggle-private" },
+    { label: "Who can message you", hint: "Choose who can send you direct messages", kind: "select-messages" },
+    { label: "Blocked people", hint: "Manage users you have blocked", kind: "blocked" },
+    { label: "Content you see", hint: "Muted words and sensitive content", kind: "content-prefs" },
   ]},
-  { id: "security", title: "Security", items: [
-    { label: "Two-factor authentication", kind: "twofa" },
-    { label: "Active sessions", kind: "sessions" },
-    { label: "Login activity", kind: "login-activity" },
+  { id: "security", title: "Security", hint: "Protect your account", items: [
+    { label: "Two-step verification", hint: "Add an extra layer of security when signing in", kind: "twofa" },
+    { label: "Where you're signed in", hint: "Devices currently using your account", kind: "sessions" },
+    { label: "Recent sign-in activity", hint: "Review new logins to your account", kind: "login-activity" },
   ]},
-  { id: "notifications", title: "Notifications", items: [
-    { label: "Push notifications", kind: "toggle-push" },
-    { label: "Email notifications", kind: "toggle-email" },
-    { label: "Fine-grained preferences", kind: "notif-prefs" },
+  { id: "notifications", title: "Notifications", hint: "How we reach you", items: [
+    { label: "Push notifications", hint: "Alerts on this device", kind: "toggle-push" },
+    { label: "Email notifications", hint: "Updates sent to your inbox", kind: "toggle-email" },
+    { label: "Notification details", hint: "Choose which activity notifies you", kind: "notif-prefs" },
   ]},
-  { id: "appearance", title: "Appearance & language", items: [
-    { label: "Theme", kind: "select-theme" },
-    { label: "Language", kind: "select-language" },
-    { label: "Text size", kind: "toggle-large-text" },
+  { id: "appearance", title: "Appearance & language", hint: "How the app looks and reads", items: [
+    { label: "Theme", hint: "Dark, light or match your device", kind: "select-theme" },
+    { label: "Language", hint: "Change the app language", kind: "select-language" },
+    { label: "Larger text", hint: "Increase text size for easier reading", kind: "toggle-large-text" },
   ]},
-  { id: "accessibility", title: "Accessibility", items: [
-    { label: "Reduce motion", kind: "toggle-motion" },
-    { label: "High contrast", kind: "toggle-contrast" },
+  { id: "accessibility", title: "Accessibility", hint: "Make the app easier to use", items: [
+    { label: "Reduce motion", hint: "Minimise animations and transitions", kind: "toggle-motion" },
+    { label: "High contrast", hint: "Boost contrast for better visibility", kind: "toggle-contrast" },
   ]},
-  { id: "data", title: "Data & storage", items: [
-    { label: "Download quality", kind: "select-quality" },
-    { label: "Video autoplay", kind: "select-autoplay" },
-    { label: "Clear cache", kind: "clear-cache" },
-    { label: "Download your data", kind: "download-data" },
+  { id: "data", title: "Data & storage", hint: "Manage data usage and downloads", items: [
+    { label: "Download quality", hint: "Quality for saved photos and videos", kind: "select-quality" },
+    { label: "Video autoplay", hint: "When videos should play automatically", kind: "select-autoplay" },
+    { label: "Clear cache", hint: "Free up space on your device", kind: "clear-cache" },
+    { label: "Download your data", hint: "Get a copy of your ZOMBIEREX information", kind: "download-data" },
   ]},
-  { id: "support", title: "Help & support", items: [
-    { label: "Help center", kind: "help" },
-    { label: "Report a problem", kind: "report" },
-    { label: "About ZOMBIEREX", kind: "about" },
+  { id: "support", title: "Help & about", hint: "Support, legal and app info", items: [
+    { label: "Help centre", hint: "Guides and answers to common questions", kind: "help" },
+    { label: "Report a problem", hint: "Let us know if something isn't working", kind: "report" },
+    { label: "About ZOMBIEREX", hint: "App version and credits", kind: "about" },
     { label: "Terms of service", kind: "tos" },
     { label: "Privacy policy", kind: "privacy-policy" },
   ]},
