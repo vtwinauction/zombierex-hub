@@ -2,170 +2,209 @@
 
 @theme {
   /* ============================================================
-     ZOMBIEREX · Obsidian Precision System
-     Off-black surface, bone ink, 1px hairlines, technical mono
+     ZOMBIEREX · Titanium Bone System
+     White · Silver · Titanium · Gunmetal · Matte Black · Neon Green
+     Inspired by fossils, CNC aluminum, carbon fiber, motorcycle frames.
      ============================================================ */
 
-  --color-bone: oklch(0.97 0.012 75);           /* primary surface — warm cream */
-  --color-ink: oklch(0.22 0.018 60);            /* primary text — warm charcoal */
-  --color-ash: oklch(0.55 0.018 60);            /* muted text */
-  --color-mist: oklch(0.94 0.014 75);           /* elevated surface */
-  --color-hair: oklch(0.86 0.014 70);           /* hairline / divider */
-  --color-hair-soft: oklch(0.91 0.012 70);
-  --color-signal: oklch(0.74 0.17 55);          /* warm amber — friendly accent */
-  --color-signal-deep: oklch(0.62 0.18 40);
-  --color-heat: oklch(0.66 0.19 25);            /* softened brand red */
-  --color-cool: oklch(0.70 0.13 220);
-  --color-plum: oklch(0.58 0.14 340);
+  /* Raw palette */
+  --color-white: #ffffff;
+  --color-silver: #c7cbd1;        /* metallic silver */
+  --color-platinum: #eff1f4;      /* elevated surface */
+  --color-titanium: #8a9099;      /* muted text / titanium gray */
+  --color-gunmetal: #3a3f47;      /* deep gray for contrast panels */
+  --color-matte: #0e0f11;         /* matte black — primary text */
+  --color-neon: #b6ff3c;          /* SIGNATURE neon green */
+  --color-neon-deep: #7ed321;     /* deeper neon for pressed states */
+  --color-bone-warm: #f6f4ef;     /* off-white "bone" surface */
 
-  --color-background: var(--color-bone);
-  --color-foreground: var(--color-ink);
-  --color-muted: var(--color-mist);
-  --color-muted-foreground: var(--color-ash);
+  /* Semantic tokens (existing names remapped — do NOT rename, screens depend on them) */
+  --color-bone: var(--color-white);          /* primary surface = pure white */
+  --color-ink: var(--color-matte);           /* primary text = matte black */
+  --color-ash: var(--color-titanium);        /* muted text = titanium */
+  --color-mist: var(--color-platinum);       /* elevated surface = platinum */
+  --color-hair: #dcdfe4;                     /* hairline / divider = silver */
+  --color-hair-soft: #ebedf0;
+  --color-signal: var(--color-neon);         /* accent = neon green */
+  --color-signal-deep: var(--color-neon-deep);
+  --color-heat: #d43a2f;                     /* destructive only */
+  --color-cool: var(--color-gunmetal);
+  --color-plum: var(--color-gunmetal);
+
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-matte);
+  --color-muted: var(--color-platinum);
+  --color-muted-foreground: var(--color-titanium);
   --color-border: var(--color-hair);
-  --color-primary: var(--color-ink);
-  --color-primary-foreground: var(--color-bone);
-  --color-accent: var(--color-signal);
+  --color-primary: var(--color-matte);
+  --color-primary-foreground: var(--color-white);
+  --color-accent: var(--color-neon);
   --color-destructive: var(--color-heat);
-  --color-card: var(--color-mist);
-  --color-card-foreground: var(--color-ink);
+  --color-card: var(--color-platinum);
+  --color-card-foreground: var(--color-matte);
   --color-input: var(--color-hair);
-  --color-ring: var(--color-signal);
-  --color-popover: var(--color-mist);
-  --color-popover-foreground: var(--color-ink);
-  --color-secondary: var(--color-mist);
-  --color-secondary-foreground: var(--color-ink);
-  --color-accent-foreground: var(--color-bone);
-  --color-destructive-foreground: var(--color-ink);
-  --color-sidebar: var(--color-bone);
-  --color-sidebar-foreground: var(--color-ink);
-  --color-sidebar-primary: var(--color-signal);
-  --color-sidebar-primary-foreground: var(--color-bone);
-  --color-sidebar-accent: var(--color-mist);
-  --color-sidebar-accent-foreground: var(--color-ink);
+  --color-ring: var(--color-neon);
+  --color-popover: var(--color-white);
+  --color-popover-foreground: var(--color-matte);
+  --color-secondary: var(--color-platinum);
+  --color-secondary-foreground: var(--color-matte);
+  --color-accent-foreground: var(--color-matte);
+  --color-destructive-foreground: var(--color-white);
+  --color-sidebar: var(--color-white);
+  --color-sidebar-foreground: var(--color-matte);
+  --color-sidebar-primary: var(--color-neon);
+  --color-sidebar-primary-foreground: var(--color-matte);
+  --color-sidebar-accent: var(--color-platinum);
+  --color-sidebar-accent-foreground: var(--color-matte);
   --color-sidebar-border: var(--color-hair);
-  --color-sidebar-ring: var(--color-signal);
-  --color-chart-1: var(--color-signal);
-  --color-chart-2: var(--color-ink);
-  --color-chart-3: var(--color-heat);
-  --color-chart-4: var(--color-cool);
-  --color-chart-5: var(--color-plum);
+  --color-sidebar-ring: var(--color-neon);
+  --color-chart-1: var(--color-neon);
+  --color-chart-2: var(--color-matte);
+  --color-chart-3: var(--color-gunmetal);
+  --color-chart-4: var(--color-titanium);
+  --color-chart-5: var(--color-silver);
 
-  --font-display: "Inter", system-ui, sans-serif;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 12px;
-
+  --radius: 10px;
 }
 
 @layer base {
   * { border-color: var(--color-hair); }
   html, body {
-    background: var(--color-bone);
-    color: var(--color-ink);
+    background: var(--color-white);
+    color: var(--color-matte);
   }
   body {
     font-family: var(--font-sans);
     font-feature-settings: "ss01","cv11","tnum";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    background-color: var(--color-bone);
+    background-color: var(--color-white);
+    /* CNC brushed metal ambience — no colored gradients */
     background-image:
-      radial-gradient(1400px 700px at 100% -20%, color-mix(in oklab, var(--color-signal) 14%, transparent), transparent 55%),
-      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-heat) 8%, transparent), transparent 55%);
+      radial-gradient(1200px 600px at 100% -10%, rgba(182,255,60,0.06), transparent 60%),
+      radial-gradient(800px 500px at -10% 105%, rgba(58,63,71,0.05), transparent 60%),
+      repeating-linear-gradient(90deg, rgba(58,63,71,0.018) 0 1px, transparent 1px 3px);
     background-attachment: fixed;
-
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.02em;
   }
   .mono { font-family: var(--font-mono); }
   ::-webkit-scrollbar { display: none; }
   * { scrollbar-width: none; }
-  ::selection { background: var(--color-signal); color: var(--color-bone); }
+  ::selection { background: var(--color-neon); color: var(--color-matte); }
 }
 
 /* ============ SURFACES ============ */
 
 @utility card-surface {
-  background: var(--color-mist);
+  background: var(--color-platinum);
   border: 1px solid var(--color-hair);
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 @utility card-ink {
-  background: var(--color-mist);
-  color: var(--color-ink);
-  border: 1px solid var(--color-hair);
-  border-radius: 14px;
+  background: var(--color-matte);
+  color: var(--color-white);
+  border: 1px solid var(--color-matte);
+  border-radius: 12px;
 }
 
-
 @utility glass {
-  background: color-mix(in oklab, var(--color-bone) 72%, transparent);
+  background: color-mix(in oklab, var(--color-white) 78%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--color-hair);
 }
 
 @utility glass-dark {
-  background: color-mix(in oklab, var(--color-bone) 62%, transparent);
+  background: color-mix(in oklab, var(--color-matte) 72%, transparent);
   backdrop-filter: blur(20px) saturate(160%);
-  color: var(--color-ink);
-  border: 1px solid color-mix(in oklab, var(--color-ink) 12%, transparent);
+  color: var(--color-white);
+  border: 1px solid rgba(255,255,255,0.08);
 }
 
-@utility hairline {
-  border: 1px solid var(--color-hair);
-}
+@utility hairline { border: 1px solid var(--color-hair); }
 @utility hairline-t { border-top: 1px solid var(--color-hair); }
 @utility hairline-b { border-bottom: 1px solid var(--color-hair); }
 
+/* Brushed titanium / CNC surface */
+@utility surface-titanium {
+  background:
+    linear-gradient(180deg, #f7f8fa 0%, #e8eaee 100%),
+    repeating-linear-gradient(90deg, rgba(58,63,71,0.05) 0 1px, transparent 1px 2px);
+  background-blend-mode: multiply;
+  border: 1px solid var(--color-hair);
+}
+
+/* Carbon-fibre weave — dark surface */
+@utility surface-carbon {
+  background-color: #101115;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 4px);
+  color: var(--color-white);
+  border: 1px solid #22252b;
+}
+
+/* Machined aluminum step-cut frame */
 @utility frame {
   position: relative;
-  border: 1px solid var(--color-hair);
+  border: 1px solid var(--color-matte);
   &::before, &::after {
     content: "";
     position: absolute;
-    width: 10px; height: 10px;
-    border: 1px solid var(--color-ink);
+    width: 8px; height: 8px;
+    border: 1px solid var(--color-matte);
   }
   &::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
   &::after  { bottom: -1px; right: -1px; border-left: none; border-top: none; }
 }
 
+/* CNC bolt marker — decorative dot with ring */
+@utility bolt {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--color-silver) 45%, var(--color-gunmetal) 100%);
+  box-shadow: 0 0 0 1px var(--color-gunmetal), inset 0 0 0 1px rgba(255,255,255,0.4);
+}
+
 @utility gradient-brand {
   background-image: linear-gradient(135deg,
-    var(--color-signal) 0%,
-    var(--color-signal-deep) 100%);
+    var(--color-neon) 0%,
+    var(--color-neon-deep) 100%);
 }
 
 @utility gradient-ink {
   background-image: linear-gradient(180deg,
     transparent 0%,
-    color-mix(in oklab, var(--color-bone) 40%, transparent) 45%,
-    color-mix(in oklab, var(--color-bone) 92%, transparent) 100%);
+    rgba(14,15,17,0.35) 45%,
+    rgba(14,15,17,0.92) 100%);
 }
 
-/* ============ TYPOGRAPHY UTILITIES ============ */
+/* ============ TYPOGRAPHY ============ */
 
 @utility mono-caps {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: none;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   font-weight: 600;
 }
 @utility mono-tag {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  text-transform: none;
-  font-weight: 600;
-  color: var(--color-ash);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-titanium);
 }
 @utility mono-num {
   font-family: var(--font-mono);
@@ -174,18 +213,17 @@
 }
 @utility display-xl {
   font-family: var(--font-display);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
 }
 @utility display-numeral {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }
-
 
 /* ============ CHIPS & BUTTONS ============ */
 
@@ -193,19 +231,22 @@
   display: inline-flex; align-items: center; gap: 6px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--color-mist);
+  background: var(--color-platinum);
   border: 1px solid var(--color-hair);
   font-family: var(--font-sans);
   font-size: 12px;
-  letter-spacing: 0;
-  text-transform: none;
   font-weight: 600;
-  color: var(--color-ink);
+  color: var(--color-matte);
 }
 @utility chip-active {
-  background: var(--color-ink);
-  color: var(--color-bone);
-  border-color: var(--color-ink);
+  background: var(--color-matte);
+  color: var(--color-white);
+  border-color: var(--color-matte);
+}
+@utility chip-neon {
+  background: var(--color-neon);
+  color: var(--color-matte);
+  border-color: var(--color-neon-deep);
 }
 @utility chip-heat {
   border-color: var(--color-heat);
@@ -214,76 +255,109 @@
 
 @utility btn-solid {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 20px;
-  background: var(--color-ink);
-  color: var(--color-bone);
+  padding: 13px 20px;
+  background: var(--color-matte);
+  color: var(--color-white);
   border-radius: 999px;
   font-weight: 600;
   font-size: 14px;
-  letter-spacing: 0;
-  text-transform: none;
-  transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), background 200ms ease;
+  transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), background 200ms ease, box-shadow 200ms ease;
   &:active { transform: translateY(1px); }
-  &:hover { background: color-mix(in oklab, var(--color-ink) 85%, var(--color-signal)); }
+  &:hover {
+    background: var(--color-gunmetal);
+    box-shadow: 0 0 0 2px var(--color-neon);
+  }
+}
+@utility btn-neon {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 13px 20px;
+  background: var(--color-neon);
+  color: var(--color-matte);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 6px 20px -8px rgba(182,255,60,0.7);
+  transition: transform 140ms ease;
+  &:active { transform: translateY(1px); }
 }
 @utility btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 20px;
+  padding: 13px 20px;
   background: transparent;
-  color: var(--color-ink);
+  color: var(--color-matte);
   border: 1px solid var(--color-hair);
   border-radius: 999px;
   font-weight: 600;
   font-size: 14px;
-  letter-spacing: 0;
-  text-transform: none;
-  transition: border-color 200ms ease;
-  &:hover { border-color: var(--color-ink); }
+  transition: border-color 200ms ease, background 200ms ease;
+  &:hover { border-color: var(--color-matte); background: var(--color-platinum); }
 }
-
 
 @utility tap {
   transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), opacity 140ms ease;
   &:active { transform: scale(0.97); opacity: 0.85; }
 }
 
-/* Vehicle hex avatar frame — square with clipped corners */
+/* Hex avatar frame — bevel-cut like a machined part */
 @utility hex-frame {
   clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-  background: var(--color-mist);
+  background: var(--color-platinum);
 }
 
-/* Story ring — now a thin outline square */
+/* Story rings */
 @utility story-ring {
   padding: 2px;
-  border-radius: 2px;
-  background: linear-gradient(135deg, var(--color-signal), var(--color-signal-deep));
+  border-radius: 999px;
+  background: conic-gradient(from 210deg, var(--color-neon), var(--color-gunmetal), var(--color-neon));
 }
 @utility story-ring-seen {
   padding: 2px;
-  border-radius: 2px;
-  background: var(--color-hair);
+  border-radius: 999px;
+  background: var(--color-silver);
 }
 @utility story-ring-live {
   padding: 2px;
-  border-radius: 2px;
-  background: linear-gradient(135deg, var(--color-heat), oklch(0.55 0.2 15));
+  border-radius: 999px;
+  background: conic-gradient(from 0deg, var(--color-heat), var(--color-matte), var(--color-heat));
+}
+
+/* Rider status badge — metallic base */
+@utility badge-metal {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px 3px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-matte);
+  background: linear-gradient(180deg, #f4f5f8 0%, #c7cbd1 100%);
+  border: 1px solid var(--color-titanium);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 1px 0 rgba(0,0,0,0.06);
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+@utility badge-neon {
+  background: linear-gradient(180deg, #dbff8b 0%, var(--color-neon) 55%, var(--color-neon-deep) 100%);
+  border-color: var(--color-neon-deep);
+  color: var(--color-matte);
+}
+@utility badge-carbon {
+  background: linear-gradient(180deg, #2a2d33 0%, #0e0f11 100%);
+  border-color: #000;
+  color: var(--color-neon);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 1px 0 rgba(0,0,0,0.4);
+}
+@utility badge-gold {
+  background: linear-gradient(180deg, #f7e58a 0%, #c9a24a 100%);
+  border-color: #8f7126;
+  color: #3a2e0f;
 }
 
 /* ============ SCROLL ============ */
-
-@utility snap-y-page {
-  scroll-snap-type: y mandatory;
-  scroll-behavior: smooth;
-}
-@utility snap-item {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-}
-@utility snap-x-page {
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-}
+@utility snap-y-page { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+@utility snap-item { scroll-snap-align: start; scroll-snap-stop: always; }
+@utility snap-x-page { scroll-snap-type: x mandatory; scroll-behavior: smooth; }
 @utility snap-x-item { scroll-snap-align: start; }
 @utility no-scrollbar {
   &::-webkit-scrollbar { display: none; }
@@ -291,17 +365,10 @@
 }
 
 /* ============ MOTION ============ */
-
-@keyframes rise {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @utility rise { animation: rise 600ms cubic-bezier(0.2,0.7,0.2,1) both; }
 
-@keyframes fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @utility fade-in { animation: fade 500ms ease-out both; }
 
 @keyframes heart-burst {
@@ -311,10 +378,7 @@
 }
 @utility heart-burst { animation: heart-burst 900ms cubic-bezier(0.2,0.7,0.2,1) both; }
 
-@keyframes pulse-signal {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
+@keyframes pulse-signal { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 @utility pulse-signal { animation: pulse-signal 1.4s ease-in-out infinite; }
 
 @keyframes ken-burns {
@@ -324,45 +388,54 @@
 }
 @utility ken-burns { animation: ken-burns 18s ease-in-out infinite; }
 
-@keyframes wave {
-  0%,100% { height: 20%; }
-  50% { height: 100%; }
-}
+@keyframes wave { 0%,100% { height: 20%; } 50% { height: 100%; } }
 @utility bar-1 { animation: wave 700ms ease-in-out infinite; }
 @utility bar-2 { animation: wave 900ms ease-in-out 100ms infinite; }
 @utility bar-3 { animation: wave 800ms ease-in-out 250ms infinite; }
 @utility bar-4 { animation: wave 1000ms ease-in-out 50ms infinite; }
 
-@keyframes progress {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-@utility progress-bar {
-  transform-origin: left;
-  animation: progress 8s linear both;
-}
+@keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@utility progress-bar { transform-origin: left; animation: progress 8s linear both; }
 
-@keyframes shimmer {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
-}
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
 @utility skeleton {
   background: linear-gradient(90deg,
-    color-mix(in oklab, var(--color-ink) 4%, transparent) 0%,
-    color-mix(in oklab, var(--color-ink) 10%, transparent) 50%,
-    color-mix(in oklab, var(--color-ink) 4%, transparent) 100%);
+    rgba(14,15,17,0.04) 0%,
+    rgba(14,15,17,0.10) 50%,
+    rgba(14,15,17,0.04) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
 }
 
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @utility marquee { animation: marquee 40s linear infinite; }
 
-@keyframes countup {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes countup { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 @utility countup { animation: countup 700ms cubic-bezier(0.2,0.7,0.2,1) both; }
+
+/* Metallic sheen for badges */
+@keyframes sheen {
+  0% { background-position: -120% 0; }
+  60% { background-position: 220% 0; }
+  100% { background-position: 220% 0; }
+}
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.65) 45%, transparent 60%);
+    background-size: 200% 100%;
+    mix-blend-mode: overlay;
+    animation: sheen 3.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+}
+
+/* Engine-pulse ring for notification badges */
+@keyframes engine-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(182,255,60,0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(182,255,60,0); }
+}
+@utility engine-pulse { animation: engine-pulse 1.8s ease-out infinite; }

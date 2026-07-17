@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import type { Post } from "@/lib/mock-data";
 import { HexChip, DataChip } from "./hud";
+import { IconClaw, IconVisor, IconMechClaw, IconBoneMark } from "./icons/RexIcons";
+import { RiderMark } from "./RiderBadge";
 
 /** Post rebuilt as a telemetry readout: left spec column, media plate, right action rail. */
 export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number }) {
@@ -30,11 +32,7 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
               <p className="font-display truncate text-sm font-semibold uppercase leading-none">
                 {post.user.name}
               </p>
-              {post.user.verified && (
-                <span className="clip-tag mono-caps bg-signal px-1 py-[1px] text-[8px] font-bold text-ink">
-                  VFD
-                </span>
-              )}
+              {post.user.verified && <RiderMark tier="ELITE" />}
             </div>
             <p className="mono-caps text-ash mt-0.5 truncate">{post.user.handle} · {post.user.location}</p>
           </div>
@@ -69,8 +67,8 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
           )}
           {liked && (
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <span className="font-display text-signal text-6xl drop-shadow" style={{ animation: "hud-in 500ms ease" }}>
-                ✚
+              <span className="heart-burst text-signal" style={{ filter: "drop-shadow(0 4px 12px rgba(182,255,60,0.8))" }}>
+                <IconClaw size={92} strokeWidth={2.5} />
               </span>
             </span>
           )}
@@ -95,32 +93,35 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
         </div>
       </div>
 
-      {/* RIGHT: vertical action rail */}
+      {/* RIGHT: vertical action rail — fossil/mechanical glyphs */}
       <div className="flex flex-col items-stretch justify-start border-l border-ink bg-mist">
-        <RailAction glyph="✚" label="LIKE" active={liked} onClick={() => setLiked((v) => !v)} tone="signal" />
-        <RailAction glyph="◨" label="RPLY" />
-        <RailAction glyph="⇢" label="SEND" />
-        <RailAction glyph="⬒" label="SAVE" active={saved} onClick={() => setSaved((v) => !v)} />
-        <RailAction glyph="⋯" label="MORE" />
+        <RailAction Icon={IconClaw}     label="LIKE" active={liked} onClick={() => setLiked((v) => !v)} tone="signal" />
+        <RailAction Icon={IconVisor}    label="RPLY" />
+        <RailAction Icon={IconMechClaw} label="SEND" />
+        <RailAction Icon={IconBoneMark} label="SAVE" active={saved} onClick={() => setSaved((v) => !v)} />
       </div>
     </article>
   );
 }
 
 function RailAction({
-  glyph, label, onClick, active, tone,
+  Icon, label, onClick, active, tone,
 }: {
-  glyph: string; label: string; onClick?: () => void; active?: boolean; tone?: "signal";
+  Icon: ComponentType<{ size?: number }>;
+  label: string;
+  onClick?: () => void;
+  active?: boolean;
+  tone?: "signal";
 }) {
   return (
     <button
       onClick={onClick}
-      className={`tap flex flex-1 flex-col items-center justify-center gap-0.5 border-b border-ink py-2 ${
+      className={`tap flex flex-1 flex-col items-center justify-center gap-1 border-b border-ink py-2 ${
         active ? (tone === "signal" ? "bg-signal text-ink" : "bg-ink text-bone") : "text-ink"
       }`}
     >
-      <span className="text-base leading-none">{glyph}</span>
-      <span className="mono-caps text-[8px]">{label}</span>
+      <Icon size={18} />
+      <span className="mono-caps" style={{ fontSize: 8 }}>{label}</span>
     </button>
   );
 }

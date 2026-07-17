@@ -1,49 +1,18 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
+import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
 
 type NavItem = {
   to: "/" | "/search" | "/marketplace" | "/profile";
-  index: string;
   label: string;
   icon: ComponentType<{ className?: string }>;
 };
 
-// Minimalist custom glyphs — hand-drawn, not lucide defaults
-const HomeGlyph = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
-    <path d="M4 20V10L12 4l8 6v10" strokeLinecap="square" />
-    <path d="M10 20v-6h4v6" strokeLinecap="square" />
-  </svg>
-);
-const CompassGlyph = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M15 9l-2 6-4 0 2-6z" fill="currentColor" stroke="none" />
-  </svg>
-);
-const CreateGlyph = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.75}>
-    <path d="M12 4v16M4 12h16" strokeLinecap="square" />
-  </svg>
-);
-const ShopGlyph = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
-    <path d="M4 8h16l-1 12H5L4 8z" strokeLinejoin="miter" />
-    <path d="M9 8V5a3 3 0 016 0v3" />
-  </svg>
-);
-const GarageGlyph = ({ className = "" }) => (
-  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
-    <path d="M3 20V9l9-5 9 5v11" strokeLinecap="square" />
-    <path d="M3 12h18M3 16h18" />
-  </svg>
-);
-
 const NAV: NavItem[] = [
-  { to: "/",            index: "01", label: "Home",   icon: HomeGlyph },
-  { to: "/search",      index: "02", label: "Discover", icon: CompassGlyph },
-  { to: "/marketplace", index: "04", label: "Market", icon: ShopGlyph },
-  { to: "/profile",     index: "05", label: "Garage", icon: GarageGlyph },
+  { to: "/",            label: "Garage",    icon: IconGarage },
+  { to: "/search",      label: "Discover",  icon: IconDiscover },
+  { to: "/marketplace", label: "Vault",     icon: IconMarket },
+  { to: "/profile",     label: "Rider",     icon: IconHelmet },
 ];
 
 export function BottomNav() {
@@ -58,26 +27,37 @@ export function BottomNav() {
       <div
         className="hairline-t grid grid-cols-5 items-center"
         style={{
-          background: "color-mix(in oklab, var(--color-bone) 88%, transparent)",
-          backdropFilter: "blur(24px) saturate(140%)",
+          background: "color-mix(in oklab, #ffffff 90%, transparent)",
+          backdropFilter: "blur(24px) saturate(160%)",
+          borderTop: "1px solid var(--color-hair)",
+          boxShadow: "0 -6px 20px -12px rgba(14,15,17,0.15)",
         }}
       >
         <NavCell item={NAV[0]} active={pathname === "/"} />
         <NavCell item={NAV[1]} active={pathname.startsWith("/search")} />
 
-        {/* Center create — friendly rounded pill */}
+        {/* Center CREATE — CNC bolt-cross floating action */}
         <button
           aria-label="Create"
           className="tap group relative flex h-16 items-center justify-center"
         >
           <span
-            className="flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
-            style={{ background: "var(--color-ink)", color: "var(--color-bone)" }}
+            className="engine-pulse relative flex h-14 w-14 items-center justify-center"
+            style={{
+              clipPath: "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
+              background: "linear-gradient(180deg, #1a1c20 0%, #0e0f11 100%)",
+              color: "var(--color-neon)",
+              boxShadow: "0 8px 22px -8px rgba(14,15,17,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
+              border: "1px solid #000",
+            }}
           >
-            <CreateGlyph className="h-5 w-5" />
+            <IconBoltCross size={22} />
+            <span className="bolt absolute left-1 top-1" />
+            <span className="bolt absolute right-1 top-1" />
+            <span className="bolt absolute left-1 bottom-1" />
+            <span className="bolt absolute right-1 bottom-1" />
           </span>
         </button>
-
 
         <NavCell item={NAV[2]} active={pathname.startsWith("/marketplace")} />
         <NavCell item={NAV[3]} active={pathname.startsWith("/profile")} />
@@ -93,19 +73,21 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
       to={item.to}
       aria-current={active ? "page" : undefined}
       className="tap relative flex h-16 flex-col items-center justify-center gap-1"
-      style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}
+      style={{ color: active ? "var(--color-matte)" : "var(--color-titanium)" }}
     >
-      <Icon className="h-5 w-5" />
-      <span className="text-[11px] font-semibold tracking-tight">
+      <Icon className="h-[22px] w-[22px]" />
+      <span
+        className="mono-caps"
+        style={{ fontSize: 9, letterSpacing: "0.16em" }}
+      >
         {item.label}
       </span>
       {active && (
         <span
-          className="absolute top-1.5 h-1 w-1 rounded-full"
-          style={{ background: "var(--color-signal)" }}
+          className="absolute bottom-1 h-[3px] w-6 rounded-full"
+          style={{ background: "var(--color-neon)", boxShadow: "0 0 8px rgba(182,255,60,0.7)" }}
         />
       )}
     </Link>
   );
 }
-
