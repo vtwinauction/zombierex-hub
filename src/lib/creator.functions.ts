@@ -350,15 +350,21 @@ export const listMyCollabInbox = createServerFn({ method: "GET" })
     const cid = await getMyCreatorId(context.supabase, context.userId);
     let q = context.supabase
       .from("collab_requests")
-      .select("*, sender:profiles!collab_requests_sender_id_fkey(handle, display_name, avatar_url)")
+      .select("*")
       .eq("creator_id", cid)
       .order("created_at", { ascending: false })
       .limit(100);
     if (data.status !== "all") q = q.eq("status", data.status);
     const { data: rows, error } = await q;
     if (error) throw new Error(error.message);
-    return rows ?? [];
+    const sids = Array.from(new Set((rows ?? []).map((r) => r.sender_id)));
+    const { data: senders } = sids.length
+      ? await context.supabase.from("profiles").select("id, handle, display_name, avatar_url").in("id", sids)
+      : { data: [] as any[] };
+    const byId = new Map((senders ?? []).map((s) => [s.id, s]));
+    return (rows ?? []).map((r) => ({ ...r, sender: byId.get(r.sender_id) ?? null }));
   });
+
 
 export const sendCollabRequest = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
