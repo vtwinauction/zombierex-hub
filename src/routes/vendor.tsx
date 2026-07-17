@@ -51,11 +51,11 @@ function VendorShell() {
     );
   }
 
-  const tabs = [
+  const tabs: { to: "/vendor" | "/vendor/plans" | "/vendor/apply"; label: string; exact?: boolean }[] = [
     { to: "/vendor", label: "Overview", exact: true },
     { to: "/vendor/plans", label: "Plans" },
     { to: "/vendor/apply", label: "Profile" },
-  ] as const;
+  ];
 
   return (
     <div className="pb-24">
