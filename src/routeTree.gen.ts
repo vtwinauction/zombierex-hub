@@ -32,6 +32,7 @@ import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenti
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
+import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
@@ -159,6 +160,12 @@ const AuthenticatedAdminVendorsRoute =
     path: '/vendors',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const CommunitiesSlugChallengesChallengeIdRoute =
+  CommunitiesSlugChallengesChallengeIdRouteImport.update({
+    id: '/challenges/$challengeId',
+    path: '/challenges/$challengeId',
+    getParentRoute: () => CommunitiesSlugRoute,
+  } as any)
 const ApiPublicWebhooksPaymentsRoute =
   ApiPublicWebhooksPaymentsRouteImport.update({
     id: '/api/public/webhooks/payments',
@@ -209,7 +216,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
-  '/communities/$slug': typeof CommunitiesSlugRoute
+  '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -237,7 +245,7 @@ export interface FileRoutesByTo {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/communities/$slug': typeof CommunitiesSlugRoute
+  '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -250,6 +258,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -269,7 +278,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
-  '/communities/$slug': typeof CommunitiesSlugRoute
+  '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -282,6 +291,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/_authenticated/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/_authenticated/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/_authenticated/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -314,6 +324,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/challenges/$challengeId'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
@@ -342,6 +353,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/challenges/$challengeId'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
@@ -373,6 +385,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/challenges/$challengeId'
     | '/_authenticated/communities/$slug/challenges/new'
     | '/_authenticated/communities/$slug/events/new'
     | '/_authenticated/communities/$slug/post/new'
@@ -390,7 +403,7 @@ export interface RootRouteChildren {
   ReelsRoute: typeof ReelsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
-  CommunitiesSlugRoute: typeof CommunitiesSlugRoute
+  CommunitiesSlugRoute: typeof CommunitiesSlugRouteWithChildren
   CommunitiesIndexRoute: typeof CommunitiesIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
@@ -559,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVendorsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/communities/$slug/challenges/$challengeId': {
+      id: '/communities/$slug/challenges/$challengeId'
+      path: '/challenges/$challengeId'
+      fullPath: '/communities/$slug/challenges/$challengeId'
+      preLoaderRoute: typeof CommunitiesSlugChallengesChallengeIdRouteImport
+      parentRoute: typeof CommunitiesSlugRoute
+    }
     '/api/public/webhooks/payments': {
       id: '/api/public/webhooks/payments'
       path: '/api/public/webhooks/payments'
@@ -675,6 +695,19 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CommunitiesSlugRouteChildren {
+  CommunitiesSlugChallengesChallengeIdRoute: typeof CommunitiesSlugChallengesChallengeIdRoute
+}
+
+const CommunitiesSlugRouteChildren: CommunitiesSlugRouteChildren = {
+  CommunitiesSlugChallengesChallengeIdRoute:
+    CommunitiesSlugChallengesChallengeIdRoute,
+}
+
+const CommunitiesSlugRouteWithChildren = CommunitiesSlugRoute._addFileChildren(
+  CommunitiesSlugRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -687,7 +720,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReelsRoute: ReelsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
-  CommunitiesSlugRoute: CommunitiesSlugRoute,
+  CommunitiesSlugRoute: CommunitiesSlugRouteWithChildren,
   CommunitiesIndexRoute: CommunitiesIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
