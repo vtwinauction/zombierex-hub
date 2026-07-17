@@ -22,6 +22,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     items: [
       { to: "/marketplace", label: "Vault (browse)" },
       { to: "/marketplace/dashboard", label: "My listings", hint: "Analytics · manage" },
+    ],
   },
   {
     title: "Explore",
