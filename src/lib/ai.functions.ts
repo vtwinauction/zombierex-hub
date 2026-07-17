@@ -257,30 +257,30 @@ export const recommendedForYou = createServerFn({ method: "POST" })
     // Signal: recent reactions & follows.
     const [reactions, follows] = await Promise.all([
       supabase.from("reactions").select("target_id, kind").eq("user_id", userId).limit(30),
-      supabase.from("follows").select("followed_id").eq("follower_id", userId).limit(30),
+      supabase.from("follows").select("followee_id").eq("follower_id", userId).limit(30),
     ]);
     const signals = {
       reactions: reactions.data ?? [],
-      follows: (follows.data ?? []).map((f) => f.followed_id),
+      follows: (follows.data ?? []).map((f) => f.followee_id as string),
     };
 
-    // Candidates per surface.
-    let candidates: Array<Record<string, unknown>> = [];
+    // Candidates per surface. `any[]` here — payloads vary and are only serialized back to the client.
+    let candidates: any[] = [];
     const sb = serverPublic();
     switch (data.surface) {
       case "feed":
       case "reels": {
         const r = await sb.from("posts").select("id, caption, kind, thumbnail_url, likes_count").order("created_at", { ascending: false }).limit(40);
-        candidates = (r.data ?? []).filter((p) => data.surface === "reels" ? p.kind === "video" : true);
+        candidates = (r.data ?? []).filter((p: any) => data.surface === "reels" ? p.kind === "video" : true);
         break;
       }
       case "communities": {
-        const r = await sb.from("clubs").select("id, slug, name, description, member_count, banner_url").order("member_count", { ascending: false }).limit(30);
+        const r = await sb.from("clubs").select("id, slug, name, description, members_count, banner_url").order("members_count", { ascending: false }).limit(30);
         candidates = r.data ?? [];
         break;
       }
       case "events": {
-        const r = await sb.from("events").select("id, title, starts_at, city, cover_url").gte("starts_at", new Date().toISOString()).order("starts_at").limit(30);
+        const r = await sb.from("events").select("id, title, starts_at, location, cover_url").gte("starts_at", new Date().toISOString()).order("starts_at").limit(30);
         candidates = r.data ?? [];
         break;
       }
@@ -290,18 +290,18 @@ export const recommendedForYou = createServerFn({ method: "POST" })
         break;
       }
       case "creators": {
-        const r = await sb.from("creator_profiles").select("id, display_name, bio, follower_count, avatar_url").order("follower_count", { ascending: false }).limit(30);
+        const r = await sb.from("creator_profiles").select("id, user_id, category, tagline, subscribers_count").order("subscribers_count", { ascending: false }).limit(30);
         candidates = r.data ?? [];
         break;
       }
       case "hashtags": {
-        const r = await sb.from("hashtags").select("name, post_count").order("post_count", { ascending: false }).limit(30);
+        const r = await sb.from("hashtags").select("tag, usage_count").order("usage_count", { ascending: false }).limit(30);
         candidates = r.data ?? [];
         break;
       }
       case "users": {
         const r = await sb.from("profiles").select("id, handle, display_name, avatar_url, tier, bio").limit(40);
-        candidates = (r.data ?? []).filter((p) => p.id !== userId && !signals.follows.includes(p.id as string));
+        candidates = (r.data ?? []).filter((p: any) => p.id !== userId && !signals.follows.includes(p.id as string));
         break;
       }
     }
