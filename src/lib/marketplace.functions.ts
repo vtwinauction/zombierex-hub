@@ -24,20 +24,17 @@ function publicClient() {
   });
 }
 
-/** Optional-auth middleware: attach supabase client + optional userId, never throws on missing token. */
-async function getOptionalAuth(): Promise<{ userId: string | null }> {
+/** Read optional bearer token from the incoming request; returns userId or null. */
+async function getOptionalUserId(): Promise<string | null> {
   try {
-    const { getRequestHeader } = await import("@tanstack/react-start/server");
-    const auth = getRequestHeader("authorization") || getRequestHeader("Authorization");
-    if (!auth?.startsWith("Bearer ")) return { userId: null };
+    const { getWebRequest } = await import("@tanstack/react-start/server");
+    const req = getWebRequest();
+    const auth = req?.headers.get("authorization") || req?.headers.get("Authorization");
+    if (!auth?.toLowerCase().startsWith("bearer ")) return null;
     const token = auth.slice(7);
-    const client = createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
-      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
-      global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-    const { data } = await client.auth.getUser(token);
-    return { userId: data.user?.id ?? null };
-  } catch { return { userId: null }; }
+    const { data } = await publicClient().auth.getUser(token);
+    return data.user?.id ?? null;
+  } catch { return null; }
 }
 
 export const LISTING_CATEGORIES = [
