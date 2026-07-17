@@ -68,7 +68,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -97,7 +97,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative min-h-[100svh] bg-background text-foreground">
-        <main className="min-h-[100svh] pr-[calc(72px+env(safe-area-inset-right))]">
+        <main className="min-h-[100svh] pb-[calc(64px+env(safe-area-inset-bottom))]">
           <Outlet />
         </main>
         <BottomNav />

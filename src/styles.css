@@ -73,12 +73,12 @@
   --color-platinum: var(--color-graphite);
   --color-hair-soft: #1c1e23;
 
-  --font-editorial: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-editorial: "Instrument Serif", "Times New Roman", serif;
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-sans: "Work Sans", "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 8px;
+  --radius: 4px;
 }
 
 @layer base {
@@ -103,8 +103,8 @@
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
-    font-family: var(--font-sans);
-    font-weight: 600;
+    font-family: var(--font-editorial);
+    font-weight: 400;
     letter-spacing: -0.02em;
   }
   .mono { font-family: var(--font-mono); }
@@ -202,23 +202,23 @@
   letter-spacing: -0.01em;
 }
 @utility display-xl {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-family: var(--font-editorial);
+  font-weight: 400;
   letter-spacing: -0.03em;
-  line-height: 0.98;
-  font-style: normal;
+  line-height: 0.92;
+  font-style: italic;
 }
 @utility display-roman {
-  font-family: var(--font-sans);
-  font-weight: 600;
+  font-family: var(--font-editorial);
+  font-weight: 400;
   letter-spacing: -0.02em;
-  line-height: 1;
+  line-height: 0.92;
 }
 @utility display-numeral {
-  font-family: var(--font-sans);
-  font-weight: 700;
+  font-family: var(--font-editorial);
+  font-weight: 400;
   letter-spacing: -0.03em;
-  line-height: 0.95;
+  line-height: 0.88;
   font-variant-numeric: tabular-nums;
 }
 

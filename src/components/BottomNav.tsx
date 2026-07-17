@@ -8,18 +8,18 @@ type NavItem = {
   icon: ComponentType<{ className?: string }>;
 };
 
-const TOP: NavItem[] = [
-  { to: "/",            label: "Feed",    icon: IconGarage },
-  { to: "/search",      label: "Signal",  icon: IconDiscover },
+const LEFT: NavItem[] = [
+  { to: "/",            label: "Feed",     icon: IconGarage },
+  { to: "/search",      label: "Signal",   icon: IconDiscover },
 ];
-const BOTTOM: NavItem[] = [
-  { to: "/marketplace", label: "Vault",   icon: IconMarket },
-  { to: "/profile",     label: "Garage",  icon: IconHelmet },
+const RIGHT: NavItem[] = [
+  { to: "/marketplace", label: "Vault",    icon: IconMarket },
+  { to: "/profile",     label: "Garage",   icon: IconHelmet },
 ];
 
 /**
- * Vertical right-side navigation rail.
- * Floating obsidian pill anchored to the right edge, safe-area aware.
+ * Floating obsidian dock — not a full-width tab bar.
+ * A pill-island with a raised neon "create" bolt at center-left offset.
  */
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -27,24 +27,24 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed right-0 top-1/2 z-50 -translate-y-1/2 pointer-events-none"
-      style={{ paddingRight: "calc(env(safe-area-inset-right) + 10px)" }}
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)" }}
     >
       <div
-        className="glass lift-2 pointer-events-auto flex flex-col items-center gap-1 px-2 py-2"
+        className="glass lift-2 pointer-events-auto flex items-center gap-1 px-2 py-2"
         style={{
           borderRadius: 999,
           border: "1px solid var(--color-hair-strong)",
         }}
       >
-        {TOP.map((it) => (
+        {LEFT.map((it) => (
           <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
         ))}
 
         {/* Central CREATE bolt */}
         <button
           aria-label="Create"
-          className="tap group relative my-1 grid h-12 w-12 place-items-center"
+          className="tap group relative mx-1 grid h-12 w-12 place-items-center"
           style={{
             borderRadius: 999,
             background: "linear-gradient(180deg, #dbff8b 0%, #c6ff3d 55%, #7ee01c 100%)",
@@ -57,7 +57,7 @@ export function BottomNav() {
           <span className="engine-pulse absolute inset-0 rounded-full" />
         </button>
 
-        {BOTTOM.map((it) => (
+        {RIGHT.map((it) => (
           <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
         ))}
       </div>
@@ -76,8 +76,7 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
     <Link
       to={item.to}
       aria-current={active ? "page" : undefined}
-      aria-label={item.label}
-      className="tap relative grid h-12 w-12 place-items-center"
+      className="tap relative grid h-11 w-14 place-items-center"
       style={{
         borderRadius: 999,
         color: active ? "var(--color-neon)" : "var(--color-silver)",
@@ -85,6 +84,7 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
       }}
     >
       <Icon className="h-[19px] w-[19px]" />
+      <span className="mono-caps absolute -bottom-0.5 hidden" style={{ fontSize: 8 }}>{item.label}</span>
     </Link>
   );
 }

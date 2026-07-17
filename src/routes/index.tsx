@@ -151,10 +151,14 @@ function HomePage() {
          ================================================== */}
       <section className="mt-10 px-4">
         <SectionHead kicker="Broadcast" title="Watch tonight" link="/" />
-        <div className="mt-4 flex flex-col gap-4">
-          <ReelTile reel={secondaryReel} tall />
-          <ReelTile reel={reels[2]} tall />
-          <ReelTile reel={reels[3]} tall />
+        <div className="mt-4 grid grid-cols-5 gap-2">
+          <div className="col-span-3">
+            <ReelTile reel={secondaryReel} tall />
+          </div>
+          <div className="col-span-2 flex flex-col gap-2">
+            <ReelTile reel={reels[2]} />
+            <ReelTile reel={reels[3]} />
+          </div>
         </div>
       </section>
 
@@ -283,14 +287,14 @@ function Spec({ k, v, u, accent }: { k: string; v: string | number; u?: string; 
 
 function ReelTile({ reel, tall }: { reel: (typeof reels)[number]; tall?: boolean }) {
   return (
-    <Link to="/" className="tap group relative block overflow-hidden" style={{ aspectRatio: tall ? "4/5" : "3/2", border: "1px solid var(--color-hair)", borderRadius: 8 }}>
+    <Link to="/" className="tap group relative block overflow-hidden" style={{ aspectRatio: tall ? "3/4" : "3/2", border: "1px solid var(--color-hair)" }}>
       <img src={reel.poster} alt="" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
       <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.85) 100%)" }} />
-      <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-        <p className="text-base font-semibold leading-tight">{reel.user.handle}</p>
-        <p className="mono-num text-xs mt-1" style={{ color: "rgba(255,255,255,0.75)" }}>{reel.views} views</p>
+      <div className="absolute inset-x-0 bottom-0 p-2 text-white">
+        <p className="serif italic text-sm leading-none">{reel.user.handle}</p>
+        <p className="mono-num text-[10px] mt-0.5" style={{ color: "rgba(255,255,255,0.7)" }}>{reel.views} views</p>
       </div>
-      <span className="mono-caps absolute right-3 top-3 px-2 py-1" style={{ background: "rgba(0,0,0,0.55)", color: "white", fontSize: 10 }}>
+      <span className="mono-caps absolute right-2 top-2 px-1.5 py-0.5" style={{ background: "rgba(0,0,0,0.55)", color: "white", fontSize: 8.5 }}>
         ▶ {String(reel.duration).padStart(2, "0")}s
       </span>
     </Link>
