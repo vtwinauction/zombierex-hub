@@ -43,10 +43,10 @@ export function StatusBar({ index, section }: { index: string; section: string }
 
         <div className="flex items-center gap-1.5">
           <ActionCell to="/notifications" label="Notifications" pulse>
-            <IconEnginePulse size={17} />
+            <Bell size={17} strokeWidth={1.75} />
           </ActionCell>
           <ActionCell to="/messages" label="Messages">
-            <IconGauge size={17} />
+            <MessageCircle size={17} strokeWidth={1.75} />
           </ActionCell>
         </div>
       </div>
