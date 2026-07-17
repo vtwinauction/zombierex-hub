@@ -35,6 +35,7 @@ import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authent
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
+import { Route as AuthenticatedCommunitiesSlugPostNewRouteImport } from './routes/_authenticated/communities.$slug.post.new'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -174,6 +175,12 @@ const AuthenticatedAdminVendorsIdRoute =
     path: '/$id',
     getParentRoute: () => AuthenticatedAdminVendorsRoute,
   } as any)
+const AuthenticatedCommunitiesSlugPostNewRoute =
+  AuthenticatedCommunitiesSlugPostNewRouteImport.update({
+    id: '/communities/$slug/post/new',
+    path: '/communities/$slug/post/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -226,6 +234,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -255,6 +264,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/_authenticated/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/post/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/post/new'
   id:
     | '__root__'
     | '/'
@@ -337,6 +349,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/_authenticated/communities/$slug/post/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -541,6 +554,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVendorsIdRouteImport
       parentRoute: typeof AuthenticatedAdminVendorsRoute
     }
+    '/_authenticated/communities/$slug/post/new': {
+      id: '/_authenticated/communities/$slug/post/new'
+      path: '/communities/$slug/post/new'
+      fullPath: '/communities/$slug/post/new'
+      preLoaderRoute: typeof AuthenticatedCommunitiesSlugPostNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -592,6 +612,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedCommunitiesSlugPostNewRoute: typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -601,6 +622,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedCommunitiesSlugPostNewRoute:
+    AuthenticatedCommunitiesSlugPostNewRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
