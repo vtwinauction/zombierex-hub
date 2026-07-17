@@ -6,17 +6,17 @@
      Off-black surface, bone ink, 1px hairlines, technical mono
      ============================================================ */
 
-  --color-bone: oklch(0.07 0.004 260);          /* primary surface — near-black */
-  --color-ink: oklch(0.97 0.003 90);            /* primary text — bone white */
-  --color-ash: oklch(0.62 0.010 260);           /* muted text */
-  --color-mist: oklch(0.12 0.005 260);          /* elevated surface */
-  --color-hair: oklch(0.22 0.006 260);          /* hairline / divider */
-  --color-hair-soft: oklch(0.16 0.005 260);
-  --color-signal: oklch(0.88 0.24 130);         /* toxic-lime brand */
-  --color-signal-deep: oklch(0.72 0.22 138);
-  --color-heat: oklch(0.66 0.24 25);            /* alert / bid red */
-  --color-cool: oklch(0.70 0.15 240);
-  --color-plum: oklch(0.52 0.16 320);
+  --color-bone: oklch(0.97 0.012 75);           /* primary surface — warm cream */
+  --color-ink: oklch(0.22 0.018 60);            /* primary text — warm charcoal */
+  --color-ash: oklch(0.55 0.018 60);            /* muted text */
+  --color-mist: oklch(0.94 0.014 75);           /* elevated surface */
+  --color-hair: oklch(0.86 0.014 70);           /* hairline / divider */
+  --color-hair-soft: oklch(0.91 0.012 70);
+  --color-signal: oklch(0.74 0.17 55);          /* warm amber — friendly accent */
+  --color-signal-deep: oklch(0.62 0.18 40);
+  --color-heat: oklch(0.66 0.19 25);            /* softened brand red */
+  --color-cool: oklch(0.70 0.13 220);
+  --color-plum: oklch(0.58 0.14 340);
 
   --color-background: var(--color-bone);
   --color-foreground: var(--color-ink);
@@ -55,7 +55,8 @@
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 2px;
+  --radius: 12px;
+
 }
 
 @layer base {
@@ -71,9 +72,10 @@
     text-rendering: optimizeLegibility;
     background-color: var(--color-bone);
     background-image:
-      radial-gradient(1400px 700px at 100% -20%, color-mix(in oklab, var(--color-ink) 4%, transparent), transparent 55%),
-      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-signal) 5%, transparent), transparent 55%);
+      radial-gradient(1400px 700px at 100% -20%, color-mix(in oklab, var(--color-signal) 14%, transparent), transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-heat) 8%, transparent), transparent 55%);
     background-attachment: fixed;
+
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
@@ -92,15 +94,16 @@
 @utility card-surface {
   background: var(--color-mist);
   border: 1px solid var(--color-hair);
-  border-radius: 2px;
+  border-radius: 14px;
 }
 
 @utility card-ink {
   background: var(--color-mist);
   color: var(--color-ink);
   border: 1px solid var(--color-hair);
-  border-radius: 2px;
+  border-radius: 14px;
 }
+
 
 @utility glass {
   background: color-mix(in oklab, var(--color-bone) 72%, transparent);
@@ -150,52 +153,53 @@
 /* ============ TYPOGRAPHY UTILITIES ============ */
 
 @utility mono-caps {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-weight: 600;
 }
 @utility mono-tag {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-weight: 600;
   color: var(--color-ash);
 }
 @utility mono-num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 @utility display-xl {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 0.9;
-  font-style: italic;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
 }
 @utility display-numeral {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.85;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }
+
 
 /* ============ CHIPS & BUTTONS ============ */
 
 @utility chip {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 10px;
-  border-radius: 2px;
-  background: transparent;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--color-mist);
   border: 1px solid var(--color-hair);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 600;
   color: var(--color-ink);
 }
 @utility chip-active {
@@ -210,32 +214,33 @@
 
 @utility btn-solid {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 18px;
+  padding: 14px 20px;
   background: var(--color-ink);
   color: var(--color-bone);
-  border-radius: 2px;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
   transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), background 200ms ease;
   &:active { transform: translateY(1px); }
   &:hover { background: color-mix(in oklab, var(--color-ink) 85%, var(--color-signal)); }
 }
 @utility btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 14px 18px;
+  padding: 14px 20px;
   background: transparent;
   color: var(--color-ink);
   border: 1px solid var(--color-hair);
-  border-radius: 2px;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-transform: none;
   transition: border-color 200ms ease;
   &:hover { border-color: var(--color-ink); }
 }
+
 
 @utility tap {
   transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), opacity 140ms ease;

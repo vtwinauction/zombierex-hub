@@ -65,19 +65,19 @@ export function BottomNav() {
         <NavCell item={NAV[0]} active={pathname === "/"} />
         <NavCell item={NAV[1]} active={pathname.startsWith("/search")} />
 
-        {/* Center create — angular, no gradient bubble */}
+        {/* Center create — friendly rounded pill */}
         <button
           aria-label="Create"
           className="tap group relative flex h-16 items-center justify-center"
         >
           <span
-            className="hairline flex h-11 w-11 items-center justify-center"
-            style={{ borderColor: "var(--color-ink)" }}
+            className="flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
+            style={{ background: "var(--color-ink)", color: "var(--color-bone)" }}
           >
-            <CreateGlyph className="h-5 w-5 text-ink" />
+            <CreateGlyph className="h-5 w-5" />
           </span>
-          <span className="pointer-events-none absolute -bottom-0 mono-tag" style={{ color: "var(--color-signal-deep)" }}>03·NEW</span>
         </button>
+
 
         <NavCell item={NAV[2]} active={pathname.startsWith("/marketplace")} />
         <NavCell item={NAV[3]} active={pathname.startsWith("/profile")} />
@@ -96,15 +96,16 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
       style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}
     >
       <Icon className="h-5 w-5" />
-      <span className="mono-tag" style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}>
-        {item.index}·{item.label}
+      <span className="text-[11px] font-semibold tracking-tight">
+        {item.label}
       </span>
       {active && (
         <span
-          className="absolute top-0 h-[2px] w-8"
+          className="absolute top-1.5 h-1 w-1 rounded-full"
           style={{ background: "var(--color-signal)" }}
         />
       )}
     </Link>
   );
 }
+

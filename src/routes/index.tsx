@@ -25,9 +25,10 @@ function HomePage() {
         {/* ============ FEATURED BUILD — cinematic ============ */}
         <section className="rise px-4 pt-4">
           <div className="mb-3 flex items-baseline justify-between">
-            <p className="mono-tag">FEATURED · TRANSMISSION 001</p>
-            <p className="mono-tag" style={{ color: "var(--color-signal)" }}>◉ LIVE</p>
+            <p className="mono-tag">Featured build of the day</p>
+            <p className="mono-tag" style={{ color: "var(--color-signal-deep)" }}>● Live now</p>
           </div>
+
 
           <Link to="/" className="tap group block">
             <article className="relative aspect-[3/4] w-full overflow-hidden border border-hair">
@@ -45,15 +46,15 @@ function HomePage() {
               {/* Right-rail metadata */}
               <div className="absolute right-3 top-6 flex flex-col items-end gap-4 text-white">
                 <div className="text-right">
-                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>BUILDER</p>
+                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>Builder</p>
                   <p className="text-xs font-bold">{featured.user.handle.replace("@","").toUpperCase()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>SPEC</p>
+                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>Spec</p>
                   <p className="mono-num text-xs font-bold">{featured.vehicle?.hp} HP</p>
                 </div>
                 <div className="text-right">
-                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>VIEWS</p>
+                  <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>Views</p>
                   <p className="mono-num text-xs font-bold">{featured.views}</p>
                 </div>
               </div>
@@ -61,7 +62,7 @@ function HomePage() {
               {/* Editorial bottom */}
               <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                 <p className="mono-tag" style={{ color: "rgba(255,255,255,0.7)" }}>◎ {featured.location}</p>
-                <h1 className="mt-2 text-4xl display-xl uppercase" style={{ lineHeight: 0.88 }}>
+                <h1 className="mt-2 text-4xl display-xl" style={{ lineHeight: 0.88 }}>
                   {featured.vehicle?.name}
                 </h1>
                 <div className="mt-4 hairline-t flex items-center gap-4 pt-3" style={{ borderColor: "rgba(255,255,255,0.25)" }}>
@@ -73,7 +74,7 @@ function HomePage() {
                     fontFamily: "var(--font-mono)",
                     fontSize: 10, letterSpacing: "0.22em", fontWeight: 600,
                   }}>
-                    ENTER FEED →
+                    Watch the story →
                   </span>
                 </div>
               </div>
@@ -84,7 +85,7 @@ function HomePage() {
         {/* ============ GARAGE TRANSMISSIONS · stories ============ */}
         <section>
           <div className="mb-3 flex items-baseline justify-between px-4">
-            <p className="mono-tag">GARAGE · TRANSMISSIONS</p>
+            <p className="mono-tag">From your garages</p>
             <span className="mono-num text-[10px] font-bold" style={{ color: "var(--color-ash)" }}>
               {String(storiesV2.length).padStart(3,"0")}
             </span>
@@ -119,8 +120,8 @@ function HomePage() {
         {/* ============ WATCH · reel preview ============ */}
         <section className="px-4">
           <div className="mb-3 flex items-baseline justify-between">
-            <p className="mono-tag">WATCH · REEL 002</p>
-            <Link to="/" className="mono-tag" style={{ color: "var(--color-signal)" }}>ALL FEEDS →</Link>
+            <p className="mono-tag">Watch now</p>
+            <Link to="/" className="mono-tag" style={{ color: "var(--color-signal)" }}>See all →</Link>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <ReelTile reel={secondaryReel} tall />
@@ -134,8 +135,8 @@ function HomePage() {
         {/* ============ MARKET · featured listing ============ */}
         <section className="px-4">
           <div className="mb-3 flex items-baseline justify-between">
-            <p className="mono-tag">MARKET · LOT 001</p>
-            <Link to="/marketplace" className="mono-tag" style={{ color: "var(--color-signal)" }}>OPEN VAULT →</Link>
+            <p className="mono-tag">Fresh in the market</p>
+            <Link to="/marketplace" className="mono-tag" style={{ color: "var(--color-signal)" }}>Browse all →</Link>
           </div>
           <Link to="/marketplace" className="tap block">
             <article className="hairline grid grid-cols-5 overflow-hidden">
@@ -148,7 +149,7 @@ function HomePage() {
                   <p className="mt-2 text-[13px] font-bold leading-tight">{marketFeatured.title}</p>
                 </div>
                 <div>
-                  <p className="mono-tag" style={{ color: "var(--color-ash)" }}>ASKING</p>
+                  <p className="mono-tag" style={{ color: "var(--color-ash)" }}>Asking</p>
                   <p className="display-numeral mt-1 text-3xl">{marketFeatured.price.replace("$","")}</p>
                   <p className="mono-tag mt-1" style={{ color: "var(--color-ash)" }}>USD · {marketFeatured.location}</p>
                 </div>
@@ -160,8 +161,8 @@ function HomePage() {
         {/* ============ SIGNAL · community events ============ */}
         <section>
           <div className="mb-3 flex items-baseline justify-between px-4">
-            <p className="mono-tag">SIGNAL · SCHEDULED</p>
-            <Link to="/events" className="mono-tag" style={{ color: "var(--color-signal)" }}>ALL EVENTS →</Link>
+            <p className="mono-tag">Upcoming meets</p>
+            <Link to="/events" className="mono-tag" style={{ color: "var(--color-signal)" }}>See all →</Link>
           </div>
           <div className="hairline-t hairline-b divide-y divide-[color:var(--color-hair)]">
             {events.slice(0,3).map((e, i) => (
@@ -180,7 +181,7 @@ function HomePage() {
 
         {/* ============ PILOTS · community strip ============ */}
         <section className="px-4">
-          <p className="mono-tag mb-3">PILOTS · TRENDING</p>
+          <p className="mono-tag mb-3">Riders you might like</p>
           <div className="grid grid-cols-3 gap-2">
             {users.map((u, i) => (
               <div key={u.id} className="hairline p-3 text-center">

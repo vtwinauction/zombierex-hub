@@ -52,7 +52,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#050505" },
+      { name: "theme-color", content: "#f6f1e7" },
       { title: "ZOMBIEREX — Precision social for riders & drivers" },
       { name: "description", content: "The premium social platform engineered for motorcycle and automotive culture. Short-form video, garage, marketplace, events." },
       { name: "author", content: "ZOMBIEREX" },
