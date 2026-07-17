@@ -47,6 +47,10 @@ const SECTIONS: { title: string; items: Item[] }[] = [
   {
     title: "Business",
     items: [
+      { to: "/business", label: "Business dashboard", hint: "Insights · engagement · reviews" },
+      { to: "/business/showcase", label: "Edit showcase", hint: "Gallery · services · portfolio" },
+      { to: "/ads", label: "Ads Manager", hint: "Campaigns · analytics" },
+      { to: "/ads/new", label: "New campaign", hint: "Boost · promote · sponsor" },
       { to: "/vendor", label: "Vendor dashboard" },
       { to: "/vendor/apply", label: "Apply as vendor" },
       { to: "/vendor/plans", label: "Subscription plans" },
