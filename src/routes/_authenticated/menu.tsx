@@ -36,6 +36,13 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     ],
   },
   {
+    title: "AI · REX",
+    items: [
+      { to: "/assistant", label: "Ask REX", hint: "AI companion · chat" },
+      { to: "/onboarding", label: "Personalize for me", hint: "AI picks crews · events · listings" },
+    ],
+  },
+  {
     title: "You",
     items: [
       { to: "/profile", label: "Garage (profile)" },

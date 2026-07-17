@@ -27,7 +27,9 @@ import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
+import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business.index'
@@ -148,9 +150,19 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMenuRoute = AuthenticatedMenuRouteImport.update({
   id: '/menu',
   path: '/menu',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAssistantRoute = AuthenticatedAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -338,7 +350,9 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -387,7 +401,9 @@ export interface FileRoutesByTo {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
@@ -438,7 +454,9 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
+  '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -490,7 +508,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/admin'
+    | '/assistant'
     | '/menu'
+    | '/onboarding'
     | '/settings'
     | '/vendor'
     | '/communities/$slug'
@@ -539,7 +559,9 @@ export interface FileRouteTypes {
     | '/reels'
     | '/reset-password'
     | '/search'
+    | '/assistant'
     | '/menu'
+    | '/onboarding'
     | '/settings'
     | '/communities/$slug'
     | '/creator/$id'
@@ -589,7 +611,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/_authenticated/admin'
+    | '/_authenticated/assistant'
     | '/_authenticated/menu'
+    | '/_authenticated/onboarding'
     | '/_authenticated/settings'
     | '/_authenticated/vendor'
     | '/communities/$slug'
@@ -775,11 +799,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/menu': {
       id: '/_authenticated/menu'
       path: '/menu'
       fullPath: '/menu'
       preLoaderRoute: typeof AuthenticatedMenuRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/assistant': {
+      id: '/_authenticated/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AuthenticatedAssistantRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin': {
@@ -1039,7 +1077,9 @@ const AuthenticatedVendorRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
+  AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedAdsNewRoute: typeof AuthenticatedAdsNewRoute
@@ -1065,7 +1105,9 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
+  AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedAdsNewRoute: AuthenticatedAdsNewRoute,
