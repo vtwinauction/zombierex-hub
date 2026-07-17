@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
 import { users, clubs, listings, posts, reels } from "@/lib/mock-data";
+import { RiderBadge, RiderMark, type RiderTier } from "@/components/RiderBadge";
+
 
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "Signal · ZOMBIEREX" }, { name: "description", content: "Discover riders, builds, crews and parts across the ZOMBIEREX network." }] }),
