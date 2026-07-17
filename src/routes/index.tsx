@@ -151,14 +151,10 @@ function HomePage() {
          ================================================== */}
       <section className="mt-10 px-4">
         <SectionHead kicker="Broadcast" title="Watch tonight" link="/" />
-        <div className="mt-4 grid grid-cols-5 gap-2">
-          <div className="col-span-3">
-            <ReelTile reel={secondaryReel} tall />
-          </div>
-          <div className="col-span-2 flex flex-col gap-2">
-            <ReelTile reel={reels[2]} />
-            <ReelTile reel={reels[3]} />
-          </div>
+        <div className="mt-4 flex flex-col gap-4">
+          <ReelTile reel={secondaryReel} tall />
+          <ReelTile reel={reels[2]} tall />
+          <ReelTile reel={reels[3]} tall />
         </div>
       </section>
 
