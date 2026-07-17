@@ -130,9 +130,8 @@ export function InteractionBar({
             else if (key === "share") share();
           };
           return (
-            <>
+            <Fragment key={key}>
               <button
-                key={key}
                 onClick={disabled ? undefined : onClick}
                 aria-label={label}
                 aria-pressed={active}
@@ -163,7 +162,7 @@ export function InteractionBar({
                   style={{ background: dividerColor }}
                 />
               )}
-            </>
+            </Fragment>
           );
         })}
       </div>
