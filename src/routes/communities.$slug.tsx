@@ -278,7 +278,8 @@ function CommunityDetail() {
                     {c.prize && <span>🏆 {c.prize}</span>}
                   </div>
                 </div>
-              </div>
+              </Link>
+
             ))}
           </div>
         )}
