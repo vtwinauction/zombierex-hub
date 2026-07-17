@@ -161,7 +161,7 @@ function ProfilePage() {
                 <div className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl" style={{
                   background: w.status === "upcoming" ? "color-mix(in oklab, var(--color-heat) 15%, white)" : "var(--color-mist)",
                 }}>
-                  <Wrench className="h-4.5 w-4.5 text-ink" />
+                  <Wrench className="h-5 w-5 text-ink" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
