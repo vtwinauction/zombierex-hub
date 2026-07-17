@@ -108,12 +108,15 @@ function SettingsPage() {
 
   return (
     <div className="pb-24">
-      <StatusBar index="06" section="SETTINGS · CONTROL" />
+      <StatusBar index="06" section="SETTINGS" />
       <header className="px-5 pt-6">
-        <Link to="/profile" className="mono-tag" style={{ color: "var(--color-titanium)" }}>← Garage</Link>
+        <Link to="/profile" className="mono-tag" style={{ color: "var(--color-titanium)" }}>← Back to profile</Link>
         <h1 className="serif mt-2 text-4xl leading-tight" style={{ color: "var(--color-ink)" }}>
-          Settings <span className="italic" style={{ color: "var(--color-neon)" }}>& control</span>
+          Settings
         </h1>
+        <p className="mt-2 text-[13px]" style={{ color: "var(--color-silver)" }}>
+          Manage your account, privacy, notifications and how the app looks.
+        </p>
       </header>
 
       <div className="mt-6 space-y-2 px-3">
