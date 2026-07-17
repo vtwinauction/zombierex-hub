@@ -163,3 +163,45 @@ export const me: User = {
 };
 
 export const myVehicles: Vehicle[] = [vehicles[0]];
+
+export type Achievement = {
+  id: string;
+  title: string;
+  detail: string;
+  icon: "trophy" | "flame" | "bolt" | "route" | "wrench" | "medal";
+  earned: boolean;
+  rarity: "common" | "rare" | "legendary";
+};
+
+export const achievements: Achievement[] = [
+  { id: "a1", title: "Canyon Carver", detail: "10 mountain rides", icon: "route", earned: true, rarity: "rare" },
+  { id: "a2", title: "Night Stalker", detail: "5 rides after midnight", icon: "flame", earned: true, rarity: "common" },
+  { id: "a3", title: "Wrench Master", detail: "First full rebuild", icon: "wrench", earned: true, rarity: "legendary" },
+  { id: "a4", title: "Ton Up Club", detail: "Break 100 mph", icon: "bolt", earned: true, rarity: "rare" },
+  { id: "a5", title: "Iron Butt", detail: "500 mi in a day", icon: "trophy", earned: false, rarity: "legendary" },
+  { id: "a6", title: "Meet Regular", detail: "10 events joined", icon: "medal", earned: false, rarity: "common" },
+];
+
+export type WorkshopEntry = {
+  id: string;
+  date: string;
+  title: string;
+  shop: string;
+  mileage: string;
+  cost: string;
+  status: "done" | "upcoming";
+};
+
+export const workshopHistory: WorkshopEntry[] = [
+  { id: "w1", date: "Nov 12", title: "Chain & sprocket replacement", shop: "Undead Garage · LA", mileage: "17,840 mi", cost: "$220", status: "done" },
+  { id: "w2", date: "Oct 03", title: "Ohlins fork rebuild", shop: "Sunset Suspension", mileage: "16,920 mi", cost: "$680", status: "done" },
+  { id: "w3", date: "Aug 21", title: "Akrapovic install + tune", shop: "REX Performance", mileage: "15,110 mi", cost: "$1,450", status: "done" },
+  { id: "w4", date: "Dec 08", title: "Valve clearance check", shop: "Undead Garage · LA", mileage: "20,000 mi", cost: "est. $380", status: "upcoming" },
+];
+
+export const rider = {
+  level: 14,
+  title: "Canyon Prowler",
+  xp: 8420,
+  xpToNext: 12000,
+};
