@@ -117,15 +117,23 @@ function ProfilePage() {
         </div>
       </section>
 
-      {/* ============ STATS GRID ============ */}
-      <section className="grid grid-cols-3 gap-px" style={{ background: "var(--color-hair)" }}>
-        <StatCell k="NETWORK" v="12.4K" />
-        <StatCell k="SORTIES" v="47" />
-        <StatCell k="ODOMETER" v="8.9K" />
-        <StatCell k="TROPHIES" v={`${earnedCount}/${achievements.length}`} />
-        <StatCell k="TOP SPEED" v={`${bike.hp + 45}`} u="mph" />
-        <StatCell k="POWER" v={String(bike.hp)} u="hp" accent />
+      {/* ============ SPEEDO TELEMETRY ============ */}
+      <section className="border-b border-hair px-4 pt-5 pb-4" style={{ background: "radial-gradient(ellipse at 50% 120%, rgba(163,255,26,0.06), transparent 60%)" }}>
+        <div className="mb-3 flex items-center gap-2">
+          <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)" }} />
+          <span className="mono-tag font-bold" style={{ color: "var(--color-titanium)" }}>LIVE TELEMETRY</span>
+          <span className="etch flex-1" />
+          <span className="mono-tag" style={{ color: "var(--color-silver)" }}>UNIT V·{bike.id.toUpperCase()}</span>
+        </div>
+        <Speedo topSpeed={bike.hp + 45} hp={bike.hp} />
+        <div className="mt-3 grid grid-cols-4 gap-px" style={{ background: "var(--color-hair)" }}>
+          <StatCell k="NETWORK" v="12.4K" />
+          <StatCell k="SORTIES" v="47" />
+          <StatCell k="ODO" v="8.9K" u="mi" />
+          <StatCell k="TROPHIES" v={`${earnedCount}/${achievements.length}`} />
+        </div>
       </section>
+
 
       {/* ============ ACHIEVEMENT RIBBONS ============ */}
       <section className="border-b border-hair px-4 py-3">
