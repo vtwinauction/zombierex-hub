@@ -13,7 +13,7 @@ const subQuery = queryOptions({
   queryFn: () => getMySubscription(),
 });
 
-export const Route = createFileRoute("/vendor")({
+export const Route = createFileRoute("/_authenticated/vendor")({
   head: () => ({ meta: [{ title: "Vendor Console · ZOMBIEREX" }, { name: "description", content: "Manage your ZOMBIEREX business — products, services, bookings, orders and subscription." }] }),
   loader: ({ context }) =>
     Promise.all([

@@ -7,7 +7,7 @@ const statsQuery = queryOptions({
   queryFn: () => getVendorDashboardStats(),
 });
 
-export const Route = createFileRoute("/vendor/")({
+export const Route = createFileRoute("/_authenticated/vendor/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(statsQuery),
   component: VendorOverview,
 });
