@@ -1,25 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bone: oklch(0.985 0.003 90);
-  --color-ink: oklch(0.16 0.01 260);
+  /* Brand */
+  --color-bone: oklch(0.99 0.002 90);
+  --color-ink: oklch(0.14 0.012 260);
   --color-ash: oklch(0.55 0.008 260);
-  --color-mist: oklch(0.93 0.004 260);
-  --color-signal: oklch(0.88 0.24 130);
-  --color-warn: oklch(0.62 0.22 25);
-  --color-line: oklch(0.86 0.006 260);
+  --color-mist: oklch(0.96 0.003 260);
+  --color-hair: oklch(0.90 0.004 260);
+  --color-signal: oklch(0.88 0.24 130);       /* toxic green accent */
+  --color-signal-deep: oklch(0.72 0.22 138);
+  --color-heat: oklch(0.68 0.24 25);          /* alert / heart red */
+  --color-cool: oklch(0.72 0.16 250);         /* info blue */
+  --color-plum: oklch(0.55 0.18 320);         /* creator gradient stop */
 
   --color-background: var(--color-bone);
   --color-foreground: var(--color-ink);
   --color-muted: var(--color-mist);
   --color-muted-foreground: var(--color-ash);
-  --color-border: var(--color-line);
+  --color-border: var(--color-hair);
   --color-primary: var(--color-ink);
   --color-primary-foreground: var(--color-bone);
   --color-accent: var(--color-signal);
-  --color-destructive: var(--color-warn);
+  --color-destructive: var(--color-heat);
   --color-card: var(--color-bone);
-  --color-input: var(--color-line);
+  --color-input: var(--color-hair);
   --color-ring: var(--color-signal);
   --color-popover: var(--color-bone);
   --color-popover-foreground: var(--color-ink);
@@ -38,83 +42,106 @@
   --color-sidebar-ring: var(--color-signal);
   --color-chart-1: var(--color-signal);
   --color-chart-2: var(--color-ink);
-  --color-chart-3: var(--color-warn);
-  --color-chart-4: var(--color-ash);
-  --color-chart-5: var(--color-mist);
+  --color-chart-3: var(--color-heat);
+  --color-chart-4: var(--color-cool);
+  --color-chart-5: var(--color-plum);
 
-  --font-display: "Rajdhani", "Arial Narrow", sans-serif;
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 0px;
+  --radius: 20px;
 }
 
 @layer base {
   * { border-color: var(--color-border); }
-  html, body { background: var(--color-bone); color: var(--color-ink); }
+  html, body {
+    background: var(--color-bone);
+    color: var(--color-ink);
+  }
   body {
     font-family: var(--font-sans);
     font-feature-settings: "ss01","cv11";
     -webkit-font-smoothing: antialiased;
-    background-image:
-      linear-gradient(var(--color-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
-    background-size: 48px 48px, 48px 48px;
-    background-position: -1px -1px;
-    background-attachment: fixed;
+    text-rendering: optimizeLegibility;
     background-color: var(--color-bone);
+    /* subtle radial glow — nothing grid-like */
+    background-image:
+      radial-gradient(1200px 600px at 100% -10%, color-mix(in oklab, var(--color-signal) 14%, transparent), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-plum) 10%, transparent), transparent 55%);
+    background-attachment: fixed;
+    overscroll-behavior-y: none;
   }
-  h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; }
+  h1,h2,h3,h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
   .mono { font-family: var(--font-mono); }
+  ::-webkit-scrollbar { display: none; }
+  * { scrollbar-width: none; }
 }
 
-/* ============ ANGULAR HUD PRIMITIVES ============ */
+/* ============ SURFACES ============ */
 
-@utility clip-chamfer {
-  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
-}
-@utility clip-chamfer-sm {
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
-}
-@utility clip-notch-l {
-  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
-}
-@utility clip-hex {
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-}
-@utility clip-tag {
-  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
-}
-
-@utility panel {
+@utility card-surface {
   background: var(--color-bone);
-  border: 1px solid var(--color-ink);
-  position: relative;
+  border: 1px solid var(--color-hair);
+  border-radius: 24px;
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-ink) 4%, transparent),
+    0 12px 32px -18px color-mix(in oklab, var(--color-ink) 20%, transparent);
 }
-@utility panel-ink {
+
+@utility card-ink {
   background: var(--color-ink);
   color: var(--color-bone);
-  border: 1px solid var(--color-ink);
-}
-@utility panel-signal {
-  background: var(--color-signal);
-  color: var(--color-ink);
-  border: 1px solid var(--color-ink);
+  border-radius: 24px;
+  box-shadow: 0 18px 40px -20px color-mix(in oklab, var(--color-ink) 60%, transparent);
 }
 
-@utility rule-tick {
-  background-image: repeating-linear-gradient(90deg, var(--color-ink) 0 1px, transparent 1px 8px);
-  height: 6px;
+@utility glass {
+  background: color-mix(in oklab, var(--color-bone) 62%, transparent);
+  backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
 }
-@utility rule-tick-v {
-  background-image: repeating-linear-gradient(0deg, var(--color-ink) 0 1px, transparent 1px 8px);
-  width: 6px;
+
+@utility glass-dark {
+  background: color-mix(in oklab, var(--color-ink) 55%, transparent);
+  backdrop-filter: blur(20px) saturate(160%);
+  color: var(--color-bone);
+  border: 1px solid color-mix(in oklab, var(--color-bone) 14%, transparent);
+}
+
+@utility hairline {
+  border: 1px solid var(--color-hair);
+}
+
+@utility gradient-brand {
+  background-image: linear-gradient(135deg,
+    var(--color-signal) 0%,
+    var(--color-signal-deep) 45%,
+    var(--color-plum) 100%);
+}
+
+@utility gradient-ink {
+  background-image: linear-gradient(180deg,
+    color-mix(in oklab, var(--color-ink) 0%, transparent) 0%,
+    color-mix(in oklab, var(--color-ink) 45%, transparent) 55%,
+    color-mix(in oklab, var(--color-ink) 88%, transparent) 100%);
+}
+
+@utility text-gradient {
+  background: linear-gradient(135deg, var(--color-ink), color-mix(in oklab, var(--color-ink) 60%, var(--color-plum)));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 @utility mono-caps {
   font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
@@ -123,63 +150,132 @@
   font-variant-numeric: tabular-nums;
 }
 
-@utility label-slash {
-  position: relative;
-  padding-left: 14px;
-  &::before {
-    content: "//";
-    position: absolute; left: 0; top: 0;
-    font-family: var(--font-mono);
-    color: var(--color-signal);
-    font-weight: 700;
-  }
+@utility chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-bone) 85%, var(--color-ink) 3%);
+  border: 1px solid var(--color-hair);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-ink);
 }
 
-@utility scanline {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent 0 3px,
-    color-mix(in oklab, var(--color-ink) 4%, transparent) 3px 4px
-  );
-}
-
-@utility grain {
-  position: relative;
-  &::after {
-    content: "";
-    position: absolute; inset: 0;
-    background-image: radial-gradient(circle at 1px 1px, var(--color-ink) 0.5px, transparent 0);
-    background-size: 3px 3px;
-    opacity: 0.04;
-    pointer-events: none;
-    mix-blend-mode: multiply;
-  }
+@utility chip-dark {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-ink) 60%, transparent);
+  color: var(--color-bone);
+  backdrop-filter: blur(12px);
+  font-size: 11px;
+  font-weight: 600;
 }
 
 @utility tap {
-  transition: transform 120ms ease, filter 120ms ease;
-  &:active {
-    transform: scale(0.96);
-    filter: brightness(0.95);
-  }
+  transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), filter 140ms ease, box-shadow 200ms ease;
+  &:active { transform: scale(0.96); filter: brightness(0.96); }
 }
 
-@keyframes hud-in {
-  from { opacity: 0; transform: translateY(6px); }
+@utility snap-y-page {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+@utility snap-item {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+@utility no-scrollbar {
+  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+}
+
+/* ============ MOTION ============ */
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@utility hud-in {
-  animation: hud-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+@utility rise { animation: rise 500ms cubic-bezier(0.2,0.7,0.2,1) both; }
+
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@utility fade-in { animation: fade 400ms ease-out both; }
+
+@keyframes heart-burst {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+  40% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+}
+@utility heart-burst { animation: heart-burst 900ms cubic-bezier(0.2,0.7,0.2,1) both; }
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-signal) 60%, transparent); }
+  100% { box-shadow: 0 0 0 14px transparent; }
+}
+@utility pulse-ring { animation: pulse-ring 1.6s ease-out infinite; }
+
+@keyframes ken-burns {
+  0% { transform: scale(1.06) translate(0, 0); }
+  50% { transform: scale(1.14) translate(-1.5%, -1%); }
+  100% { transform: scale(1.06) translate(0, 0); }
+}
+@utility ken-burns { animation: ken-burns 14s ease-in-out infinite; }
+
+@keyframes wave {
+  0%,100% { height: 30%; }
+  50% { height: 100%; }
+}
+@utility bar-1 { animation: wave 700ms ease-in-out infinite; }
+@utility bar-2 { animation: wave 900ms ease-in-out 100ms infinite; }
+@utility bar-3 { animation: wave 800ms ease-in-out 250ms infinite; }
+@utility bar-4 { animation: wave 1000ms ease-in-out 50ms infinite; }
+
+@keyframes progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@utility progress-bar {
+  transform-origin: left;
+  animation: progress 8s linear both;
 }
 
-@keyframes signal-pulse {
-  0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-signal) 80%, transparent); }
-  50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--color-signal) 0%, transparent); }
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
 }
-@utility signal-pulse { animation: signal-pulse 1.6s ease-in-out infinite; }
+@utility skeleton {
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--color-ink) 5%, transparent) 0%,
+    color-mix(in oklab, var(--color-ink) 12%, transparent) 50%,
+    color-mix(in oklab, var(--color-ink) 5%, transparent) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
 
 @keyframes marquee {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
 @utility marquee { animation: marquee 40s linear infinite; }
+
+/* Story ring gradient stroke */
+@utility story-ring {
+  padding: 2px;
+  border-radius: 9999px;
+  background: conic-gradient(from 210deg,
+    var(--color-signal),
+    var(--color-cool),
+    var(--color-plum),
+    var(--color-heat),
+    var(--color-signal));
+}
+@utility story-ring-seen {
+  padding: 2px;
+  border-radius: 9999px;
+  background: var(--color-hair);
+}
