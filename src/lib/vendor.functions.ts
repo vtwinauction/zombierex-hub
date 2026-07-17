@@ -96,7 +96,7 @@ export const getMyVendor = createServerFn({ method: "GET" })
 
 export const applyAsVendor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((raw) => VendorApplicationSchema.parse(raw))
+  .validator((raw) => VendorApplicationSchema.parse(raw))
   .handler(async ({ data, context }) => {
     const payload = normalize({
       ...data,
@@ -123,7 +123,7 @@ export const applyAsVendor = createServerFn({ method: "POST" })
 
 export const updateMyVendor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((raw) => VendorApplicationSchema.partial().parse(raw))
+  .validator((raw) => VendorApplicationSchema.partial().parse(raw))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("vendors")
@@ -137,7 +137,7 @@ export const updateMyVendor = createServerFn({ method: "POST" })
 
 export const subscribeVendor = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((raw) =>
+  .validator((raw) =>
     z.object({
       vendor_id: z.string().uuid(),
       plan_code: z.string().min(2).max(40),
