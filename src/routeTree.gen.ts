@@ -37,6 +37,7 @@ import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
+import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/_authenticated/marketplace.dashboard'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
@@ -197,6 +198,12 @@ const AuthenticatedMarketplaceNewRoute =
     path: '/marketplace/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMarketplaceDashboardRoute =
+  AuthenticatedMarketplaceDashboardRouteImport.update({
+    id: '/marketplace/dashboard',
+    path: '/marketplace/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEventsNewRoute = AuthenticatedEventsNewRouteImport.update({
   id: '/events/new',
   path: '/events/new',
@@ -321,6 +328,7 @@ export interface FileRoutesByFullPath {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -364,6 +372,7 @@ export interface FileRoutesByTo {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -411,6 +420,7 @@ export interface FileRoutesById {
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
+  '/_authenticated/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -458,6 +468,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
     | '/vendor/apply'
@@ -501,6 +512,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
     | '/vendor/apply'
@@ -547,6 +559,7 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/tiers'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
+    | '/_authenticated/marketplace/dashboard'
     | '/_authenticated/marketplace/new'
     | '/_authenticated/post/new'
     | '/_authenticated/vendor/apply'
@@ -782,6 +795,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMarketplaceNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/marketplace/dashboard': {
+      id: '/_authenticated/marketplace/dashboard'
+      path: '/marketplace/dashboard'
+      fullPath: '/marketplace/dashboard'
+      preLoaderRoute: typeof AuthenticatedMarketplaceDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/events/new': {
       id: '/_authenticated/events/new'
       path: '/events/new'
@@ -952,6 +972,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
+  AuthenticatedMarketplaceDashboardRoute: typeof AuthenticatedMarketplaceDashboardRoute
   AuthenticatedMarketplaceNewRoute: typeof AuthenticatedMarketplaceNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
@@ -973,6 +994,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
+  AuthenticatedMarketplaceDashboardRoute:
+    AuthenticatedMarketplaceDashboardRoute,
   AuthenticatedMarketplaceNewRoute: AuthenticatedMarketplaceNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
   AuthenticatedCommunitiesSlugManageRoute:
