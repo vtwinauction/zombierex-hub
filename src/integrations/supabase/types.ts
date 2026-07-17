@@ -203,6 +203,82 @@ export type Database = {
           },
         ]
       }
+      club_badges: {
+        Row: {
+          awarded_at: string
+          club_id: string
+          code: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          club_id: string
+          code: string
+          id?: string
+          label: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          club_id?: string
+          code?: string
+          id?: string
+          label?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_badges_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      club_join_requests: {
+        Row: {
+          club_id: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          id: string
+          message: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          club_id: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          message?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          club_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          message?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_join_requests_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_members: {
         Row: {
           club_id: string
@@ -241,38 +317,59 @@ export type Database = {
       }
       clubs: {
         Row: {
+          activity_score: number
           banner_url: string | null
+          category: string
+          cover_url: string | null
           created_at: string
           description: string | null
+          hashtags: string[]
           id: string
           is_private: boolean
+          join_policy: string
+          location: string | null
           members_count: number
           name: string
           owner_id: string
+          rules: string | null
           slug: string
           updated_at: string
         }
         Insert: {
+          activity_score?: number
           banner_url?: string | null
+          category?: string
+          cover_url?: string | null
           created_at?: string
           description?: string | null
+          hashtags?: string[]
           id?: string
           is_private?: boolean
+          join_policy?: string
+          location?: string | null
           members_count?: number
           name: string
           owner_id: string
+          rules?: string | null
           slug: string
           updated_at?: string
         }
         Update: {
+          activity_score?: number
           banner_url?: string | null
+          category?: string
+          cover_url?: string | null
           created_at?: string
           description?: string | null
+          hashtags?: string[]
           id?: string
           is_private?: boolean
+          join_policy?: string
+          location?: string | null
           members_count?: number
           name?: string
           owner_id?: string
+          rules?: string | null
           slug?: string
           updated_at?: string
         }
@@ -500,6 +597,10 @@ export type Database = {
           created_at: string
           description: string | null
           ends_at: string | null
+          event_type: string
+          gps_lat: number | null
+          gps_lng: number | null
+          guest_limit: number | null
           host_id: string
           id: string
           location: string | null
@@ -514,6 +615,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          event_type?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          guest_limit?: number | null
           host_id: string
           id?: string
           location?: string | null
@@ -528,6 +633,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           ends_at?: string | null
+          event_type?: string
+          gps_lat?: number | null
+          gps_lng?: number | null
+          guest_limit?: number | null
           host_id?: string
           id?: string
           location?: string | null
@@ -1008,15 +1117,19 @@ export type Database = {
         Row: {
           author_id: string
           caption: string | null
+          club_id: string | null
           comments_count: number
           created_at: string
           deleted_at: string | null
           id: string
+          is_announcement: boolean
+          is_pinned: boolean
           is_reel: boolean
           is_story: boolean
           kind: Database["public"]["Enums"]["post_kind"]
           likes_count: number
           media_url: string | null
+          poll: Json | null
           shares_count: number
           story_expires_at: string | null
           telemetry: Json | null
@@ -1028,15 +1141,19 @@ export type Database = {
         Insert: {
           author_id: string
           caption?: string | null
+          club_id?: string | null
           comments_count?: number
           created_at?: string
           deleted_at?: string | null
           id?: string
+          is_announcement?: boolean
+          is_pinned?: boolean
           is_reel?: boolean
           is_story?: boolean
           kind?: Database["public"]["Enums"]["post_kind"]
           likes_count?: number
           media_url?: string | null
+          poll?: Json | null
           shares_count?: number
           story_expires_at?: string | null
           telemetry?: Json | null
@@ -1048,15 +1165,19 @@ export type Database = {
         Update: {
           author_id?: string
           caption?: string | null
+          club_id?: string | null
           comments_count?: number
           created_at?: string
           deleted_at?: string | null
           id?: string
+          is_announcement?: boolean
+          is_pinned?: boolean
           is_reel?: boolean
           is_story?: boolean
           kind?: Database["public"]["Enums"]["post_kind"]
           likes_count?: number
           media_url?: string | null
+          poll?: Json | null
           shares_count?: number
           story_expires_at?: string | null
           telemetry?: Json | null
@@ -1071,6 +1192,13 @@ export type Database = {
             columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
             referencedColumns: ["id"]
           },
           {
@@ -1825,6 +1953,14 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      is_club_member: {
+        Args: { _club: string; _user: string }
+        Returns: boolean
+      }
+      is_club_staff: {
+        Args: { _club: string; _user: string }
         Returns: boolean
       }
       is_conversation_member: {

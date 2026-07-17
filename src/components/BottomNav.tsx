@@ -3,20 +3,20 @@ import type { ComponentType } from "react";
 import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
 
 type NavItem = {
-  to: "/" | "/search" | "/marketplace" | "/profile" | "/vendor";
+  to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor";
   label: string;
   icon: ComponentType<{ className?: string }>;
 };
 
 const LEFT: NavItem[] = [
   { to: "/",            label: "Feed",     icon: IconGarage },
-  { to: "/search",      label: "Signal",   icon: IconDiscover },
+  { to: "/communities", label: "Crews",    icon: IconDiscover },
 ];
 const RIGHT: NavItem[] = [
   { to: "/marketplace", label: "Vault",    icon: IconMarket },
-  { to: "/vendor",      label: "Business", icon: IconGarage },
   { to: "/profile",     label: "Garage",   icon: IconHelmet },
 ];
+
 
 /**
  * Floating obsidian dock — not a full-width tab bar.
