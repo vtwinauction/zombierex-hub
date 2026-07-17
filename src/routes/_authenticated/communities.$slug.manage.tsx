@@ -5,8 +5,17 @@ import { StatusBar } from "@/components/StatusBar";
 import { supabase } from "@/integrations/supabase/client";
 import {
   getCommunityBySlug, decideRequest, setMemberRole, removeMember, pinPost, deleteCommunityPost,
+  awardBadge,
 } from "@/lib/communities.functions";
 import { useEffect, useState } from "react";
+
+const BADGE_PRESETS = [
+  { code: "top_rider", label: "Top Rider" },
+  { code: "featured_build", label: "Featured Build" },
+  { code: "milestone", label: "Milestone" },
+  { code: "event_champ", label: "Event Champ" },
+];
+
 
 export const Route = createFileRoute("/_authenticated/communities/$slug/manage")({
   head: ({ params }) => ({ meta: [{ title: `Manage ${params.slug} · ZOMBIEREX` }] }),
