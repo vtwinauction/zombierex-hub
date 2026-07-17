@@ -422,8 +422,8 @@ function HomePage() {
          ================================================== */}
       <section className="mt-8 space-y-6">
         {feedPosts.map((p, idx) => (
-          <>
-          <article key={p.id} className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
+          <div key={p.id}>
+          <article className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
             {/* post header */}
             <div className="flex items-center gap-2.5 px-4 pb-2.5">
               <div className="story-ring">
