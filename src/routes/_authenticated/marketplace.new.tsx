@@ -91,7 +91,8 @@ function NewListing() {
   }
 
   return (
-    <div className="pb-32" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-56" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+
       <StatusBar index="09" section="NEW LISTING" />
 
       <div className="px-4 pt-6">
@@ -183,13 +184,14 @@ function NewListing() {
 
       {err && <p className="mx-4 mt-4 mono-tag" style={{ color: "#ff6b6b" }}>ERR · {err}</p>}
 
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t p-3"
-        style={{ background: "var(--color-obsidian)", borderColor: "var(--color-hair-strong)" }}>
+      <div className="fixed inset-x-0 z-40 border-t p-3"
+        style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 96px)", background: "var(--color-obsidian)", borderColor: "var(--color-hair-strong)" }}>
         <button onClick={() => submit.mutate()} disabled={submit.isPending || uploading}
           className="btn-neon w-full py-3" style={{ fontSize: 12 }}>
           {submit.isPending ? "PUBLISHING…" : "PUBLISH LISTING ▸"}
         </button>
       </div>
+
     </div>
   );
 }
