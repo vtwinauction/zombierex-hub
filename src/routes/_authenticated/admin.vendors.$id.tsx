@@ -14,7 +14,7 @@ export const Route = createFileRoute("/_authenticated/admin/vendors/$id")({
 
 function AdminVendorDetail() {
   const { id } = Route.useParams();
-  const { data: v } = useSuspenseQuery(vendorQuery(id));
+  const { data: vendor } = useSuspenseQuery(vendorQuery(id));
   const setStatus = useServerFn(adminSetVendorStatus);
   const qc = useQueryClient();
   const nav = useNavigate();
@@ -22,7 +22,8 @@ function AdminVendorDetail() {
   const [notes, setNotes] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
-  if (!v) return <div className="px-5 text-[12px]">Not found.</div>;
+  if (!vendor) return <div className="px-5 text-[12px]">Not found.</div>;
+  const v = vendor;
 
   async function act(status: "approved" | "rejected" | "info_requested", label: typeof busy) {
     setBusy(label);
