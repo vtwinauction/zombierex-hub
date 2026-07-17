@@ -73,12 +73,12 @@
   --color-platinum: var(--color-graphite);
   --color-hair-soft: #1c1e23;
 
-  --font-editorial: "Instrument Serif", "Times New Roman", serif;
-  --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-sans: "Work Sans", "Inter", system-ui, sans-serif;
+  --font-editorial: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --radius: 4px;
+  --radius: 8px;
 }
 
 @layer base {
