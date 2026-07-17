@@ -1,93 +1,126 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Heart, MessageCircle, Send, Bookmark, MapPin, ShoppingBag } from "lucide-react";
+import { useState } from "react";
+import { StatusBar } from "@/components/StatusBar";
 import { listings } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/marketplace")({
-  head: () => ({ meta: [{ title: "Marketplace · ZOMBIEREX" }] }),
+  head: () => ({ meta: [{ title: "Vault · ZOMBIEREX" }, { name: "description", content: "Verified motorcycles, cars, parts, and gear. A curated showroom for the ZOMBIEREX community." }] }),
   component: MarketplacePage,
 });
 
-const CATS = ["All", "Vehicles", "Parts", "Gear", "Wheels", "Deals"] as const;
+const CATS = ["ALL", "MACHINES", "PARTS", "GEAR", "WHEELS", "APPAREL"] as const;
 
 function MarketplacePage() {
+  const [cat, setCat] = useState<typeof CATS[number]>("ALL");
   const featured = listings[0];
-  return (
-    <div className="pb-28">
-      <header className="sticky top-0 z-30 bg-bone/70 pt-[max(env(safe-area-inset-top),12px)] backdrop-blur-lg">
-        <div className="flex items-center justify-between px-4 pb-3">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Marketplace</h1>
-            <p className="text-[11px] text-ash">Verified riders. Fair prices.</p>
-          </div>
-          <Link to="/search" className="tap rounded-full bg-ink px-4 py-2 text-[12px] font-semibold text-bone">
-            + Sell
-          </Link>
-        </div>
-        <div className="no-scrollbar flex gap-2 overflow-x-auto px-4 pb-3">
-          {CATS.map((c, i) => (
-            <button
-              key={c}
-              className={`tap shrink-0 rounded-full px-4 py-1.5 text-[12px] font-semibold ${
-                i === 0 ? "bg-ink text-bone" : "border border-hair bg-white text-ink"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </header>
+  const rest = listings.slice(1);
 
-      <div className="space-y-6 px-4 pt-4">
-        {/* Featured hero */}
-        <Link to="/" className="tap block overflow-hidden rounded-3xl">
-          <div className="card-ink relative overflow-hidden">
-            <img src={featured.image} alt="" className="ken-burns h-64 w-full object-cover opacity-90" />
-            <div className="absolute inset-0 gradient-ink" />
-            <div className="absolute inset-x-0 bottom-0 space-y-2 p-5 text-white">
-              <span className="chip-dark w-fit" style={{ color: "white" }}>
-                <ShoppingBag className="h-3 w-3" />
-                Featured · {featured.category}
+  return (
+    <div>
+      <StatusBar index="04" section="THE VAULT · MARKETPLACE" />
+
+      {/* Section masthead */}
+      <div className="px-4 pt-6">
+        <div className="flex items-end justify-between">
+          <div>
+            <p className="mono-tag">CURATED · VERIFIED SELLERS</p>
+            <h1 className="mt-2 display-xl text-5xl uppercase">The Vault</h1>
+          </div>
+          <span className="display-numeral text-4xl" style={{ color: "var(--color-ash)" }}>
+            {String(listings.length).padStart(3,"0")}
+          </span>
+        </div>
+        <div className="mt-3 hairline-t flex items-center justify-between pt-3">
+          <p className="mono-tag" style={{ color: "var(--color-ash)" }}>SORT · LATEST DROPS</p>
+          <button className="btn-ghost" style={{ padding: "8px 12px", fontSize: 10 }}>+ LIST</button>
+        </div>
+      </div>
+
+      {/* Category tabs — thin mono rail */}
+      <div className="no-scrollbar mt-4 flex gap-0 overflow-x-auto hairline-t hairline-b">
+        {CATS.map((c) => (
+          <button
+            key={c}
+            onClick={() => setCat(c)}
+            className="tap shrink-0 px-4 py-3 mono-caps border-r border-hair"
+            style={{
+              color: c === cat ? "var(--color-ink)" : "var(--color-ash)",
+              background: c === cat ? "var(--color-mist)" : "transparent",
+              position: "relative",
+            }}
+          >
+            {c}
+            {c === cat && (
+              <span className="absolute inset-x-0 bottom-0 h-[2px]" style={{ background: "var(--color-signal)" }} />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Hero listing — showroom */}
+      <section className="px-4 pt-6">
+        <p className="mono-tag mb-2" style={{ color: "var(--color-ash)" }}>LOT 001 · FEATURED</p>
+        <Link to="/marketplace" className="tap block">
+          <article className="hairline overflow-hidden">
+            <div className="relative aspect-[4/5]">
+              <img src={featured.image} alt="" className="ken-burns h-full w-full object-cover" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.85) 100%)" }} />
+              <span className="absolute left-3 top-3 mono-tag text-white" style={{ background: "rgba(0,0,0,0.55)", padding: "4px 8px" }}>
+                ● {featured.condition.toUpperCase()}
               </span>
-              <h2 className="text-xl font-semibold leading-tight">{featured.title}</h2>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1 text-[12px] text-white/80">
-                  <MapPin className="h-3 w-3" />
-                  {featured.location} · {featured.condition}
-                </div>
-                <span className="text-lg font-bold">{featured.price}</span>
+              <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                <p className="mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {featured.location}</p>
+                <h2 className="mt-2 text-2xl display-xl uppercase leading-none">{featured.title}</h2>
               </div>
             </div>
-          </div>
+            {/* Spec/price strip */}
+            <div className="grid grid-cols-3 divide-x divide-hair border-t border-hair" style={{ background: "var(--color-mist)" }}>
+              <Cell k="ASKING" v={featured.price} highlight />
+              <Cell k="SELLER" v={featured.seller.handle} />
+              <Cell k="ACTION" v="INSPECT →" />
+            </div>
+          </article>
         </Link>
+      </section>
 
-        <div className="grid grid-cols-2 gap-3">
-          {listings.slice(1).map((l) => (
-            <article key={l.id} className="overflow-hidden rounded-2xl border border-hair bg-white">
-              <div className="relative">
-                <img src={l.image} alt="" className="aspect-[4/5] w-full object-cover" />
-                <button className="tap absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-ink backdrop-blur">
-                  <Heart className="h-4 w-4" />
-                </button>
-                <span className="absolute bottom-2 left-2 rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-bold text-ink">
-                  {l.condition}
+      {/* Showroom grid — single column, immersive */}
+      <section className="mt-8 px-4 space-y-6">
+        <p className="mono-tag">SHOWROOM · {rest.length} LOTS</p>
+        {rest.map((l, i) => (
+          <Link key={l.id} to="/marketplace" className="tap block">
+            <article className="hairline">
+              <div className="relative aspect-[16/10]">
+                <img src={l.image} alt="" className="h-full w-full object-cover" />
+                <span className="absolute right-2 top-2 mono-tag text-white" style={{ background: "rgba(0,0,0,0.6)", padding: "3px 6px" }}>
+                  LOT·{String(i+2).padStart(3,"0")}
                 </span>
               </div>
-              <div className="space-y-1 p-3">
-                <p className="line-clamp-2 text-[12.5px] font-medium leading-snug">{l.title}</p>
-                <p className="text-[10px] text-ash">{l.location}</p>
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[15px] font-bold">{l.price}</span>
-                  <div className="flex items-center gap-2 text-ash">
-                    <MessageCircle className="h-3.5 w-3.5" />
-                    <Send className="h-3.5 w-3.5" />
-                    <Bookmark className="h-3.5 w-3.5" />
-                  </div>
+              <div className="grid grid-cols-[1fr_auto] items-end gap-4 border-t border-hair p-4">
+                <div>
+                  <p className="mono-tag" style={{ color: "var(--color-ash)" }}>{l.category.toUpperCase()} · {l.condition.toUpperCase()}</p>
+                  <p className="mt-1 text-[15px] font-bold leading-tight">{l.title}</p>
+                  <p className="mono-tag mt-2" style={{ color: "var(--color-ash)" }}>◎ {l.location}</p>
+                </div>
+                <div className="text-right">
+                  <p className="mono-tag" style={{ color: "var(--color-ash)" }}>USD</p>
+                  <p className="display-numeral text-2xl" style={{ color: "var(--color-ink)" }}>{l.price.replace("$","")}</p>
                 </div>
               </div>
             </article>
-          ))}
-        </div>
-      </div>
+          </Link>
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function Cell({ k, v, highlight }: { k: string; v: string; highlight?: boolean }) {
+  return (
+    <div className="p-3">
+      <p className="mono-tag" style={{ color: "var(--color-ash)" }}>{k}</p>
+      <p className={`mt-1 text-sm font-bold ${highlight ? "display-numeral" : ""}`} style={highlight ? { color: "var(--color-signal)" } : undefined}>
+        {v}
+      </p>
     </div>
   );
 }

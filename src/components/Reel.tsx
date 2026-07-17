@@ -1,16 +1,47 @@
 import { useRef, useState } from "react";
 import type { Reel as ReelType } from "@/lib/mock-data";
-import {
-  Heart, MessageCircle, Send, Bookmark, Eye, MapPin, Music2,
-  ChevronDown, ChevronUp, Volume2, VolumeX, Tag, Bike, Car,
-} from "lucide-react";
+
+// Custom hand-drawn glyphs — no lucide defaults on the video surface
+const Glyph = {
+  Heart: ({ filled, className = "" }: { filled?: boolean; className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.4}>
+      <path d="M12 20s-7-4.5-9-9a5 5 0 019-3 5 5 0 019 3c-2 4.5-9 9-9 9z" strokeLinejoin="miter" />
+    </svg>
+  ),
+  Speak: ({ className = "" }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.4}>
+      <path d="M4 5h16v11H9l-5 4V5z" strokeLinejoin="miter" strokeLinecap="square" />
+    </svg>
+  ),
+  Send: ({ className = "" }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.4}>
+      <path d="M3 12L21 4l-8 18-2-8-8-2z" strokeLinejoin="miter" strokeLinecap="square" />
+    </svg>
+  ),
+  Save: ({ filled, className = "" }: { filled?: boolean; className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth={1.4}>
+      <path d="M6 3h12v18l-6-4-6 4V3z" strokeLinejoin="miter" strokeLinecap="square" />
+    </svg>
+  ),
+  Mute: ({ muted, className = "" }: { muted?: boolean; className?: string }) => (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.4}>
+      <path d="M3 9v6h4l5 4V5L7 9H3z" strokeLinejoin="miter" strokeLinecap="square" />
+      {muted && <path d="M16 9l6 6M22 9l-6 6" strokeLinecap="square" />}
+      {!muted && <path d="M16 8a5 5 0 010 8" />}
+    </svg>
+  ),
+  Corner: ({ className = "" }: { className?: string }) => (
+    <svg viewBox="0 0 12 12" className={className} fill="none" stroke="currentColor" strokeWidth={1}>
+      <path d="M0 4V0h4" strokeLinecap="square" />
+    </svg>
+  ),
+};
 
 export function Reel({ reel }: { reel: ReelType }) {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
   const [followed, setFollowed] = useState(!!reel.followed);
   const [muted, setMuted] = useState(true);
-  const [expanded, setExpanded] = useState(false);
   const [burst, setBurst] = useState(0);
   const lastTap = useRef(0);
 
@@ -24,218 +55,168 @@ export function Reel({ reel }: { reel: ReelType }) {
   };
 
   const likeCount = reel.likes + (liked ? 1 : 0);
-  const VehicleIcon = reel.vehicle?.type === "Car" ? Car : Bike;
 
   return (
-    <section className="snap-item relative h-[100svh] w-full overflow-hidden bg-ink">
+    <section className="snap-item relative h-[100svh] w-full overflow-hidden bg-bone">
       {/* Media */}
-      <button
-        onClick={handleMediaTap}
-        className="absolute inset-0 h-full w-full"
-        aria-label="Play video"
-      >
-        <img
-          src={reel.poster}
-          alt=""
-          className="ken-burns h-full w-full object-cover"
-          draggable={false}
-        />
+      <button onClick={handleMediaTap} className="absolute inset-0 h-full w-full" aria-label="Play">
+        <img src={reel.poster} alt="" className="ken-burns h-full w-full object-cover" draggable={false} />
       </button>
 
-      {/* Vignettes */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%]" style={{
-        background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.85) 100%)",
+      {/* Top + bottom vignettes */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/70 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[60%]" style={{
+        background: "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.92) 100%)",
       }} />
 
-      {/* Top bar: progress + mute */}
-      <div className="pointer-events-none absolute inset-x-3 top-3 flex items-center gap-2">
-        <div className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/25">
-          <div key={burst /* replay */} className="progress-bar h-full origin-left bg-white" />
+      {/* Precision corner marks (top-left / top-right) */}
+      <div className="pointer-events-none absolute left-3 top-[max(env(safe-area-inset-top),12px)]" style={{ color: "rgba(255,255,255,0.75)" }}>
+        <Glyph.Corner className="h-3 w-3" />
+      </div>
+      <div className="pointer-events-none absolute right-3 top-[max(env(safe-area-inset-top),12px)] rotate-90" style={{ color: "rgba(255,255,255,0.75)" }}>
+        <Glyph.Corner className="h-3 w-3" />
+      </div>
+
+      {/* Top metadata rail */}
+      <div className="absolute inset-x-4 top-[max(env(safe-area-inset-top),18px)] flex items-center justify-between text-white">
+        <div className="flex items-center gap-2">
+          <span className="mono-tag" style={{ color: "rgba(255,255,255,0.7)" }}>REEL·{reel.id.toUpperCase()}</span>
+          <span className="mono-tag" style={{ color: "rgba(255,255,255,0.5)" }}>· {String(reel.duration).padStart(2,"0")}s</span>
         </div>
         <button
-          onClick={(e) => { e.stopPropagation(); setMuted((m) => !m); }}
-          className="pointer-events-auto grid h-8 w-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-md"
+          onClick={(e) => { e.stopPropagation(); setMuted(m => !m); }}
+          className="tap hairline flex h-8 w-8 items-center justify-center"
+          style={{ borderColor: "rgba(255,255,255,0.35)" }}
           aria-label={muted ? "Unmute" : "Mute"}
         >
-          {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+          <Glyph.Mute muted={muted} className="h-4 w-4" />
         </button>
+      </div>
+
+      {/* Progress hairlines — segmented */}
+      <div className="pointer-events-none absolute inset-x-4 top-[calc(max(env(safe-area-inset-top),18px)+36px)] flex gap-1">
+        {[0,1,2,3].map((i) => (
+          <div key={i} className="h-[2px] flex-1 overflow-hidden" style={{ background: "rgba(255,255,255,0.15)" }}>
+            {i === 0 && <div key={burst} className="progress-bar h-full origin-left bg-white" />}
+          </div>
+        ))}
       </div>
 
       {/* Heart burst */}
       {burst > 0 && (
-        <Heart
+        <Glyph.Heart
           key={burst}
-          className="heart-burst pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 fill-white text-white drop-shadow-[0_10px_40px_rgba(255,255,255,0.35)]"
+          filled
+          className="heart-burst pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 text-white drop-shadow-[0_10px_40px_rgba(255,255,255,0.35)]"
         />
       )}
 
-      {/* Right action rail */}
-      <div className="absolute bottom-28 right-3 flex flex-col items-center gap-4 text-white">
-        <ActionBtn
-          icon={<Heart className={`h-7 w-7 ${liked ? "fill-current" : ""}`} />}
-          label={fmt(likeCount)}
-          onClick={() => { setLiked((v) => !v); if (!liked) setBurst((b) => b + 1); }}
-          activeTone={liked ? "heat" : undefined}
+      {/* Right action rail — thin icons + mono numbers */}
+      <div className="absolute right-3 top-1/2 flex -translate-y-1/2 flex-col items-center gap-5 text-white">
+        <RailBtn
+          icon={<Glyph.Heart filled={liked} className="h-6 w-6" />}
+          value={fmt(likeCount)}
+          highlight={liked ? "var(--color-heat)" : undefined}
+          onClick={() => { setLiked(v => !v); if (!liked) setBurst(b => b + 1); }}
         />
-        <ActionBtn icon={<MessageCircle className="h-7 w-7" />} label={fmt(reel.comments)} />
-        <ActionBtn icon={<Send className="h-7 w-7 -rotate-12" />} label={fmt(reel.shares)} />
-        <ActionBtn
-          icon={<Bookmark className={`h-7 w-7 ${saved ? "fill-current" : ""}`} />}
-          label={saved ? "Saved" : "Save"}
-          onClick={() => setSaved((v) => !v)}
-          activeTone={saved ? "signal" : undefined}
+        <RailBtn icon={<Glyph.Speak className="h-6 w-6" />} value={fmt(reel.comments)} />
+        <RailBtn icon={<Glyph.Send className="h-6 w-6" />} value={fmt(reel.shares)} />
+        <RailBtn
+          icon={<Glyph.Save filled={saved} className="h-6 w-6" />}
+          value={saved ? "SAVED" : "SAVE"}
+          highlight={saved ? "var(--color-signal)" : undefined}
+          onClick={() => setSaved(v => !v)}
         />
-        <div className="mt-1 flex flex-col items-center gap-1 text-white/80">
-          <Eye className="h-5 w-5" />
-          <span className="text-[10px] font-semibold tracking-wide">{reel.views}</span>
-        </div>
-
-        {/* Spinning music disc */}
-        <div className="relative mt-2 h-11 w-11 overflow-hidden rounded-full border-2 border-white/70">
-          <img src={reel.user.avatar} alt="" className="h-full w-full animate-spin object-cover" style={{ animationDuration: "6s" }} />
-          <span className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-white/20" />
-        </div>
       </div>
 
-      {/* Bottom info block */}
-      <div className="absolute inset-x-0 bottom-24 z-10 space-y-3 px-4 text-white">
-        {/* Creator row */}
+      {/* Bottom editorial block */}
+      <div className="absolute inset-x-0 bottom-20 z-10 space-y-4 px-4 text-white">
+        {/* Creator strip */}
         <div className="flex items-center gap-3">
           <div className="story-ring">
-            <div className="rounded-full bg-ink p-[2px]">
-              <img src={reel.user.avatar} alt="" className="h-10 w-10 rounded-full object-cover" />
+            <div className="bg-bone p-[2px]">
+              <img src={reel.user.avatar} alt="" className="h-10 w-10 object-cover" style={{ borderRadius: 0 }} />
             </div>
           </div>
-          <div className="min-w-0">
-            <p className="flex items-center gap-1.5 text-sm font-semibold">
-              {reel.user.name}
-              {reel.user.verified && (
-                <span
-                  className="grid h-4 w-4 place-items-center rounded-full text-[10px] font-bold text-ink"
-                  style={{ background: "var(--color-signal)" }}
-                >✓</span>
-              )}
-            </p>
-            <p className="text-[11px] text-white/70">{reel.user.handle}</p>
+          <div className="min-w-0 leading-tight">
+            <p className="mono-tag" style={{ color: "rgba(255,255,255,0.6)" }}>{reel.user.handle}</p>
+            <p className="text-sm font-bold">{reel.user.name}</p>
           </div>
           <button
-            onClick={() => setFollowed((f) => !f)}
-            className={`tap ml-auto rounded-full px-4 py-1.5 text-xs font-bold ${
-              followed
-                ? "bg-white/15 text-white backdrop-blur-md"
-                : "bg-white text-ink"
-            }`}
+            onClick={() => setFollowed(f => !f)}
+            className="tap ml-auto"
+            style={{
+              padding: "6px 12px",
+              border: "1px solid rgba(255,255,255,0.6)",
+              background: followed ? "transparent" : "white",
+              color: followed ? "white" : "black",
+              fontFamily: "var(--font-mono)",
+              fontSize: 10,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              fontWeight: 600,
+            }}
           >
-            {followed ? "Following" : "Follow"}
+            {followed ? "TRACKING" : "+ TRACK"}
           </button>
         </div>
 
-        {/* Caption */}
-        <div>
-          <p className={`text-[13.5px] leading-snug ${expanded ? "" : "line-clamp-2"}`}>
-            {reel.caption}
-          </p>
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            className="mt-1 inline-flex items-center gap-1 text-[11px] font-semibold text-white/80"
-          >
-            {expanded ? "Show less" : "More"}
-            {expanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-          </button>
-        </div>
+        {/* Editorial caption */}
+        <p className="max-w-[85%] text-[15px] font-medium leading-snug" style={{ letterSpacing: "-0.01em" }}>
+          {reel.caption}
+        </p>
 
-        {/* Meta chips */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          {reel.hashtags.slice(0, 3).map((h) => (
-            <span key={h} className="rounded-full bg-white/12 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
-              {h}
-            </span>
-          ))}
-          {reel.location && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/12 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
-              <MapPin className="h-3 w-3" /> {reel.location}
-            </span>
-          )}
-        </div>
-
-        {/* Tagged vehicle */}
+        {/* Tagged vehicle — spec strip */}
         {reel.vehicle && (
-          <div className="glass-dark flex items-center gap-3 rounded-2xl px-3 py-2.5">
-            <span
-              className="grid h-9 w-9 place-items-center rounded-xl"
-              style={{ background: "color-mix(in oklab, var(--color-signal) 30%, transparent)" }}
-            >
-              <VehicleIcon className="h-4.5 w-4.5 text-white" />
+          <div
+            className="grid grid-cols-4 items-center gap-0 border border-white/25"
+            style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(14px)" }}
+          >
+            <div className="col-span-1 border-r border-white/25 px-3 py-2">
+              <p className="mono-tag" style={{ color: "rgba(255,255,255,0.55)" }}>YEAR</p>
+              <p className="mono-num text-sm font-bold">{reel.vehicle.year}</p>
+            </div>
+            <div className="col-span-1 border-r border-white/25 px-3 py-2">
+              <p className="mono-tag" style={{ color: "rgba(255,255,255,0.55)" }}>HP</p>
+              <p className="mono-num text-sm font-bold">{reel.vehicle.hp}</p>
+            </div>
+            <div className="col-span-2 px-3 py-2">
+              <p className="mono-tag" style={{ color: "rgba(255,255,255,0.55)" }}>MACHINE</p>
+              <p className="truncate text-sm font-bold">{reel.vehicle.name}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Bottom footer row: location + music */}
+        <div className="hairline-t flex items-center gap-3 pt-3" style={{ borderColor: "rgba(255,255,255,0.2)" }}>
+          {reel.location && (
+            <span className="mono-tag" style={{ color: "rgba(255,255,255,0.7)" }}>◎ {reel.location}</span>
+          )}
+          <div className="ml-auto flex items-center gap-2 overflow-hidden">
+            <div className="flex h-3 items-end gap-[2px]">
+              <span className="bar-1 w-[2px] rounded-full bg-white/80" />
+              <span className="bar-2 w-[2px] rounded-full bg-white/80" />
+              <span className="bar-3 w-[2px] rounded-full bg-white/80" />
+              <span className="bar-4 w-[2px] rounded-full bg-white/80" />
+            </div>
+            <span className="mono-tag truncate" style={{ color: "rgba(255,255,255,0.7)", maxWidth: 160 }}>
+              {reel.music.artist} — {reel.music.title}
             </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[13px] font-semibold">{reel.vehicle.name}</p>
-              <p className="text-[10.5px] uppercase tracking-wide text-white/70">
-                {reel.vehicle.year} · {reel.vehicle.hp} HP · {reel.vehicle.mods.length} mods
-              </p>
-            </div>
-            <button className="tap rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold">View</button>
           </div>
-        )}
-
-        {/* Tagged product */}
-        {reel.taggedProduct && (
-          <div className="glass-dark flex items-center gap-2 rounded-2xl px-3 py-2">
-            <Tag className="h-4 w-4" style={{ color: "var(--color-signal)" }} />
-            <p className="flex-1 truncate text-[12px] font-medium">
-              {reel.taggedProduct.name}
-            </p>
-            <span className="text-[12px] font-bold text-white">{reel.taggedProduct.price}</span>
-            <button className="tap rounded-full bg-white px-3 py-1 text-[11px] font-bold text-ink">Shop</button>
-          </div>
-        )}
-
-        {/* Music */}
-        <div className="flex items-center gap-2 pt-1">
-          <Music2 className="h-3.5 w-3.5" />
-          <div className="min-w-0 flex-1 overflow-hidden">
-            <div className="marquee inline-flex whitespace-nowrap text-[11px] font-medium text-white/85">
-              <span className="pr-6">{reel.music.title} — {reel.music.artist}</span>
-              <span className="pr-6">{reel.music.title} — {reel.music.artist}</span>
-            </div>
-          </div>
-          <Waveform />
         </div>
       </div>
     </section>
   );
 }
 
-function ActionBtn({
-  icon, label, onClick, activeTone,
-}: {
-  icon: React.ReactNode; label: string; onClick?: () => void; activeTone?: "heat" | "signal";
-}) {
-  const color =
-    activeTone === "heat" ? { color: "var(--color-heat)" }
-    : activeTone === "signal" ? { color: "var(--color-signal)" }
-    : undefined;
+function RailBtn({
+  icon, value, onClick, highlight,
+}: { icon: React.ReactNode; value: string; onClick?: () => void; highlight?: string }) {
   return (
-    <button onClick={onClick} className="tap flex flex-col items-center gap-1">
-      <span
-        className="grid h-11 w-11 place-items-center rounded-full bg-black/25 backdrop-blur-md"
-        style={color}
-      >
-        {icon}
-      </span>
-      <span className="text-[10px] font-semibold text-white/90">{label}</span>
+    <button onClick={onClick} className="tap flex flex-col items-center gap-1.5" style={highlight ? { color: highlight } : undefined}>
+      {icon}
+      <span className="mono-num text-[10px] font-bold" style={{ letterSpacing: "0.05em" }}>{value}</span>
     </button>
-  );
-}
-
-function Waveform() {
-  return (
-    <div className="flex h-4 items-end gap-[2px]">
-      <span className="bar-1 w-[2px] rounded-full bg-white/80" />
-      <span className="bar-2 w-[2px] rounded-full bg-white/80" />
-      <span className="bar-3 w-[2px] rounded-full bg-white/80" />
-      <span className="bar-4 w-[2px] rounded-full bg-white/80" />
-    </div>
   );
 }
 
