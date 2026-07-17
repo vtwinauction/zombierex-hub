@@ -91,6 +91,17 @@ function ManageCommunity() {
     mutationFn: (post_id: string) => del({ data: { post_id } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["community", slug] }),
   });
+  const awardMut = useMutation({
+    mutationFn: (v: { user_id: string; code: string; label: string }) =>
+      award({ data: { club_id: community!.club.id, ...v } }),
+    onSuccess: (_, v) => {
+      setPickerFor(null);
+      setToast(`🏅 ${v.label} awarded`);
+      setTimeout(() => setToast(null), 2000);
+      qc.invalidateQueries({ queryKey: ["community-badges", community?.club.id] });
+    },
+  });
+
 
   if (!community) {
     return <div className="grid min-h-[50vh] place-items-center"><p className="mono-tag" style={{ color: "var(--color-titanium)" }}>loading…</p></div>;
