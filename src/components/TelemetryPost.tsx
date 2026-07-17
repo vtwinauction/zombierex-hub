@@ -93,32 +93,35 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
         </div>
       </div>
 
-      {/* RIGHT: vertical action rail */}
+      {/* RIGHT: vertical action rail — fossil/mechanical glyphs */}
       <div className="flex flex-col items-stretch justify-start border-l border-ink bg-mist">
-        <RailAction glyph="✚" label="LIKE" active={liked} onClick={() => setLiked((v) => !v)} tone="signal" />
-        <RailAction glyph="◨" label="RPLY" />
-        <RailAction glyph="⇢" label="SEND" />
-        <RailAction glyph="⬒" label="SAVE" active={saved} onClick={() => setSaved((v) => !v)} />
-        <RailAction glyph="⋯" label="MORE" />
+        <RailAction Icon={IconClaw}     label="LIKE" active={liked} onClick={() => setLiked((v) => !v)} tone="signal" />
+        <RailAction Icon={IconVisor}    label="RPLY" />
+        <RailAction Icon={IconMechClaw} label="SEND" />
+        <RailAction Icon={IconBoneMark} label="SAVE" active={saved} onClick={() => setSaved((v) => !v)} />
       </div>
     </article>
   );
 }
 
 function RailAction({
-  glyph, label, onClick, active, tone,
+  Icon, label, onClick, active, tone,
 }: {
-  glyph: string; label: string; onClick?: () => void; active?: boolean; tone?: "signal";
+  Icon: ComponentType<{ size?: number }>;
+  label: string;
+  onClick?: () => void;
+  active?: boolean;
+  tone?: "signal";
 }) {
   return (
     <button
       onClick={onClick}
-      className={`tap flex flex-1 flex-col items-center justify-center gap-0.5 border-b border-ink py-2 ${
+      className={`tap flex flex-1 flex-col items-center justify-center gap-1 border-b border-ink py-2 ${
         active ? (tone === "signal" ? "bg-signal text-ink" : "bg-ink text-bone") : "text-ink"
       }`}
     >
-      <span className="text-base leading-none">{glyph}</span>
-      <span className="mono-caps text-[8px]">{label}</span>
+      <Icon size={18} />
+      <span className="mono-caps" style={{ fontSize: 8 }}>{label}</span>
     </button>
   );
 }
