@@ -422,7 +422,7 @@ function HomePage() {
          ================================================== */}
       <section className="mt-8 space-y-6">
         {feedPosts.map((p, idx) => (
-
+          <>
           <article key={p.id} className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
             {/* post header */}
             <div className="flex items-center gap-2.5 px-4 pb-2.5">
@@ -486,8 +486,18 @@ function HomePage() {
               )}
             </div>
           </article>
+          {idx > 0 && idx % 3 === 0 && sponsored.data?.[Math.floor(idx / 3) % (sponsored.data?.length || 1)] && (
+            <div className="px-4">
+              <SponsoredCard
+                creative={sponsored.data[Math.floor(idx / 3) % sponsored.data.length] as any}
+                placement="feed"
+              />
+            </div>
+          )}
+          </>
         ))}
       </section>
+
 
       {/* ==================================================
          REEL GRID — TikTok "For You" tail
