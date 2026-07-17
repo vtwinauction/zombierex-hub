@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
 
