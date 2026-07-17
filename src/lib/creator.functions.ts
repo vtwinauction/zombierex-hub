@@ -104,20 +104,24 @@ export const getCreatorProfile = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { data: cp, error } = await context.supabase
       .from("creator_profiles")
-      .select("*, profiles:profiles!creator_profiles_user_id_fkey(id, handle, display_name, avatar_url, tier, is_verified, followers_count, following_count, posts_count, bio, location)")
+      .select("*")
       .eq("user_id", data.user_id)
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!cp) return null;
 
-    const [{ data: tiers }, { data: sub }] = await Promise.all([
+    const [{ data: profile }, { data: tiers }, { data: sub }] = await Promise.all([
+      context.supabase.from("profiles")
+        .select("id, handle, display_name, avatar_url, tier, is_verified, followers_count, following_count, posts_count, bio, location")
+        .eq("id", data.user_id).maybeSingle(),
       context.supabase.from("creator_tiers").select("*").eq("creator_id", cp.id).eq("is_active", true).order("sort_order"),
       context.supabase.from("creator_subscriptions").select("id, status, tier_id, current_period_end")
         .eq("creator_id", cp.id).eq("subscriber_id", context.userId).maybeSingle(),
     ]);
 
-    return { ...cp, tiers: tiers ?? [], my_subscription: sub ?? null };
+    return { ...cp, profile, tiers: tiers ?? [], my_subscription: sub ?? null };
   });
+
 
 export const listCreators = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
