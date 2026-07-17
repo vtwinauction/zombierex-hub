@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
@@ -93,6 +94,11 @@ const AuthenticatedVendorIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
@@ -133,12 +139,13 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
@@ -152,11 +159,11 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
@@ -172,12 +179,13 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
 }
@@ -199,6 +207,7 @@ export interface FileRouteTypes {
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/admin/'
     | '/vendor/'
     | '/api/public/webhooks/payments'
   fileRoutesByTo: FileRoutesByTo
@@ -212,11 +221,11 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/search'
-    | '/admin'
     | '/checkout/$paymentId'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/admin'
     | '/vendor'
     | '/api/public/webhooks/payments'
   id:
@@ -237,6 +246,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
+    | '/_authenticated/admin/'
     | '/_authenticated/vendor/'
     | '/api/public/webhooks/payments'
   fileRoutesById: FileRoutesById
@@ -349,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorIndexRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/api/public/health': {
       id: '/api/public/health'
       path: '/api/public/health'
@@ -387,6 +404,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedVendorRouteChildren {
   AuthenticatedVendorApplyRoute: typeof AuthenticatedVendorApplyRoute
   AuthenticatedVendorPlansRoute: typeof AuthenticatedVendorPlansRoute
@@ -403,13 +431,13 @@ const AuthenticatedVendorRouteWithChildren =
   AuthenticatedVendorRoute._addFileChildren(AuthenticatedVendorRouteChildren)
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
 }
