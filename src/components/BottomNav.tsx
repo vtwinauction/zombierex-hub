@@ -8,62 +8,66 @@ type NavItem = {
   icon: ComponentType<{ className?: string }>;
 };
 
-const NAV: NavItem[] = [
-  { to: "/",            label: "Garage",    icon: IconGarage },
-  { to: "/search",      label: "Discover",  icon: IconDiscover },
-  { to: "/marketplace", label: "Vault",     icon: IconMarket },
-  { to: "/profile",     label: "Rider",     icon: IconHelmet },
+const LEFT: NavItem[] = [
+  { to: "/",            label: "Feed",     icon: IconGarage },
+  { to: "/search",      label: "Signal",   icon: IconDiscover },
+];
+const RIGHT: NavItem[] = [
+  { to: "/marketplace", label: "Vault",    icon: IconMarket },
+  { to: "/profile",     label: "Garage",   icon: IconHelmet },
 ];
 
+/**
+ * Floating obsidian dock — not a full-width tab bar.
+ * A pill-island with a raised neon "create" bolt at center-left offset.
+ */
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50"
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none"
+      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)" }}
     >
       <div
-        className="hairline-t grid grid-cols-5 items-center"
+        className="glass lift-2 pointer-events-auto flex items-center gap-1 px-2 py-2"
         style={{
-          background: "color-mix(in oklab, #ffffff 90%, transparent)",
-          backdropFilter: "blur(24px) saturate(160%)",
-          borderTop: "1px solid var(--color-hair)",
-          boxShadow: "0 -6px 20px -12px rgba(14,15,17,0.15)",
+          borderRadius: 999,
+          border: "1px solid var(--color-hair-strong)",
         }}
       >
-        <NavCell item={NAV[0]} active={pathname === "/"} />
-        <NavCell item={NAV[1]} active={pathname.startsWith("/search")} />
+        {LEFT.map((it) => (
+          <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
+        ))}
 
-        {/* Center CREATE — CNC bolt-cross floating action */}
+        {/* Central CREATE bolt */}
         <button
           aria-label="Create"
-          className="tap group relative flex h-16 items-center justify-center"
+          className="tap group relative mx-1 grid h-12 w-12 place-items-center"
+          style={{
+            borderRadius: 999,
+            background: "linear-gradient(180deg, #dbff8b 0%, #c6ff3d 55%, #7ee01c 100%)",
+            color: "var(--color-obsidian)",
+            boxShadow: "0 10px 26px -10px rgba(198,255,61,0.7), inset 0 1px 0 rgba(255,255,255,0.5)",
+            border: "1px solid #6bb318",
+          }}
         >
-          <span
-            className="engine-pulse relative flex h-14 w-14 items-center justify-center"
-            style={{
-              clipPath: "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
-              background: "linear-gradient(180deg, #1a1c20 0%, #0e0f11 100%)",
-              color: "var(--color-neon)",
-              boxShadow: "0 8px 22px -8px rgba(14,15,17,0.55), inset 0 1px 0 rgba(255,255,255,0.08)",
-              border: "1px solid #000",
-            }}
-          >
-            <IconBoltCross size={22} />
-            <span className="bolt absolute left-1 top-1" />
-            <span className="bolt absolute right-1 top-1" />
-            <span className="bolt absolute left-1 bottom-1" />
-            <span className="bolt absolute right-1 bottom-1" />
-          </span>
+          <IconBoltCross size={20} />
+          <span className="engine-pulse absolute inset-0 rounded-full" />
         </button>
 
-        <NavCell item={NAV[2]} active={pathname.startsWith("/marketplace")} />
-        <NavCell item={NAV[3]} active={pathname.startsWith("/profile")} />
+        {RIGHT.map((it) => (
+          <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
+        ))}
       </div>
     </nav>
   );
+}
+
+function isActive(pathname: string, to: string) {
+  if (to === "/") return pathname === "/";
+  return pathname.startsWith(to);
 }
 
 function NavCell({ item, active }: { item: NavItem; active: boolean }) {
@@ -72,22 +76,15 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
     <Link
       to={item.to}
       aria-current={active ? "page" : undefined}
-      className="tap relative flex h-16 flex-col items-center justify-center gap-1"
-      style={{ color: active ? "var(--color-matte)" : "var(--color-titanium)" }}
+      className="tap relative grid h-11 w-14 place-items-center"
+      style={{
+        borderRadius: 999,
+        color: active ? "var(--color-neon)" : "var(--color-silver)",
+        background: active ? "rgba(198,255,61,0.08)" : "transparent",
+      }}
     >
-      <Icon className="h-[22px] w-[22px]" />
-      <span
-        className="mono-caps"
-        style={{ fontSize: 9, letterSpacing: "0.16em" }}
-      >
-        {item.label}
-      </span>
-      {active && (
-        <span
-          className="absolute bottom-1 h-[3px] w-6 rounded-full"
-          style={{ background: "var(--color-neon)", boxShadow: "0 0 8px rgba(182,255,60,0.7)" }}
-        />
-      )}
+      <Icon className="h-[19px] w-[19px]" />
+      <span className="mono-caps absolute -bottom-0.5 hidden" style={{ fontSize: 8 }}>{item.label}</span>
     </Link>
   );
 }
