@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
 import { users, clubs, listings, posts, reels } from "@/lib/mock-data";
+import { RiderBadge, RiderMark, type RiderTier } from "@/components/RiderBadge";
+
 
 export const Route = createFileRoute("/search")({
   head: () => ({ meta: [{ title: "Signal · ZOMBIEREX" }, { name: "description", content: "Discover riders, builds, crews and parts across the ZOMBIEREX network." }] }),
@@ -89,21 +91,33 @@ function ExplorePage() {
         <section>
           <SectionHeader index="C" title="Operators · Follow" />
           <ul className="mt-3 divide-y divide-hair hairline-t hairline-b">
-            {users.map((u, i) => (
-              <li key={u.id} className="flex items-center gap-3 py-3">
-                <span className="display-numeral w-6 text-lg" style={{ color: "var(--color-ash)" }}>{String(i+1).padStart(2,"0")}</span>
-                <img src={u.avatar} alt="" className="h-10 w-10 object-cover hairline" />
-                <div className="min-w-0 flex-1">
-                  <p className="flex items-center gap-1.5 text-[13.5px] font-bold">
-                    {u.name}
-                    {u.verified && <span className="mono-tag" style={{ color: "var(--color-signal)" }}>✓ VRF</span>}
-                  </p>
-                  <p className="mono-tag mt-0.5" style={{ color: "var(--color-ash)" }}>{u.handle} · ◎ {u.location}</p>
-                </div>
-                <button className="btn-ghost" style={{ padding: "8px 14px", fontSize: 10 }}>+ FOLLOW</button>
-              </li>
-            ))}
+            {users.map((u, i) => {
+              const tiers: RiderTier[] = ["ELITE", "APEX_REX", "MASTER_BUILDER", "TURBO", "LEGEND"];
+              const tier = tiers[i % tiers.length];
+              return (
+                <li key={u.id} className="flex items-center gap-3 py-3">
+                  <span className="display-numeral w-6 text-lg" style={{ color: "var(--color-ash)" }}>{String(i+1).padStart(2,"0")}</span>
+                  <div className="relative">
+                    <img src={u.avatar} alt="" className="h-10 w-10 object-cover hairline" />
+                    {u.verified && (
+                      <span className="absolute -bottom-1 -right-1">
+                        <RiderMark tier={tier} />
+                      </span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="flex items-center gap-1.5 text-[13.5px] font-bold">
+                      {u.name}
+                      {u.verified && <RiderBadge tier={tier} compact />}
+                    </p>
+                    <p className="mono-tag mt-0.5" style={{ color: "var(--color-ash)" }}>{u.handle} · ◎ {u.location}</p>
+                  </div>
+                  <button className="btn-ghost" style={{ padding: "8px 14px", fontSize: 10 }}>+ FOLLOW</button>
+                </li>
+              );
+            })}
           </ul>
+
         </section>
 
         <section>

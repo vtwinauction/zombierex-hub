@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatusBar } from "@/components/StatusBar";
+import { InteractionBar } from "@/components/InteractionBar";
+import { RiderBadge, RiderMark, type RiderTier } from "@/components/RiderBadge";
 import { reels, storiesV2, listings, events, users } from "@/lib/mock-data";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -66,8 +69,9 @@ function HomePage() {
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <p className="mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {featured.location}</p>
-                    <p className="serif mt-1 italic text-lg leading-tight">
-                      Built by <span style={{ color: "var(--color-neon)" }}>{featured.user.handle}</span>
+                    <p className="serif mt-1 flex items-center gap-2 italic text-lg leading-tight">
+                      <span>Built by <span style={{ color: "var(--color-neon)" }}>{featured.user.handle}</span></span>
+                      <RiderMark tier="APEX_REX" />
                     </p>
                   </div>
                   <span className="mono-caps px-2 py-1" style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.25)" }}>
@@ -84,16 +88,30 @@ function HomePage() {
           </div>
         </div>
 
-        {/* Floating spec card — overlaps into next section */}
-        <div className="relative -mt-8 px-4">
+        {/* ── Interaction Bar (Like · Comment · Views · Share · Save) ── */}
+        <div className="relative z-10 -mt-5 px-4">
+          <InteractionBar
+            variant="dark"
+            counts={{
+              likes: featured.likes,
+              comments: featured.comments,
+              views: featured.views,
+              shares: featured.shares,
+            }}
+          />
+        </div>
+
+        {/* Floating spec card */}
+        <div className="relative mt-4 px-4">
           <div className="surface-brushed lift-2 grid grid-cols-4 divide-x" style={{ borderRadius: 3, borderColor: "var(--color-hair-strong)" }}>
             <Spec k="Power" v={`${featured.vehicle?.hp}`} u="hp" />
-            <Spec k="Views" v={featured.views} />
-            <Spec k="Likes" v={fmt(featured.likes)} />
-            <Spec k="Cmts" v={fmt(featured.comments)} accent />
+            <Spec k="Torque" v="284" u="nm" />
+            <Spec k="0–100" v="4.2" u="s" />
+            <Spec k="Weight" v="1180" u="kg" accent />
           </div>
         </div>
       </section>
+
 
       {/* ==================================================
          GARAGE TRANSMISSIONS — stories rail
@@ -195,22 +213,35 @@ function HomePage() {
       </section>
 
       {/* ==================================================
-         PILOTS — Riders strip
+         PILOTS — Riders strip with rider status tiers
          ================================================== */}
       <section className="mt-10 px-4">
         <SectionHead kicker="Pilots" title="Signals nearby" />
         <div className="mt-4 grid grid-cols-3 gap-2">
-          {users.map((u, i) => (
-            <div key={u.id} className="surface-1 p-3 text-center" style={{ borderRadius: 3 }}>
-              <div className="mx-auto h-14 w-14 overflow-hidden hex-frame">
-                <img src={u.avatar} alt="" className="h-full w-full object-cover" />
+          {users.map((u, i) => {
+            const tiers: RiderTier[] = ["APEX_REX", "LEGEND", "MASTER_BUILDER"];
+            const tier = tiers[i % tiers.length];
+            return (
+              <div key={u.id} className="surface-1 flex flex-col items-center p-3 text-center" style={{ borderRadius: 3 }}>
+                <div className="relative">
+                  <div className="mx-auto h-14 w-14 overflow-hidden hex-frame">
+                    <img src={u.avatar} alt="" className="h-full w-full object-cover" />
+                  </div>
+                  <span className="absolute -bottom-1 -right-1">
+                    <RiderMark tier={tier} />
+                  </span>
+                </div>
+                <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>P·{String(i + 1).padStart(2, "0")}</p>
+                <p className="serif mt-0.5 truncate text-[13px] italic" style={{ color: "var(--color-ink)" }}>{u.name}</p>
+                <div className="mt-1.5">
+                  <RiderBadge tier={tier} compact />
+                </div>
               </div>
-              <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>P·{String(i + 1).padStart(2, "0")}</p>
-              <p className="serif mt-0.5 truncate text-[13px] italic" style={{ color: "var(--color-ink)" }}>{u.name}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
+
 
       {/* Colophon */}
       <footer className="mt-14 px-4">
