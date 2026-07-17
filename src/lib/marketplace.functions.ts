@@ -3,8 +3,42 @@
  * Listings, saves, reports, seller reviews, and lightweight seller analytics.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
+
+/** Publishable-key server client for public reads (respects RLS as anon). */
+function publicClient() {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  return createClient<Database>(process.env.SUPABASE_URL!, key, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input, { ...init, headers: h });
+      },
+    },
+  });
+}
+
+/** Optional-auth middleware: attach supabase client + optional userId, never throws on missing token. */
+async function getOptionalAuth(): Promise<{ userId: string | null }> {
+  try {
+    const { getRequestHeader } = await import("@tanstack/react-start/server");
+    const auth = getRequestHeader("authorization") || getRequestHeader("Authorization");
+    if (!auth?.startsWith("Bearer ")) return { userId: null };
+    const token = auth.slice(7);
+    const client = createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_PUBLISHABLE_KEY!, {
+      auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    const { data } = await client.auth.getUser(token);
+    return { userId: data.user?.id ?? null };
+  } catch { return { userId: null }; }
+}
 
 export const LISTING_CATEGORIES = [
   "motorcycle","car","truck","scooter","atv","boat","other_vehicle",
