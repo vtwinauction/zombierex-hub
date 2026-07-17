@@ -27,9 +27,8 @@ function publicClient() {
 /** Read optional bearer token from the incoming request; returns userId or null. */
 async function getOptionalUserId(): Promise<string | null> {
   try {
-    const { getWebRequest } = await import("@tanstack/react-start/server");
-    const req = getWebRequest();
-    const auth = req?.headers.get("authorization") || req?.headers.get("Authorization");
+    const { getRequestHeader } = await import("@tanstack/start-server-core");
+    const auth = getRequestHeader("authorization") || getRequestHeader("Authorization" as any);
     if (!auth?.toLowerCase().startsWith("bearer ")) return null;
     const token = auth.slice(7);
     const { data } = await publicClient().auth.getUser(token);
