@@ -14,6 +14,206 @@ export type Database = {
   }
   public: {
     Tables: {
+      ad_campaigns: {
+        Row: {
+          age_max: number | null
+          age_min: number | null
+          budget_daily_cents: number
+          budget_total_cents: number
+          clicks_count: number
+          created_at: string
+          currency: string
+          end_at: string | null
+          engagements_count: number
+          geo_cities: string[]
+          geo_countries: string[]
+          id: string
+          impressions_count: number
+          interests: string[]
+          name: string
+          objective: Database["public"]["Enums"]["ad_objective"]
+          owner_id: string
+          placements: Database["public"]["Enums"]["ad_placement"][]
+          spent_cents: number
+          start_at: string | null
+          status: Database["public"]["Enums"]["ad_status"]
+          targeting: Json
+          updated_at: string
+          vendor_id: string | null
+        }
+        Insert: {
+          age_max?: number | null
+          age_min?: number | null
+          budget_daily_cents?: number
+          budget_total_cents?: number
+          clicks_count?: number
+          created_at?: string
+          currency?: string
+          end_at?: string | null
+          engagements_count?: number
+          geo_cities?: string[]
+          geo_countries?: string[]
+          id?: string
+          impressions_count?: number
+          interests?: string[]
+          name: string
+          objective: Database["public"]["Enums"]["ad_objective"]
+          owner_id: string
+          placements?: Database["public"]["Enums"]["ad_placement"][]
+          spent_cents?: number
+          start_at?: string | null
+          status?: Database["public"]["Enums"]["ad_status"]
+          targeting?: Json
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Update: {
+          age_max?: number | null
+          age_min?: number | null
+          budget_daily_cents?: number
+          budget_total_cents?: number
+          clicks_count?: number
+          created_at?: string
+          currency?: string
+          end_at?: string | null
+          engagements_count?: number
+          geo_cities?: string[]
+          geo_countries?: string[]
+          id?: string
+          impressions_count?: number
+          interests?: string[]
+          name?: string
+          objective?: Database["public"]["Enums"]["ad_objective"]
+          owner_id?: string
+          placements?: Database["public"]["Enums"]["ad_placement"][]
+          spent_cents?: number
+          start_at?: string | null
+          status?: Database["public"]["Enums"]["ad_status"]
+          targeting?: Json
+          updated_at?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_campaigns_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_campaigns_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_creatives: {
+        Row: {
+          body: string | null
+          campaign_id: string
+          created_at: string
+          cta_label: string | null
+          cta_url: string | null
+          headline: string | null
+          id: string
+          is_active: boolean
+          kind: Database["public"]["Enums"]["ad_creative_kind"]
+          media_url: string | null
+          ref_id: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          body?: string | null
+          campaign_id: string
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          headline?: string | null
+          id?: string
+          is_active?: boolean
+          kind: Database["public"]["Enums"]["ad_creative_kind"]
+          media_url?: string | null
+          ref_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          body?: string | null
+          campaign_id?: string
+          created_at?: string
+          cta_label?: string | null
+          cta_url?: string | null
+          headline?: string | null
+          id?: string
+          is_active?: boolean
+          kind?: Database["public"]["Enums"]["ad_creative_kind"]
+          media_url?: string | null
+          ref_id?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_creatives_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ad_events: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          creative_id: string | null
+          id: number
+          kind: Database["public"]["Enums"]["ad_event_kind"]
+          meta: Json
+          placement: Database["public"]["Enums"]["ad_placement"] | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          creative_id?: string | null
+          id?: number
+          kind: Database["public"]["Enums"]["ad_event_kind"]
+          meta?: Json
+          placement?: Database["public"]["Enums"]["ad_placement"] | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          creative_id?: string | null
+          id?: number
+          kind?: Database["public"]["Enums"]["ad_event_kind"]
+          meta?: Json
+          placement?: Database["public"]["Enums"]["ad_placement"] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ad_events_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "ad_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ad_events_creative_id_fkey"
+            columns: ["creative_id"]
+            isOneToOne: false
+            referencedRelation: "ad_creatives"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       advertisements: {
         Row: {
           budget_cents: number
@@ -196,6 +396,51 @@ export type Database = {
           },
           {
             foreignKeyName: "bookings_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          rating: number
+          reviewer_id: string
+          updated_at: string
+          vendor_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          reviewer_id: string
+          updated_at?: string
+          vendor_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          reviewer_id?: string
+          updated_at?: string
+          vendor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_reviews_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_reviews_vendor_id_fkey"
             columns: ["vendor_id"]
             isOneToOne: false
             referencedRelation: "vendors_public"
@@ -2666,12 +2911,16 @@ export type Database = {
           business_name: string
           business_type: string
           city: string | null
+          contact_channels: Json
           country: string | null
           cover_url: string | null
           created_at: string
           description: string | null
           email: string | null
+          followers_count: number
+          gallery: Json
           id: string
+          is_premium: boolean
           is_verified: boolean
           lat: number | null
           legal_name: string | null
@@ -2681,11 +2930,16 @@ export type Database = {
           owner_id: string
           owner_name: string | null
           phone: string | null
+          portfolio: Json
           postal_code: string | null
+          premium_until: string | null
+          products_showcase: Json
+          profile_views_count: number
           region: string | null
           reviewed_at: string | null
           reviewed_by: string | null
           service_areas: string[]
+          services_showcase: Json
           slug: string
           socials: Json
           submitted_at: string | null
@@ -2703,12 +2957,16 @@ export type Database = {
           business_name: string
           business_type?: string
           city?: string | null
+          contact_channels?: Json
           country?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
+          followers_count?: number
+          gallery?: Json
           id?: string
+          is_premium?: boolean
           is_verified?: boolean
           lat?: number | null
           legal_name?: string | null
@@ -2718,11 +2976,16 @@ export type Database = {
           owner_id: string
           owner_name?: string | null
           phone?: string | null
+          portfolio?: Json
           postal_code?: string | null
+          premium_until?: string | null
+          products_showcase?: Json
+          profile_views_count?: number
           region?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           service_areas?: string[]
+          services_showcase?: Json
           slug: string
           socials?: Json
           submitted_at?: string | null
@@ -2740,12 +3003,16 @@ export type Database = {
           business_name?: string
           business_type?: string
           city?: string | null
+          contact_channels?: Json
           country?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
+          followers_count?: number
+          gallery?: Json
           id?: string
+          is_premium?: boolean
           is_verified?: boolean
           lat?: number | null
           legal_name?: string | null
@@ -2755,11 +3022,16 @@ export type Database = {
           owner_id?: string
           owner_name?: string | null
           phone?: string | null
+          portfolio?: Json
           postal_code?: string | null
+          premium_until?: string | null
+          products_showcase?: Json
+          profile_views_count?: number
           region?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           service_areas?: string[]
+          services_showcase?: Json
           slug?: string
           socials?: Json
           submitted_at?: string | null
@@ -2851,57 +3123,99 @@ export type Database = {
     Views: {
       vendors_public: {
         Row: {
+          address_line1: string | null
           business_name: string | null
           business_type: string | null
           city: string | null
+          contact_channels: Json | null
           country: string | null
+          cover_url: string | null
           created_at: string | null
           description: string | null
+          email: string | null
+          followers_count: number | null
+          gallery: Json | null
           id: string | null
+          is_premium: boolean | null
           is_verified: boolean | null
           lat: number | null
           lng: number | null
+          logo_url: string | null
           operating_hours: Json | null
+          phone: string | null
+          portfolio: Json | null
+          premium_until: string | null
+          products_showcase: Json | null
+          profile_views_count: number | null
           region: string | null
           service_areas: string[] | null
+          services_showcase: Json | null
           slug: string | null
           socials: Json | null
           verification_status: string | null
           website: string | null
         }
         Insert: {
+          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
+          contact_channels?: Json | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
+          followers_count?: number | null
+          gallery?: Json | null
           id?: string | null
+          is_premium?: boolean | null
           is_verified?: boolean | null
           lat?: number | null
           lng?: number | null
+          logo_url?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          portfolio?: Json | null
+          premium_until?: string | null
+          products_showcase?: Json | null
+          profile_views_count?: number | null
           region?: string | null
           service_areas?: string[] | null
+          services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
           verification_status?: string | null
           website?: string | null
         }
         Update: {
+          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
+          contact_channels?: Json | null
           country?: string | null
+          cover_url?: string | null
           created_at?: string | null
           description?: string | null
+          email?: string | null
+          followers_count?: number | null
+          gallery?: Json | null
           id?: string | null
+          is_premium?: boolean | null
           is_verified?: boolean | null
           lat?: number | null
           lng?: number | null
+          logo_url?: string | null
           operating_hours?: Json | null
+          phone?: string | null
+          portfolio?: Json | null
+          premium_until?: string | null
+          products_showcase?: Json | null
+          profile_views_count?: number | null
           region?: string | null
           service_areas?: string[] | null
+          services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
           verification_status?: string | null
@@ -2941,6 +3255,39 @@ export type Database = {
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
+      ad_creative_kind:
+        | "post"
+        | "reel"
+        | "story"
+        | "event"
+        | "listing"
+        | "community"
+        | "business_profile"
+        | "creator_profile"
+      ad_event_kind: "impression" | "click" | "engagement" | "conversion"
+      ad_objective:
+        | "followers"
+        | "profile_visits"
+        | "post_engagement"
+        | "event_attendance"
+        | "listing_views"
+        | "website_visits"
+        | "direct_messages"
+      ad_placement:
+        | "feed"
+        | "reels"
+        | "stories"
+        | "explore"
+        | "marketplace"
+        | "communities"
+        | "search"
+      ad_status:
+        | "draft"
+        | "pending"
+        | "active"
+        | "paused"
+        | "completed"
+        | "rejected"
       app_role:
         | "super_admin"
         | "admin"
@@ -3142,6 +3489,43 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      ad_creative_kind: [
+        "post",
+        "reel",
+        "story",
+        "event",
+        "listing",
+        "community",
+        "business_profile",
+        "creator_profile",
+      ],
+      ad_event_kind: ["impression", "click", "engagement", "conversion"],
+      ad_objective: [
+        "followers",
+        "profile_visits",
+        "post_engagement",
+        "event_attendance",
+        "listing_views",
+        "website_visits",
+        "direct_messages",
+      ],
+      ad_placement: [
+        "feed",
+        "reels",
+        "stories",
+        "explore",
+        "marketplace",
+        "communities",
+        "search",
+      ],
+      ad_status: [
+        "draft",
+        "pending",
+        "active",
+        "paused",
+        "completed",
+        "rejected",
+      ],
       app_role: [
         "super_admin",
         "admin",

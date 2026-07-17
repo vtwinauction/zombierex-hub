@@ -11,6 +11,10 @@ import {
 import { Plus, Bell, MessageCircle } from "lucide-react";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
 import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
+import { SponsoredCard } from "@/components/SponsoredCard";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { listSponsoredCreatives } from "@/lib/ads.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,6 +42,13 @@ function HomePage() {
   const suggestedCreators = users.slice(0, 6);
   const suggestedClubs = clubs.slice(0, 4);
   const feedPosts = tab === "following" ? posts.filter((_, i) => i % 2 === 0) : posts;
+  const listAds = useServerFn(listSponsoredCreatives);
+  const sponsored = useQuery({
+    queryKey: ["ads", "feed"],
+    queryFn: () => listAds({ data: { placement: "feed", limit: 3 } }),
+    staleTime: 5 * 60_000,
+  });
+
 
 
   return (
@@ -411,8 +422,8 @@ function HomePage() {
          ================================================== */}
       <section className="mt-8 space-y-6">
         {feedPosts.map((p, idx) => (
-
-          <article key={p.id} className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
+          <div key={p.id}>
+          <article className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
             {/* post header */}
             <div className="flex items-center gap-2.5 px-4 pb-2.5">
               <div className="story-ring">
@@ -475,8 +486,18 @@ function HomePage() {
               )}
             </div>
           </article>
+          {idx > 0 && idx % 3 === 0 && sponsored.data?.[Math.floor(idx / 3) % (sponsored.data?.length || 1)] && (
+            <div className="px-4">
+              <SponsoredCard
+                creative={sponsored.data[Math.floor(idx / 3) % sponsored.data.length] as any}
+                placement="feed"
+              />
+            </div>
+          )}
+          </div>
         ))}
       </section>
+
 
       {/* ==================================================
          REEL GRID — TikTok "For You" tail
