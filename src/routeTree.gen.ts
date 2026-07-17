@@ -22,6 +22,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
+import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
@@ -114,6 +115,11 @@ const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
   id: '/communities/',
   path: '/communities/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MarketplaceIdRoute = MarketplaceIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MarketplaceRoute,
 } as any)
 const CreatorIdRoute = CreatorIdRouteImport.update({
   id: '/creator/$id',
@@ -278,7 +284,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -291,6 +297,7 @@ export interface FileRoutesByFullPath {
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -320,7 +327,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -362,7 +370,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -375,6 +383,7 @@ export interface FileRoutesById {
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -419,6 +428,7 @@ export interface FileRouteTypes {
     | '/vendor'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities/'
     | '/admin/vendors'
     | '/checkout/$paymentId'
@@ -459,6 +469,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities'
     | '/admin/vendors'
     | '/checkout/$paymentId'
@@ -502,6 +513,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vendor'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities/'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
@@ -533,7 +545,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CreatorsRoute: typeof CreatorsRoute
   EventsRoute: typeof EventsRoute
-  MarketplaceRoute: typeof MarketplaceRoute
+  MarketplaceRoute: typeof MarketplaceRouteWithChildren
   MessagesRoute: typeof MessagesRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
@@ -639,6 +651,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/communities/'
       preLoaderRoute: typeof CommunitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/marketplace/$id': {
+      id: '/marketplace/$id'
+      path: '/$id'
+      fullPath: '/marketplace/$id'
+      preLoaderRoute: typeof MarketplaceIdRouteImport
+      parentRoute: typeof MarketplaceRoute
     }
     '/creator/$id': {
       id: '/creator/$id'
@@ -928,6 +947,18 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface MarketplaceRouteChildren {
+  MarketplaceIdRoute: typeof MarketplaceIdRoute
+}
+
+const MarketplaceRouteChildren: MarketplaceRouteChildren = {
+  MarketplaceIdRoute: MarketplaceIdRoute,
+}
+
+const MarketplaceRouteWithChildren = MarketplaceRoute._addFileChildren(
+  MarketplaceRouteChildren,
+)
+
 interface CommunitiesSlugRouteChildren {
   CommunitiesSlugChallengesChallengeIdRoute: typeof CommunitiesSlugChallengesChallengeIdRoute
 }
@@ -947,7 +978,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CreatorsRoute: CreatorsRoute,
   EventsRoute: EventsRoute,
-  MarketplaceRoute: MarketplaceRoute,
+  MarketplaceRoute: MarketplaceRouteWithChildren,
   MessagesRoute: MessagesRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
