@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { listPlans, subscribeVendor, getMyVendor, getMySubscription } from "@/lib/vendor.functions";
+import { startCheckout } from "@/lib/payments.functions";
 
 const plansQuery = queryOptions({ queryKey: ["plans"], queryFn: () => listPlans() });
 const vendorQuery = queryOptions({ queryKey: ["my-vendor"], queryFn: () => getMyVendor() });
@@ -26,6 +27,7 @@ function PlansPage() {
   const [busy, setBusy] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const subscribeFn = useServerFn(subscribeVendor);
+  const checkoutFn = useServerFn(startCheckout);
   const qc = useQueryClient();
   const nav = useNavigate();
 
@@ -39,9 +41,18 @@ function PlansPage() {
     setBusy(code);
     setErr(null);
     try {
-      await subscribeFn({ data: { vendor_id: vendor.id, plan_code: code, billing_interval: "month" } });
+      const newSub: any = await subscribeFn({
+        data: { vendor_id: vendor.id, plan_code: code, billing_interval: "month" },
+      });
       await qc.invalidateQueries({ queryKey: ["my-subscription"] });
-      nav({ to: "/vendor" });
+
+      const plan = (plans as any[]).find((p) => p.code === code);
+      if (plan && plan.price_cents > 0 && newSub?.id) {
+        const co = await checkoutFn({ data: { subscription_id: newSub.id } });
+        nav({ to: "/checkout/$paymentId", params: { paymentId: co.payment_id } });
+      } else {
+        nav({ to: "/vendor" });
+      }
     } catch (e: any) {
       setErr(e?.message ?? "Subscription failed");
     } finally {
