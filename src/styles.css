@@ -94,15 +94,16 @@
 @utility card-surface {
   background: var(--color-mist);
   border: 1px solid var(--color-hair);
-  border-radius: 2px;
+  border-radius: 14px;
 }
 
 @utility card-ink {
   background: var(--color-mist);
   color: var(--color-ink);
   border: 1px solid var(--color-hair);
-  border-radius: 2px;
+  border-radius: 14px;
 }
+
 
 @utility glass {
   background: color-mix(in oklab, var(--color-bone) 72%, transparent);
