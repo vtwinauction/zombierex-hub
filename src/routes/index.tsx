@@ -66,13 +66,15 @@ function HomePage() {
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          <IconChip label="Capture"><IconLens18 /></IconChip>
-          <Link to="/notifications" aria-label="Signals" className="tap relative grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)" }}>
-            <IconClaw size={16} />
+          <Link to="/post/new" aria-label="Create new post" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", boxShadow: "0 6px 18px -6px rgba(198,255,61,0.6)" }}>
+            <Plus size={18} strokeWidth={2.4} />
+          </Link>
+          <Link to="/notifications" aria-label="Notifications" className="tap relative grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)", color: "var(--color-ink)" }}>
+            <Bell size={16} strokeWidth={1.9} />
             <span className="engine-pulse absolute right-1 top-1 h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-ember)" }} />
           </Link>
-          <Link to="/messages" aria-label="Messages" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)" }}>
-            <IconGauge size={16} />
+          <Link to="/messages" aria-label="Messages" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)", color: "var(--color-ink)" }}>
+            <MessageCircle size={16} strokeWidth={1.9} />
           </Link>
         </div>
       </header>
