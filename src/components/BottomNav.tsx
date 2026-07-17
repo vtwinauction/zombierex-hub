@@ -65,19 +65,19 @@ export function BottomNav() {
         <NavCell item={NAV[0]} active={pathname === "/"} />
         <NavCell item={NAV[1]} active={pathname.startsWith("/search")} />
 
-        {/* Center create — angular, no gradient bubble */}
+        {/* Center create — friendly rounded pill */}
         <button
           aria-label="Create"
           className="tap group relative flex h-16 items-center justify-center"
         >
           <span
-            className="hairline flex h-11 w-11 items-center justify-center"
-            style={{ borderColor: "var(--color-ink)" }}
+            className="flex h-12 w-12 items-center justify-center rounded-full shadow-lg"
+            style={{ background: "var(--color-ink)", color: "var(--color-bone)" }}
           >
-            <CreateGlyph className="h-5 w-5 text-ink" />
+            <CreateGlyph className="h-5 w-5" />
           </span>
-          <span className="pointer-events-none absolute -bottom-0 mono-tag" style={{ color: "var(--color-signal-deep)" }}>03·NEW</span>
         </button>
+
 
         <NavCell item={NAV[2]} active={pathname.startsWith("/marketplace")} />
         <NavCell item={NAV[3]} active={pathname.startsWith("/profile")} />
