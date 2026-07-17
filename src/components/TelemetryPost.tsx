@@ -32,11 +32,7 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
               <p className="font-display truncate text-sm font-semibold uppercase leading-none">
                 {post.user.name}
               </p>
-              {post.user.verified && (
-                <span className="clip-tag mono-caps bg-signal px-1 py-[1px] text-[8px] font-bold text-ink">
-                  VFD
-                </span>
-              )}
+              {post.user.verified && <RiderMark tier="ELITE" />}
             </div>
             <p className="mono-caps text-ash mt-0.5 truncate">{post.user.handle} · {post.user.location}</p>
           </div>
