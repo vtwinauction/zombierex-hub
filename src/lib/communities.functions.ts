@@ -323,7 +323,7 @@ export const createCommunityPost = createServerFn({ method: "POST" })
       caption: z.string().trim().max(2200).optional(),
       media_url: z.string().url().max(2048).optional(),
       thumbnail_url: z.string().url().max(2048).optional(),
-      kind: z.enum(["photo", "video", "text"]).default("photo"),
+      kind: z.enum(["photo", "video"]).default("photo"),
       is_announcement: z.boolean().default(false),
     }).parse(raw),
   )
@@ -351,7 +351,7 @@ export const listCommunityBadges = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const sb = serverPublic();
     const { data: rows, error } = await sb.from("club_badges")
-      .select("id, user_id, label, icon, tier, awarded_at")
+      .select("id, user_id, code, label, awarded_at")
       .eq("club_id", data.club_id)
       .order("awarded_at", { ascending: false }).limit(50);
     if (error) throw new Error(error.message);
@@ -363,17 +363,15 @@ export const awardBadge = createServerFn({ method: "POST" })
   .inputValidator((raw) => z.object({
     club_id: z.string().uuid(),
     user_id: z.string().uuid(),
+    code: z.string().trim().min(2).max(40),
     label: z.string().trim().min(2).max(40),
-    icon: z.string().trim().max(20).optional(),
-    tier: z.enum(["bronze","silver","gold","legend"]).default("bronze"),
   }).parse(raw))
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("club_badges").insert({
-      ...data, awarded_by: context.userId,
-    });
+    const { error } = await context.supabase.from("club_badges").insert(data);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
 
 /* ============================================================
  * WEEKLY CHALLENGES
