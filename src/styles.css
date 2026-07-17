@@ -123,7 +123,6 @@
 /* Legacy names still referenced elsewhere */
 @utility card-surface { background: var(--color-graphite); border: 1px solid var(--color-hair); border-radius: 4px; }
 @utility card-ink { background: var(--color-obsidian); color: var(--color-ink); border: 1px solid var(--color-hair-strong); border-radius: 4px; }
-@utility bg-bone { background: var(--color-ink); color: var(--color-obsidian); }
 
 @utility glass {
   background: color-mix(in oklab, #0b0c0f 62%, transparent);
