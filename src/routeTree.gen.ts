@@ -36,6 +36,7 @@ import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/publ
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
 import { Route as AuthenticatedCommunitiesSlugPostNewRouteImport } from './routes/_authenticated/communities.$slug.post.new'
+import { Route as AuthenticatedCommunitiesSlugEventsNewRouteImport } from './routes/_authenticated/communities.$slug.events.new'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -181,6 +182,12 @@ const AuthenticatedCommunitiesSlugPostNewRoute =
     path: '/communities/$slug/post/new',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedCommunitiesSlugEventsNewRoute =
+  AuthenticatedCommunitiesSlugEventsNewRouteImport.update({
+    id: '/communities/$slug/events/new',
+    path: '/communities/$slug/events/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRoutesByTo {
@@ -234,6 +242,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRoutesById {
@@ -264,6 +273,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
+  '/_authenticated/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/_authenticated/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 export interface FileRouteTypes {
@@ -294,6 +304,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -320,6 +331,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
   id:
     | '__root__'
@@ -349,6 +361,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/communities/$slug/manage'
     | '/api/public/webhooks/payments'
+    | '/_authenticated/communities/$slug/events/new'
     | '/_authenticated/communities/$slug/post/new'
   fileRoutesById: FileRoutesById
 }
@@ -561,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCommunitiesSlugPostNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/communities/$slug/events/new': {
+      id: '/_authenticated/communities/$slug/events/new'
+      path: '/communities/$slug/events/new'
+      fullPath: '/communities/$slug/events/new'
+      preLoaderRoute: typeof AuthenticatedCommunitiesSlugEventsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -612,6 +632,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
   AuthenticatedCommunitiesSlugPostNewRoute: typeof AuthenticatedCommunitiesSlugPostNewRoute
 }
 
@@ -622,6 +643,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedCommunitiesSlugEventsNewRoute:
+    AuthenticatedCommunitiesSlugEventsNewRoute,
   AuthenticatedCommunitiesSlugPostNewRoute:
     AuthenticatedCommunitiesSlugPostNewRoute,
 }
