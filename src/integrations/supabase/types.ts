@@ -203,6 +203,48 @@ export type Database = {
           },
         ]
       }
+      challenge_entries: {
+        Row: {
+          challenge_id: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+          votes_count: number
+        }
+        Insert: {
+          challenge_id: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+          votes_count?: number
+        }
+        Update: {
+          challenge_id?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+          votes_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_entries_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "weekly_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "challenge_entries_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       club_badges: {
         Row: {
           awarded_at: string
@@ -1873,6 +1915,65 @@ export type Database = {
             columns: ["reviewed_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      weekly_challenges: {
+        Row: {
+          club_id: string
+          cover_url: string | null
+          created_at: string
+          created_by: string
+          description: string | null
+          ends_at: string
+          entries_count: number
+          hashtag: string | null
+          id: string
+          is_active: boolean
+          prize: string | null
+          starts_at: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          club_id: string
+          cover_url?: string | null
+          created_at?: string
+          created_by: string
+          description?: string | null
+          ends_at: string
+          entries_count?: number
+          hashtag?: string | null
+          id?: string
+          is_active?: boolean
+          prize?: string | null
+          starts_at?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          club_id?: string
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          ends_at?: string
+          entries_count?: number
+          hashtag?: string | null
+          id?: string
+          is_active?: boolean
+          prize?: string | null
+          starts_at?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_challenges_club_id_fkey"
+            columns: ["club_id"]
+            isOneToOne: false
+            referencedRelation: "clubs"
             referencedColumns: ["id"]
           },
         ]

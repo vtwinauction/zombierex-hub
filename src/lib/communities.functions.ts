@@ -310,3 +310,133 @@ export const rsvpEvent = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/* ============================================================
+ * COMMUNITY POSTS (composer)
+ * ============================================================ */
+
+export const createCommunityPost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) =>
+    z.object({
+      club_id: z.string().uuid(),
+      caption: z.string().trim().max(2200).optional(),
+      media_url: z.string().url().max(2048).optional(),
+      thumbnail_url: z.string().url().max(2048).optional(),
+      kind: z.enum(["photo", "video"]).default("photo"),
+      is_announcement: z.boolean().default(false),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase.from("posts")
+      .insert({
+        author_id: context.userId,
+        club_id: data.club_id,
+        caption: data.caption ?? null,
+        media_url: data.media_url ?? null,
+        thumbnail_url: data.thumbnail_url ?? null,
+        kind: data.kind,
+        is_announcement: data.is_announcement,
+      }).select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+/* ============================================================
+ * BADGES
+ * ============================================================ */
+
+export const listCommunityBadges = createServerFn({ method: "GET" })
+  .inputValidator((raw) => z.object({ club_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data }) => {
+    const sb = serverPublic();
+    const { data: rows, error } = await sb.from("club_badges")
+      .select("id, user_id, code, label, awarded_at")
+      .eq("club_id", data.club_id)
+      .order("awarded_at", { ascending: false }).limit(50);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const awardBadge = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({
+    club_id: z.string().uuid(),
+    user_id: z.string().uuid(),
+    code: z.string().trim().min(2).max(40),
+    label: z.string().trim().min(2).max(40),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("club_badges").insert(data);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+
+/* ============================================================
+ * WEEKLY CHALLENGES
+ * ============================================================ */
+
+export const listChallenges = createServerFn({ method: "GET" })
+  .inputValidator((raw) => z.object({
+    club_id: z.string().uuid(),
+    active_only: z.boolean().default(true),
+  }).parse(raw))
+  .handler(async ({ data }) => {
+    const sb = serverPublic();
+    let q = sb.from("weekly_challenges")
+      .select("id, title, description, hashtag, prize, cover_url, starts_at, ends_at, entries_count, is_active")
+      .eq("club_id", data.club_id)
+      .order("ends_at", { ascending: false }).limit(20);
+    if (data.active_only) q = q.eq("is_active", true).gte("ends_at", new Date().toISOString());
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const createChallenge = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({
+    club_id: z.string().uuid(),
+    title: z.string().trim().min(3).max(120),
+    description: z.string().trim().max(2000).optional(),
+    hashtag: z.string().trim().max(40).optional(),
+    prize: z.string().trim().max(200).optional(),
+    cover_url: z.string().url().max(2048).optional(),
+    starts_at: z.string().datetime().optional(),
+    ends_at: z.string().datetime(),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase.from("weekly_challenges")
+      .insert({ ...data, created_by: context.userId, starts_at: data.starts_at ?? new Date().toISOString() })
+      .select().single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const submitChallengeEntry = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({
+    challenge_id: z.string().uuid(),
+    post_id: z.string().uuid(),
+  }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase.from("challenge_entries")
+      .insert({ ...data, user_id: context.userId });
+    if (error && !error.message.includes("duplicate")) throw new Error(error.message);
+    return { ok: true };
+  });
+
+export const challengeLeaderboard = createServerFn({ method: "GET" })
+  .inputValidator((raw) => z.object({ challenge_id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data }) => {
+    const sb = serverPublic();
+    const { data: rows, error } = await sb.from("challenge_entries")
+      .select("id, user_id, post_id, votes_count, created_at")
+      .eq("challenge_id", data.challenge_id)
+      .order("votes_count", { ascending: false })
+      .limit(50);
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+

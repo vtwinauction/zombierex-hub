@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
-import { getCommunityBySlug, joinCommunity, leaveCommunity } from "@/lib/communities.functions";
+import { getCommunityBySlug, joinCommunity, leaveCommunity, listChallenges, listCommunityBadges } from "@/lib/communities.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect } from "react";
 
@@ -17,7 +17,8 @@ export const Route = createFileRoute("/communities/$slug")({
   component: CommunityDetail,
 });
 
-const TABS = ["Feed", "Events", "Members", "About"] as const;
+const TABS = ["Feed", "Events", "Challenges", "Members", "About"] as const;
+
 
 function CommunityDetail() {
   const { slug } = Route.useParams();
@@ -48,6 +49,34 @@ function CommunityDetail() {
     mutationFn: () => leave({ data: { club_id: data!.club.id } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["community", slug] }),
   });
+
+  const clubId = data?.club.id;
+
+  // Realtime: refresh feed when a new post lands in this club
+  useEffect(() => {
+    if (!clubId) return;
+    const ch = supabase
+      .channel(`club-${clubId}`)
+      .on("postgres_changes",
+        { event: "INSERT", schema: "public", table: "posts", filter: `club_id=eq.${clubId}` },
+        () => { qc.invalidateQueries({ queryKey: ["community", slug] }); })
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [clubId, qc, slug]);
+
+  const fetchChallenges = useServerFn(listChallenges);
+  const fetchBadges = useServerFn(listCommunityBadges);
+  const { data: challenges = [] } = useQuery({
+    queryKey: ["community-challenges", clubId],
+    queryFn: () => fetchChallenges({ data: { club_id: clubId!, active_only: true } }),
+    enabled: !!clubId,
+  });
+  const { data: badges = [] } = useQuery({
+    queryKey: ["community-badges", clubId],
+    queryFn: () => fetchBadges({ data: { club_id: clubId! } }),
+    enabled: !!clubId,
+  });
+
 
   if (isPending) {
     return (
@@ -182,6 +211,13 @@ function CommunityDetail() {
       <div className="px-4 pt-4">
         {tab === "Feed" && (
           <div className="space-y-4">
+            {userId && (
+              <Link
+                to="/communities/$slug/post/new" params={{ slug }}
+                className="tap block rounded-xl px-4 py-3 text-[12px] font-bold uppercase tracking-wider"
+                style={{ background: "var(--color-obsidian)", color: "var(--color-neon)", border: "1px dashed var(--color-neon)", letterSpacing: "0.14em" }}
+              >+ Post to the crew</Link>
+            )}
             {pinned.length === 0 && posts.length === 0 && (
               <EmptyState label="No posts yet. Be the first to share." />
             )}
@@ -192,6 +228,12 @@ function CommunityDetail() {
 
         {tab === "Events" && (
           <div className="space-y-3">
+            {isStaff && (
+              <Link to="/communities/$slug/events/new" params={{ slug }}
+                className="tap block rounded-xl px-4 py-3 text-[12px] font-bold uppercase tracking-wider"
+                style={{ background: "var(--color-obsidian)", color: "var(--color-neon)", border: "1px dashed var(--color-neon)", letterSpacing: "0.14em" }}
+              >+ Schedule event</Link>
+            )}
             {events.length === 0 && <EmptyState label="No upcoming events yet." />}
             {events.map((e) => (
               <div key={e.id} className="overflow-hidden" style={{ borderRadius: 12, border: "1px solid var(--color-hair)" }}>
@@ -210,21 +252,65 @@ function CommunityDetail() {
           </div>
         )}
 
-        {tab === "Members" && (
-          <div className="space-y-2">
-            {staff.length === 0 && <EmptyState label="Staff list is private." />}
-            {staff.map((s) => (
-              <div
-                key={s.user_id}
-                className="flex items-center justify-between rounded-lg px-3 py-2"
-                style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hair)" }}
-              >
-                <span className="mono-num text-[11px]" style={{ color: "var(--color-ink)" }}>{s.user_id.slice(0, 8)}</span>
-                <span className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>{s.role.toUpperCase()}</span>
+        {tab === "Challenges" && (
+          <div className="space-y-3">
+            {isStaff && (
+              <Link to="/communities/$slug/challenges/new" params={{ slug }}
+                className="tap block rounded-xl px-4 py-3 text-[12px] font-bold uppercase tracking-wider"
+                style={{ background: "var(--color-obsidian)", color: "var(--color-neon)", border: "1px dashed var(--color-neon)", letterSpacing: "0.14em" }}
+              >+ Launch weekly challenge</Link>
+            )}
+            {challenges.length === 0 && <EmptyState label="No active challenges." />}
+            {challenges.map((c) => (
+              <div key={c.id} className="overflow-hidden" style={{ borderRadius: 12, border: "1px solid var(--color-hair)", background: "var(--color-graphite)" }}>
+                {c.cover_url && <img src={c.cover_url} alt="" className="aspect-[16/9] w-full object-cover" />}
+                <div className="p-3">
+                  <p className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>
+                    CHALLENGE · ends {new Date(c.ends_at).toLocaleDateString()}
+                  </p>
+                  <p className="serif mt-1 text-[18px] italic" style={{ color: "var(--color-ink)" }}>{c.title}</p>
+                  {c.description && <p className="mt-1 text-[12px]" style={{ color: "var(--color-titanium)" }}>{c.description}</p>}
+                  <div className="mt-2 flex items-center gap-3 mono-tag" style={{ color: "var(--color-titanium)", fontSize: 9 }}>
+                    {c.hashtag && <span style={{ color: "var(--color-neon)" }}>{c.hashtag}</span>}
+                    <span>{c.entries_count} entries</span>
+                    {c.prize && <span>🏆 {c.prize}</span>}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         )}
+
+        {tab === "Members" && (
+          <div className="space-y-4">
+            {badges.length > 0 && (
+              <div>
+                <p className="mono-tag mb-2" style={{ color: "var(--color-neon)", fontSize: 10 }}>Leaderboard · recent badges</p>
+                <div className="space-y-1.5">
+                  {badges.slice(0, 8).map((b) => (
+                    <div key={b.id} className="flex items-center justify-between rounded-lg px-3 py-2"
+                      style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hair)" }}>
+                      <span className="mono-num text-[11px]" style={{ color: "var(--color-ink)" }}>{b.user_id.slice(0, 8)}</span>
+                      <span className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>🏅 {b.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div>
+              <p className="mono-tag mb-2" style={{ color: "var(--color-neon)", fontSize: 10 }}>Staff</p>
+              {staff.length === 0 && <EmptyState label="Staff list is private." />}
+              {staff.map((s) => (
+                <div key={s.user_id} className="mb-1.5 flex items-center justify-between rounded-lg px-3 py-2"
+                  style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hair)" }}>
+                  <span className="mono-num text-[11px]" style={{ color: "var(--color-ink)" }}>{s.user_id.slice(0, 8)}</span>
+                  <span className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9 }}>{s.role.toUpperCase()}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
 
         {tab === "About" && (
           <div className="space-y-4 text-[13px]" style={{ color: "var(--color-ink)" }}>
