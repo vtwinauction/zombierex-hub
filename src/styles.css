@@ -1,228 +1,185 @@
-@import "tailwindcss" source(none);
-@source "../src";
-@import "tw-animate-css";
+@import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
+@theme {
+  --color-bone: oklch(0.985 0.003 90);
+  --color-ink: oklch(0.16 0.01 260);
+  --color-ash: oklch(0.55 0.008 260);
+  --color-mist: oklch(0.93 0.004 260);
+  --color-signal: oklch(0.88 0.24 130);
+  --color-warn: oklch(0.62 0.22 25);
+  --color-line: oklch(0.86 0.006 260);
 
-/*
- * ZOMBIEREX — Premium light design system.
- * Cloud White surfaces, toxic-green signal, ink type.
- * Space Grotesk (display) + DM Sans (body).
- */
+  --color-background: var(--color-bone);
+  --color-foreground: var(--color-ink);
+  --color-muted: var(--color-mist);
+  --color-muted-foreground: var(--color-ash);
+  --color-border: var(--color-line);
+  --color-primary: var(--color-ink);
+  --color-primary-foreground: var(--color-bone);
+  --color-accent: var(--color-signal);
+  --color-destructive: var(--color-warn);
+  --color-card: var(--color-bone);
+  --color-input: var(--color-line);
+  --color-ring: var(--color-signal);
+  --color-popover: var(--color-bone);
+  --color-popover-foreground: var(--color-ink);
+  --color-secondary: var(--color-mist);
+  --color-secondary-foreground: var(--color-ink);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive-foreground: var(--color-bone);
+  --color-card-foreground: var(--color-ink);
+  --color-sidebar: var(--color-ink);
+  --color-sidebar-foreground: var(--color-bone);
+  --color-sidebar-primary: var(--color-signal);
+  --color-sidebar-primary-foreground: var(--color-ink);
+  --color-sidebar-accent: oklch(0.22 0.01 260);
+  --color-sidebar-accent-foreground: var(--color-bone);
+  --color-sidebar-border: oklch(0.28 0.01 260);
+  --color-sidebar-ring: var(--color-signal);
+  --color-chart-1: var(--color-signal);
+  --color-chart-2: var(--color-ink);
+  --color-chart-3: var(--color-warn);
+  --color-chart-4: var(--color-ash);
+  --color-chart-5: var(--color-mist);
 
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 16px);
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-
-  --color-ink: var(--ink);
-  --color-surface: var(--surface);
-  --color-surface-2: var(--surface-2);
-  --color-hairline: var(--hairline);
-  --color-toxic: var(--toxic);
-
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Rajdhani", "Arial Narrow", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  --shadow-soft: 0 1px 2px oklch(0.2 0.02 240 / 0.04), 0 8px 24px -12px oklch(0.2 0.02 240 / 0.08);
-  --shadow-lift: 0 2px 6px oklch(0.2 0.02 240 / 0.05), 0 20px 48px -18px oklch(0.2 0.02 240 / 0.14);
-  --shadow-toxic: 0 10px 30px -10px oklch(0.78 0.18 152 / 0.6);
-  --shadow-inset-hairline: inset 0 0 0 1px oklch(0.2 0.02 240 / 0.06);
-
-  --gradient-toxic: linear-gradient(135deg, oklch(0.82 0.2 152), oklch(0.72 0.18 156));
-  --gradient-ink: linear-gradient(180deg, oklch(0.22 0.01 240), oklch(0.1 0.005 240));
-  --gradient-fog: linear-gradient(180deg, oklch(1 0 0 / 0.6), oklch(0.97 0.005 240 / 0));
-}
-
-:root {
-  --radius: 1rem;
-
-  /* Cloud white surfaces */
-  --background: oklch(0.99 0.003 240);
-  --foreground: oklch(0.16 0.01 240);
-
-  --surface: oklch(0.975 0.004 240);
-  --surface-2: oklch(0.955 0.006 240);
-
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.16 0.01 240);
-
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.16 0.01 240);
-
-  /* Toxic green — the signal */
-  --primary: oklch(0.72 0.2 152);
-  --primary-foreground: oklch(0.14 0.02 152);
-  --toxic: oklch(0.78 0.22 152);
-
-  --secondary: oklch(0.955 0.006 240);
-  --secondary-foreground: oklch(0.16 0.01 240);
-
-  --muted: oklch(0.955 0.006 240);
-  --muted-foreground: oklch(0.5 0.015 240);
-
-  --accent: oklch(0.955 0.006 240);
-  --accent-foreground: oklch(0.16 0.01 240);
-
-  --destructive: oklch(0.58 0.22 27);
-  --destructive-foreground: oklch(0.99 0.005 100);
-
-  --ink: oklch(0.14 0.01 240);
-  --hairline: oklch(0.9 0.006 240);
-
-  --border: oklch(0.92 0.006 240);
-  --input: oklch(0.95 0.006 240);
-  --ring: oklch(0.72 0.2 152);
-}
-
-.dark {
-  --background: oklch(0.14 0.01 240);
-  --foreground: oklch(0.97 0.005 240);
-  --surface: oklch(0.18 0.01 240);
-  --surface-2: oklch(0.22 0.012 240);
-  --card: oklch(0.18 0.01 240);
-  --card-foreground: oklch(0.97 0.005 240);
-  --popover: oklch(0.18 0.01 240);
-  --popover-foreground: oklch(0.97 0.005 240);
-  --primary: oklch(0.82 0.22 152);
-  --primary-foreground: oklch(0.14 0.02 152);
-  --secondary: oklch(0.22 0.012 240);
-  --secondary-foreground: oklch(0.97 0.005 240);
-  --muted: oklch(0.22 0.012 240);
-  --muted-foreground: oklch(0.7 0.015 240);
-  --accent: oklch(0.22 0.012 240);
-  --accent-foreground: oklch(0.82 0.22 152);
-  --destructive: oklch(0.62 0.24 27);
-  --destructive-foreground: oklch(0.99 0.005 100);
-  --ink: oklch(0.97 0.005 240);
-  --hairline: oklch(0.28 0.012 240);
-  --border: oklch(0.26 0.012 240);
-  --input: oklch(0.22 0.012 240);
-  --ring: oklch(0.82 0.22 152);
+  --radius: 0px;
 }
 
 @layer base {
   * { border-color: var(--color-border); }
-  html, body {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
+  html, body { background: var(--color-bone); color: var(--color-ink); }
   body {
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01","cv11";
+    -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(1000px 500px at 100% -20%, oklch(0.78 0.22 152 / 0.08), transparent 60%),
-      radial-gradient(800px 400px at -10% 110%, oklch(0.75 0.14 220 / 0.06), transparent 60%);
+      linear-gradient(var(--color-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+    background-size: 48px 48px, 48px 48px;
+    background-position: -1px -1px;
     background-attachment: fixed;
-    font-feature-settings: "ss01", "cv11";
+    background-color: var(--color-bone);
   }
-  h1, h2, h3, h4, .display {
-    font-family: var(--font-display);
-    letter-spacing: -0.01em;
-    font-weight: 600;
-  }
+  h1,h2,h3,h4 { font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; }
+  .mono { font-family: var(--font-mono); }
 }
 
-@utility scrollbar-none {
-  scrollbar-width: none;
-}
-.scrollbar-none::-webkit-scrollbar { display: none; }
+/* ============ ANGULAR HUD PRIMITIVES ============ */
 
-@utility hairline {
-  box-shadow: var(--shadow-inset-hairline);
+@utility clip-chamfer {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+@utility clip-chamfer-sm {
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+@utility clip-notch-l {
+  clip-path: polygon(12px 0, 100% 0, 100% 100%, 0 100%, 0 12px);
+}
+@utility clip-hex {
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+@utility clip-tag {
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
 }
 
-@utility text-mono-caps {
+@utility panel {
+  background: var(--color-bone);
+  border: 1px solid var(--color-ink);
+  position: relative;
+}
+@utility panel-ink {
+  background: var(--color-ink);
+  color: var(--color-bone);
+  border: 1px solid var(--color-ink);
+}
+@utility panel-signal {
+  background: var(--color-signal);
+  color: var(--color-ink);
+  border: 1px solid var(--color-ink);
+}
+
+@utility rule-tick {
+  background-image: repeating-linear-gradient(90deg, var(--color-ink) 0 1px, transparent 1px 8px);
+  height: 6px;
+}
+@utility rule-tick-v {
+  background-image: repeating-linear-gradient(0deg, var(--color-ink) 0 1px, transparent 1px 8px);
+  width: 6px;
+}
+
+@utility mono-caps {
   font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
   font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
-@utility glass-panel {
-  background: color-mix(in oklab, var(--color-background) 78%, transparent);
-  backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--color-ink) 6%, transparent);
+@utility mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
-/* ================= Motion & alive utilities ================= */
-
-@keyframes rex-rise {
-  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@utility label-slash {
+  position: relative;
+  padding-left: 14px;
 }
-@keyframes rex-heart-burst {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
-  30% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
-  70% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-  100% { opacity: 0; transform: translate(-50%, -80%) scale(0.9); }
-}
-@keyframes rex-shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-@keyframes rex-pulse-ring {
-  0% { transform: scale(0.8); opacity: 0.8; }
-  100% { transform: scale(2.4); opacity: 0; }
-}
-@keyframes rex-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-@keyframes rex-spark {
-  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
-  100% { transform: translate(var(--rx, 40px), var(--ry, -40px)) scale(1); opacity: 0; }
+@utility label-slash::before {
+  content: "//";
+  position: absolute; left: 0; top: 0;
+  font-family: var(--font-mono);
+  color: var(--color-signal);
+  font-weight: 700;
 }
 
-@utility rex-rise {
-  animation: rex-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+@utility scanline {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent 0 3px,
+    color-mix(in oklab, var(--color-ink) 4%, transparent) 3px 4px
+  );
 }
-@utility rex-heart-burst {
-  animation: rex-heart-burst 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@utility rex-float {
-  animation: rex-float 3.6s ease-in-out infinite;
-}
-@utility rex-shimmer {
-  background: linear-gradient(90deg,
-    var(--color-muted) 0%,
-    color-mix(in oklab, var(--color-muted) 60%, white) 50%,
-    var(--color-muted) 100%);
-  background-size: 200% 100%;
-  animation: rex-shimmer 1.6s linear infinite;
-}
-@utility tap-press {
-  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms;
-}
-.tap-press:active { transform: scale(0.96); }
 
-@utility depth-lift {
-  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms;
+@utility grain {
+  position: relative;
 }
-.depth-lift:hover { transform: translateY(-2px); box-shadow: var(--shadow-lift); }
+@utility grain::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, var(--color-ink) 0.5px, transparent 0);
+  background-size: 3px 3px;
+  opacity: 0.04;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+@utility tap {
+  transition: transform 120ms ease, filter 120ms ease;
+}
+@utility tap:active {
+  transform: scale(0.96);
+  filter: brightness(0.95);
+}
+
+@keyframes hud-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@utility hud-in {
+  animation: hud-in 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes signal-pulse {
+  0%,100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-signal) 80%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in oklab, var(--color-signal) 0%, transparent); }
+}
+@utility signal-pulse { animation: signal-pulse 1.6s ease-in-out infinite; }
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@utility marquee { animation: marquee 40s linear infinite; }
