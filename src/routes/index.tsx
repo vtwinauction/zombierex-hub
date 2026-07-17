@@ -296,11 +296,120 @@ function HomePage() {
       </section>
 
       {/* ==================================================
+         FEATURED CREATORS — horizontal card rail
+         ================================================== */}
+      <section className="mt-8">
+        <div className="mb-3 flex items-end justify-between px-4">
+          <div>
+            <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Signal · Riders</p>
+            <h2 className="serif text-[20px] italic leading-none" style={{ color: "var(--color-ink)" }}>Featured creators</h2>
+          </div>
+          <Link to="/search" className="mono-tag" style={{ color: "var(--color-neon)" }}>Discover →</Link>
+        </div>
+        <div className="no-scrollbar flex gap-3 overflow-x-auto px-4 pb-1">
+          {suggestedCreators.map((u, i) => {
+            const tiers = ["APEX_REX", "LEGEND", "ELITE", "TURBO", "MASTER_BUILDER", "NITRO"] as const;
+            const tier = tiers[i % tiers.length];
+            return (
+              <div
+                key={u.id}
+                className="shrink-0 overflow-hidden"
+                style={{ width: 158, borderRadius: 14, border: "1px solid var(--color-hair)", background: "var(--color-graphite)" }}
+              >
+                <div className="relative h-20">
+                  <img src={u.avatar} alt="" className="h-full w-full object-cover" style={{ filter: "brightness(0.55) saturate(1.1)" }} />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, rgba(8,9,11,0.85))" }} />
+                </div>
+                <div className="-mt-8 px-3 pb-3">
+                  <img src={u.avatar} alt="" className="h-12 w-12 rounded-full object-cover" style={{ boxShadow: "0 0 0 2px var(--color-graphite)" }} />
+                  <p className="mt-1.5 flex items-center gap-1 truncate text-[12.5px] font-semibold" style={{ color: "var(--color-ink)" }}>
+                    {u.name}
+                    {u.verified && <RiderMark tier={tier} />}
+                  </p>
+                  <p className="mono-tag truncate" style={{ fontSize: 8.5, color: "var(--color-titanium)" }}>
+                    {u.handle} · ◎ {u.location}
+                  </p>
+                  <button
+                    className="tap mt-2 w-full rounded-full py-1.5 text-[10.5px] font-bold uppercase tracking-wider"
+                    style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", letterSpacing: "0.14em" }}
+                  >
+                    + Follow
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ==================================================
+         TRENDING HASHTAGS
+         ================================================== */}
+      <section className="mt-6 px-4">
+        <div className="mb-2.5 flex items-end justify-between">
+          <div>
+            <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Frequencies</p>
+            <h2 className="serif text-[20px] italic leading-none" style={{ color: "var(--color-ink)" }}>Trending tags</h2>
+          </div>
+          <Link to="/search" className="mono-tag" style={{ color: "var(--color-neon)" }}>All →</Link>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {TRENDING_TAGS.map((t, i) => (
+            <Link
+              key={t.tag}
+              to="/search"
+              className="tap flex items-center gap-2 rounded-full px-2.5 py-1.5"
+              style={{ border: "1px solid var(--color-hair-strong)", background: "var(--color-graphite)" }}
+            >
+              <span className="mono-num text-[10px]" style={{ color: "var(--color-titanium)" }}>{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-[12px] font-semibold" style={{ color: "var(--color-ink)" }}>{t.tag}</span>
+              <span className="mono-num text-[10px]" style={{ color: "var(--color-neon)" }}>{t.posts}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================================================
+         SUGGESTED CREWS
+         ================================================== */}
+      <section className="mt-6 px-4">
+        <div className="mb-2.5 flex items-end justify-between">
+          <div>
+            <p className="mono-tag" style={{ color: "var(--color-silver)" }}>Crews · Join</p>
+            <h2 className="serif text-[20px] italic leading-none" style={{ color: "var(--color-ink)" }}>Suggested for you</h2>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          {suggestedClubs.map((c) => (
+            <div key={c.id} className="overflow-hidden" style={{ borderRadius: 12, border: "1px solid var(--color-hair)" }}>
+              <div className="relative h-20">
+                <img src={c.cover} alt="" className="h-full w-full object-cover" />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent, rgba(8,9,11,0.7))" }} />
+                <span className="absolute left-2 bottom-1.5 text-[12px] font-bold text-white">{c.name}</span>
+              </div>
+              <div className="flex items-center justify-between px-2.5 py-2" style={{ background: "var(--color-graphite)" }}>
+                <span className="mono-tag" style={{ color: "var(--color-titanium)", fontSize: 9 }}>
+                  {c.tag} · {c.members.toLocaleString()} ops
+                </span>
+                <button
+                  className="tap rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wider"
+                  style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", letterSpacing: "0.14em" }}
+                >
+                  Join
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================================================
          FEED — Instagram DNA
          Square media · caption · InteractionBar
          ================================================== */}
       <section className="mt-8 space-y-6">
-        {posts.map((p, idx) => (
+        {feedPosts.map((p, idx) => (
+
           <article key={p.id} className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
             {/* post header */}
             <div className="flex items-center gap-2.5 px-4 pb-2.5">
