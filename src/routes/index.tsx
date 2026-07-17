@@ -213,22 +213,35 @@ function HomePage() {
       </section>
 
       {/* ==================================================
-         PILOTS — Riders strip
+         PILOTS — Riders strip with rider status tiers
          ================================================== */}
       <section className="mt-10 px-4">
         <SectionHead kicker="Pilots" title="Signals nearby" />
         <div className="mt-4 grid grid-cols-3 gap-2">
-          {users.map((u, i) => (
-            <div key={u.id} className="surface-1 p-3 text-center" style={{ borderRadius: 3 }}>
-              <div className="mx-auto h-14 w-14 overflow-hidden hex-frame">
-                <img src={u.avatar} alt="" className="h-full w-full object-cover" />
+          {users.map((u, i) => {
+            const tiers: RiderTier[] = ["APEX_REX", "LEGEND", "MASTER_BUILDER"];
+            const tier = tiers[i % tiers.length];
+            return (
+              <div key={u.id} className="surface-1 flex flex-col items-center p-3 text-center" style={{ borderRadius: 3 }}>
+                <div className="relative">
+                  <div className="mx-auto h-14 w-14 overflow-hidden hex-frame">
+                    <img src={u.avatar} alt="" className="h-full w-full object-cover" />
+                  </div>
+                  <span className="absolute -bottom-1 -right-1">
+                    <RiderMark tier={tier} />
+                  </span>
+                </div>
+                <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>P·{String(i + 1).padStart(2, "0")}</p>
+                <p className="serif mt-0.5 truncate text-[13px] italic" style={{ color: "var(--color-ink)" }}>{u.name}</p>
+                <div className="mt-1.5">
+                  <RiderBadge tier={tier} compact />
+                </div>
               </div>
-              <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>P·{String(i + 1).padStart(2, "0")}</p>
-              <p className="serif mt-0.5 truncate text-[13px] italic" style={{ color: "var(--color-ink)" }}>{u.name}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
+
 
       {/* Colophon */}
       <footer className="mt-14 px-4">
