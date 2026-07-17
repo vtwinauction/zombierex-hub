@@ -72,9 +72,10 @@
     text-rendering: optimizeLegibility;
     background-color: var(--color-bone);
     background-image:
-      radial-gradient(1400px 700px at 100% -20%, color-mix(in oklab, var(--color-ink) 4%, transparent), transparent 55%),
-      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-signal) 5%, transparent), transparent 55%);
+      radial-gradient(1400px 700px at 100% -20%, color-mix(in oklab, var(--color-signal) 14%, transparent), transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, color-mix(in oklab, var(--color-heat) 8%, transparent), transparent 55%);
     background-attachment: fixed;
+
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
