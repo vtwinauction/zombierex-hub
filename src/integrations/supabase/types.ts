@@ -1272,48 +1272,237 @@ export type Database = {
         }
         Relationships: []
       }
-      listings: {
+      listing_photos: {
         Row: {
           created_at: string
-          currency: string
-          description: string | null
-          hero_image_url: string | null
+          height: number | null
           id: string
-          location: string | null
-          price_cents: number
-          seller_id: string
-          status: Database["public"]["Enums"]["listing_status"]
-          title: string
-          updated_at: string
-          vehicle_id: string | null
+          is_video: boolean
+          listing_id: string
+          sort_order: number
+          thumbnail_url: string | null
+          url: string
+          width: number | null
         }
         Insert: {
           created_at?: string
-          currency?: string
-          description?: string | null
-          hero_image_url?: string | null
+          height?: number | null
           id?: string
-          location?: string | null
-          price_cents: number
-          seller_id: string
-          status?: Database["public"]["Enums"]["listing_status"]
-          title: string
-          updated_at?: string
-          vehicle_id?: string | null
+          is_video?: boolean
+          listing_id: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          url: string
+          width?: number | null
         }
         Update: {
           created_at?: string
+          height?: number | null
+          id?: string
+          is_video?: boolean
+          listing_id?: string
+          sort_order?: number
+          thumbnail_url?: string | null
+          url?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_photos_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_reports: {
+        Row: {
+          created_at: string
+          id: string
+          listing_id: string
+          note: string | null
+          reason: string
+          reporter_id: string
+          status: Database["public"]["Enums"]["listing_report_status"]
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          listing_id: string
+          note?: string | null
+          reason: string
+          reporter_id: string
+          status?: Database["public"]["Enums"]["listing_report_status"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          listing_id?: string
+          note?: string | null
+          reason?: string
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["listing_report_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_reports_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_saves: {
+        Row: {
+          created_at: string
+          listing_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          listing_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          listing_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_saves_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          brand: string | null
+          category: Database["public"]["Enums"]["listing_category"]
+          city: string | null
+          color: string | null
+          condition: Database["public"]["Enums"]["listing_condition"]
+          country: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          engine_cc: number | null
+          expires_at: string | null
+          fuel_type: Database["public"]["Enums"]["listing_fuel"]
+          hero_image_url: string | null
+          id: string
+          is_featured: boolean
+          is_negotiable: boolean
+          latitude: number | null
+          location: string | null
+          longitude: number | null
+          mileage_km: number | null
+          model: string | null
+          photos_count: number
+          price_cents: number
+          published_at: string | null
+          region: string | null
+          saves_count: number
+          seller_id: string
+          shares_count: number
+          sold_at: string | null
+          status: Database["public"]["Enums"]["listing_status"]
+          subcategory: string | null
+          tags: string[]
+          title: string
+          transmission: Database["public"]["Enums"]["listing_transmission"]
+          updated_at: string
+          vehicle_id: string | null
+          views_count: number
+          vin: string | null
+          year: number | null
+        }
+        Insert: {
+          brand?: string | null
+          category?: Database["public"]["Enums"]["listing_category"]
+          city?: string | null
+          color?: string | null
+          condition?: Database["public"]["Enums"]["listing_condition"]
+          country?: string | null
+          created_at?: string
           currency?: string
           description?: string | null
+          engine_cc?: number | null
+          expires_at?: string | null
+          fuel_type?: Database["public"]["Enums"]["listing_fuel"]
           hero_image_url?: string | null
           id?: string
+          is_featured?: boolean
+          is_negotiable?: boolean
+          latitude?: number | null
           location?: string | null
-          price_cents?: number
-          seller_id?: string
+          longitude?: number | null
+          mileage_km?: number | null
+          model?: string | null
+          photos_count?: number
+          price_cents: number
+          published_at?: string | null
+          region?: string | null
+          saves_count?: number
+          seller_id: string
+          shares_count?: number
+          sold_at?: string | null
           status?: Database["public"]["Enums"]["listing_status"]
-          title?: string
+          subcategory?: string | null
+          tags?: string[]
+          title: string
+          transmission?: Database["public"]["Enums"]["listing_transmission"]
           updated_at?: string
           vehicle_id?: string | null
+          views_count?: number
+          vin?: string | null
+          year?: number | null
+        }
+        Update: {
+          brand?: string | null
+          category?: Database["public"]["Enums"]["listing_category"]
+          city?: string | null
+          color?: string | null
+          condition?: Database["public"]["Enums"]["listing_condition"]
+          country?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          engine_cc?: number | null
+          expires_at?: string | null
+          fuel_type?: Database["public"]["Enums"]["listing_fuel"]
+          hero_image_url?: string | null
+          id?: string
+          is_featured?: boolean
+          is_negotiable?: boolean
+          latitude?: number | null
+          location?: string | null
+          longitude?: number | null
+          mileage_km?: number | null
+          model?: string | null
+          photos_count?: number
+          price_cents?: number
+          published_at?: string | null
+          region?: string | null
+          saves_count?: number
+          seller_id?: string
+          shares_count?: number
+          sold_at?: string | null
+          status?: Database["public"]["Enums"]["listing_status"]
+          subcategory?: string | null
+          tags?: string[]
+          title?: string
+          transmission?: Database["public"]["Enums"]["listing_transmission"]
+          updated_at?: string
+          vehicle_id?: string | null
+          views_count?: number
+          vin?: string | null
+          year?: number | null
         }
         Relationships: [
           {
@@ -1883,8 +2072,11 @@ export type Database = {
           handle: string | null
           id: string
           is_verified: boolean
+          listings_count: number
           location: string | null
           posts_count: number
+          seller_rating_avg: number
+          seller_reviews_count: number
           tier: Database["public"]["Enums"]["rider_tier"]
           updated_at: string
           website: string | null
@@ -1901,8 +2093,11 @@ export type Database = {
           handle?: string | null
           id: string
           is_verified?: boolean
+          listings_count?: number
           location?: string | null
           posts_count?: number
+          seller_rating_avg?: number
+          seller_reviews_count?: number
           tier?: Database["public"]["Enums"]["rider_tier"]
           updated_at?: string
           website?: string | null
@@ -1919,8 +2114,11 @@ export type Database = {
           handle?: string | null
           id?: string
           is_verified?: boolean
+          listings_count?: number
           location?: string | null
           posts_count?: number
+          seller_rating_avg?: number
+          seller_reviews_count?: number
           tier?: Database["public"]["Enums"]["rider_tier"]
           updated_at?: string
           website?: string | null
@@ -2144,6 +2342,44 @@ export type Database = {
             columns: ["published_post_id"]
             isOneToOne: false
             referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      seller_reviews: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          listing_id: string | null
+          rating: number
+          reviewer_id: string
+          seller_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          rating: number
+          reviewer_id: string
+          seller_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          rating?: number
+          reviewer_id?: string
+          seller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "seller_reviews_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
             referencedColumns: ["id"]
           },
         ]
@@ -2716,7 +2952,45 @@ export type Database = {
         | "standard"
       booking_status: "requested" | "confirmed" | "completed" | "cancelled"
       conversation_kind: "dm" | "club" | "group"
+      listing_category:
+        | "motorcycle"
+        | "car"
+        | "truck"
+        | "scooter"
+        | "atv"
+        | "boat"
+        | "other_vehicle"
+        | "parts"
+        | "accessories"
+        | "riding_gear"
+        | "apparel"
+        | "collectibles"
+        | "tools"
+        | "garage_equipment"
+        | "electronics"
+        | "services"
+      listing_condition:
+        | "new"
+        | "like_new"
+        | "used"
+        | "for_parts"
+        | "refurbished"
+      listing_fuel:
+        | "gasoline"
+        | "diesel"
+        | "electric"
+        | "hybrid"
+        | "other"
+        | "na"
+      listing_report_status: "open" | "reviewing" | "resolved" | "dismissed"
       listing_status: "draft" | "active" | "sold" | "archived"
+      listing_transmission:
+        | "manual"
+        | "automatic"
+        | "semi_auto"
+        | "cvt"
+        | "dct"
+        | "na"
       notification_kind:
         | "like"
         | "comment"
@@ -2880,7 +3154,42 @@ export const Constants = {
       ],
       booking_status: ["requested", "confirmed", "completed", "cancelled"],
       conversation_kind: ["dm", "club", "group"],
+      listing_category: [
+        "motorcycle",
+        "car",
+        "truck",
+        "scooter",
+        "atv",
+        "boat",
+        "other_vehicle",
+        "parts",
+        "accessories",
+        "riding_gear",
+        "apparel",
+        "collectibles",
+        "tools",
+        "garage_equipment",
+        "electronics",
+        "services",
+      ],
+      listing_condition: [
+        "new",
+        "like_new",
+        "used",
+        "for_parts",
+        "refurbished",
+      ],
+      listing_fuel: ["gasoline", "diesel", "electric", "hybrid", "other", "na"],
+      listing_report_status: ["open", "reviewing", "resolved", "dismissed"],
       listing_status: ["draft", "active", "sold", "archived"],
+      listing_transmission: [
+        "manual",
+        "automatic",
+        "semi_auto",
+        "cvt",
+        "dct",
+        "na",
+      ],
       notification_kind: [
         "like",
         "comment",
