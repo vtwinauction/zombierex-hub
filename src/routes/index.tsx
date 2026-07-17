@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { StatusBar } from "@/components/StatusBar";
+import { InteractionBar } from "@/components/InteractionBar";
+import { RiderBadge, RiderMark, type RiderTier } from "@/components/RiderBadge";
 import { reels, storiesV2, listings, events, users } from "@/lib/mock-data";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
