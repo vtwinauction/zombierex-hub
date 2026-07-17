@@ -226,10 +226,10 @@ export const trendingSearches = createServerFn({ method: "GET" })
     const sb = serverPublic();
     const { data } = await sb
       .from("hashtags")
-      .select("name, post_count")
-      .order("post_count", { ascending: false })
+      .select("tag, usage_count")
+      .order("usage_count", { ascending: false })
       .limit(8);
-    const live = (data ?? []).map((h) => `#${h.name}`);
+    const live = (data ?? []).map((h) => `#${h.tag}`);
     const seed = [
       "trackday setup", "cafe racer builds", "adventure loops",
       "electric bikes", "vintage muscle", "sunday cruise",
@@ -351,10 +351,10 @@ export const onboardingRecommendations = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const sb = serverPublic();
     const [clubs, events, listings, creators] = await Promise.all([
-      sb.from("clubs").select("id, slug, name, description, member_count, banner_url").order("member_count", { ascending: false }).limit(20),
-      sb.from("events").select("id, title, starts_at, city, cover_url").gte("starts_at", new Date().toISOString()).order("starts_at").limit(20),
+      sb.from("clubs").select("id, slug, name, description, members_count, banner_url").order("members_count", { ascending: false }).limit(20),
+      sb.from("events").select("id, title, starts_at, location, cover_url").gte("starts_at", new Date().toISOString()).order("starts_at").limit(20),
       sb.from("listings").select("id, title, price_cents, currency, hero_image_url, category").eq("status", "active").limit(20),
-      sb.from("creator_profiles").select("id, display_name, bio, follower_count, avatar_url").order("follower_count", { ascending: false }).limit(20),
+      sb.from("creator_profiles").select("id, user_id, category, tagline, subscribers_count").order("subscribers_count", { ascending: false }).limit(20),
     ]);
 
     try {
@@ -368,25 +368,26 @@ export const onboardingRecommendations = createServerFn({ method: "POST" })
             `Recommend items for a new user with interests: ${data.interests.join(", ") || "(unspecified)"}. ` +
             `Return JSON {"clubs": id[], "events": id[], "listings": id[], "creators": id[]} using ids from the candidate pools; up to 5 each, best first. ` +
             `Pools: ${JSON.stringify({
-              clubs: (clubs.data ?? []).map((c) => ({ id: c.id, name: c.name, description: c.description })),
-              events: (events.data ?? []).map((e) => ({ id: e.id, title: e.title, city: e.city })),
-              listings: (listings.data ?? []).map((l) => ({ id: l.id, title: l.title, category: l.category })),
-              creators: (creators.data ?? []).map((c) => ({ id: c.id, name: c.display_name, bio: c.bio })),
+              clubs: (clubs.data ?? []).map((c: any) => ({ id: c.id, name: c.name, description: c.description })),
+              events: (events.data ?? []).map((e: any) => ({ id: e.id, title: e.title, location: e.location })),
+              listings: (listings.data ?? []).map((l: any) => ({ id: l.id, title: l.title, category: l.category })),
+              creators: (creators.data ?? []).map((c: any) => ({ id: c.id, category: c.category, tagline: c.tagline })),
             })}`,
         },
       ], { temperature: 0.4 });
 
-      const pick = <T extends { id: string }>(all: T[] | null, ids: string[] | undefined) => {
-        const map = new Map((all ?? []).map((x) => [x.id, x]));
+      const pick = <T extends { id: string }>(all: T[] | null | undefined, ids: string[] | undefined) => {
+        const list = (all ?? []) as T[];
+        const map = new Map(list.map((x) => [x.id, x]));
         const chosen = (ids ?? []).map((id) => map.get(id)).filter(Boolean) as T[];
         if (chosen.length) return chosen.slice(0, 5);
-        return (all ?? []).slice(0, 5);
+        return list.slice(0, 5);
       };
       return {
-        clubs: pick(clubs.data, out.clubs),
-        events: pick(events.data, out.events),
-        listings: pick(listings.data, out.listings),
-        creators: pick(creators.data, out.creators),
+        clubs: pick(clubs.data as any, out.clubs),
+        events: pick(events.data as any, out.events),
+        listings: pick(listings.data as any, out.listings),
+        creators: pick(creators.data as any, out.creators),
       };
     } catch {
       return {
