@@ -25,9 +25,10 @@ function HomePage() {
         {/* ============ FEATURED BUILD — cinematic ============ */}
         <section className="rise px-4 pt-4">
           <div className="mb-3 flex items-baseline justify-between">
-            <p className="mono-tag">FEATURED · TRANSMISSION 001</p>
-            <p className="mono-tag" style={{ color: "var(--color-signal)" }}>◉ LIVE</p>
+            <p className="mono-tag">Featured build of the day</p>
+            <p className="mono-tag" style={{ color: "var(--color-signal-deep)" }}>● Live now</p>
           </div>
+
 
           <Link to="/" className="tap group block">
             <article className="relative aspect-[3/4] w-full overflow-hidden border border-hair">
