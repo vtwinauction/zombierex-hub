@@ -1,74 +1,108 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Compass, Store, User, Plus } from "lucide-react";
 import type { ComponentType } from "react";
 
 type NavItem = {
   to: "/" | "/search" | "/marketplace" | "/profile";
+  index: string;
   label: string;
-  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: ComponentType<{ className?: string }>;
 };
 
+// Minimalist custom glyphs — hand-drawn, not lucide defaults
+const HomeGlyph = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <path d="M4 20V10L12 4l8 6v10" strokeLinecap="square" />
+    <path d="M10 20v-6h4v6" strokeLinecap="square" />
+  </svg>
+);
+const CompassGlyph = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M15 9l-2 6-4 0 2-6z" fill="currentColor" stroke="none" />
+  </svg>
+);
+const CreateGlyph = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.75}>
+    <path d="M12 4v16M4 12h16" strokeLinecap="square" />
+  </svg>
+);
+const ShopGlyph = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <path d="M4 8h16l-1 12H5L4 8z" strokeLinejoin="miter" />
+    <path d="M9 8V5a3 3 0 016 0v3" />
+  </svg>
+);
+const GarageGlyph = ({ className = "" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth={1.5}>
+    <path d="M3 20V9l9-5 9 5v11" strokeLinecap="square" />
+    <path d="M3 12h18M3 16h18" />
+  </svg>
+);
+
 const NAV: NavItem[] = [
-  { to: "/", label: "Home", icon: Home },
-  { to: "/search", label: "Explore", icon: Compass },
-  { to: "/marketplace", label: "Market", icon: Store },
-  { to: "/profile", label: "Garage", icon: User },
+  { to: "/",            index: "01", label: "Home",   icon: HomeGlyph },
+  { to: "/search",      index: "02", label: "Discover", icon: CompassGlyph },
+  { to: "/marketplace", index: "04", label: "Market", icon: ShopGlyph },
+  { to: "/profile",     index: "05", label: "Garage", icon: GarageGlyph },
 ];
 
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const left = NAV.slice(0, 2);
-  const right = NAV.slice(2);
 
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pb-[max(env(safe-area-inset-bottom),12px)] pt-1"
+      className="fixed inset-x-0 bottom-0 z-50"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
-      <div className="glass flex items-center gap-1 rounded-full px-2 py-2 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.35)]">
-        {left.map((item) => (
-          <NavButton key={item.to} item={item} active={item.to === "/" ? pathname === "/" : pathname.startsWith(item.to)} />
-        ))}
+      <div
+        className="hairline-t grid grid-cols-5 items-center"
+        style={{
+          background: "color-mix(in oklab, var(--color-bone) 88%, transparent)",
+          backdropFilter: "blur(24px) saturate(140%)",
+        }}
+      >
+        <NavCell item={NAV[0]} active={pathname === "/"} />
+        <NavCell item={NAV[1]} active={pathname.startsWith("/search")} />
 
-        {/* Center create button */}
+        {/* Center create — angular, no gradient bubble */}
         <button
           aria-label="Create"
-          className="tap relative mx-1 grid h-12 w-12 place-items-center rounded-full text-ink"
-          style={{
-            background: "linear-gradient(135deg, var(--color-signal), var(--color-signal-deep))",
-            boxShadow: "0 10px 24px -6px color-mix(in oklab, var(--color-signal) 60%, transparent)",
-          }}
+          className="tap group relative flex h-16 items-center justify-center"
         >
-          <Plus className="h-6 w-6" strokeWidth={2.5} />
-          <span className="pulse-ring pointer-events-none absolute inset-0 rounded-full" />
+          <span
+            className="hairline flex h-11 w-11 items-center justify-center"
+            style={{ borderColor: "var(--color-ink)" }}
+          >
+            <CreateGlyph className="h-5 w-5 text-ink" />
+          </span>
+          <span className="pointer-events-none absolute -bottom-0 mono-tag" style={{ color: "var(--color-signal-deep)" }}>03·NEW</span>
         </button>
 
-        {right.map((item) => (
-          <NavButton key={item.to} item={item} active={item.to === "/" ? pathname === "/" : pathname.startsWith(item.to)} />
-        ))}
+        <NavCell item={NAV[2]} active={pathname.startsWith("/marketplace")} />
+        <NavCell item={NAV[3]} active={pathname.startsWith("/profile")} />
       </div>
     </nav>
   );
 }
 
-function NavButton({ item, active }: { item: NavItem; active: boolean }) {
+function NavCell({ item, active }: { item: NavItem; active: boolean }) {
   const Icon = item.icon;
   return (
     <Link
       to={item.to}
       aria-current={active ? "page" : undefined}
-      className={`tap relative flex h-12 w-14 flex-col items-center justify-center rounded-full transition-colors ${
-        active ? "text-ink" : "text-ash"
-      }`}
+      className="tap relative flex h-16 flex-col items-center justify-center gap-1"
+      style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}
     >
-      <Icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.4 : 1.8} />
-      <span className={`mt-0.5 text-[10px] font-semibold tracking-wide ${active ? "opacity-100" : "opacity-60"}`}>
-        {item.label}
+      <Icon className="h-5 w-5" />
+      <span className="mono-tag" style={{ color: active ? "var(--color-ink)" : "var(--color-ash)" }}>
+        {item.index}·{item.label}
       </span>
       {active && (
         <span
-          className="absolute -bottom-0.5 h-1 w-1 rounded-full"
-          style={{ background: "var(--color-signal-deep)" }}
+          className="absolute top-0 h-[2px] w-8"
+          style={{ background: "var(--color-signal)" }}
         />
       )}
     </Link>
