@@ -1,20 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
-import { me, myVehicles, posts, clubs } from "@/lib/mock-data";
-import { Settings, MapPin, Gauge, Wrench, Plus, Users2, Trophy, Route as RouteIcon, Zap, ArrowUpRight } from "lucide-react";
+import { me, myVehicles, posts, clubs, achievements, workshopHistory, rider } from "@/lib/mock-data";
+import { Settings, MapPin, Gauge, Wrench, Plus, Users2, Trophy, Route as RouteIcon, Zap, ArrowUpRight, Flame, Medal, CheckCircle2, Clock } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "Garage — ZOMBIEREX" },
-      { name: "description", content: "Your digital garage: vehicles, achievements, ride stats." },
+      { name: "description", content: "Your digital garage: vehicles, achievements, ride stats, workshop history." },
     ],
   }),
   component: ProfilePage,
 });
 
-const tabs = ["Garage", "Rides", "Gallery", "Clubs"] as const;
+const tabs = ["Garage", "Rides", "Trophies", "Workshop", "Gallery", "Clubs"] as const;
 type Tab = (typeof tabs)[number];
 
 function ProfilePage() {
@@ -27,7 +27,7 @@ function ProfilePage() {
 
       {/* Cockpit header */}
       <section className="px-5">
-        <div className="rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
+        <div className="rex-rise overflow-hidden rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
               <span className="relative">
@@ -45,13 +45,32 @@ function ProfilePage() {
                 </p>
               </div>
             </div>
-            <button aria-label="Settings" className="grid h-10 w-10 place-items-center rounded-full border border-border">
+            <button aria-label="Settings" className="tap-press grid h-10 w-10 place-items-center rounded-full border border-border">
               <Settings className="h-4 w-4" />
             </button>
           </div>
 
+          {/* Level bar */}
+          <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="grid h-7 w-7 place-items-center rounded-lg font-display text-[11px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
+                  L{rider.level}
+                </span>
+                <div>
+                  <p className="font-display text-[13px] leading-none">{rider.title}</p>
+                  <p className="mt-1 text-mono-caps text-muted-foreground">{rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} xp</p>
+                </div>
+              </div>
+              <span className="text-mono-caps" style={{ color: "var(--color-primary)" }}>Next: L{rider.level + 1}</span>
+            </div>
+            <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-background">
+              <div className="h-full rounded-full" style={{ width: `${(rider.xp / rider.xpToNext) * 100}%`, background: "var(--gradient-toxic)" }} />
+            </div>
+          </div>
+
           {/* Cockpit stats */}
-          <div className="mt-5 grid grid-cols-4 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <Cockpit label="Rides" value="37" />
             <Cockpit label="Miles" value="18k" />
             <Cockpit label="Bikes" value="1" />
@@ -59,27 +78,28 @@ function ProfilePage() {
           </div>
 
           <div className="mt-4 flex items-center gap-2">
-            <button className="flex-1 rounded-full py-2.5 font-display text-[13px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
+            <button className="tap-press flex-1 rounded-full py-2.5 font-display text-[13px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
               Edit profile
             </button>
-            <button className="rounded-full border border-border px-5 py-2.5 font-display text-[13px]">Share</button>
+            <button className="tap-press rounded-full border border-border px-5 py-2.5 font-display text-[13px]">Share</button>
           </div>
         </div>
       </section>
 
-      {/* Tabs */}
-      <div className="mt-4 px-5">
-        <div className="flex items-center gap-1 rounded-full border border-border bg-card p-1">
+
+      {/* Tabs — horizontally scrollable pill row */}
+      <div className="mt-4">
+        <div className="scrollbar-none flex gap-2 overflow-x-auto px-5 pb-1">
           {tabs.map((t) => {
             const on = tab === t;
             return (
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className="flex-1 rounded-full py-2 font-display text-[12px] transition-colors"
+                className="tap-press shrink-0 rounded-full border px-4 py-2 font-display text-[12px] transition-colors"
                 style={on
-                  ? { background: "var(--color-foreground)", color: "var(--color-background)" }
-                  : { color: "var(--color-muted-foreground)" }}
+                  ? { background: "var(--color-foreground)", color: "var(--color-background)", borderColor: "var(--color-foreground)" }
+                  : { color: "var(--color-muted-foreground)", borderColor: "var(--color-border)", background: "var(--color-card)" }}
               >
                 {t}
               </button>
@@ -87,6 +107,7 @@ function ProfilePage() {
           })}
         </div>
       </div>
+
 
       {/* Tab content */}
       {tab === "Garage" ? (
@@ -181,6 +202,60 @@ function ProfilePage() {
           ))}
         </div>
       ) : null}
+
+      {tab === "Trophies" ? (
+        <section className="p-5">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <span className="text-mono-caps text-muted-foreground">Earned</span>
+              <p className="mt-1 font-display text-[20px] leading-none tracking-tight">
+                {achievements.filter((a) => a.earned).length}<span className="ml-1 text-[13px] text-muted-foreground">/ {achievements.length}</span>
+              </p>
+            </div>
+            <span className="text-mono-caps" style={{ color: "var(--color-primary)" }}>2 in progress</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {achievements.map((a) => <AchievementCard key={a.id} a={a} />)}
+          </div>
+        </section>
+      ) : null}
+
+      {tab === "Workshop" ? (
+        <section className="p-5">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <span className="text-mono-caps text-muted-foreground">Service log</span>
+              <p className="mt-1 font-display text-[20px] leading-none tracking-tight">Nightshade MT-09</p>
+            </div>
+            <button className="tap-press rounded-full border border-border px-3 py-1.5 font-display text-[11px]">+ Log</button>
+          </div>
+          <ol className="relative ml-3 border-l border-border">
+            {workshopHistory.map((w) => (
+              <li key={w.id} className="relative mb-4 pl-5">
+                <span
+                  className="absolute -left-[7px] top-1 grid h-3 w-3 place-items-center rounded-full ring-2 ring-background"
+                  style={{ background: w.status === "upcoming" ? "var(--color-primary)" : "var(--color-foreground)" }}
+                />
+                <div className="rounded-2xl border border-border bg-card p-3 shadow-[var(--shadow-soft)]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-mono-caps text-muted-foreground">{w.date} · {w.mileage}</span>
+                    <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: w.status === "upcoming" ? "var(--color-primary)" : "var(--color-muted-foreground)" }}>
+                      {w.status === "upcoming" ? <Clock className="h-3 w-3" /> : <CheckCircle2 className="h-3 w-3" />}
+                      {w.status === "upcoming" ? "Upcoming" : "Done"}
+                    </span>
+                  </div>
+                  <h4 className="mt-1.5 font-display text-[15px] leading-tight tracking-tight">{w.title}</h4>
+                  <div className="mt-2 flex items-center justify-between text-[12px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1"><Wrench className="h-3 w-3" /> {w.shop}</span>
+                    <span className="font-display tabular-nums">{w.cost}</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
     </>
   );
 }
@@ -219,3 +294,38 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     </div>
   );
 }
+
+function AchievementCard({ a }: { a: typeof achievements[number] }) {
+  const IconMap = { trophy: Trophy, flame: Flame, bolt: Zap, route: RouteIcon, wrench: Wrench, medal: Medal };
+  const Icon = IconMap[a.icon];
+  const rarityColor = a.rarity === "legendary"
+    ? "var(--color-primary)"
+    : a.rarity === "rare"
+      ? "var(--color-foreground)"
+      : "var(--color-muted-foreground)";
+  return (
+    <div
+      className="depth-lift relative overflow-hidden rounded-[20px] border border-border bg-card p-4"
+      style={a.earned ? undefined : { opacity: 0.55 }}
+    >
+      <div className="flex items-start justify-between">
+        <span
+          className="grid h-11 w-11 place-items-center rounded-2xl"
+          style={{
+            background: a.earned ? "var(--color-foreground)" : "var(--color-muted)",
+            color: a.earned ? "var(--color-background)" : "var(--color-muted-foreground)",
+          }}
+        >
+          <Icon className="h-5 w-5" strokeWidth={2.2} />
+        </span>
+        <span className="text-mono-caps" style={{ color: rarityColor }}>{a.rarity}</span>
+      </div>
+      <h4 className="mt-3 font-display text-[15px] leading-tight tracking-tight">{a.title}</h4>
+      <p className="mt-1 text-[11px] text-muted-foreground">{a.detail}</p>
+      {a.earned ? (
+        <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-primary)", boxShadow: "0 0 8px var(--color-primary)" }} />
+      ) : null}
+    </div>
+  );
+}
+

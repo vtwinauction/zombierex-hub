@@ -1,5 +1,5 @@
 import { Heart, MessageCircle, Send, Bookmark, MoreHorizontal, BadgeCheck, Gauge, Eye, Flame, ThumbsUp, Zap } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Post } from "@/lib/mock-data";
 
 export function PostCard({ post }: { post: Post }) {
@@ -7,6 +7,8 @@ export function PostCard({ post }: { post: Post }) {
   const [saved, setSaved] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const [reaction, setReaction] = useState<string | null>(null);
+  const [burst, setBurst] = useState(0);
+  const lastTap = useRef(0);
 
   const views = Math.round(post.likes * 8.4).toLocaleString();
 
@@ -17,8 +19,20 @@ export function PostCard({ post }: { post: Post }) {
     { key: "love", icon: Heart, color: "var(--color-destructive)" },
   ];
 
+  const triggerLike = () => {
+    setLiked(true);
+    setReaction((r) => r ?? "love");
+    setBurst((b) => b + 1);
+  };
+
+  const onMediaTap = () => {
+    const now = Date.now();
+    if (now - lastTap.current < 320) triggerLike();
+    lastTap.current = now;
+  };
+
   return (
-    <article className="relative mx-4 mb-5 overflow-hidden rounded-[28px] border border-border bg-card shadow-[var(--shadow-soft)]">
+    <article className="rex-rise relative mx-4 mb-5 overflow-hidden rounded-[28px] border border-border bg-card shadow-[var(--shadow-soft)]">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 pt-4 pb-3">
         <img src={post.user.avatar} alt={post.user.name} className="h-11 w-11 rounded-2xl object-cover ring-1 ring-border" />
@@ -33,7 +47,7 @@ export function PostCard({ post }: { post: Post }) {
             <span>{post.user.location}</span>
           </div>
         </div>
-        <button className="rounded-full bg-foreground px-4 py-2 font-display text-[11px] text-background transition-transform active:scale-95">
+        <button className="tap-press rounded-full bg-foreground px-4 py-2 font-display text-[11px] text-background">
           Follow
         </button>
         <button aria-label="More" className="grid h-9 w-9 place-items-center rounded-full text-muted-foreground hover:bg-muted">
@@ -43,8 +57,17 @@ export function PostCard({ post }: { post: Post }) {
 
       {/* Media — edge to edge inside card */}
       <div className="relative mx-2 overflow-hidden rounded-[20px]">
-        <div className="relative aspect-[4/5] w-full bg-surface">
+        <div className="relative aspect-[4/5] w-full bg-surface" onClick={onMediaTap}>
           <img src={post.image} alt="" loading="lazy" className="h-full w-full object-cover" />
+
+          {/* Double-tap burst */}
+          {burst > 0 ? (
+            <Heart
+              key={burst}
+              className="pointer-events-none rex-heart-burst absolute left-1/2 top-1/2 h-24 w-24 fill-current drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+              style={{ color: "var(--color-destructive)" }}
+            />
+          ) : null}
 
           {/* Top-left views chip */}
           <div className="absolute left-3 top-3 flex items-center gap-1.5 rounded-full bg-background/85 px-2.5 py-1 backdrop-blur">
@@ -67,11 +90,12 @@ export function PostCard({ post }: { post: Post }) {
                 <p className="font-display text-[13px] leading-none tracking-tight text-white">{post.vehicle.name}</p>
                 <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-white/70">{post.vehicle.year} · {post.vehicle.type} · {post.vehicle.hp} HP</p>
               </div>
-              <button className="rounded-full bg-white/95 px-3 py-1.5 font-display text-[11px] text-foreground">Build</button>
+              <button className="tap-press rounded-full bg-white/95 px-3 py-1.5 font-display text-[11px] text-foreground">Build</button>
             </div>
           ) : null}
         </div>
       </div>
+
 
       {/* Adaptive action bar */}
       <div className="relative px-3 pt-3">
@@ -96,7 +120,7 @@ export function PostCard({ post }: { post: Post }) {
         <div className="flex items-center gap-1 rounded-2xl bg-muted/50 p-1">
           <ActionButton
             active={liked}
-            onClick={() => { setLiked((v) => !v); setReaction(liked ? null : "love"); }}
+            onClick={() => { if (liked) { setLiked(false); setReaction(null); } else { triggerLike(); } }}
             onLongPress={() => setShowReactions(true)}
             label={(post.likes + (liked ? 1 : 0)).toLocaleString()}
             activeColor="var(--color-destructive)"
