@@ -101,7 +101,7 @@ export const createSignedUploadUrl = createServerFn({ method: "POST" })
 const ReadSchema = z.object({
   bucket: z.enum(BUCKETS),
   path: PathSchema,
-  expires_in: z.number().int().min(30).max(60 * 60 * 24).default(300),
+  expires_in: z.number().int().min(30).max(60 * 60 * 24 * 365).default(300),
 });
 
 export const createSignedReadUrl = createServerFn({ method: "POST" })
