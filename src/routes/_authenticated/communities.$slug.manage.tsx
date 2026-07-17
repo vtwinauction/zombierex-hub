@@ -34,6 +34,10 @@ function ManageCommunity() {
   const kick = useServerFn(removeMember);
   const pin = useServerFn(pinPost);
   const del = useServerFn(deleteCommunityPost);
+  const award = useServerFn(awardBadge);
+  const [pickerFor, setPickerFor] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
 
   const { data: community } = useQuery({
     queryKey: ["community", slug],
