@@ -120,7 +120,7 @@ export function PostCard({ post }: { post: Post }) {
         <div className="flex items-center gap-1 rounded-2xl bg-muted/50 p-1">
           <ActionButton
             active={liked}
-            onClick={() => { setLiked((v) => !v); setReaction(liked ? null : "love"); }}
+            onClick={() => { if (liked) { setLiked(false); setReaction(null); } else { triggerLike(); } }}
             onLongPress={() => setShowReactions(true)}
             label={(post.likes + (liked ? 1 : 0)).toLocaleString()}
             activeColor="var(--color-destructive)"
