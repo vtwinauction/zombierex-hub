@@ -123,10 +123,13 @@ function SettingsPage() {
         {SECTIONS.map((s) => (
           <section key={s.id} style={{ background: "var(--color-graphite)", border: "1px solid var(--color-hair)", borderRadius: 10 }}>
             <button onClick={() => setOpen((cur) => cur === s.id ? null : s.id)}
-              className="tap flex w-full items-center justify-between px-4 py-3 text-left"
+              className="tap flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
               style={{ color: "var(--color-ink)" }}>
-              <span className="serif text-[16px] italic">{s.title}</span>
-              <span className="mono-tag" style={{ color: "var(--color-silver)" }}>{open === s.id ? "−" : "+"}</span>
+              <span className="min-w-0">
+                <span className="serif block text-[16px] italic">{s.title}</span>
+                <span className="mt-0.5 block text-[12px]" style={{ color: "var(--color-silver)" }}>{s.hint}</span>
+              </span>
+              <span className="mono-tag shrink-0" style={{ color: "var(--color-silver)" }}>{open === s.id ? "−" : "+"}</span>
             </button>
             {open === s.id && (
               <div className="divide-y" style={{ borderTop: "1px solid var(--color-hair)", borderColor: "var(--color-hair)" }}>
