@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { InteractionBar } from "@/components/InteractionBar";
 import { RiderMark } from "@/components/RiderBadge";
 import {
@@ -9,7 +10,7 @@ import {
   IconGauge,
 } from "@/components/icons/RexIcons";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
-import { reels, storiesV2, posts, chats } from "@/lib/mock-data";
+import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,9 +22,23 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+const TRENDING_TAGS = [
+  { tag: "#nightride", posts: "48.2K" },
+  { tag: "#widebody", posts: "31.6K" },
+  { tag: "#trackday", posts: "22.9K" },
+  { tag: "#wrenchlife", posts: "18.4K" },
+  { tag: "#jdm", posts: "72.1K" },
+  { tag: "#turbolife", posts: "14.8K" },
+];
+
 function HomePage() {
+  const [tab, setTab] = useState<"for_you" | "following">("for_you");
   const featured = reels[1];
   const gridReels = [reels[0], reels[2], reels[3]];
+  const suggestedCreators = users.slice(0, 6);
+  const suggestedClubs = clubs.slice(0, 4);
+  const feedPosts = tab === "following" ? posts.filter((_, i) => i % 2 === 0) : posts;
+
 
   return (
     <div className="pb-24">
