@@ -3,6 +3,7 @@ import { queryOptions, useSuspenseQuery, useQueryClient } from "@tanstack/react-
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { listPlans, subscribeVendor, getMyVendor, getMySubscription } from "@/lib/vendor.functions";
+import { startCheckout } from "@/lib/payments.functions";
 
 const plansQuery = queryOptions({ queryKey: ["plans"], queryFn: () => listPlans() });
 const vendorQuery = queryOptions({ queryKey: ["my-vendor"], queryFn: () => getMyVendor() });
