@@ -1,0 +1,201 @@
+/**
+ * ZOMBIEREX — Interaction Queue
+ * -----------------------------------------------------------------
+ * Offline-friendly action queue for social interactions
+ * (like / save / share). Applies optimistic updates immediately,
+ * persists pending mutations to localStorage, and drains them
+ * whenever the network is (or becomes) available.
+ *
+ * There is no real backend yet — `sendMock` simulates latency and
+ * fails while the browser reports `navigator.onLine === false` or
+ * when a synthetic "force offline" flag is set. This lets the UI
+ * exercise queued / retrying / failed states end-to-end.
+ */
+
+export type InteractionKind = "like" | "unlike" | "save" | "unsave" | "share";
+
+export type QueuedAction = {
+  id: string;
+  targetId: string;
+  kind: InteractionKind;
+  createdAt: number;
+  attempts: number;
+  lastError?: string;
+  status: "pending" | "retrying" | "failed";
+};
+
+type Listener = () => void;
+
+const STORAGE_KEY = "zrex.interactions.queue.v1";
+const FORCE_OFFLINE_KEY = "zrex.interactions.forceOffline";
+const MAX_ATTEMPTS = 6;
+
+const listeners = new Set<Listener>();
+let queue: QueuedAction[] = load();
+let draining = false;
+
+function load(): QueuedAction[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as QueuedAction[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function persist() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(queue));
+  } catch {
+    /* quota / private mode — ignore */
+  }
+}
+
+function emit() {
+  for (const l of listeners) l();
+}
+
+export function subscribe(l: Listener): () => void {
+  listeners.add(l);
+  return () => listeners.delete(l);
+}
+
+export function getQueueSnapshot(): QueuedAction[] {
+  return queue;
+}
+
+export function getPendingForTarget(targetId: string): QueuedAction[] {
+  return queue.filter((a) => a.targetId === targetId);
+}
+
+export function isOnline(): boolean {
+  if (typeof navigator === "undefined") return true;
+  if (typeof window !== "undefined") {
+    try {
+      if (window.sessionStorage.getItem(FORCE_OFFLINE_KEY) === "1") return false;
+    } catch {
+      /* ignore */
+    }
+  }
+  return navigator.onLine !== false;
+}
+
+export function setForceOffline(v: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    if (v) window.sessionStorage.setItem(FORCE_OFFLINE_KEY, "1");
+    else window.sessionStorage.removeItem(FORCE_OFFLINE_KEY);
+  } catch {
+    /* ignore */
+  }
+  emit();
+  if (!v) void drain();
+}
+
+/** Simulated network transport. Replace with a real fetch/RPC call. */
+async function sendMock(action: QueuedAction): Promise<void> {
+  await new Promise((r) => setTimeout(r, 320 + Math.random() * 280));
+  if (!isOnline()) {
+    throw new Error("offline");
+  }
+  // ~5% synthetic transient failure so retry state is visible.
+  if (Math.random() < 0.05) throw new Error("transient");
+}
+
+export function enqueue(targetId: string, kind: InteractionKind): QueuedAction {
+  const action: QueuedAction = {
+    id:
+      (typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`),
+    targetId,
+    kind,
+    createdAt: Date.now(),
+    attempts: 0,
+    status: isOnline() ? "pending" : "pending",
+  };
+  queue = [...queue, action];
+  persist();
+  emit();
+  void drain();
+  return action;
+}
+
+export function retryFailed() {
+  queue = queue.map((a) =>
+    a.status === "failed" ? { ...a, status: "pending", attempts: 0, lastError: undefined } : a,
+  );
+  persist();
+  emit();
+  void drain();
+}
+
+async function drain() {
+  if (draining) return;
+  draining = true;
+  try {
+    while (true) {
+      const next = queue.find((a) => a.status !== "failed");
+      if (!next) break;
+      if (!isOnline()) break;
+
+      queue = queue.map((a) =>
+        a.id === next.id ? { ...a, status: "retrying", attempts: a.attempts + 1 } : a,
+      );
+      persist();
+      emit();
+
+      try {
+        await sendMock(next);
+        // success — drop it
+        queue = queue.filter((a) => a.id !== next.id);
+        persist();
+        emit();
+      } catch (err) {
+        const attempts = (queue.find((a) => a.id === next.id)?.attempts) ?? next.attempts + 1;
+        const message = err instanceof Error ? err.message : "error";
+        if (message === "offline") {
+          // leave it as pending until we come back online
+          queue = queue.map((a) =>
+            a.id === next.id ? { ...a, status: "pending", lastError: message } : a,
+          );
+          persist();
+          emit();
+          break;
+        }
+        if (attempts >= MAX_ATTEMPTS) {
+          queue = queue.map((a) =>
+            a.id === next.id ? { ...a, status: "failed", lastError: message } : a,
+          );
+          persist();
+          emit();
+          continue;
+        }
+        // exponential backoff before next attempt
+        const wait = Math.min(8000, 400 * 2 ** Math.min(attempts, 5));
+        queue = queue.map((a) =>
+          a.id === next.id ? { ...a, status: "pending", lastError: message } : a,
+        );
+        persist();
+        emit();
+        await new Promise((r) => setTimeout(r, wait));
+      }
+    }
+  } finally {
+    draining = false;
+  }
+}
+
+if (typeof window !== "undefined") {
+  window.addEventListener("online", () => {
+    emit();
+    void drain();
+  });
+  window.addEventListener("offline", () => emit());
+  // Kick off any actions persisted from a previous session.
+  if (queue.length > 0) void drain();
+}
