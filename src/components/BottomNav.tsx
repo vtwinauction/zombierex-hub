@@ -1,51 +1,57 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Calendar, ShoppingBag, MessageCircle, User } from "lucide-react";
+import { LayoutGrid, Route as RouteIcon, Plus, Store, User } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 type Item = { to: string; label: string; icon: LucideIcon };
 
-const items: Item[] = [
-  { to: "/", label: "Feed", icon: Home },
-  { to: "/events", label: "Events", icon: Calendar },
-  { to: "/marketplace", label: "Market", icon: ShoppingBag },
-  { to: "/messages", label: "DMs", icon: MessageCircle },
-  { to: "/profile", label: "Me", icon: User },
+const left: Item[] = [
+  { to: "/", label: "Hub", icon: LayoutGrid },
+  { to: "/events", label: "Rides", icon: RouteIcon },
+];
+const right: Item[] = [
+  { to: "/marketplace", label: "Market", icon: Store },
+  { to: "/profile", label: "Garage", icon: User },
 ];
 
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-background/85 backdrop-blur-xl"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.25rem)" }}
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-4"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom), 0.75rem)" }}
     >
-      <ul className="mx-auto grid max-w-screen-sm grid-cols-5">
-        {items.map(({ to, label, icon: Icon }) => {
-          const active = to === "/" ? pathname === "/" : pathname.startsWith(to);
-          return (
-            <li key={to}>
-              <Link
-                to={to}
-                className="flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] uppercase tracking-widest transition-colors"
-                style={{ color: active ? "var(--color-primary)" : "var(--color-muted-foreground)" }}
-              >
-                <span
-                  className="relative grid h-8 w-8 place-items-center rounded-md"
-                  style={
-                    active
-                      ? { boxShadow: "inset 0 0 0 1px var(--color-primary)", background: "oklch(0.86 0.28 140 / 0.08)" }
-                      : undefined
-                  }
-                >
-                  <Icon className="h-[18px] w-[18px]" strokeWidth={active ? 2.4 : 2} />
-                </span>
-                <span className="font-display text-[11px] tracking-[0.18em]">{label}</span>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
+      <div className="pointer-events-auto flex items-center gap-1 rounded-full border border-border bg-background/90 p-1.5 shadow-[var(--shadow-lift)] backdrop-blur-xl">
+        {left.map((i) => <NavPill key={i.to} item={i} active={isActive(i.to)} />)}
+
+        <Link
+          to="/messages"
+          aria-label="Compose"
+          className="mx-1 grid h-11 w-11 place-items-center rounded-full bg-foreground text-background transition-transform hover:scale-[1.05]"
+          style={{ boxShadow: "var(--shadow-toxic)" }}
+        >
+          <Plus className="h-5 w-5" strokeWidth={2.4} />
+        </Link>
+
+        {right.map((i) => <NavPill key={i.to} item={i} active={isActive(i.to)} />)}
+      </div>
     </nav>
+  );
+}
+
+function NavPill({ item, active }: { item: Item; active: boolean }) {
+  const Icon = item.icon;
+  return (
+    <Link
+      to={item.to}
+      className="group relative flex items-center gap-2 rounded-full px-3.5 py-2.5 transition-colors"
+      style={active
+        ? { background: "var(--color-foreground)", color: "var(--color-background)" }
+        : { color: "var(--color-muted-foreground)" }}
+    >
+      <Icon className="h-[18px] w-[18px]" strokeWidth={active ? 2.4 : 2} />
+      <span className={`font-display text-[13px] leading-none ${active ? "inline" : "hidden"}`}>{item.label}</span>
+    </Link>
   );
 }
