@@ -202,6 +202,60 @@ function ProfilePage() {
           ))}
         </div>
       ) : null}
+
+      {tab === "Trophies" ? (
+        <section className="p-5">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <span className="text-mono-caps text-muted-foreground">Earned</span>
+              <p className="mt-1 font-display text-[20px] leading-none tracking-tight">
+                {achievements.filter((a) => a.earned).length}<span className="ml-1 text-[13px] text-muted-foreground">/ {achievements.length}</span>
+              </p>
+            </div>
+            <span className="text-mono-caps" style={{ color: "var(--color-primary)" }}>2 in progress</span>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {achievements.map((a) => <AchievementCard key={a.id} a={a} />)}
+          </div>
+        </section>
+      ) : null}
+
+      {tab === "Workshop" ? (
+        <section className="p-5">
+          <div className="mb-3 flex items-end justify-between">
+            <div>
+              <span className="text-mono-caps text-muted-foreground">Service log</span>
+              <p className="mt-1 font-display text-[20px] leading-none tracking-tight">Nightshade MT-09</p>
+            </div>
+            <button className="tap-press rounded-full border border-border px-3 py-1.5 font-display text-[11px]">+ Log</button>
+          </div>
+          <ol className="relative ml-3 border-l border-border">
+            {workshopHistory.map((w) => (
+              <li key={w.id} className="relative mb-4 pl-5">
+                <span
+                  className="absolute -left-[7px] top-1 grid h-3 w-3 place-items-center rounded-full ring-2 ring-background"
+                  style={{ background: w.status === "upcoming" ? "var(--color-primary)" : "var(--color-foreground)" }}
+                />
+                <div className="rounded-2xl border border-border bg-card p-3 shadow-[var(--shadow-soft)]">
+                  <div className="flex items-center justify-between">
+                    <span className="text-mono-caps text-muted-foreground">{w.date} · {w.mileage}</span>
+                    <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: w.status === "upcoming" ? "var(--color-primary)" : "var(--color-muted-foreground)" }}>
+                      {w.status === "upcoming" ? <Clock className="h-3 w-3" /> : <CheckCircle2 className="h-3 w-3" />}
+                      {w.status === "upcoming" ? "Upcoming" : "Done"}
+                    </span>
+                  </div>
+                  <h4 className="mt-1.5 font-display text-[15px] leading-tight tracking-tight">{w.title}</h4>
+                  <div className="mt-2 flex items-center justify-between text-[12px] text-muted-foreground">
+                    <span className="inline-flex items-center gap-1"><Wrench className="h-3 w-3" /> {w.shop}</span>
+                    <span className="font-display tabular-nums">{w.cost}</span>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
     </>
   );
 }
