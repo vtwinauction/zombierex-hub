@@ -3,8 +3,38 @@
  * Listings, saves, reports, seller reviews, and lightweight seller analytics.
  */
 import { createServerFn } from "@tanstack/react-start";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
+
+/** Publishable-key server client for public reads (respects RLS as anon). */
+function publicClient() {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+  return createClient<Database>(process.env.SUPABASE_URL!, key, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+    global: {
+      fetch: (input, init) => {
+        const h = new Headers(init?.headers);
+        if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) h.delete("Authorization");
+        h.set("apikey", key);
+        return fetch(input, { ...init, headers: h });
+      },
+    },
+  });
+}
+
+/** Read optional bearer token from the incoming request; returns userId or null. */
+async function getOptionalUserId(): Promise<string | null> {
+  try {
+    const { getRequestHeader } = await import("@tanstack/start-server-core");
+    const auth = getRequestHeader("authorization") || getRequestHeader("Authorization" as any);
+    if (!auth?.toLowerCase().startsWith("bearer ")) return null;
+    const token = auth.slice(7);
+    const { data } = await publicClient().auth.getUser(token);
+    return data.user?.id ?? null;
+  } catch { return null; }
+}
 
 export const LISTING_CATEGORIES = [
   "motorcycle","car","truck","scooter","atv","boat","other_vehicle",
@@ -132,14 +162,17 @@ const LISTING_SELECT =
   "id, seller_id, title, price_cents, currency, category, condition, brand, model, year, mileage_km, city, region, country, is_negotiable, is_featured, hero_image_url, saves_count, views_count, published_at, created_at, status";
 
 export const listListings = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => ListFilters.parse(raw ?? {}))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const userId = (data.scope === "mine" || data.scope === "saved") ? await getOptionalUserId() : null;
+    if ((data.scope === "mine" || data.scope === "saved") && !userId) return [];
+
     const sel = (s: string): string => s;
-    let q = context.supabase.from("listings").select(sel(LISTING_SELECT))
+    let q = sb.from("listings").select(sel(LISTING_SELECT))
       .limit(data.limit).range(data.offset, data.offset + data.limit - 1);
 
-    if (data.scope === "mine") q = q.eq("seller_id", context.userId);
+    if (data.scope === "mine") q = q.eq("seller_id", userId!);
     else q = q.eq("status", "active");
 
     if (data.scope === "featured") q = q.eq("is_featured", true).order("published_at", { ascending: false });
@@ -147,11 +180,11 @@ export const listListings = createServerFn({ method: "GET" })
     else if (data.scope === "recommended") q = q.order("saves_count", { ascending: false });
     else if (data.scope === "nearby") q = q.order("published_at", { ascending: false });
     else if (data.scope === "saved") {
-      const { data: s } = await context.supabase.from("listing_saves")
-        .select("listing_id").eq("user_id", context.userId).limit(200);
+      const { data: s } = await sb.from("listing_saves")
+        .select("listing_id").eq("user_id", userId!).limit(200);
       const ids = (s ?? []).map((r: any) => r.listing_id);
       if (!ids.length) return [];
-      q = context.supabase.from("listings").select(sel(LISTING_SELECT))
+      q = sb.from("listings").select(sel(LISTING_SELECT))
         .in("id", ids).order("created_at", { ascending: false });
     } else q = q.order("published_at", { ascending: false });
 
@@ -179,31 +212,29 @@ export const listListings = createServerFn({ method: "GET" })
   });
 
 export const getListing = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
-  .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const userId = await getOptionalUserId();
+    const { data: row, error } = await sb
       .from("listings").select("*").eq("id", data.id).maybeSingle();
     if (error) throw new Error(error.message);
     if (!row) return null;
 
-    const [{ data: photos }, { data: seller }, { data: save }] = await Promise.all([
-      context.supabase.from("listing_photos").select("*")
-        .eq("listing_id", data.id).order("sort_order"),
-      context.supabase.from("profiles")
+    const [{ data: photos }, { data: seller }, saveRes] = await Promise.all([
+      sb.from("listing_photos").select("*").eq("listing_id", data.id).order("sort_order"),
+      sb.from("profiles")
         .select("id, handle, display_name, avatar_url, tier, is_verified, followers_count, seller_rating_avg, seller_reviews_count, listings_count, created_at")
         .eq("id", row.seller_id).maybeSingle(),
-      context.supabase.from("listing_saves").select("listing_id")
-        .eq("user_id", context.userId).eq("listing_id", data.id).maybeSingle(),
+      userId
+        ? sb.from("listing_saves").select("listing_id").eq("user_id", userId).eq("listing_id", data.id).maybeSingle()
+        : Promise.resolve({ data: null } as any),
     ]);
 
     // Fire and forget view increment
-    context.supabase.rpc as any; // keep type quiet
-    await context.supabase.from("listings")
-      .update({ views_count: (row.views_count ?? 0) + 1 })
-      .eq("id", data.id);
+    await sb.from("listings").update({ views_count: (row.views_count ?? 0) + 1 }).eq("id", data.id);
 
-    return { ...row, photos: photos ?? [], seller, saved_by_me: !!save };
+    return { ...row, photos: photos ?? [], seller, saved_by_me: !!(saveRes as any)?.data };
   });
 
 /* ================= SAVE / UNSAVE ================= */
@@ -258,15 +289,15 @@ export const submitSellerReview = createServerFn({ method: "POST" })
   });
 
 export const listSellerReviews = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => z.object({ seller_id: z.string().uuid(), limit: z.number().int().max(50).default(20) }).parse(raw))
-  .handler(async ({ data, context }) => {
-    const { data: rows, error } = await context.supabase.from("seller_reviews")
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const { data: rows, error } = await sb.from("seller_reviews")
       .select("*").eq("seller_id", data.seller_id).order("created_at", { ascending: false }).limit(data.limit);
     if (error) throw new Error(error.message);
     const rids = Array.from(new Set((rows ?? []).map((r) => r.reviewer_id)));
     const { data: revs } = rids.length
-      ? await context.supabase.from("profiles").select("id, handle, display_name, avatar_url").in("id", rids)
+      ? await sb.from("profiles").select("id, handle, display_name, avatar_url").in("id", rids)
       : { data: [] as any[] };
     const byId = new Map((revs ?? []).map((r) => [r.id, r]));
     return (rows ?? []).map((r) => ({ ...r, reviewer: byId.get(r.reviewer_id) ?? null }));
@@ -274,20 +305,22 @@ export const listSellerReviews = createServerFn({ method: "GET" })
 
 /* ================= SELLER PROFILE ================= */
 export const getSellerProfile = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data }) => {
+    const sb = publicClient();
+    const userId = await getOptionalUserId();
     const sel = (s: string): string => s;
     const [{ data: profile }, { data: active }, followState] = await Promise.all([
-      context.supabase.from("profiles")
+      sb.from("profiles")
         .select("id, handle, display_name, avatar_url, bio, tier, is_verified, followers_count, listings_count, seller_rating_avg, seller_reviews_count, created_at, location")
         .eq("id", data.id).maybeSingle(),
-      context.supabase.from("listings").select(sel(LISTING_SELECT))
+      sb.from("listings").select(sel(LISTING_SELECT))
         .eq("seller_id", data.id).eq("status", "active").order("published_at", { ascending: false }).limit(30),
-      context.supabase.from("follows").select("follower_id")
-        .eq("follower_id", context.userId).eq("followee_id", data.id).maybeSingle(),
+      userId
+        ? sb.from("follows").select("follower_id").eq("follower_id", userId).eq("followee_id", data.id).maybeSingle()
+        : Promise.resolve({ data: null } as any),
     ]);
-    return { profile, active_listings: active ?? [], following: !!followState.data };
+    return { profile, active_listings: active ?? [], following: !!(followState as any)?.data };
   });
 
 /* ================= SELLER DASHBOARD ================= */
