@@ -238,7 +238,7 @@ export const logAdEvent = createServerFn({ method: "POST" })
       creative_id: data.creative_id ?? null,
       kind: data.kind,
       user_id: context.userId,
-      placement: data.placement ?? null,
+      placement: (data.placement ?? null) as any,
     });
     if (error) throw new Error(error.message);
     return { ok: true };
