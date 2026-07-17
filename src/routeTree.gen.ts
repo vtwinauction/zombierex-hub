@@ -31,6 +31,7 @@ import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/m
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as MarketplaceSellerIdRouteImport } from './routes/marketplace.seller.$id'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
@@ -162,6 +163,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const MarketplaceSellerIdRoute = MarketplaceSellerIdRouteImport.update({
+  id: '/seller/$id',
+  path: '/seller/$id',
+  getParentRoute: () => MarketplaceRoute,
 } as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
@@ -320,6 +326,7 @@ export interface FileRoutesByFullPath {
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -362,6 +369,7 @@ export interface FileRoutesByTo {
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -454,6 +463,7 @@ export interface FileRouteTypes {
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/admin/'
     | '/vendor/'
     | '/admin/vendors/$id'
@@ -496,6 +506,7 @@ export interface FileRouteTypes {
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/admin'
     | '/vendor'
     | '/admin/vendors/$id'
@@ -541,6 +552,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
@@ -727,6 +739,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/marketplace/seller/$id': {
+      id: '/marketplace/seller/$id'
+      path: '/seller/$id'
+      fullPath: '/marketplace/seller/$id'
+      preLoaderRoute: typeof MarketplaceSellerIdRouteImport
+      parentRoute: typeof MarketplaceRoute
     }
     '/api/public/health': {
       id: '/api/public/health'
@@ -971,10 +990,12 @@ const AuthenticatedRouteRouteWithChildren =
 
 interface MarketplaceRouteChildren {
   MarketplaceIdRoute: typeof MarketplaceIdRoute
+  MarketplaceSellerIdRoute: typeof MarketplaceSellerIdRoute
 }
 
 const MarketplaceRouteChildren: MarketplaceRouteChildren = {
   MarketplaceIdRoute: MarketplaceIdRoute,
+  MarketplaceSellerIdRoute: MarketplaceSellerIdRoute,
 }
 
 const MarketplaceRouteWithChildren = MarketplaceRoute._addFileChildren(
