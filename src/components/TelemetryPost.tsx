@@ -67,8 +67,8 @@ export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number 
           )}
           {liked && (
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
-              <span className="font-display text-signal text-6xl drop-shadow" style={{ animation: "hud-in 500ms ease" }}>
-                ✚
+              <span className="heart-burst text-signal" style={{ filter: "drop-shadow(0 4px 12px rgba(182,255,60,0.8))" }}>
+                <IconClaw size={92} strokeWidth={2.5} />
               </span>
             </span>
           )}
