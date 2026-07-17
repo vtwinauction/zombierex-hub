@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
 import type { Post } from "@/lib/mock-data";
 import { HexChip, DataChip } from "./hud";
+import { IconClaw, IconVisor, IconMechClaw, IconBoneMark } from "./icons/RexIcons";
+import { RiderMark } from "./RiderBadge";
 
 /** Post rebuilt as a telemetry readout: left spec column, media plate, right action rail. */
 export function TelemetryPost({ post, index = 0 }: { post: Post; index?: number }) {
