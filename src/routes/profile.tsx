@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
@@ -71,9 +71,10 @@ function ProfilePage() {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-2">
+        <div className="mt-5 grid grid-cols-3 gap-2">
           <button className="btn-neon">Edit profile</button>
           <button className="btn-ghost">Share unit</button>
+          <Link to="/settings" className="btn-ghost text-center">Settings</Link>
         </div>
 
         {/* Level meter */}
