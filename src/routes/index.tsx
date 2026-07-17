@@ -69,8 +69,9 @@ function HomePage() {
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <p className="mono-tag" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {featured.location}</p>
-                    <p className="serif mt-1 italic text-lg leading-tight">
-                      Built by <span style={{ color: "var(--color-neon)" }}>{featured.user.handle}</span>
+                    <p className="serif mt-1 flex items-center gap-2 italic text-lg leading-tight">
+                      <span>Built by <span style={{ color: "var(--color-neon)" }}>{featured.user.handle}</span></span>
+                      <RiderMark tier="APEX_REX" />
                     </p>
                   </div>
                   <span className="mono-caps px-2 py-1" style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(255,255,255,0.25)" }}>
@@ -87,16 +88,30 @@ function HomePage() {
           </div>
         </div>
 
-        {/* Floating spec card — overlaps into next section */}
-        <div className="relative -mt-8 px-4">
+        {/* ── Interaction Bar (Like · Comment · Views · Share · Save) ── */}
+        <div className="relative z-10 -mt-5 px-4">
+          <InteractionBar
+            variant="dark"
+            counts={{
+              likes: featured.likes,
+              comments: featured.comments,
+              views: featured.views,
+              shares: featured.shares,
+            }}
+          />
+        </div>
+
+        {/* Floating spec card */}
+        <div className="relative mt-4 px-4">
           <div className="surface-brushed lift-2 grid grid-cols-4 divide-x" style={{ borderRadius: 3, borderColor: "var(--color-hair-strong)" }}>
             <Spec k="Power" v={`${featured.vehicle?.hp}`} u="hp" />
-            <Spec k="Views" v={featured.views} />
-            <Spec k="Likes" v={fmt(featured.likes)} />
-            <Spec k="Cmts" v={fmt(featured.comments)} accent />
+            <Spec k="Torque" v="284" u="nm" />
+            <Spec k="0–100" v="4.2" u="s" />
+            <Spec k="Weight" v="1180" u="kg" accent />
           </div>
         </div>
       </section>
+
 
       {/* ==================================================
          GARAGE TRANSMISSIONS — stories rail
