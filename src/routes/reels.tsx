@@ -1,0 +1,274 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { reels, type Reel } from "@/lib/mock-data";
+import { RiderMark } from "@/components/RiderBadge";
+import { IconClaw, IconVisor, IconMechClaw, IconBoneMark } from "@/components/icons/RexIcons";
+
+export const Route = createFileRoute("/reels")({
+  head: () => ({
+    meta: [
+      { title: "Reels · ZOMBIEREX" },
+      { name: "description", content: "Full-screen vertical rides, builds and burnouts from the ZOMBIEREX network." },
+      { property: "og:title", content: "Reels · ZOMBIEREX" },
+      { property: "og:description", content: "Full-screen vertical rides, builds and burnouts from the ZOMBIEREX network." },
+      { property: "og:type", content: "video.other" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
+  component: ReelsPage,
+});
+
+// Loop the mock reels a few times for an infinite-feel prototype
+const feed: Reel[] = [...reels, ...reels, ...reels];
+
+function ReelsPage() {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+    const items = Array.from(scroller.querySelectorAll<HTMLElement>("[data-reel-idx]"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        let best: { idx: number; ratio: number } | null = null;
+        for (const e of entries) {
+          const idx = Number((e.target as HTMLElement).dataset.reelIdx);
+          if (!best || e.intersectionRatio > best.ratio) best = { idx, ratio: e.intersectionRatio };
+        }
+        if (best && best.ratio > 0.6) setActiveIdx(best.idx);
+      },
+      { root: scroller, threshold: [0, 0.6, 0.95] },
+    );
+    items.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-40"
+      style={{ background: "var(--color-obsidian)" }}
+    >
+      {/* Top overlay: tabs + back */}
+      <header
+        className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),14px)] pb-3"
+        style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55), transparent)" }}
+      >
+        <Link
+          to="/"
+          className="pointer-events-auto tap grid h-9 w-9 place-items-center rounded-full text-white"
+          aria-label="Back"
+          style={{ background: "rgba(0,0,0,0.35)", border: "1px solid rgba(255,255,255,0.18)", backdropFilter: "blur(10px)" }}
+        >
+          ‹
+        </Link>
+        <div className="pointer-events-auto flex items-center gap-5 text-white">
+          <button className="text-[15px] font-semibold" style={{ opacity: 0.55 }}>Following</button>
+          <span style={{ height: 4, width: 4, borderRadius: 999, background: "var(--color-neon)" }} />
+          <button className="text-[15px] font-bold">For you</button>
+        </div>
+        <div style={{ width: 36 }} />
+      </header>
+
+      {/* Snap scroller */}
+      <div
+        ref={scrollerRef}
+        className="no-scrollbar h-full w-full overflow-y-auto"
+        style={{ scrollSnapType: "y mandatory", WebkitOverflowScrolling: "touch" }}
+      >
+        {feed.map((r, i) => (
+          <ReelSlide key={`${r.id}-${i}`} reel={r} idx={i} active={activeIdx === i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReelSlide({ reel, idx, active }: { reel: Reel; idx: number; active: boolean }) {
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [muted, setMuted] = useState(true);
+  const [lastTap, setLastTap] = useState(0);
+  const [heartPing, setHeartPing] = useState(false);
+
+  function onTap() {
+    const now = Date.now();
+    if (now - lastTap < 260) {
+      // double-tap → like
+      if (!liked) setLiked(true);
+      setHeartPing(true);
+      setTimeout(() => setHeartPing(false), 620);
+    } else {
+      setMuted((m) => !m);
+    }
+    setLastTap(now);
+  }
+
+  return (
+    <section
+      data-reel-idx={idx}
+      className="relative h-[100dvh] w-full overflow-hidden"
+      style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}
+      onClick={onTap}
+    >
+      <img
+        src={reel.poster}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ animation: active ? "ken-burns 18s ease-in-out infinite alternate" : "none" }}
+      />
+      {/* Vignettes */}
+      <div className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, transparent 25%, transparent 55%, rgba(0,0,0,0.85) 100%)" }} />
+
+      {/* Mute pill */}
+      <span
+        className="absolute right-3 top-[calc(env(safe-area-inset-top)+58px)] rounded-full px-2 py-1 text-[10px] font-semibold tracking-wider text-white"
+        style={{ background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.2)", fontFamily: "var(--font-mono)" }}
+      >
+        {muted ? "MUTED · TAP" : "SOUND ON"}
+      </span>
+
+      {/* Double-tap heart */}
+      {heartPing && (
+        <div className="pointer-events-none absolute inset-0 grid place-items-center">
+          <div
+            style={{
+              color: "var(--color-ember)",
+              filter: "drop-shadow(0 6px 24px rgba(255,91,58,0.6))",
+              animation: "heart-ping 620ms ease-out forwards",
+            }}
+          >
+            <IconClaw size={130} />
+          </div>
+        </div>
+      )}
+
+      {/* Right action rail */}
+      <div className="absolute bottom-24 right-3 flex flex-col items-center gap-5 text-white">
+        <RailBtn
+          Icon={IconClaw}
+          count={fmt(reel.likes + (liked ? 1 : 0))}
+          active={liked}
+          tint="var(--color-ember)"
+          onClick={(e) => { e.stopPropagation(); setLiked((v) => !v); }}
+        />
+        <RailBtn Icon={IconVisor} count={fmt(reel.comments)} onClick={(e) => e.stopPropagation()} />
+        <RailBtn
+          Icon={IconBoneMark}
+          count={saved ? "Saved" : "Save"}
+          active={saved}
+          tint="var(--color-neon)"
+          onClick={(e) => { e.stopPropagation(); setSaved((v) => !v); }}
+        />
+        <RailBtn Icon={IconMechClaw} count={fmt(reel.shares)} onClick={(e) => e.stopPropagation()} />
+        <button
+          onClick={(e) => e.stopPropagation()}
+          className="tap mt-1 h-10 w-10 overflow-hidden rounded-full border-2"
+          style={{ borderColor: "var(--color-neon)", animation: active ? "spin 12s linear infinite" : "none" }}
+          aria-label="Sound"
+        >
+          <img src={reel.user.avatar} alt="" className="h-full w-full object-cover" />
+        </button>
+      </div>
+
+      {/* Bottom content */}
+      <div className="absolute inset-x-3 bottom-6 pr-16 text-white">
+        <div className="flex items-center gap-2">
+          <img src={reel.user.avatar} alt="" className="h-9 w-9 rounded-full object-cover" style={{ boxShadow: "0 0 0 1.5px var(--color-neon)" }} />
+          <p className="flex items-center gap-1.5 text-[14px] font-semibold">
+            {reel.user.handle}
+            {reel.user.verified && <RiderMark tier={idx % 2 === 0 ? "APEX_REX" : "LEGEND"} />}
+          </p>
+          {!reel.followed && (
+            <button
+              onClick={(e) => e.stopPropagation()}
+              className="tap ml-1 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wider"
+              style={{ background: "var(--color-ember)", color: "white", letterSpacing: "0.14em" }}
+            >
+              Follow
+            </button>
+          )}
+        </div>
+        <p className="mt-2.5 text-[13.5px] leading-snug">{reel.caption}</p>
+        <p className="mt-1 text-[12px]" style={{ color: "var(--color-neon)" }}>
+          {reel.hashtags.slice(0, 3).join(" ")}
+        </p>
+        {reel.location && (
+          <p className="mono-tag mt-1.5" style={{ color: "rgba(255,255,255,0.75)" }}>◎ {reel.location}</p>
+        )}
+        {reel.taggedProduct && (
+          <div
+            className="mt-2.5 inline-flex items-center gap-2 rounded-full px-2.5 py-1.5"
+            style={{ background: "rgba(0,0,0,0.55)", border: "1px solid rgba(198,255,61,0.35)", backdropFilter: "blur(10px)" }}
+          >
+            <span style={{ color: "var(--color-neon)" }}>◇</span>
+            <span className="text-[12px] font-semibold">{reel.taggedProduct.name}</span>
+            <span className="mono-num text-[11px]" style={{ color: "var(--color-neon)" }}>{reel.taggedProduct.price}</span>
+          </div>
+        )}
+
+        {/* Music ticker */}
+        <div className="mt-3 flex items-center gap-2 overflow-hidden">
+          <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full text-[11px]" style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.25)" }}>♫</span>
+          <div className="min-w-0 flex-1 overflow-hidden">
+            <p className="marquee whitespace-nowrap text-[11px]" style={{ color: "rgba(255,255,255,0.9)" }}>
+              {reel.music.title} — {reel.music.artist} · original sound · {reel.views} views &nbsp;·&nbsp;
+              {reel.music.title} — {reel.music.artist} &nbsp;·&nbsp;
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Progress rail (fake auto-advance visualization) */}
+      <div className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: "rgba(255,255,255,0.12)" }}>
+        <div
+          key={`${idx}-${active}`}
+          style={{
+            height: "100%",
+            background: "var(--color-neon)",
+            animation: active ? `reel-progress ${reel.duration}s linear forwards` : "none",
+            width: active ? undefined : 0,
+          }}
+        />
+      </div>
+    </section>
+  );
+}
+
+function RailBtn({
+  Icon,
+  count,
+  active,
+  tint,
+  onClick,
+}: {
+  Icon: React.ComponentType<{ size?: number }>;
+  count: string;
+  active?: boolean;
+  tint?: string;
+  onClick?: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <button onClick={onClick} className="tap flex flex-col items-center gap-1">
+      <span
+        className="grid h-11 w-11 place-items-center rounded-full transition-transform active:scale-95"
+        style={{
+          background: "rgba(0,0,0,0.4)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.16)",
+          color: active ? tint : "white",
+          boxShadow: active ? `0 0 24px -4px ${tint}` : undefined,
+        }}
+      >
+        <Icon size={20} />
+      </span>
+      <span className="mono-num text-[10.5px] font-semibold text-white">{count}</span>
+    </button>
+  );
+}
+
+function fmt(n: number) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
+  return String(n);
+}

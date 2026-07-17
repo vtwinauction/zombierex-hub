@@ -427,3 +427,13 @@
 @utility bar-2 { animation: bar-wave 900ms ease-in-out 100ms infinite; }
 @utility bar-3 { animation: bar-wave 800ms ease-in-out 250ms infinite; }
 @utility bar-4 { animation: bar-wave 1000ms ease-in-out 50ms infinite; }
+
+@keyframes reel-progress { from { width: 0%; } to { width: 100%; } }
+@keyframes heart-ping {
+  0%   { opacity: 0; transform: scale(0.4); }
+  30%  { opacity: 1; transform: scale(1.15); }
+  60%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
