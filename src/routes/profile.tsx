@@ -4,161 +4,162 @@ import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "Garage · ZOMBIEREX" }, { name: "description", content: "The rider's digital garage — machine, level, trophies, workshop log." }] }),
+  head: () => ({ meta: [{ title: "Digital Garage · ZOMBIEREX" }, { name: "description", content: "The rider's digital garage — machine, level, trophies, workshop log." }] }),
   component: ProfilePage,
 });
 
-const TABS = ["REELS", "GARAGE", "TROPHIES", "WORKSHOP"] as const;
+const TABS = ["Reels", "Garage", "Trophies", "Workshop"] as const;
 type Tab = typeof TABS[number];
 
 function ProfilePage() {
-  const [tab, setTab] = useState<Tab>("REELS");
+  const [tab, setTab] = useState<Tab>("Reels");
   const bike = myVehicles[0];
   const xpPct = Math.min(100, (rider.xp / rider.xpToNext) * 100);
 
   return (
-    <div>
+    <div className="pb-16">
       <StatusBar index="05" section="GARAGE · OPERATOR" />
 
-      {/* =========== THE MACHINE — hero =========== */}
-      <section className="relative">
-        <div className="relative aspect-[4/5] w-full overflow-hidden">
-          <img src={bike.cover} alt="" className="ken-burns h-full w-full object-cover" />
-          <div className="absolute inset-0" style={{
-            background: "linear-gradient(180deg, rgba(0,0,0,0.25) 0%, transparent 30%, rgba(5,5,5,0.9) 88%, var(--color-bone) 100%)",
-          }} />
-
-          {/* Corner marks */}
-          <span className="pointer-events-none absolute left-3 top-3 h-3 w-3 border-l border-t border-white/70" />
-          <span className="pointer-events-none absolute right-3 top-3 h-3 w-3 border-r border-t border-white/70" />
-
-          {/* Right vertical serial */}
-          <div className="absolute right-3 top-16 text-right text-white">
-            <p className="mono-tag" style={{ color: "rgba(255,255,255,0.55)" }}>UNIT · V·{bike.id.toUpperCase()}</p>
-            <p className="mono-tag mt-1" style={{ color: "rgba(255,255,255,0.55)" }}>REG · {bike.year}·CA</p>
+      {/* ============ MACHINE — editorial hero ============ */}
+      <section className="rise relative pt-4">
+        <div className="px-4">
+          <div className="flex items-baseline gap-3">
+            <span className="mono-tag">Unit V·{bike.id.toUpperCase()}</span>
+            <span className="etch flex-1" />
+            <span className="mono-tag" style={{ color: "var(--color-silver)" }}>{bike.year} · {bike.type}</span>
           </div>
+          <p className="mono-tag mt-4" style={{ color: "var(--color-silver)" }}>The machine</p>
+          <h1 className="serif mt-1 text-[56px] leading-[0.85]" style={{ color: "var(--color-ink)" }}>
+            {bike.name.split(" ").map((w, i) => (
+              <span key={i} className={i === 1 ? "italic block" : "block"} style={i === 1 ? { color: "var(--color-neon)" } : undefined}>{w}</span>
+            ))}
+          </h1>
+        </div>
 
-          {/* Machine name — editorial */}
-          <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-            <p className="mono-tag" style={{ color: "rgba(255,255,255,0.7)" }}>THE MACHINE</p>
-            <h1 className="mt-2 display-xl text-4xl uppercase leading-[0.85]">
-              {bike.name.split(" ").map((w, i) => (
-                <span key={i} className="block">{w}</span>
-              ))}
-            </h1>
+        <div className="relative mt-5">
+          <div className="relative aspect-[4/5] w-full overflow-hidden" style={{ borderTop: "1px solid var(--color-hair)", borderBottom: "1px solid var(--color-hair)" }}>
+            <img src={bike.cover} alt="" className="ken-burns h-full w-full object-cover" />
+            <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 40%, rgba(0,0,0,0.75) 100%)" }} />
+            <span className="pointer-events-none absolute left-2 top-2 h-3 w-3 border-l border-t border-white/70" />
+            <span className="pointer-events-none absolute right-2 top-2 h-3 w-3 border-r border-t border-white/70" />
+            <span className="pointer-events-none absolute left-2 bottom-2 h-3 w-3 border-l border-b border-white/70" />
+            <span className="pointer-events-none absolute right-2 bottom-2 h-3 w-3 border-r border-b border-white/70" />
           </div>
         </div>
 
-        {/* Spec strip beneath hero */}
-        <div className="grid grid-cols-4 divide-x divide-hair hairline-b" style={{ background: "var(--color-bone)" }}>
-          <SpecCell k="YEAR" v={String(bike.year)} />
-          <SpecCell k="HP" v={String(bike.hp)} />
-          <SpecCell k="TYPE" v={bike.type === "Motorcycle" ? "MOTO" : "CAR"} />
-          <SpecCell k="MODS" v={String(bike.mods.length)} highlight />
+        {/* Floating specs card */}
+        <div className="relative -mt-8 px-4">
+          <div className="surface-brushed lift-2 grid grid-cols-4 divide-x" style={{ borderColor: "var(--color-hair-strong)", borderRadius: 3 }}>
+            <SpecCell k="Year" v={String(bike.year)} />
+            <SpecCell k="Power" v={String(bike.hp)} u="hp" />
+            <SpecCell k="Type" v={bike.type === "Motorcycle" ? "Moto" : "Car"} />
+            <SpecCell k="Mods" v={String(bike.mods.length)} highlight />
+          </div>
         </div>
       </section>
 
-      {/* =========== THE RIDER — secondary =========== */}
-      <section className="px-4 pt-6">
+      {/* ============ OPERATOR ============ */}
+      <section className="mt-8 px-4">
         <div className="flex items-start gap-4">
-          <div className="hairline shrink-0 overflow-hidden" style={{ width: 72, height: 72 }}>
+          <div className="hex-frame shrink-0 overflow-hidden" style={{ width: 72, height: 72 }}>
             <img src={me.avatar} alt="" className="h-full w-full object-cover" />
           </div>
           <div className="min-w-0 flex-1 pt-1">
-            <p className="mono-tag" style={{ color: "var(--color-ash)" }}>OPERATOR · VERIFIED</p>
-            <h2 className="mt-1 text-2xl display-xl uppercase leading-none">{me.name}</h2>
-            <p className="mono-tag mt-2" style={{ color: "var(--color-ash)" }}>{me.handle} · ◎ {me.location}</p>
+            <p className="mono-tag">Operator · Verified</p>
+            <h2 className="serif mt-1 text-3xl italic leading-none" style={{ color: "var(--color-ink)" }}>{me.name}</h2>
+            <p className="mono-tag mt-2" style={{ color: "var(--color-silver)" }}>{me.handle} · ◎ {me.location}</p>
           </div>
         </div>
 
-        {/* Actions */}
         <div className="mt-5 grid grid-cols-2 gap-2">
-          <button className="btn-solid">EDIT PROFILE</button>
-          <button className="btn-ghost">SHARE UNIT</button>
+          <button className="btn-neon">Edit profile</button>
+          <button className="btn-ghost">Share unit</button>
         </div>
 
-        {/* Level meter — technical */}
-        <div className="mt-6 hairline p-4">
+        {/* Level meter */}
+        <div className="surface-1 mt-6 p-4" style={{ borderRadius: 3 }}>
           <div className="flex items-baseline justify-between">
             <div>
-              <p className="mono-tag" style={{ color: "var(--color-ash)" }}>ENDURANCE LEVEL</p>
-              <p className="mt-1 display-xl text-2xl uppercase">LV·{rider.level} — {rider.title}</p>
+              <p className="mono-tag">Endurance level</p>
+              <p className="serif mt-1 text-2xl italic" style={{ color: "var(--color-ink)" }}>Lv·{rider.level} — {rider.title}</p>
             </div>
-            <p className="display-numeral text-3xl" style={{ color: "var(--color-signal)" }}>{Math.round(xpPct)}<span className="text-sm" style={{ color: "var(--color-ash)" }}>%</span></p>
+            <p className="serif text-4xl italic" style={{ color: "var(--color-neon)", lineHeight: 0.9 }}>
+              {Math.round(xpPct)}<span className="mono ml-0.5 text-[10px]" style={{ color: "var(--color-silver)" }}>%</span>
+            </p>
           </div>
-          {/* Segmented progress */}
-          <div className="mt-3 flex h-2 gap-[2px]">
+          <div className="mt-4 flex h-2 gap-[2px]">
             {Array.from({ length: 20 }).map((_, i) => (
               <div key={i} className="flex-1" style={{
-                background: i < Math.round(xpPct / 5) ? "var(--color-signal)" : "var(--color-hair)",
+                background: i < Math.round(xpPct / 5) ? "var(--color-neon)" : "var(--color-hair-strong)",
+                boxShadow: i < Math.round(xpPct / 5) ? "0 0 6px rgba(198,255,61,0.5)" : undefined,
               }} />
             ))}
           </div>
-          <p className="mono-tag mt-2" style={{ color: "var(--color-ash)" }}>
-            {rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} XP · {rider.xpToNext - rider.xp} TO NEXT
+          <p className="mono-tag mt-3" style={{ color: "var(--color-silver)" }}>
+            {rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} XP · {rider.xpToNext - rider.xp} to next
           </p>
         </div>
 
-        {/* Stats grid */}
-        <div className="mt-4 grid grid-cols-3 divide-x divide-hair border border-hair">
-          <StatBlock k="FOLLOWERS" v="12.4K" />
-          <StatBlock k="RIDES" v="47" />
-          <StatBlock k="MILES" v="8,912" />
+        {/* Stats */}
+        <div className="mt-4 grid grid-cols-3 divide-x divide-hair surface-1" style={{ borderRadius: 3 }}>
+          <StatBlock k="Followers" v="12.4K" />
+          <StatBlock k="Rides" v="47" />
+          <StatBlock k="Miles" v="8,912" />
         </div>
       </section>
 
-      {/* =========== TAB BAR =========== */}
+      {/* ============ TABS ============ */}
       <div className="mt-8 hairline-t hairline-b flex">
         {TABS.map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className="tap relative flex-1 py-3 mono-caps"
+            className="tap relative flex-1 py-3.5"
             style={{
-              color: tab === t ? "var(--color-ink)" : "var(--color-ash)",
-              background: tab === t ? "var(--color-mist)" : "transparent",
+              color: tab === t ? "var(--color-neon)" : "var(--color-silver)",
+              background: tab === t ? "rgba(198,255,61,0.06)" : "transparent",
             }}
           >
-            {t}
+            <span className="serif italic text-[15px]">{t}</span>
             {tab === t && (
-              <span className="absolute inset-x-6 top-0 h-[2px]" style={{ background: "var(--color-signal)" }} />
+              <span className="absolute inset-x-6 top-0 h-[2px]" style={{ background: "var(--color-neon)" }} />
             )}
           </button>
         ))}
       </div>
 
       <div className="px-4 pt-5">
-        {tab === "REELS" && (
-          <div className="grid grid-cols-3 gap-0.5">
+        {tab === "Reels" && (
+          <div className="grid grid-cols-3 gap-1">
             {reels.map((r, i) => (
-              <div key={r.id} className="relative aspect-[3/4] overflow-hidden border border-hair">
+              <div key={r.id} className="relative aspect-[3/4] overflow-hidden" style={{ border: "1px solid var(--color-hair)" }}>
                 <img src={r.poster} alt="" className="h-full w-full object-cover" />
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent" />
-                <span className="absolute left-1.5 top-1.5 mono-tag" style={{ color: "rgba(255,255,255,0.85)" }}>{String(i+1).padStart(2,"0")}</span>
-                <span className="absolute bottom-1.5 left-1.5 mono-num text-[10px] font-bold text-white">▶ {r.views}</span>
+                <span className="mono-tag absolute left-1.5 top-1.5" style={{ color: "rgba(255,255,255,0.85)" }}>{String(i + 1).padStart(2, "0")}</span>
+                <span className="mono-num absolute bottom-1.5 left-1.5 text-[10px] font-bold text-white">▶ {r.views}</span>
               </div>
             ))}
           </div>
         )}
 
-        {tab === "GARAGE" && (
+        {tab === "Garage" && (
           <div className="space-y-4">
             {myVehicles.map((v) => (
-              <div key={v.id} className="hairline overflow-hidden">
+              <div key={v.id} className="surface-1 lift-1 overflow-hidden" style={{ borderRadius: 3 }}>
                 <img src={v.cover} alt="" className="h-48 w-full object-cover" />
                 <div className="p-4">
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="mono-tag" style={{ color: "var(--color-ash)" }}>{v.type.toUpperCase()} · {v.year}</p>
-                      <p className="text-lg font-bold">{v.name}</p>
+                      <p className="mono-tag">{v.type} · {v.year}</p>
+                      <p className="serif text-xl italic" style={{ color: "var(--color-ink)" }}>{v.name}</p>
                     </div>
-                    <p className="display-numeral text-2xl" style={{ color: "var(--color-signal)" }}>{v.hp}<span className="mono-tag ml-1" style={{ color: "var(--color-ash)" }}>HP</span></p>
+                    <p className="serif text-2xl italic" style={{ color: "var(--color-neon)" }}>{v.hp}<span className="mono ml-1 text-[10px]" style={{ color: "var(--color-silver)" }}>hp</span></p>
                   </div>
                   <ul className="mt-4 divide-y divide-hair hairline-t hairline-b">
                     {v.mods.map((m, i) => (
                       <li key={m} className="flex items-center gap-3 py-2">
-                        <span className="mono-tag" style={{ color: "var(--color-ash)" }}>MOD·{String(i+1).padStart(2,"0")}</span>
-                        <span className="text-[13px] font-medium">{m}</span>
+                        <span className="mono-tag">Mod·{String(i + 1).padStart(2, "0")}</span>
+                        <span className="serif text-[15px] italic" style={{ color: "var(--color-ink)" }}>{m}</span>
                       </li>
                     ))}
                   </ul>
@@ -168,45 +169,41 @@ function ProfilePage() {
           </div>
         )}
 
-        {tab === "TROPHIES" && (
+        {tab === "Trophies" && (
           <div className="grid grid-cols-2 gap-2">
             {achievements.map((a, i) => (
-              <div
-                key={a.id}
-                className="hairline p-3"
-                style={{ opacity: a.earned ? 1 : 0.35 }}
-              >
+              <div key={a.id} className="surface-1 p-3" style={{ opacity: a.earned ? 1 : 0.4, borderRadius: 3 }}>
                 <div className="flex items-baseline justify-between">
-                  <span className="mono-tag" style={{ color: "var(--color-ash)" }}>T·{String(i+1).padStart(2,"0")}</span>
+                  <span className="mono-tag">T·{String(i + 1).padStart(2, "0")}</span>
                   <span className="mono-tag" style={{
-                    color: a.rarity === "legendary" ? "var(--color-signal)" : a.rarity === "rare" ? "var(--color-cool)" : "var(--color-ash)",
-                  }}>{a.rarity.toUpperCase()}</span>
+                    color: a.rarity === "legendary" ? "var(--color-neon)" : a.rarity === "rare" ? "var(--color-silver)" : "var(--color-titanium)",
+                  }}>{a.rarity}</span>
                 </div>
-                <p className="mt-3 text-[13px] font-bold leading-tight">{a.title}</p>
-                <p className="mono-tag mt-1" style={{ color: "var(--color-ash)" }}>{a.detail}</p>
-                <div className="mt-3 h-[2px]" style={{ background: a.earned ? "var(--color-signal)" : "var(--color-hair)" }} />
+                <p className="serif mt-3 text-[15px] italic leading-tight" style={{ color: "var(--color-ink)" }}>{a.title}</p>
+                <p className="mono-tag mt-1" style={{ color: "var(--color-silver)" }}>{a.detail}</p>
+                <div className="mt-3 h-[2px]" style={{ background: a.earned ? "var(--color-neon)" : "var(--color-hair-strong)" }} />
               </div>
             ))}
           </div>
         )}
 
-        {tab === "WORKSHOP" && (
+        {tab === "Workshop" && (
           <ul className="divide-y divide-hair hairline-t hairline-b">
             {workshopHistory.map((w, i) => (
               <li key={w.id} className="grid grid-cols-[52px_1fr_auto] items-start gap-3 py-4">
                 <div>
-                  <span className="display-numeral text-lg">{String(i+1).padStart(2,"0")}</span>
-                  <p className="mono-tag" style={{ color: "var(--color-ash)" }}>{w.date}</p>
+                  <span className="serif text-2xl italic" style={{ color: "var(--color-titanium)" }}>{String(i + 1).padStart(2, "0")}</span>
+                  <p className="mono-tag" style={{ color: "var(--color-silver)" }}>{w.date}</p>
                 </div>
                 <div>
-                  <p className="text-[13px] font-bold leading-tight">{w.title}</p>
-                  <p className="mono-tag mt-1" style={{ color: "var(--color-ash)" }}>{w.shop} · {w.mileage}</p>
+                  <p className="serif text-[15px] italic" style={{ color: "var(--color-ink)" }}>{w.title}</p>
+                  <p className="mono-tag mt-1" style={{ color: "var(--color-silver)" }}>{w.shop} · {w.mileage}</p>
                 </div>
                 <div className="text-right">
-                  <p className="mono-num text-sm font-bold">{w.cost}</p>
+                  <p className="mono-num text-sm font-semibold" style={{ color: "var(--color-ink)" }}>{w.cost}</p>
                   <p className="mono-tag mt-0.5" style={{
-                    color: w.status === "upcoming" ? "var(--color-heat)" : "var(--color-signal)",
-                  }}>{w.status.toUpperCase()}</p>
+                    color: w.status === "upcoming" ? "var(--color-ember)" : "var(--color-neon)",
+                  }}>{w.status}</p>
                 </div>
               </li>
             ))}
@@ -217,11 +214,14 @@ function ProfilePage() {
   );
 }
 
-function SpecCell({ k, v, highlight }: { k: string; v: string; highlight?: boolean }) {
+function SpecCell({ k, v, u, highlight }: { k: string; v: string; u?: string; highlight?: boolean }) {
   return (
-    <div className="p-3">
-      <p className="mono-tag" style={{ color: "var(--color-ash)" }}>{k}</p>
-      <p className="display-numeral mt-1 text-xl" style={{ color: highlight ? "var(--color-signal)" : "var(--color-ink)" }}>{v}</p>
+    <div className="px-3 py-3">
+      <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 8.5 }}>{k}</p>
+      <p className="serif mt-1 text-xl italic" style={{ color: highlight ? "var(--color-neon)" : "var(--color-ink)", lineHeight: 0.9 }}>
+        {v}
+        {u && <span className="mono ml-1 text-[10px]" style={{ color: "var(--color-silver)" }}>{u}</span>}
+      </p>
     </div>
   );
 }
@@ -229,8 +229,8 @@ function SpecCell({ k, v, highlight }: { k: string; v: string; highlight?: boole
 function StatBlock({ k, v }: { k: string; v: string }) {
   return (
     <div className="p-4 text-center">
-      <p className="display-numeral text-2xl">{v}</p>
-      <p className="mono-tag mt-1" style={{ color: "var(--color-ash)" }}>{k}</p>
+      <p className="serif text-2xl italic" style={{ color: "var(--color-ink)" }}>{v}</p>
+      <p className="mono-tag mt-1" style={{ color: "var(--color-silver)" }}>{k}</p>
     </div>
   );
 }
