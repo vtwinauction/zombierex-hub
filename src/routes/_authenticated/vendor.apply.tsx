@@ -6,7 +6,7 @@ import { applyAsVendor, getMyVendor, BUSINESS_TYPES } from "@/lib/vendor.functio
 
 const vendorQuery = queryOptions({ queryKey: ["my-vendor"], queryFn: () => getMyVendor() });
 
-export const Route = createFileRoute("/vendor/apply")({
+export const Route = createFileRoute("/_authenticated/vendor/apply")({
   head: () => ({ meta: [{ title: "Vendor Application · ZOMBIEREX" }, { name: "description", content: "Register your automotive business on ZOMBIEREX in a guided, verified onboarding flow." }] }),
   loader: ({ context }) => context.queryClient.ensureQueryData(vendorQuery),
   component: ApplyPage,

@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VendorRouteImport } from './routes/vendor'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -18,17 +17,14 @@ import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as VendorIndexRouteImport } from './routes/vendor.index'
-import { Route as VendorPlansRouteImport } from './routes/vendor.plans'
-import { Route as VendorApplyRouteImport } from './routes/vendor.apply'
+import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
+import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
+import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
+import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 
-const VendorRoute = VendorRouteImport.update({
-  id: '/vendor',
-  path: '/vendor',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -69,31 +65,43 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VendorIndexRoute = VendorIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => VendorRoute,
+const AuthenticatedVendorRoute = AuthenticatedVendorRouteImport.update({
+  id: '/vendor',
+  path: '/vendor',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const VendorPlansRoute = VendorPlansRouteImport.update({
-  id: '/plans',
-  path: '/plans',
-  getParentRoute: () => VendorRoute,
-} as any)
-const VendorApplyRoute = VendorApplyRouteImport.update({
-  id: '/apply',
-  path: '/apply',
-  getParentRoute: () => VendorRoute,
-} as any)
+const AuthenticatedVendorIndexRoute =
+  AuthenticatedVendorIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedVendorRoute,
+  } as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedVendorPlansRoute =
+  AuthenticatedVendorPlansRouteImport.update({
+    id: '/plans',
+    path: '/plans',
+    getParentRoute: () => AuthenticatedVendorRoute,
+  } as any)
+const AuthenticatedVendorApplyRoute =
+  AuthenticatedVendorApplyRouteImport.update({
+    id: '/apply',
+    path: '/apply',
+    getParentRoute: () => AuthenticatedVendorRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -105,11 +113,11 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/vendor': typeof VendorRouteWithChildren
-  '/vendor/apply': typeof VendorApplyRoute
-  '/vendor/plans': typeof VendorPlansRoute
-  '/vendor/': typeof VendorIndexRoute
+  '/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/vendor/apply': typeof AuthenticatedVendorApplyRoute
+  '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/vendor/': typeof AuthenticatedVendorIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -121,14 +129,15 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/vendor/apply': typeof VendorApplyRoute
-  '/vendor/plans': typeof VendorPlansRoute
-  '/vendor': typeof VendorIndexRoute
+  '/vendor/apply': typeof AuthenticatedVendorApplyRoute
+  '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/vendor': typeof AuthenticatedVendorIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRoute
@@ -137,11 +146,11 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
-  '/vendor': typeof VendorRouteWithChildren
-  '/vendor/apply': typeof VendorApplyRoute
-  '/vendor/plans': typeof VendorPlansRoute
-  '/vendor/': typeof VendorIndexRoute
+  '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
+  '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -158,8 +167,8 @@ export interface FileRouteTypes {
     | '/vendor'
     | '/vendor/apply'
     | '/vendor/plans'
-    | '/vendor/'
     | '/api/public/health'
+    | '/vendor/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -173,11 +182,12 @@ export interface FileRouteTypes {
     | '/search'
     | '/vendor/apply'
     | '/vendor/plans'
-    | '/vendor'
     | '/api/public/health'
+    | '/vendor'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/events'
     | '/marketplace'
@@ -186,15 +196,16 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/search'
-    | '/vendor'
-    | '/vendor/apply'
-    | '/vendor/plans'
-    | '/vendor/'
+    | '/_authenticated/vendor'
+    | '/_authenticated/vendor/apply'
+    | '/_authenticated/vendor/plans'
     | '/api/public/health'
+    | '/_authenticated/vendor/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   EventsRoute: typeof EventsRoute
   MarketplaceRoute: typeof MarketplaceRoute
@@ -203,19 +214,11 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
-  VendorRoute: typeof VendorRouteWithChildren
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vendor': {
-      id: '/vendor'
-      path: '/vendor'
-      fullPath: '/vendor'
-      preLoaderRoute: typeof VendorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -272,6 +275,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -279,26 +289,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vendor/': {
-      id: '/vendor/'
+    '/_authenticated/vendor': {
+      id: '/_authenticated/vendor'
+      path: '/vendor'
+      fullPath: '/vendor'
+      preLoaderRoute: typeof AuthenticatedVendorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/vendor/': {
+      id: '/_authenticated/vendor/'
       path: '/'
       fullPath: '/vendor/'
-      preLoaderRoute: typeof VendorIndexRouteImport
-      parentRoute: typeof VendorRoute
-    }
-    '/vendor/plans': {
-      id: '/vendor/plans'
-      path: '/plans'
-      fullPath: '/vendor/plans'
-      preLoaderRoute: typeof VendorPlansRouteImport
-      parentRoute: typeof VendorRoute
-    }
-    '/vendor/apply': {
-      id: '/vendor/apply'
-      path: '/apply'
-      fullPath: '/vendor/apply'
-      preLoaderRoute: typeof VendorApplyRouteImport
-      parentRoute: typeof VendorRoute
+      preLoaderRoute: typeof AuthenticatedVendorIndexRouteImport
+      parentRoute: typeof AuthenticatedVendorRoute
     }
     '/api/public/health': {
       id: '/api/public/health'
@@ -307,26 +310,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/vendor/plans': {
+      id: '/_authenticated/vendor/plans'
+      path: '/plans'
+      fullPath: '/vendor/plans'
+      preLoaderRoute: typeof AuthenticatedVendorPlansRouteImport
+      parentRoute: typeof AuthenticatedVendorRoute
+    }
+    '/_authenticated/vendor/apply': {
+      id: '/_authenticated/vendor/apply'
+      path: '/apply'
+      fullPath: '/vendor/apply'
+      preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
+      parentRoute: typeof AuthenticatedVendorRoute
+    }
   }
 }
 
-interface VendorRouteChildren {
-  VendorApplyRoute: typeof VendorApplyRoute
-  VendorPlansRoute: typeof VendorPlansRoute
-  VendorIndexRoute: typeof VendorIndexRoute
+interface AuthenticatedVendorRouteChildren {
+  AuthenticatedVendorApplyRoute: typeof AuthenticatedVendorApplyRoute
+  AuthenticatedVendorPlansRoute: typeof AuthenticatedVendorPlansRoute
+  AuthenticatedVendorIndexRoute: typeof AuthenticatedVendorIndexRoute
 }
 
-const VendorRouteChildren: VendorRouteChildren = {
-  VendorApplyRoute: VendorApplyRoute,
-  VendorPlansRoute: VendorPlansRoute,
-  VendorIndexRoute: VendorIndexRoute,
+const AuthenticatedVendorRouteChildren: AuthenticatedVendorRouteChildren = {
+  AuthenticatedVendorApplyRoute: AuthenticatedVendorApplyRoute,
+  AuthenticatedVendorPlansRoute: AuthenticatedVendorPlansRoute,
+  AuthenticatedVendorIndexRoute: AuthenticatedVendorIndexRoute,
 }
 
-const VendorRouteWithChildren =
-  VendorRoute._addFileChildren(VendorRouteChildren)
+const AuthenticatedVendorRouteWithChildren =
+  AuthenticatedVendorRoute._addFileChildren(AuthenticatedVendorRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   EventsRoute: EventsRoute,
   MarketplaceRoute: MarketplaceRoute,
@@ -335,7 +364,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
-  VendorRoute: VendorRouteWithChildren,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
 }
 export const routeTree = rootRouteImport

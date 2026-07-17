@@ -8,7 +8,7 @@ const plansQuery = queryOptions({ queryKey: ["plans"], queryFn: () => listPlans(
 const vendorQuery = queryOptions({ queryKey: ["my-vendor"], queryFn: () => getMyVendor() });
 const subQuery = queryOptions({ queryKey: ["my-subscription"], queryFn: () => getMySubscription() });
 
-export const Route = createFileRoute("/vendor/plans")({
+export const Route = createFileRoute("/_authenticated/vendor/plans")({
   head: () => ({ meta: [{ title: "Plans · ZOMBIEREX" }, { name: "description", content: "Choose the subscription plan that fits your business — from Free to Enterprise." }] }),
   loader: ({ context }) =>
     Promise.all([
