@@ -13,8 +13,15 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     title: "Create",
     items: [
       { to: "/post/new", label: "New post", hint: "Photo · video · telemetry" },
+      { to: "/marketplace/new", label: "New listing", hint: "Sell in the Vault" },
       { to: "/communities/create", label: "New community", hint: "Start a crew" },
     ],
+  },
+  {
+    title: "Sell",
+    items: [
+      { to: "/marketplace", label: "Vault (browse)" },
+      { to: "/marketplace/dashboard", label: "My listings", hint: "Analytics · manage" },
   },
   {
     title: "Explore",
