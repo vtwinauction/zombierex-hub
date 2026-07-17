@@ -7,8 +7,8 @@ import {
   IconVisor,
   IconMechClaw,
   IconBoneMark,
-  IconGauge,
 } from "@/components/icons/RexIcons";
+import { Plus, Bell, MessageCircle } from "lucide-react";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
 import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
 
