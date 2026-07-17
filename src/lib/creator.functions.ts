@@ -393,7 +393,7 @@ export const updateCollabStatus = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const cid = await getMyCreatorId(context.supabase, context.userId);
-    const patch: Record<string, unknown> = { status: data.status };
+    const patch: any = { status: data.status };
     if (data.status === "read") patch.read_at = new Date().toISOString();
     if (["replied","accepted","declined"].includes(data.status)) patch.responded_at = new Date().toISOString();
     const { error } = await context.supabase
