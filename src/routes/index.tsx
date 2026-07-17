@@ -123,19 +123,54 @@ function HomePage() {
       </section>
 
       {/* ==================================================
-         FEATURED REEL — TikTok DNA
-         Edge-to-edge vertical media, side action rail,
-         music ticker along the bottom.
+         FEED TABS — For You / Following
+         ================================================== */}
+      <div
+        className="sticky top-[calc(env(safe-area-inset-top)+56px)] z-30 flex items-center gap-1 px-4 py-2"
+        style={{
+          background: "color-mix(in oklab, var(--color-obsidian) 82%, transparent)",
+          backdropFilter: "blur(18px) saturate(160%)",
+          borderBottom: "1px solid var(--color-hair)",
+        }}
+      >
+        {(["for_you", "following"] as const).map((k) => {
+          const active = tab === k;
+          return (
+            <button
+              key={k}
+              onClick={() => setTab(k)}
+              className="tap relative px-3 py-1.5 text-[13px] font-semibold"
+              style={{ color: active ? "var(--color-ink)" : "var(--color-titanium)" }}
+            >
+              {k === "for_you" ? "For you" : "Following"}
+              {active && (
+                <span
+                  className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 rounded-full"
+                  style={{ height: 3, width: 22, background: "var(--color-neon)", boxShadow: "0 0 12px rgba(198,255,61,0.7)" }}
+                />
+              )}
+            </button>
+          );
+        })}
+        <span className="ml-auto mono-tag" style={{ color: "var(--color-titanium)" }}>
+          ● Live · {tab === "for_you" ? "personalized" : `${suggestedCreators.length} riders`}
+        </span>
+      </div>
+
+      {/* ==================================================
+         FEATURED REEL — TikTok DNA · tap → /reels
          ================================================== */}
       <section className="mt-4 px-4">
         <div className="mb-2 flex items-center justify-between">
-          <p className="mono-tag" style={{ color: "var(--color-neon)" }}>● For you · Reels</p>
-          <Link to="/" className="mono-tag" style={{ color: "var(--color-silver)" }}>See all →</Link>
+          <p className="mono-tag" style={{ color: "var(--color-neon)" }}>● Trending · Reels</p>
+          <Link to="/reels" className="mono-tag" style={{ color: "var(--color-silver)" }}>Open reels →</Link>
         </div>
-        <div
-          className="relative overflow-hidden"
+        <Link
+          to="/reels"
+          className="relative block overflow-hidden"
           style={{ aspectRatio: "9/14", borderRadius: 18, border: "1px solid var(--color-hair)" }}
         >
+
           <img src={featured.poster} alt="" className="ken-burns h-full w-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, transparent 30%, rgba(0,0,0,0.85) 100%)" }} />
 
