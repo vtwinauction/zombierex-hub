@@ -29,6 +29,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
+import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
@@ -136,6 +137,12 @@ const AuthenticatedVendorApplyRoute =
     path: '/apply',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedCommunitiesCreateRoute =
+  AuthenticatedCommunitiesCreateRouteImport.update({
+    id: '/communities/create',
+    path: '/communities/create',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCheckoutPaymentIdRoute =
   AuthenticatedCheckoutPaymentIdRouteImport.update({
     id: '/checkout/$paymentId',
@@ -178,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
+  '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -201,6 +209,7 @@ export interface FileRoutesByTo {
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
+  '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -228,6 +237,7 @@ export interface FileRoutesById {
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
+  '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -255,6 +265,7 @@ export interface FileRouteTypes {
     | '/communities/'
     | '/admin/vendors'
     | '/checkout/$paymentId'
+    | '/communities/create'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -278,6 +289,7 @@ export interface FileRouteTypes {
     | '/communities'
     | '/admin/vendors'
     | '/checkout/$paymentId'
+    | '/communities/create'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -304,6 +316,7 @@ export interface FileRouteTypes {
     | '/communities/'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
+    | '/_authenticated/communities/create'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
@@ -473,6 +486,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
     }
+    '/_authenticated/communities/create': {
+      id: '/_authenticated/communities/create'
+      path: '/communities/create'
+      fullPath: '/communities/create'
+      preLoaderRoute: typeof AuthenticatedCommunitiesCreateRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/checkout/$paymentId': {
       id: '/_authenticated/checkout/$paymentId'
       path: '/checkout/$paymentId'
@@ -550,12 +570,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
+  AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
+  AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
