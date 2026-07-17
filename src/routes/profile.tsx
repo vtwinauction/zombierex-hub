@@ -294,3 +294,38 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     </div>
   );
 }
+
+function AchievementCard({ a }: { a: typeof achievements[number] }) {
+  const IconMap = { trophy: Trophy, flame: Flame, bolt: Zap, route: RouteIcon, wrench: Wrench, medal: Medal };
+  const Icon = IconMap[a.icon];
+  const rarityColor = a.rarity === "legendary"
+    ? "var(--color-primary)"
+    : a.rarity === "rare"
+      ? "var(--color-foreground)"
+      : "var(--color-muted-foreground)";
+  return (
+    <div
+      className="depth-lift relative overflow-hidden rounded-[20px] border border-border bg-card p-4"
+      style={a.earned ? undefined : { opacity: 0.55 }}
+    >
+      <div className="flex items-start justify-between">
+        <span
+          className="grid h-11 w-11 place-items-center rounded-2xl"
+          style={{
+            background: a.earned ? "var(--color-foreground)" : "var(--color-muted)",
+            color: a.earned ? "var(--color-background)" : "var(--color-muted-foreground)",
+          }}
+        >
+          <Icon className="h-5 w-5" strokeWidth={2.2} />
+        </span>
+        <span className="text-mono-caps" style={{ color: rarityColor }}>{a.rarity}</span>
+      </div>
+      <h4 className="mt-3 font-display text-[15px] leading-tight tracking-tight">{a.title}</h4>
+      <p className="mt-1 text-[11px] text-muted-foreground">{a.detail}</p>
+      {a.earned ? (
+        <span className="absolute right-3 bottom-3 h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-primary)", boxShadow: "0 0 8px var(--color-primary)" }} />
+      ) : null}
+    </div>
+  );
+}
+
