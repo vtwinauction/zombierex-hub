@@ -36,6 +36,7 @@ import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenti
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
+import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
 import { Route as AuthenticatedCreatorDashboardRouteImport } from './routes/_authenticated/creator.dashboard'
 import { Route as AuthenticatedCreatorCollabsRouteImport } from './routes/_authenticated/creator.collabs'
 import { Route as AuthenticatedCreatorApplyRouteImport } from './routes/_authenticated/creator.apply'
@@ -187,6 +188,12 @@ const AuthenticatedEventsIdRoute = AuthenticatedEventsIdRouteImport.update({
   path: '/events/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCreatorTiersRoute =
+  AuthenticatedCreatorTiersRouteImport.update({
+    id: '/creator/tiers',
+    path: '/creator/tiers',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCreatorDashboardRoute =
   AuthenticatedCreatorDashboardRouteImport.update({
     id: '/creator/dashboard',
@@ -291,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/creator/apply': typeof AuthenticatedCreatorApplyRoute
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -330,6 +338,7 @@ export interface FileRoutesByTo {
   '/creator/apply': typeof AuthenticatedCreatorApplyRoute
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -373,6 +382,7 @@ export interface FileRoutesById {
   '/_authenticated/creator/apply': typeof AuthenticatedCreatorApplyRoute
   '/_authenticated/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/_authenticated/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
+  '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
@@ -416,6 +426,7 @@ export interface FileRouteTypes {
     | '/creator/apply'
     | '/creator/collabs'
     | '/creator/dashboard'
+    | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -455,6 +466,7 @@ export interface FileRouteTypes {
     | '/creator/apply'
     | '/creator/collabs'
     | '/creator/dashboard'
+    | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
     | '/post/new'
@@ -497,6 +509,7 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/apply'
     | '/_authenticated/creator/collabs'
     | '/_authenticated/creator/dashboard'
+    | '/_authenticated/creator/tiers'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
     | '/_authenticated/post/new'
@@ -725,6 +738,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedEventsIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/creator/tiers': {
+      id: '/_authenticated/creator/tiers'
+      path: '/creator/tiers'
+      fullPath: '/creator/tiers'
+      preLoaderRoute: typeof AuthenticatedCreatorTiersRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/creator/dashboard': {
       id: '/_authenticated/creator/dashboard'
       path: '/creator/dashboard'
@@ -871,6 +891,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorApplyRoute: typeof AuthenticatedCreatorApplyRoute
   AuthenticatedCreatorCollabsRoute: typeof AuthenticatedCreatorCollabsRoute
   AuthenticatedCreatorDashboardRoute: typeof AuthenticatedCreatorDashboardRoute
+  AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
@@ -890,6 +911,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorApplyRoute: AuthenticatedCreatorApplyRoute,
   AuthenticatedCreatorCollabsRoute: AuthenticatedCreatorCollabsRoute,
   AuthenticatedCreatorDashboardRoute: AuthenticatedCreatorDashboardRoute,
+  AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
