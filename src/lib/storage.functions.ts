@@ -14,8 +14,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-type Bucket = "avatars" | "vehicles" | "posts" | "documents";
-const BUCKETS = ["avatars", "vehicles", "posts", "documents"] as const;
+type Bucket = "avatars" | "vehicles" | "posts" | "documents" | "marketplace";
+const BUCKETS = ["avatars", "vehicles", "posts", "documents", "marketplace"] as const;
 
 const PathSchema = z
   .string()
@@ -30,6 +30,7 @@ const MIME_ALLOWED: Record<Bucket, RegExp> = {
   vehicles: /^image\/(png|jpeg|webp|gif)$/,
   posts: /^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm|quicktime))$/,
   documents: /^(image\/(png|jpeg|webp)|application\/pdf)$/,
+  marketplace: /^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm|quicktime))$/,
 };
 
 async function assertOwnerOfVendor(supabase: any, userId: string, vendorId: string) {

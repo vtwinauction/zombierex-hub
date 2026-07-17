@@ -22,6 +22,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
+import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
@@ -30,10 +31,13 @@ import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/m
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as MarketplaceSellerIdRouteImport } from './routes/marketplace.seller.$id'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
+import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
+import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/_authenticated/marketplace.dashboard'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
@@ -115,6 +119,11 @@ const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
   path: '/communities/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketplaceIdRoute = MarketplaceIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => MarketplaceRoute,
+} as any)
 const CreatorIdRoute = CreatorIdRouteImport.update({
   id: '/creator/$id',
   path: '/creator/$id',
@@ -156,6 +165,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const MarketplaceSellerIdRoute = MarketplaceSellerIdRouteImport.update({
+  id: '/seller/$id',
+  path: '/seller/$id',
+  getParentRoute: () => MarketplaceRoute,
+} as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
@@ -178,6 +192,18 @@ const AuthenticatedPostNewRoute = AuthenticatedPostNewRouteImport.update({
   path: '/post/new',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMarketplaceNewRoute =
+  AuthenticatedMarketplaceNewRouteImport.update({
+    id: '/marketplace/new',
+    path: '/marketplace/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMarketplaceDashboardRoute =
+  AuthenticatedMarketplaceDashboardRouteImport.update({
+    id: '/marketplace/dashboard',
+    path: '/marketplace/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedEventsNewRoute = AuthenticatedEventsNewRouteImport.update({
   id: '/events/new',
   path: '/events/new',
@@ -278,7 +304,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -291,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -301,10 +328,13 @@ export interface FileRoutesByFullPath {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
+  '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -320,7 +350,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -331,6 +361,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities': typeof CommunitiesIndexRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -341,10 +372,13 @@ export interface FileRoutesByTo {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
+  '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -362,7 +396,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
-  '/marketplace': typeof MarketplaceRoute
+  '/marketplace': typeof MarketplaceRouteWithChildren
   '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
@@ -375,6 +409,7 @@ export interface FileRoutesById {
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
@@ -385,10 +420,13 @@ export interface FileRoutesById {
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
+  '/_authenticated/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
+  '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -419,6 +457,7 @@ export interface FileRouteTypes {
     | '/vendor'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities/'
     | '/admin/vendors'
     | '/checkout/$paymentId'
@@ -429,10 +468,13 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/marketplace/dashboard'
+    | '/marketplace/new'
     | '/post/new'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/admin/'
     | '/vendor/'
     | '/admin/vendors/$id'
@@ -459,6 +501,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities'
     | '/admin/vendors'
     | '/checkout/$paymentId'
@@ -469,10 +512,13 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/marketplace/dashboard'
+    | '/marketplace/new'
     | '/post/new'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/admin'
     | '/vendor'
     | '/admin/vendors/$id'
@@ -502,6 +548,7 @@ export interface FileRouteTypes {
     | '/_authenticated/vendor'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/marketplace/$id'
     | '/communities/'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/checkout/$paymentId'
@@ -512,10 +559,13 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/tiers'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
+    | '/_authenticated/marketplace/dashboard'
+    | '/_authenticated/marketplace/new'
     | '/_authenticated/post/new'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
+    | '/marketplace/seller/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
@@ -533,7 +583,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CreatorsRoute: typeof CreatorsRoute
   EventsRoute: typeof EventsRoute
-  MarketplaceRoute: typeof MarketplaceRoute
+  MarketplaceRoute: typeof MarketplaceRouteWithChildren
   MessagesRoute: typeof MessagesRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
@@ -640,6 +690,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CommunitiesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/marketplace/$id': {
+      id: '/marketplace/$id'
+      path: '/$id'
+      fullPath: '/marketplace/$id'
+      preLoaderRoute: typeof MarketplaceIdRouteImport
+      parentRoute: typeof MarketplaceRoute
+    }
     '/creator/$id': {
       id: '/creator/$id'
       path: '/creator/$id'
@@ -696,6 +753,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/marketplace/seller/$id': {
+      id: '/marketplace/seller/$id'
+      path: '/seller/$id'
+      fullPath: '/marketplace/seller/$id'
+      preLoaderRoute: typeof MarketplaceSellerIdRouteImport
+      parentRoute: typeof MarketplaceRoute
+    }
     '/api/public/health': {
       id: '/api/public/health'
       path: '/api/public/health'
@@ -722,6 +786,20 @@ declare module '@tanstack/react-router' {
       path: '/post/new'
       fullPath: '/post/new'
       preLoaderRoute: typeof AuthenticatedPostNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/marketplace/new': {
+      id: '/_authenticated/marketplace/new'
+      path: '/marketplace/new'
+      fullPath: '/marketplace/new'
+      preLoaderRoute: typeof AuthenticatedMarketplaceNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/marketplace/dashboard': {
+      id: '/_authenticated/marketplace/dashboard'
+      path: '/marketplace/dashboard'
+      fullPath: '/marketplace/dashboard'
+      preLoaderRoute: typeof AuthenticatedMarketplaceDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/events/new': {
@@ -894,6 +972,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
+  AuthenticatedMarketplaceDashboardRoute: typeof AuthenticatedMarketplaceDashboardRoute
+  AuthenticatedMarketplaceNewRoute: typeof AuthenticatedMarketplaceNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
@@ -914,6 +994,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
+  AuthenticatedMarketplaceDashboardRoute:
+    AuthenticatedMarketplaceDashboardRoute,
+  AuthenticatedMarketplaceNewRoute: AuthenticatedMarketplaceNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
@@ -927,6 +1010,20 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface MarketplaceRouteChildren {
+  MarketplaceIdRoute: typeof MarketplaceIdRoute
+  MarketplaceSellerIdRoute: typeof MarketplaceSellerIdRoute
+}
+
+const MarketplaceRouteChildren: MarketplaceRouteChildren = {
+  MarketplaceIdRoute: MarketplaceIdRoute,
+  MarketplaceSellerIdRoute: MarketplaceSellerIdRoute,
+}
+
+const MarketplaceRouteWithChildren = MarketplaceRoute._addFileChildren(
+  MarketplaceRouteChildren,
+)
 
 interface CommunitiesSlugRouteChildren {
   CommunitiesSlugChallengesChallengeIdRoute: typeof CommunitiesSlugChallengesChallengeIdRoute
@@ -947,7 +1044,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CreatorsRoute: CreatorsRoute,
   EventsRoute: EventsRoute,
-  MarketplaceRoute: MarketplaceRoute,
+  MarketplaceRoute: MarketplaceRouteWithChildren,
   MessagesRoute: MessagesRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
