@@ -91,7 +91,8 @@ function NewListing() {
   }
 
   return (
-    <div className="pb-32" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-56" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+
       <StatusBar index="09" section="NEW LISTING" />
 
       <div className="px-4 pt-6">
