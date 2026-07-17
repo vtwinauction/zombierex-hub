@@ -1,20 +1,20 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { TopBar } from "@/components/TopBar";
 import { me, myVehicles, posts, clubs } from "@/lib/mock-data";
-import { Settings, MapPin, Gauge, Wrench, Plus, Users2 } from "lucide-react";
+import { Settings, MapPin, Gauge, Wrench, Plus, Users2, Trophy, Route as RouteIcon, Zap, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "Profile — ZOMBIEREX" },
-      { name: "description", content: "Your rider profile, garage of vehicles and posts." },
+      { title: "Garage — ZOMBIEREX" },
+      { name: "description", content: "Your digital garage: vehicles, achievements, ride stats." },
     ],
   }),
   component: ProfilePage,
 });
 
-const tabs = ["Posts", "Garage", "Clubs"] as const;
+const tabs = ["Garage", "Rides", "Gallery", "Clubs"] as const;
 type Tab = (typeof tabs)[number];
 
 function ProfilePage() {
@@ -23,130 +23,159 @@ function ProfilePage() {
 
   return (
     <>
-      <TopBar title="Profile" />
+      <TopBar title="Garage" />
 
-      {/* hero */}
-      <section className="relative overflow-hidden border-b border-border">
-        <div
-          className="absolute inset-0 opacity-70"
-          style={{
-            backgroundImage: `url(${myVehicles[0].cover})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            filter: "blur(24px) saturate(1.1)",
-          }}
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, oklch(0.09 0.005 150 / 0.5), oklch(0.09 0.005 150 / 0.95))" }} />
-        <div className="relative px-4 pb-5 pt-6">
-          <div className="flex items-center gap-4">
-            <img
-              src={me.avatar}
-              alt={me.name}
-              className="h-20 w-20 rounded-full border-2 object-cover"
-              style={{ borderColor: "var(--color-primary)", boxShadow: "var(--shadow-glow-toxic)" }}
-            />
-            <div className="min-w-0 flex-1">
-              <h2 className="font-display text-3xl leading-none tracking-wide">{me.name}</h2>
-              <p className="mt-1 text-sm text-muted-foreground">{me.handle}</p>
-              <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" />
-                {me.location}
-              </p>
+      {/* Cockpit header */}
+      <section className="px-5">
+        <div className="rounded-[28px] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="relative">
+                <img src={me.avatar} alt={me.name} className="h-16 w-16 rounded-2xl object-cover" />
+                <span className="absolute -bottom-1 -right-1 grid h-6 w-6 place-items-center rounded-full ring-2 ring-card" style={{ background: "var(--color-primary)" }}>
+                  <Zap className="h-3 w-3" style={{ color: "var(--color-primary-foreground)" }} strokeWidth={3} />
+                </span>
+              </span>
+              <div className="min-w-0">
+                <h2 className="font-display text-[22px] leading-none tracking-tight">Marcus V.</h2>
+                <p className="mt-1 text-[13px] text-muted-foreground">{me.handle}</p>
+                <p className="mt-1.5 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <MapPin className="h-3 w-3" />
+                  {me.location}
+                </p>
+              </div>
             </div>
-            <button aria-label="Settings" className="grid h-10 w-10 place-items-center rounded-md border border-border">
+            <button aria-label="Settings" className="grid h-10 w-10 place-items-center rounded-full border border-border">
               <Settings className="h-4 w-4" />
             </button>
           </div>
 
-          <div className="mt-5 grid grid-cols-4 gap-2 rounded-xl border border-border bg-card/80 p-3 backdrop-blur">
-            <Stat label="Posts" value="128" />
-            <Stat label="Followers" value="4.2k" />
-            <Stat label="Rides" value="37" />
-            <Stat label="Miles" value="18k" />
+          {/* Cockpit stats */}
+          <div className="mt-5 grid grid-cols-4 gap-2">
+            <Cockpit label="Rides" value="37" />
+            <Cockpit label="Miles" value="18k" />
+            <Cockpit label="Bikes" value="1" />
+            <Cockpit label="Trophies" value="12" accent />
           </div>
 
-          <div className="mt-4 flex gap-2">
-            <button
-              className="flex-1 rounded-md py-2.5 font-display text-sm tracking-widest"
-              style={{ background: "var(--color-primary)", color: "var(--color-primary-foreground)" }}
-            >
-              EDIT PROFILE
+          <div className="mt-4 flex items-center gap-2">
+            <button className="flex-1 rounded-full py-2.5 font-display text-[13px]" style={{ background: "var(--color-foreground)", color: "var(--color-background)" }}>
+              Edit profile
             </button>
-            <button className="flex-1 rounded-md border border-border py-2.5 font-display text-sm tracking-widest">SHARE</button>
+            <button className="rounded-full border border-border px-5 py-2.5 font-display text-[13px]">Share</button>
           </div>
         </div>
       </section>
 
-      {/* tabs */}
-      <div className="sticky top-[57px] z-20 grid grid-cols-3 border-b border-border bg-background/85 backdrop-blur-xl">
-        {tabs.map((t) => {
-          const on = tab === t;
-          return (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className="relative py-3 font-display text-sm tracking-widest"
-              style={{ color: on ? "var(--color-primary)" : "var(--color-muted-foreground)" }}
-            >
-              {t.toUpperCase()}
-              {on ? <span className="absolute inset-x-6 -bottom-px h-[2px]" style={{ background: "var(--color-primary)" }} /> : null}
-            </button>
-          );
-        })}
+      {/* Tabs */}
+      <div className="mt-4 px-5">
+        <div className="flex items-center gap-1 rounded-full border border-border bg-card p-1">
+          {tabs.map((t) => {
+            const on = tab === t;
+            return (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className="flex-1 rounded-full py-2 font-display text-[12px] transition-colors"
+                style={on
+                  ? { background: "var(--color-foreground)", color: "var(--color-background)" }
+                  : { color: "var(--color-muted-foreground)" }}
+              >
+                {t}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {tab === "Posts" ? (
-        <div className="grid grid-cols-3 gap-0.5">
+      {/* Tab content */}
+      {tab === "Garage" ? (
+        <section className="flex flex-col gap-3 p-5">
+          {myVehicles.map((v) => (
+            <article key={v.id} className="overflow-hidden rounded-[24px] border border-border bg-card shadow-[var(--shadow-soft)]">
+              <div className="relative aspect-[16/10] w-full overflow-hidden">
+                <img src={v.cover} alt={v.name} loading="lazy" className="h-full w-full object-cover" />
+                <span className="absolute left-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-mono-caps backdrop-blur">Primary</span>
+              </div>
+              <div className="p-4">
+                <p className="text-mono-caps text-muted-foreground">{v.year} · {v.type}</p>
+                <h3 className="mt-1 font-display text-[22px] leading-tight tracking-tight">{v.name}</h3>
+
+                <div className="mt-4 grid grid-cols-3 gap-2 rounded-2xl bg-muted/60 p-3 text-center">
+                  <SpecPod label="Power" value={`${v.hp}`} unit="hp" />
+                  <SpecPod label="Mods" value={`${v.mods.length}`} unit="fitted" />
+                  <SpecPod label="Health" value="98" unit="%" />
+                </div>
+
+                <div className="mt-3">
+                  <p className="text-mono-caps text-muted-foreground">Mods installed</p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {v.mods.map((m) => (
+                      <span key={m} className="rounded-full border border-border px-3 py-1 text-[12px]">{m}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          ))}
+
+          <button className="flex items-center justify-center gap-2 rounded-[24px] border border-dashed border-border py-8 font-display text-[13px] text-muted-foreground transition-colors hover:text-foreground">
+            <Plus className="h-4 w-4" />
+            Add vehicle
+          </button>
+        </section>
+      ) : null}
+
+      {tab === "Rides" ? (
+        <section className="p-5">
+          <div className="overflow-hidden rounded-[24px] border border-border bg-card p-4">
+            <div className="flex items-center justify-between">
+              <span className="text-mono-caps text-muted-foreground">Last 30 days</span>
+              <span className="inline-flex items-center gap-1 text-mono-caps" style={{ color: "var(--color-primary)" }}>
+                <RouteIcon className="h-3.5 w-3.5" /> +18%
+              </span>
+            </div>
+            <p className="mt-3 font-display text-[44px] leading-none tracking-tight">1,284<span className="ml-1 text-[16px] text-muted-foreground">mi</span></p>
+
+            <div className="mt-5 flex h-24 items-end gap-1.5">
+              {[0.3, 0.5, 0.4, 0.8, 0.6, 0.9, 0.7, 0.5, 1, 0.8, 0.6, 0.9].map((v, i) => (
+                <span key={i} className="flex-1 rounded-t-md" style={{ height: `${v * 100}%`, background: i === 8 ? "var(--color-primary)" : "var(--color-foreground)" }} />
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <StatCard icon={<Trophy className="h-4 w-4" />} label="Achievements" value="12" />
+            <StatCard icon={<Gauge className="h-4 w-4" />} label="Top speed" value="147 mph" />
+            <StatCard icon={<RouteIcon className="h-4 w-4" />} label="Longest ride" value="284 mi" />
+            <StatCard icon={<Wrench className="h-4 w-4" />} label="Service due" value="2,300 mi" />
+          </div>
+        </section>
+      ) : null}
+
+      {tab === "Gallery" ? (
+        <div className="grid grid-cols-3 gap-1 p-1">
           {[...myPosts, ...myPosts, ...myPosts].map((p, i) => (
-            <div key={i} className="aspect-square overflow-hidden bg-surface">
+            <div key={i} className="aspect-square overflow-hidden rounded-md bg-muted">
               <img src={p.image} alt="" loading="lazy" className="h-full w-full object-cover" />
             </div>
           ))}
         </div>
       ) : null}
 
-      {tab === "Garage" ? (
-        <div className="flex flex-col gap-3 p-4">
-          {myVehicles.map((v) => (
-            <Link key={v.id} to="/profile" className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
-              <div className="relative aspect-[16/10] w-full overflow-hidden">
-                <img src={v.cover} alt={v.name} loading="lazy" className="h-full w-full object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 30%, oklch(0.09 0.005 150 / 0.9))" }} />
-                <div className="absolute inset-x-4 bottom-3">
-                  <p className="font-display text-xs tracking-[0.2em]" style={{ color: "var(--color-primary)" }}>{v.year} · {v.type.toUpperCase()}</p>
-                  <h3 className="mt-0.5 font-display text-2xl leading-none tracking-wide">{v.name}</h3>
-                </div>
-              </div>
-              <div className="flex items-center justify-between border-t border-border px-4 py-3 text-xs">
-                <span className="flex items-center gap-1.5"><Gauge className="h-3.5 w-3.5" style={{ color: "var(--color-primary)" }} />{v.hp} HP</span>
-                <span className="flex items-center gap-1.5 text-muted-foreground"><Wrench className="h-3.5 w-3.5" />{v.mods.length} mods</span>
-              </div>
-            </Link>
-          ))}
-
-          <button className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-border py-8 font-display text-sm tracking-widest text-muted-foreground transition-colors hover:text-foreground">
-            <Plus className="h-4 w-4" />
-            ADD VEHICLE
-          </button>
-        </div>
-      ) : null}
-
       {tab === "Clubs" ? (
-        <div className="flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-3 p-5">
           {clubs.map((c) => (
-            <article key={c.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3">
-              <img src={c.cover} alt="" loading="lazy" className="h-14 w-14 rounded-lg object-cover" />
+            <article key={c.id} className="flex items-center gap-3 rounded-[20px] border border-border bg-card p-3">
+              <img src={c.cover} alt="" loading="lazy" className="h-14 w-14 rounded-xl object-cover" />
               <div className="min-w-0 flex-1">
-                <h3 className="truncate font-display text-lg leading-none tracking-wide">{c.name}</h3>
-                <p className="mt-1 flex items-center gap-1.5 text-[11px] text-muted-foreground">
-                  <Users2 className="h-3 w-3" /> {c.members.toLocaleString()} members · {c.city}
+                <h3 className="truncate font-display text-[16px] leading-none tracking-tight">{c.name}</h3>
+                <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <Users2 className="h-3 w-3" /> {c.members.toLocaleString()} · {c.city}
                 </p>
               </div>
-              <span
-                className="rounded-full border px-2.5 py-0.5 text-[10px] uppercase tracking-widest"
-                style={{ color: "var(--color-primary)", borderColor: "var(--color-primary)" }}
-              >
-                {c.tag}
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border">
+                <ArrowUpRight className="h-4 w-4" />
               </span>
             </article>
           ))}
@@ -156,11 +185,37 @@ function ProfilePage() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Cockpit({ label, value, accent }: { label: string; value: string; accent?: boolean }) {
   return (
-    <div className="text-center">
-      <p className="font-display text-xl leading-none tracking-wide">{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-widest text-muted-foreground">{label}</p>
+    <div
+      className="rounded-2xl px-2 py-3 text-center"
+      style={accent
+        ? { background: "var(--color-foreground)", color: "var(--color-background)" }
+        : { background: "var(--color-muted)" }}
+    >
+      <p className="font-display text-[20px] leading-none tracking-tight">{value}</p>
+      <p className="mt-1 text-mono-caps opacity-70">{label}</p>
+    </div>
+  );
+}
+
+function SpecPod({ label, value, unit }: { label: string; value: string; unit: string }) {
+  return (
+    <div>
+      <p className="font-display text-[20px] leading-none tracking-tight">
+        {value}<span className="ml-0.5 text-[11px] text-muted-foreground">{unit}</span>
+      </p>
+      <p className="mt-1 text-mono-caps text-muted-foreground">{label}</p>
+    </div>
+  );
+}
+
+function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-[20px] border border-border bg-card p-4">
+      <span className="grid h-8 w-8 place-items-center rounded-full bg-muted">{icon}</span>
+      <p className="mt-3 font-display text-[18px] leading-none tracking-tight">{value}</p>
+      <p className="mt-1 text-mono-caps text-muted-foreground">{label}</p>
     </div>
   );
 }
