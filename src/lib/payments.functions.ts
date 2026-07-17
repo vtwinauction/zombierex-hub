@@ -84,3 +84,46 @@ export const listMyPayments = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return data ?? [];
   });
+
+/**
+ * Dev-only: confirm a mock payment without leaving the app.
+ * In production this path is disabled and the real provider webhook does it.
+ */
+export const confirmMockPayment = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .validator((raw) =>
+    z.object({
+      payment_id: z.string().uuid(),
+      outcome: z.enum(["succeeded", "failed"]),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: payment, error } = await context.supabase
+      .from("payments")
+      .select("id, user_id, provider, subscription_id")
+      .eq("id", data.payment_id)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!payment || payment.user_id !== context.userId) throw new Error("Forbidden");
+    if (payment.provider !== "mock") throw new Error("Only mock payments can be confirmed this way");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin
+      .from("payments")
+      .update({ status: data.outcome, provider_ref: `mock_${Date.now()}` })
+      .eq("id", payment.id);
+
+    if (data.outcome === "succeeded" && payment.subscription_id) {
+      const periodEnd = new Date();
+      periodEnd.setMonth(periodEnd.getMonth() + 1);
+      await supabaseAdmin
+        .from("subscriptions")
+        .update({
+          status: "active",
+          trial_ends_at: null,
+          current_period_end: periodEnd.toISOString(),
+        })
+        .eq("id", payment.subscription_id);
+    }
+    return { ok: true, status: data.outcome };
+  });

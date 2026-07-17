@@ -24,6 +24,7 @@ import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenti
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
+import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 
 const SearchRoute = SearchRouteImport.update({
@@ -103,6 +104,12 @@ const AuthenticatedVendorApplyRoute =
     path: '/apply',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedCheckoutPaymentIdRoute =
+  AuthenticatedCheckoutPaymentIdRouteImport.update({
+    id: '/checkout/$paymentId',
+    path: '/checkout/$paymentId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicWebhooksPaymentsRoute =
   ApiPublicWebhooksPaymentsRouteImport.update({
     id: '/api/public/webhooks/payments',
@@ -121,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -156,6 +165,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
+  '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/vendor'
+    | '/checkout/$paymentId'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/reset-password'
     | '/search'
+    | '/checkout/$paymentId'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -209,6 +221,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/search'
     | '/_authenticated/vendor'
+    | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
@@ -338,6 +351,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
     }
+    '/_authenticated/checkout/$paymentId': {
+      id: '/_authenticated/checkout/$paymentId'
+      path: '/checkout/$paymentId'
+      fullPath: '/checkout/$paymentId'
+      preLoaderRoute: typeof AuthenticatedCheckoutPaymentIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/webhooks/payments': {
       id: '/api/public/webhooks/payments'
       path: '/api/public/webhooks/payments'
@@ -365,10 +385,12 @@ const AuthenticatedVendorRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
+  AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
+  AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -391,13 +413,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
