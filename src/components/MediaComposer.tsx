@@ -615,7 +615,7 @@ function PreviewStage({ m, onEditOverlay, onAddStrokePoint }: {
   );
 }
 
-function DraggableOverlay({ o, onChange, bounds }: { o: Overlay; onChange: (p: Partial<Overlay>) => void; bounds: React.RefObject<HTMLDivElement> }) {
+function DraggableOverlay({ o, onChange, bounds }: { o: Overlay; onChange: (p: Partial<Overlay>) => void; bounds: React.RefObject<HTMLDivElement | null> }) {
   const state = useRef<{ dx: number; dy: number } | null>(null);
   return (
     <div
