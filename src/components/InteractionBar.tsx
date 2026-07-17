@@ -70,29 +70,30 @@ export function InteractionBar({
 
   const surface: React.CSSProperties = isDark
     ? {
-        background:
-          "linear-gradient(180deg, rgba(20,22,26,0.92) 0%, rgba(8,9,11,0.94) 100%)",
-        border: "1px solid rgba(255,255,255,0.10)",
+        background: "rgba(8,9,11,0.72)",
+        border: "1px solid rgba(255,255,255,0.08)",
         boxShadow:
-          "0 20px 40px -20px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05) inset",
+          "0 20px 50px -18px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.06) inset",
         color: "var(--color-ink)",
       }
     : {
-        background: "rgba(255,255,255,0.92)",
-        border: "1px solid var(--color-hair-strong)",
+        background: "rgba(255,255,255,0.82)",
+        border: "1px solid rgba(0,0,0,0.08)",
         boxShadow:
-          "0 18px 38px -20px rgba(0,0,0,0.25), 0 1px 0 rgba(255,255,255,0.9) inset",
+          "0 18px 40px -20px rgba(0,0,0,0.20), 0 1px 0 rgba(255,255,255,0.9) inset",
         color: "var(--color-obsidian)",
       };
 
-  const mutedColor = isDark ? "var(--color-silver)" : "var(--color-titanium)";
+  const idleColor = isDark ? "rgba(230,232,236,0.62)" : "rgba(8,9,11,0.55)";
+  const dividerColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+  const hairlineColor = isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.4)";
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
     comment: fmt(counts.comments),
     views: typeof counts.views === "string" ? counts.views : fmt(counts.views),
     share: fmt(shares),
-    save: saved ? "Saved" : "Save",
+    save: saved ? "SAVED" : "SAVE",
   };
 
   const queuedCount = pending.length;
@@ -100,71 +101,70 @@ export function InteractionBar({
 
   return (
     <div
-      className="backdrop-blur-xl"
+      className="backdrop-blur-2xl relative"
       style={{
         ...surface,
-        borderRadius: 14,
-        padding: "10px 8px 8px",
+        borderRadius: 16,
+        padding: "10px 6px",
       }}
     >
-      <div className="grid grid-cols-5">
-        {ACTIONS.map(({ key, label, icon: Icon }) => {
+      {/* precision hairline reflection */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-4 top-0 h-px"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${hairlineColor}, transparent)`,
+        }}
+      />
+
+      <div className="flex items-center justify-between">
+        {ACTIONS.map(({ key, label, icon: Icon }, idx) => {
           const active =
             (key === "like" && liked) || (key === "save" && saved);
+          const accent =
+            (key === "like" && liked) || (key === "save" && saved);
+          const disabled = key === "comment" || key === "views";
           const onClick = () => {
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
           };
-          const accent = key === "like" && liked;
-          const disabled = key === "comment" || key === "views";
           return (
-            <button
-              key={key}
-              onClick={disabled ? undefined : onClick}
-              aria-label={label}
-              aria-pressed={active}
-              className="tap group relative flex flex-col items-center justify-center gap-1 py-1"
-            >
-              <span
-                className="grid h-9 w-9 place-items-center transition-transform group-active:scale-90"
-                style={{
-                  borderRadius: 999,
-                  background: accent
-                    ? "radial-gradient(circle at 30% 30%, rgba(198,255,61,0.35), rgba(198,255,61,0.05))"
-                    : active
-                    ? isDark
-                      ? "rgba(255,255,255,0.08)"
-                      : "rgba(0,0,0,0.05)"
-                    : "transparent",
-                  color: accent
-                    ? "var(--color-neon)"
-                    : active
-                    ? isDark ? "var(--color-ink)" : "var(--color-obsidian)"
-                    : isDark ? "var(--color-ink)" : "var(--color-obsidian)",
-                  border: accent
-                    ? "1px solid rgba(198,255,61,0.45)"
-                    : "1px solid transparent",
-                }}
+            <>
+              <button
+                key={key}
+                onClick={disabled ? undefined : onClick}
+                aria-label={label}
+                aria-pressed={active}
+                className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
               >
-                <Icon size={17} />
-                {accent && (
-                  <span className="engine-pulse absolute inset-0 rounded-full" />
-                )}
-              </span>
-              <span
-                className="mono-num text-[11px] font-semibold tabular-nums leading-none"
-                style={{ color: accent ? "var(--color-neon)" : undefined }}
-              >
-                {values[key]}
-              </span>
-              <span
-                className="mono-tag leading-none"
-                style={{ color: mutedColor, fontSize: 8.5, letterSpacing: "0.16em" }}
-              >
-                {label.toUpperCase()}
-              </span>
-            </button>
+                <Icon
+                  size={18}
+                  className="transition-transform duration-200 ease-out group-active:scale-90"
+                  style={{
+                    color: accent ? "var(--color-neon)" : idleColor,
+                  }}
+                />
+                <span
+                  className="mono-num text-[10px] tabular-nums leading-none"
+                  style={{
+                    color: accent ? "var(--color-neon)" : idleColor,
+                    letterSpacing: "0.02em",
+                    fontWeight: 500,
+                    fontStyle: key === "save" && !accent ? "normal" : accent ? "italic" : "normal",
+                  }}
+                >
+                  {values[key]}
+                </span>
+              </button>
+              {idx < ACTIONS.length - 1 && (
+                <span
+                  aria-hidden
+                  className="h-6 w-px shrink-0"
+                  style={{ background: dividerColor }}
+                />
+              )}
+            </>
           );
         })}
       </div>
@@ -172,12 +172,8 @@ export function InteractionBar({
       {/* ── Sync status rail ── */}
       {status && (
         <div
-          className="mt-2 flex items-center justify-between gap-2 px-1 pt-2"
-          style={{
-            borderTop: isDark
-              ? "1px solid rgba(255,255,255,0.06)"
-              : "1px solid rgba(0,0,0,0.06)",
-          }}
+          className="mt-2 flex items-center justify-between gap-2 px-2 pt-2"
+          style={{ borderTop: `1px solid ${dividerColor}` }}
         >
           <div className="flex items-center gap-1.5 min-w-0">
             <span
@@ -190,7 +186,7 @@ export function InteractionBar({
             />
             <span
               className="mono-tag truncate"
-              style={{ color: status.color, fontSize: 8.5, letterSpacing: "0.16em" }}
+              style={{ color: status.color, fontSize: 8.5, letterSpacing: "0.18em" }}
             >
               {status.text}
             </span>
@@ -202,7 +198,7 @@ export function InteractionBar({
               style={{
                 borderRadius: 6,
                 fontSize: 8.5,
-                letterSpacing: "0.16em",
+                letterSpacing: "0.18em",
                 color: "var(--color-neon)",
                 border: "1px solid rgba(198,255,61,0.45)",
                 background: "rgba(198,255,61,0.08)",
@@ -216,6 +212,7 @@ export function InteractionBar({
     </div>
   );
 }
+
 
 function getStatus({
   online,
