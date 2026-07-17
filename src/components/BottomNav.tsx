@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
+// menu route lives at /menu (authenticated hub)
 
 type NavItem = {
   to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor";
@@ -42,9 +43,10 @@ export function BottomNav() {
           <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
         ))}
 
-        {/* Central CREATE bolt */}
-        <button
-          aria-label="Create"
+        {/* Central CREATE bolt → opens menu hub */}
+        <Link
+          to="/menu"
+          aria-label="Open menu"
           className="tap group relative mx-1 grid h-12 w-12 place-items-center"
           style={{
             borderRadius: 999,
@@ -56,7 +58,7 @@ export function BottomNav() {
         >
           <IconBoltCross size={20} />
           <span className="engine-pulse absolute inset-0 rounded-full" />
-        </button>
+        </Link>
 
         {RIGHT.map((it) => (
           <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
