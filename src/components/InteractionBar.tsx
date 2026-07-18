@@ -106,16 +106,19 @@ export function InteractionBar({
         {ACTIONS.map(({ key, label, icon: Icon }, idx) => {
           const active =
             (key === "like" && liked) || (key === "save" && saved);
-          const accent =
-            (key === "like" && liked) || (key === "save" && saved);
           const disabled = key === "views";
           const onClick = () => {
-            console.log("[IBar] click", key, "id=", id);
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
             else if (key === "comment") setCommentsOpen(true);
           };
+
+          const iconColor = active
+            ? "var(--color-neon)"
+            : isDark
+              ? "rgba(230,232,236,0.72)"
+              : "rgba(20,22,26,0.68)";
 
           return (
             <Fragment key={key}>
@@ -125,34 +128,31 @@ export function InteractionBar({
                 aria-pressed={active}
                 className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
               >
-
                 <span
-                  className="transition-transform duration-200 ease-out group-active:scale-90"
+                  key={active ? "on" : "off"}
+                  className={`transition-transform duration-200 ease-out group-active:scale-90 ${active ? "ibar-pop" : ""}`}
                   style={{
-                    color: "var(--color-neon)",
+                    color: iconColor,
                     lineHeight: 0,
-                    opacity: accent ? 1 : 0.82,
-                    filter: accent
-                      ? "drop-shadow(0 0 6px rgba(198,255,61,0.85)) drop-shadow(0 0 14px rgba(126,224,28,0.55))"
-                      : "drop-shadow(0 0 3px rgba(198,255,61,0.35))",
+                    filter: active
+                      ? "drop-shadow(0 0 8px rgba(198,255,61,0.85)) drop-shadow(0 0 18px rgba(126,224,28,0.5))"
+                      : "none",
                   }}
                 >
-                  <Icon size={22} strokeWidth={2} fill={accent ? "currentColor" : "none"} />
+                  <Icon size={22} strokeWidth={2} fill={active ? "currentColor" : "none"} />
                 </span>
 
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
-                    color: "var(--color-neon)",
-                    opacity: accent ? 1 : 0.75,
+                    color: active ? "var(--color-neon)" : iconColor,
                     letterSpacing: "0.06em",
                     fontWeight: 600,
-                    textShadow: accent ? "0 0 8px rgba(198,255,61,0.6)" : "none",
+                    textShadow: active ? "0 0 8px rgba(198,255,61,0.55)" : "none",
                   }}
                 >
                   {values[key]}
                 </span>
-
               </button>
               {idx < ACTIONS.length - 1 && (
                 <span
@@ -165,6 +165,7 @@ export function InteractionBar({
           );
         })}
       </div>
+
 
       {/* ── Sync status rail ── */}
       {status && (
