@@ -45,7 +45,6 @@ export function CommentsSheet({
   useEffect(() => {
     if (open) {
       setItems([...seed(targetId)]);
-      setTimeout(() => inputRef.current?.focus(), 220);
     }
   }, [open, targetId]);
 
