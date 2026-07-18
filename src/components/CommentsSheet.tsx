@@ -180,31 +180,36 @@ export function CommentsSheet({
         </div>
 
         {/* composer */}
-        <div
+        <form
+          onSubmit={(e) => { e.preventDefault(); submit(); }}
           className="flex items-center gap-2 px-4 pt-3"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)",
             borderTop: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(8,9,11,0.9)",
+            background: "rgba(8,9,11,0.95)",
           }}
         >
           <input
             ref={inputRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && submit()}
             placeholder="Add a comment…"
-            className="flex-1 rounded-full px-4 py-2.5 text-[14px] outline-none"
+            enterKeyHint="send"
+            autoComplete="off"
+            autoCapitalize="sentences"
+            inputMode="text"
+            className="flex-1 rounded-full px-4 py-3 text-[15px] outline-none"
             style={{
-              background: "rgba(255,255,255,0.06)",
+              background: "rgba(255,255,255,0.08)",
               color: "var(--color-ink)",
-              border: "1px solid rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.14)",
+              WebkitAppearance: "none",
             }}
           />
           <button
-            onClick={submit}
+            type="submit"
             disabled={!text.trim()}
-            className="tap px-4 py-2.5 text-[13px] font-semibold"
+            className="tap px-4 py-3 text-[13px] font-semibold"
             style={{
               borderRadius: 999,
               background: text.trim() ? "var(--color-neon, #c6ff3d)" : "rgba(255,255,255,0.08)",
@@ -214,7 +219,8 @@ export function CommentsSheet({
           >
             Post
           </button>
-        </div>
+        </form>
+
       </div>
     </div>
   );
