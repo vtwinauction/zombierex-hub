@@ -1,19 +1,7 @@
 import { Fragment, useState, type ComponentType } from "react";
-import { Heart, MessageCircle, Eye, Send, Bookmark } from "lucide-react";
+import { HeartIcon, CommentIcon, EyeIcon, ShareIcon, BookmarkIcon } from "./icons/SocialIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
 import { CommentsSheet } from "./CommentsSheet";
-
-
-/**
- * ZOMBIEREX Interaction Bar
- * ------------------------------------------------------------------
- * Floating control cluster beneath any piece of media (photo/reel).
- * All actions are optimistic:
- *   - counters + toggle state update instantly
- *   - the mutation is enqueued in a persistent offline-friendly queue
- *   - a status rail exposes syncing / queued-offline / failed states
- *     with a one-tap retry when something couldn't be delivered.
- */
 
 export type InteractionCounts = {
   likes: number;
@@ -24,17 +12,16 @@ export type InteractionCounts = {
 
 type ActionKey = "like" | "comment" | "views" | "share" | "save";
 
-const ACTIONS: {
-  key: ActionKey;
-  label: string;
-  icon: ComponentType<{ size?: number; className?: string; strokeWidth?: number; fill?: string }>;
-}[] = [
-  { key: "like",    label: "Like",     icon: Heart },
-  { key: "comment", label: "Comment",  icon: MessageCircle },
-  { key: "views",   label: "Views",    icon: Eye },
-  { key: "share",   label: "Share",    icon: Send },
-  { key: "save",    label: "Save",     icon: Bookmark },
+type IconCmp = ComponentType<{ size?: number; active?: boolean; className?: string }>;
+
+const ACTIONS: { key: ActionKey; label: string; icon: IconCmp }[] = [
+  { key: "like",    label: "Like",     icon: HeartIcon },
+  { key: "comment", label: "Comment",  icon: CommentIcon },
+  { key: "views",   label: "Views",    icon: EyeIcon },
+  { key: "share",   label: "Share",    icon: ShareIcon },
+  { key: "save",    label: "Save",     icon: BookmarkIcon },
 ];
+
 
 
 export function InteractionBar({
