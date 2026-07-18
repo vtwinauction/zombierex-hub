@@ -27,6 +27,7 @@ import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated/vendor'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
 import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticated/rewards'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
@@ -149,6 +150,11 @@ const AuthenticatedVendorRoute = AuthenticatedVendorRouteImport.update({
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSecurityRoute = AuthenticatedSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedRewardsRoute = AuthenticatedRewardsRouteImport.update({
@@ -360,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/menu': typeof AuthenticatedMenuRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/rewards': typeof AuthenticatedRewardsRoute
+  '/security': typeof AuthenticatedSecurityRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -412,6 +419,7 @@ export interface FileRoutesByTo {
   '/menu': typeof AuthenticatedMenuRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/rewards': typeof AuthenticatedRewardsRoute
+  '/security': typeof AuthenticatedSecurityRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
@@ -466,6 +474,7 @@ export interface FileRoutesById {
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
+  '/_authenticated/security': typeof AuthenticatedSecurityRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -521,6 +530,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/onboarding'
     | '/rewards'
+    | '/security'
     | '/settings'
     | '/vendor'
     | '/communities/$slug'
@@ -573,6 +583,7 @@ export interface FileRouteTypes {
     | '/menu'
     | '/onboarding'
     | '/rewards'
+    | '/security'
     | '/settings'
     | '/communities/$slug'
     | '/creator/$id'
@@ -626,6 +637,7 @@ export interface FileRouteTypes {
     | '/_authenticated/menu'
     | '/_authenticated/onboarding'
     | '/_authenticated/rewards'
+    | '/_authenticated/security'
     | '/_authenticated/settings'
     | '/_authenticated/vendor'
     | '/communities/$slug'
@@ -809,6 +821,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/security': {
+      id: '/_authenticated/security'
+      path: '/security'
+      fullPath: '/security'
+      preLoaderRoute: typeof AuthenticatedSecurityRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/rewards': {
@@ -1100,6 +1119,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
+  AuthenticatedSecurityRoute: typeof AuthenticatedSecurityRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedAdsNewRoute: typeof AuthenticatedAdsNewRoute
@@ -1129,6 +1149,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
+  AuthenticatedSecurityRoute: AuthenticatedSecurityRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedAdsNewRoute: AuthenticatedAdsNewRoute,

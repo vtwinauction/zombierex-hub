@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
@@ -239,7 +239,7 @@ function SecurityCenter() {
             <button onClick={onExport} disabled={busy === "export"} className="tap px-3 py-2 text-sm" style={btnPrimary}>
               {busy === "export" ? "Preparing…" : "Download my data"}
             </button>
-            <Link to="/settings" className="tap px-3 py-2 text-sm" style={btnGhost}>Privacy settings</Link>
+            <a href="/settings" className="tap px-3 py-2 text-sm" style={btnGhost}>Privacy settings</a>
           </div>
         </Section>
 

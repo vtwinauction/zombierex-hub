@@ -57,6 +57,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { to: "/notifications", label: "Notifications" },
       { to: "/messages", label: "Messages" },
       { to: "/settings", label: "Settings", hint: "Account · privacy · appearance" },
+      { to: "/security", label: "Security Center", hint: "Devices · 2FA · data export" },
     ],
   },
   {
