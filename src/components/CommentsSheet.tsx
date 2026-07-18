@@ -69,7 +69,9 @@ export function CommentsSheet({
     store.set(targetId, merged);
     setItems(merged);
     setText("");
+    onSubmitted?.();
   };
+
 
   return (
     <div
