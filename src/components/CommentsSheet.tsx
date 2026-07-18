@@ -29,12 +29,15 @@ export function CommentsSheet({
   onClose,
   targetId,
   title = "Comments",
+  onSubmitted,
 }: {
   open: boolean;
   onClose: () => void;
   targetId: string;
   title?: string;
+  onSubmitted?: () => void;
 }) {
+
   const [items, setItems] = useState<CommentItem[]>(() => seed(targetId));
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
