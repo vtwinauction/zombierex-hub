@@ -69,25 +69,15 @@ export function InteractionBar({
   const isDark = variant === "dark";
 
 
-  const surface: React.CSSProperties = isDark
-    ? {
-        background: "rgba(8,9,11,0.72)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow:
-          "0 20px 50px -18px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.06) inset",
-        color: "var(--color-ink)",
-      }
-    : {
-        background: "rgba(255,255,255,0.82)",
-        border: "1px solid rgba(0,0,0,0.08)",
-        boxShadow:
-          "0 18px 40px -20px rgba(0,0,0,0.20), 0 1px 0 rgba(255,255,255,0.9) inset",
-        color: "var(--color-obsidian)",
-      };
+  const surface: React.CSSProperties = {
+    background: "transparent",
+    border: "none",
+    boxShadow: "none",
+    color: isDark ? "var(--color-ink)" : "var(--color-obsidian)",
+  };
 
-  const idleColor = isDark ? "rgba(230,232,236,0.62)" : "rgba(8,9,11,0.55)";
-  const dividerColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
-  const hairlineColor = isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.4)";
+  const idleColor = isDark ? "rgba(230,232,236,0.78)" : "rgba(8,9,11,0.72)";
+  const dividerColor = "transparent";
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
@@ -103,21 +93,13 @@ export function InteractionBar({
 
   return (
     <div
-      className="backdrop-blur-2xl relative"
+      className="relative"
       style={{
         ...surface,
-        borderRadius: 16,
-        padding: "10px 6px",
+        padding: "6px 4px",
       }}
     >
-      {/* precision hairline reflection */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-4 top-0 h-px"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${hairlineColor}, transparent)`,
-        }}
-      />
+
 
       <div className="flex items-center justify-between">
         {ACTIONS.map(({ key, label, icon: Icon }, idx) => {
