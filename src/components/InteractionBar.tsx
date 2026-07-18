@@ -221,7 +221,9 @@ export function InteractionBar({
         open={commentsOpen}
         onClose={() => setCommentsOpen(false)}
         targetId={id}
+        onSubmitted={() => setCommentDelta((n) => n + 1)}
       />
+
     </div>
   );
 }
