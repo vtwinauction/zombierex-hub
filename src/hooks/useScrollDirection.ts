@@ -35,6 +35,9 @@ export function useScrollDirection(threshold = 18) {
         const delta = y - lastY.current;
         lastY.current = y;
 
+        // eslint-disable-next-line no-console
+        console.log("scroll", y, delta, accumulator.current);
+
         if (Math.abs(delta) < 2) return; // ignore sub-pixel jitter
 
         // Accumulate movement in the same direction; reset on reversal.
