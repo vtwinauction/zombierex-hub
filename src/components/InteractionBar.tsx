@@ -216,9 +216,16 @@ export function InteractionBar({
           )}
         </div>
       )}
+
+      <CommentsSheet
+        open={commentsOpen}
+        onClose={() => setCommentsOpen(false)}
+        targetId={id}
+      />
     </div>
   );
 }
+
 
 
 function getStatus({
