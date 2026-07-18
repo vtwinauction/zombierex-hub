@@ -81,7 +81,7 @@ export const adminHealthSnapshot = createServerFn({ method: "GET" })
       context.supabase.from("listings").select("id", { count: "exact", head: true }),
       context.supabase.from("events").select("id", { count: "exact", head: true }),
       context.supabase.from("clubs").select("id", { count: "exact", head: true }),
-      context.supabase.from("reports").select("id", { count: "exact", head: true }).eq("status", "pending"),
+      context.supabase.from("reports").select("id", { count: "exact", head: true }).eq("status", "open"),
       context.supabase.from("subscriptions").select("id", { count: "exact", head: true }).in("status", ["active", "trialing"]),
     ]);
     const { data: settings } = await context.supabase.from("platform_settings").select("key, value");
