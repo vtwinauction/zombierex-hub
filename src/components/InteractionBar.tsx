@@ -96,11 +96,12 @@ export function InteractionBar({
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
-    comment: fmt(counts.comments),
+    comment: fmt(counts.comments + commentDelta),
     views: typeof counts.views === "string" ? counts.views : fmt(counts.views),
     share: fmt(shares),
     save: saved ? "SAVED" : "SAVE",
   };
+
 
   const queuedCount = pending.length;
   const status = getStatus({ online, hasFailed, isSyncing, queuedCount });
