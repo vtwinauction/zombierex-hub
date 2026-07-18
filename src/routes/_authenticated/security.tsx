@@ -147,7 +147,7 @@ function SecurityCenter() {
 
   return (
     <div style={{ background: "var(--color-cream, #fafaf7)", minHeight: "100vh", color: "var(--color-ink, #0a0a0a)" }}>
-      <StatusBar />
+      <StatusBar index="SEC/01" section="Security Center" />
       <main className="mx-auto max-w-xl px-4 pb-32 pt-4">
         <div className="mb-4">
           <p className="mono-tag" style={{ color: "var(--color-neon)" }}>◆ SECURITY CENTER</p>
