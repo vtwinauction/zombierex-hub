@@ -1,4 +1,4 @@
-import { Fragment, type ComponentType } from "react";
+import { Fragment, useState, type ComponentType } from "react";
 import {
   IconClaw,
   IconVisor,
@@ -7,6 +7,8 @@ import {
   IconLens,
 } from "./icons/RexIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
+import { CommentsSheet } from "./CommentsSheet";
+
 
 /**
  * ZOMBIEREX Interaction Bar
