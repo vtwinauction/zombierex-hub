@@ -1,4 +1,4 @@
-import { Fragment, type ComponentType } from "react";
+import { Fragment, useState, type ComponentType } from "react";
 import {
   IconClaw,
   IconVisor,
@@ -7,6 +7,8 @@ import {
   IconLens,
 } from "./icons/RexIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
+import { CommentsSheet } from "./CommentsSheet";
+
 
 /**
  * ZOMBIEREX Interaction Bar
@@ -66,7 +68,11 @@ export function InteractionBar({
     retry,
   } = useInteractionState(id, { likes: counts.likes, shares: counts.shares });
 
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentDelta, setCommentDelta] = useState(0);
+
   const isDark = variant === "dark";
+
 
   const surface: React.CSSProperties = isDark
     ? {
@@ -90,11 +96,12 @@ export function InteractionBar({
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
-    comment: fmt(counts.comments),
+    comment: fmt(counts.comments + commentDelta),
     views: typeof counts.views === "string" ? counts.views : fmt(counts.views),
     share: fmt(shares),
     save: saved ? "SAVED" : "SAVE",
   };
+
 
   const queuedCount = pending.length;
   const status = getStatus({ online, hasFailed, isSyncing, queuedCount });
@@ -123,11 +130,12 @@ export function InteractionBar({
             (key === "like" && liked) || (key === "save" && saved);
           const accent =
             (key === "like" && liked) || (key === "save" && saved);
-          const disabled = key === "comment" || key === "views";
+          const disabled = key === "views";
           const onClick = () => {
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
+            else if (key === "comment") setCommentsOpen(true);
           };
           return (
             <Fragment key={key}>
@@ -137,6 +145,7 @@ export function InteractionBar({
                 aria-pressed={active}
                 className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
               >
+
                 <span
                   className="transition-transform duration-200 ease-out group-active:scale-90"
                   style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
@@ -207,9 +216,18 @@ export function InteractionBar({
           )}
         </div>
       )}
+
+      <CommentsSheet
+        open={commentsOpen}
+        onClose={() => setCommentsOpen(false)}
+        targetId={id}
+        onSubmitted={() => setCommentDelta((n) => n + 1)}
+      />
+
     </div>
   );
 }
+
 
 
 function getStatus({
