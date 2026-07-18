@@ -96,7 +96,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const scrollDir = useScrollDirection(12);
+  const scrollDir = useScrollDirection();
   const [isTop, setIsTop] = useState(true);
 
   useEffect(() => {
