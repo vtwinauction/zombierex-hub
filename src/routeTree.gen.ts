@@ -55,6 +55,8 @@ import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_au
 import { Route as AuthenticatedBusinessShowcaseRouteImport } from './routes/_authenticated/business.showcase'
 import { Route as AuthenticatedAdsNewRouteImport } from './routes/_authenticated/ads.new'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
+import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin.moderation'
+import { Route as AuthenticatedAdminHealthRouteImport } from './routes/_authenticated/admin.health'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
@@ -306,6 +308,18 @@ const AuthenticatedAdminVendorsRoute =
     path: '/vendors',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminModerationRoute =
+  AuthenticatedAdminModerationRouteImport.update({
+    id: '/moderation',
+    path: '/moderation',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminHealthRoute =
+  AuthenticatedAdminHealthRouteImport.update({
+    id: '/health',
+    path: '/health',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const CommunitiesSlugChallengesChallengeIdRoute =
   CommunitiesSlugChallengesChallengeIdRouteImport.update({
     id: '/challenges/$challengeId',
@@ -373,6 +387,8 @@ export interface FileRoutesByFullPath {
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
+  '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
@@ -425,6 +441,8 @@ export interface FileRoutesByTo {
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities': typeof CommunitiesIndexRoute
+  '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
@@ -481,6 +499,8 @@ export interface FileRoutesById {
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/communities/': typeof CommunitiesIndexRoute
+  '/_authenticated/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/ads/new': typeof AuthenticatedAdsNewRoute
   '/_authenticated/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
@@ -537,6 +557,8 @@ export interface FileRouteTypes {
     | '/creator/$id'
     | '/marketplace/$id'
     | '/communities/'
+    | '/admin/health'
+    | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
     | '/business/showcase'
@@ -589,6 +611,8 @@ export interface FileRouteTypes {
     | '/creator/$id'
     | '/marketplace/$id'
     | '/communities'
+    | '/admin/health'
+    | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
     | '/business/showcase'
@@ -644,6 +668,8 @@ export interface FileRouteTypes {
     | '/creator/$id'
     | '/marketplace/$id'
     | '/communities/'
+    | '/_authenticated/admin/health'
+    | '/_authenticated/admin/moderation'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/ads/new'
     | '/_authenticated/business/showcase'
@@ -1019,6 +1045,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminVendorsRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/moderation': {
+      id: '/_authenticated/admin/moderation'
+      path: '/moderation'
+      fullPath: '/admin/moderation'
+      preLoaderRoute: typeof AuthenticatedAdminModerationRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/health': {
+      id: '/_authenticated/admin/health'
+      path: '/health'
+      fullPath: '/admin/health'
+      preLoaderRoute: typeof AuthenticatedAdminHealthRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/communities/$slug/challenges/$challengeId': {
       id: '/communities/$slug/challenges/$challengeId'
       path: '/challenges/$challengeId'
@@ -1086,11 +1126,15 @@ const AuthenticatedAdminVendorsRouteWithChildren =
   )
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminHealthRoute: typeof AuthenticatedAdminHealthRoute
+  AuthenticatedAdminModerationRoute: typeof AuthenticatedAdminModerationRoute
   AuthenticatedAdminVendorsRoute: typeof AuthenticatedAdminVendorsRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminHealthRoute: AuthenticatedAdminHealthRoute,
+  AuthenticatedAdminModerationRoute: AuthenticatedAdminModerationRoute,
   AuthenticatedAdminVendorsRoute: AuthenticatedAdminVendorsRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }

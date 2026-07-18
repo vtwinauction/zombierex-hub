@@ -339,6 +339,89 @@ export type Database = {
           },
         ]
       }
+      api_keys: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          key_hash: string
+          last_used_at: string | null
+          name: string
+          prefix: string
+          revoked_at: string | null
+          scopes: string[]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash: string
+          last_used_at?: string | null
+          name: string
+          prefix: string
+          revoked_at?: string | null
+          scopes?: string[]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          key_hash?: string
+          last_used_at?: string | null
+          name?: string
+          prefix?: string
+          revoked_at?: string | null
+          scopes?: string[]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      appeals: {
+        Row: {
+          action_id: string | null
+          created_at: string
+          id: string
+          message: string
+          reviewer_id: string | null
+          reviewer_notes: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          reviewer_id?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          reviewer_id?: string | null
+          reviewer_notes?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appeals_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "moderation_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_log: {
         Row: {
           action: string
@@ -1502,6 +1585,39 @@ export type Database = {
           },
         ]
       }
+      feature_flags: {
+        Row: {
+          audience: Json
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          key: string
+          rollout_percent: number
+          updated_at: string
+        }
+        Insert: {
+          audience?: Json
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key: string
+          rollout_percent?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: Json
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          key?: string
+          rollout_percent?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
@@ -1609,6 +1725,33 @@ export type Database = {
           id?: string
           tag?: string
           usage_count?: number
+        }
+        Relationships: []
+      }
+      keyword_filters: {
+        Row: {
+          created_at: string
+          id: string
+          keyword: string
+          match_type: string
+          scope: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keyword: string
+          match_type?: string
+          scope?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keyword?: string
+          match_type?: string
+          scope?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -1906,6 +2049,51 @@ export type Database = {
           },
         ]
       }
+      moderation_actions: {
+        Row: {
+          action: string
+          created_at: string
+          duration_hours: number | null
+          expires_at: string | null
+          id: string
+          issued_by: string | null
+          meta: Json
+          reason: string | null
+          status: string
+          target_id: string | null
+          target_kind: string | null
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          duration_hours?: number | null
+          expires_at?: string | null
+          id?: string
+          issued_by?: string | null
+          meta?: Json
+          reason?: string | null
+          status?: string
+          target_id?: string | null
+          target_kind?: string | null
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          duration_hours?: number | null
+          expires_at?: string | null
+          id?: string
+          issued_by?: string | null
+          meta?: Json
+          reason?: string | null
+          status?: string
+          target_id?: string | null
+          target_kind?: string | null
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       notification_preferences: {
         Row: {
           bookings: boolean
@@ -2167,6 +2355,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      platform_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: []
       }
       post_drafts: {
         Row: {
@@ -3013,6 +3222,30 @@ export type Database = {
           },
         ]
       }
+      user_blocks: {
+        Row: {
+          blocked_id: string
+          blocker_id: string
+          created_at: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          blocked_id: string
+          blocker_id: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          blocked_id?: string
+          blocker_id?: string
+          created_at?: string
+          id?: string
+          reason?: string | null
+        }
+        Relationships: []
+      }
       user_challenges: {
         Row: {
           challenge_id: string
@@ -3047,6 +3280,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_mutes: {
+        Row: {
+          created_at: string
+          id: string
+          muted_id: string
+          muter_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          muted_id: string
+          muter_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          muted_id?: string
+          muter_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
@@ -3323,6 +3577,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      webhooks: {
+        Row: {
+          active: boolean
+          created_at: string
+          events: string[]
+          failure_count: number
+          id: string
+          last_delivered_at: string | null
+          secret: string
+          target_url: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_delivered_at?: string | null
+          secret: string
+          target_url: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          events?: string[]
+          failure_count?: number
+          id?: string
+          last_delivered_at?: string | null
+          secret?: string
+          target_url?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       weekly_challenges: {
         Row: {

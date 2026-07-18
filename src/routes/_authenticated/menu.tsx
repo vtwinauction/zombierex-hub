@@ -77,6 +77,8 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     items: [
       { to: "/admin", label: "Admin console" },
       { to: "/admin/vendors", label: "Vendor verifications" },
+      { to: "/admin/moderation", label: "Moderation queue", hint: "Reports · warnings · bans" },
+      { to: "/admin/health", label: "Platform Health", hint: "Live stats · feature flags · maintenance" },
     ],
   },
 ];
