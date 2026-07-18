@@ -76,8 +76,9 @@ export function InteractionBar({
     color: isDark ? "var(--color-ink)" : "var(--color-obsidian)",
   };
 
-  const idleColor = isDark ? "rgba(230,232,236,0.78)" : "rgba(8,9,11,0.72)";
+  void isDark;
   const dividerColor = "transparent";
+
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
