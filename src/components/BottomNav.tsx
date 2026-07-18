@@ -29,12 +29,10 @@ export function BottomNav({ hidden = false }: { hidden?: boolean }) {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none will-change-transform"
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
       style={{
         paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)",
-        transform: hidden ? "translateY(calc(100% + 28px))" : "translateY(0)",
-        transition: "transform 500ms cubic-bezier(0.23, 1, 0.32, 1), opacity 350ms ease-out",
-        opacity: hidden ? 0.35 : 1,
+        transform: hidden ? "translateY(calc(100% + 24px))" : "translateY(0)",
       }}
     >
       <div

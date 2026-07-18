@@ -1,30 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Detects window scroll direction with hysteresis so the bottom nav doesn't
- * flicker on micro-bounces or slow drags. Returns "up" | "down" | null before
+ * Detects window scroll direction with a small threshold so micro-bounces
+ * don't constantly toggle the chrome. Returns "up" | "down" | null before
  * any scroll has happened.
- *
- * - A direction change only fires after the user has scrolled `threshold` px
- *   in the new direction.
- * - A small settle delay prevents rapid hide/show toggles when the thumb pauses.
  */
-export function useScrollDirection(threshold = 18) {
+export function useScrollDirection(threshold = 12) {
   const [direction, setDirection] = useState<"up" | "down" | null>(null);
   const lastY = useRef(0);
-  const accumulator = useRef(0);
-  const settleTimer = useRef<number | null>(null);
-  const directionRef = useRef<"up" | "down" | null>(null);
-
-  useEffect(() => {
-    directionRef.current = direction;
-  }, [direction]);
+  const lastDelta = useRef(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
     lastY.current = window.scrollY;
-    accumulator.current = 0;
 
     let raf = 0;
     const onScroll = () => {
@@ -33,33 +22,14 @@ export function useScrollDirection(threshold = 18) {
         raf = 0;
         const y = window.scrollY;
         const delta = y - lastY.current;
+
+        // Ignore tiny bounces and direction reversals below threshold.
+        if (Math.abs(delta) < threshold) return;
+        if (Math.sign(delta) === Math.sign(lastDelta.current) && Math.abs(delta) < threshold * 2) return;
+
         lastY.current = y;
-
-        // eslint-disable-next-line no-console
-        console.log("scroll", y, delta, accumulator.current);
-
-        if (Math.abs(delta) < 2) return; // ignore sub-pixel jitter
-
-        // Accumulate movement in the same direction; reset on reversal.
-        if (Math.sign(delta) === Math.sign(accumulator.current)) {
-          accumulator.current += delta;
-        } else {
-          accumulator.current = delta;
-        }
-
-        if (Math.abs(accumulator.current) < threshold) return;
-
-        const next = accumulator.current > 0 ? "down" : "up";
-        if (next === directionRef.current) {
-          accumulator.current = 0;
-          return;
-        }
-
-        if (settleTimer.current) window.clearTimeout(settleTimer.current);
-        settleTimer.current = window.setTimeout(() => {
-          setDirection(next);
-          accumulator.current = 0;
-        }, 80);
+        lastDelta.current = delta;
+        setDirection(delta > 0 ? "down" : "up");
       });
     };
 
@@ -67,7 +37,6 @@ export function useScrollDirection(threshold = 18) {
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (raf) cancelAnimationFrame(raf);
-      if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
   }, [threshold]);
 

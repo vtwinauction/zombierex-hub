@@ -96,7 +96,7 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  const scrollDir = useScrollDirection();
+  const scrollDir = useScrollDirection(12);
   const [isTop, setIsTop] = useState(true);
 
   useEffect(() => {
@@ -125,9 +125,6 @@ function RootComponent() {
           <Outlet />
         </main>
         <BottomNav hidden={navHidden} />
-        <div className="fixed top-12 left-2 z-[100] bg-black text-neon text-xs mono p-2">
-          dir:{scrollDir ?? "null"} top:{isTop ? "T" : "F"} hide:{navHidden ? "Y" : "N"}
-        </div>
       </div>
     </QueryClientProvider>
   );
