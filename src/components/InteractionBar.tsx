@@ -1,11 +1,5 @@
 import { Fragment, useState, type ComponentType } from "react";
-import {
-  IconClaw,
-  IconVisor,
-  IconMechClaw,
-  IconBoneMark,
-  IconLens,
-} from "./icons/RexIcons";
+import { Heart, MessageCircle, Eye, Send, Bookmark } from "lucide-react";
 import { useInteractionState } from "@/hooks/useInteractionState";
 import { CommentsSheet } from "./CommentsSheet";
 
@@ -33,14 +27,15 @@ type ActionKey = "like" | "comment" | "views" | "share" | "save";
 const ACTIONS: {
   key: ActionKey;
   label: string;
-  icon: ComponentType<{ size?: number; className?: string }>;
+  icon: ComponentType<{ size?: number; className?: string; strokeWidth?: number; fill?: string }>;
 }[] = [
-  { key: "like",    label: "Like",     icon: IconClaw },
-  { key: "comment", label: "Comment",  icon: IconVisor },
-  { key: "views",   label: "Views",    icon: IconLens },
-  { key: "share",   label: "Share",    icon: IconMechClaw },
-  { key: "save",    label: "Save",     icon: IconBoneMark },
+  { key: "like",    label: "Like",     icon: Heart },
+  { key: "comment", label: "Comment",  icon: MessageCircle },
+  { key: "views",   label: "Views",    icon: Eye },
+  { key: "share",   label: "Share",    icon: Send },
+  { key: "save",    label: "Save",     icon: Bookmark },
 ];
+
 
 export function InteractionBar({
   counts,
@@ -150,8 +145,9 @@ export function InteractionBar({
                   className="transition-transform duration-200 ease-out group-active:scale-90"
                   style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
                 >
-                  <Icon size={18} />
+                  <Icon size={20} strokeWidth={1.8} fill={accent ? "currentColor" : "none"} />
                 </span>
+
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
