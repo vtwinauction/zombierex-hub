@@ -68,7 +68,11 @@ export function InteractionBar({
     retry,
   } = useInteractionState(id, { likes: counts.likes, shares: counts.shares });
 
+  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentDelta, setCommentDelta] = useState(0);
+
   const isDark = variant === "dark";
+
 
   const surface: React.CSSProperties = isDark
     ? {
