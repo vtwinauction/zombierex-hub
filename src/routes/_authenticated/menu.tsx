@@ -43,6 +43,14 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     ],
   },
   {
+    title: "Rewards",
+    items: [
+      { to: "/rewards", label: "Rewards hub", hint: "XP · badges · challenges · leaderboards" },
+      { to: "/rewards", label: "Go Premium", hint: "Apex · Legend tiers" },
+    ],
+  },
+
+  {
     title: "You",
     items: [
       { to: "/profile", label: "Garage (profile)" },
