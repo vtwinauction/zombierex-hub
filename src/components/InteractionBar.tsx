@@ -101,11 +101,7 @@ export function InteractionBar({
             else if (key === "comment") setCommentsOpen(true);
           };
 
-          const iconColor = active
-            ? "var(--color-neon)"
-            : isDark
-              ? "rgba(230,232,236,0.72)"
-              : "rgba(20,22,26,0.68)";
+          const iconColor = "var(--color-neon)";
 
           return (
             <Fragment key={key}>
@@ -122,12 +118,13 @@ export function InteractionBar({
                     color: iconColor,
                     lineHeight: 0,
                     filter: active
-                      ? "drop-shadow(0 0 8px rgba(198,255,61,0.85)) drop-shadow(0 0 18px rgba(126,224,28,0.5))"
-                      : "none",
+                      ? "drop-shadow(0 0 8px rgba(198,255,61,0.95)) drop-shadow(0 0 22px rgba(126,224,28,0.65))"
+                      : "drop-shadow(0 0 4px rgba(198,255,61,0.45))",
                   }}
                 >
-                  <Icon size={22} strokeWidth={2} fill={active ? "currentColor" : "none"} />
+                  <Icon size={24} active={active} />
                 </span>
+
 
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
