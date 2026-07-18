@@ -18,19 +18,22 @@ const RIGHT: NavItem[] = [
   { to: "/profile",     label: "Garage",   icon: IconHelmet },
 ];
 
-
 /**
  * Floating obsidian dock — not a full-width tab bar.
  * A pill-island with a raised neon "create" bolt at center-left offset.
+ * Hides automatically when the user scrolls down so it never covers content.
  */
-export function BottomNav() {
+export function BottomNav({ hidden = false }: { hidden?: boolean }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none"
-      style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)" }}
+      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+      style={{
+        paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)",
+        transform: hidden ? "translateY(calc(100% + 24px))" : "translateY(0)",
+      }}
     >
       <div
         className="glass lift-2 pointer-events-auto flex items-center gap-1 px-2 py-2"
