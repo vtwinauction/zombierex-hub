@@ -69,25 +69,16 @@ export function InteractionBar({
   const isDark = variant === "dark";
 
 
-  const surface: React.CSSProperties = isDark
-    ? {
-        background: "rgba(8,9,11,0.72)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow:
-          "0 20px 50px -18px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.06) inset",
-        color: "var(--color-ink)",
-      }
-    : {
-        background: "rgba(255,255,255,0.82)",
-        border: "1px solid rgba(0,0,0,0.08)",
-        boxShadow:
-          "0 18px 40px -20px rgba(0,0,0,0.20), 0 1px 0 rgba(255,255,255,0.9) inset",
-        color: "var(--color-obsidian)",
-      };
+  const surface: React.CSSProperties = {
+    background: "transparent",
+    border: "none",
+    boxShadow: "none",
+    color: isDark ? "var(--color-ink)" : "var(--color-obsidian)",
+  };
 
-  const idleColor = isDark ? "rgba(230,232,236,0.62)" : "rgba(8,9,11,0.55)";
-  const dividerColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
-  const hairlineColor = isDark ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.4)";
+  void isDark;
+  const dividerColor = "transparent";
+
 
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
@@ -103,21 +94,13 @@ export function InteractionBar({
 
   return (
     <div
-      className="backdrop-blur-2xl relative"
+      className="relative"
       style={{
         ...surface,
-        borderRadius: 16,
-        padding: "10px 6px",
+        padding: "6px 4px",
       }}
     >
-      {/* precision hairline reflection */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-4 top-0 h-px"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${hairlineColor}, transparent)`,
-        }}
-      />
+
 
       <div className="flex items-center justify-between">
         {ACTIONS.map(({ key, label, icon: Icon }, idx) => {
@@ -143,22 +126,31 @@ export function InteractionBar({
 
                 <span
                   className="transition-transform duration-200 ease-out group-active:scale-90"
-                  style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
+                  style={{
+                    color: "var(--color-neon)",
+                    lineHeight: 0,
+                    opacity: accent ? 1 : 0.82,
+                    filter: accent
+                      ? "drop-shadow(0 0 6px rgba(198,255,61,0.85)) drop-shadow(0 0 14px rgba(126,224,28,0.55))"
+                      : "drop-shadow(0 0 3px rgba(198,255,61,0.35))",
+                  }}
                 >
-                  <Icon size={20} strokeWidth={1.8} fill={accent ? "currentColor" : "none"} />
+                  <Icon size={22} strokeWidth={2} fill={accent ? "currentColor" : "none"} />
                 </span>
 
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
-                    color: accent ? "var(--color-neon)" : idleColor,
-                    letterSpacing: "0.02em",
-                    fontWeight: 500,
-                    fontStyle: key === "save" && !accent ? "normal" : accent ? "italic" : "normal",
+                    color: "var(--color-neon)",
+                    opacity: accent ? 1 : 0.75,
+                    letterSpacing: "0.06em",
+                    fontWeight: 600,
+                    textShadow: accent ? "0 0 8px rgba(198,255,61,0.6)" : "none",
                   }}
                 >
                   {values[key]}
                 </span>
+
               </button>
               {idx < ACTIONS.length - 1 && (
                 <span
