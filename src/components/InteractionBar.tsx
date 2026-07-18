@@ -130,11 +130,12 @@ export function InteractionBar({
             (key === "like" && liked) || (key === "save" && saved);
           const accent =
             (key === "like" && liked) || (key === "save" && saved);
-          const disabled = key === "comment" || key === "views";
+          const disabled = key === "views";
           const onClick = () => {
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
+            else if (key === "comment") setCommentsOpen(true);
           };
           return (
             <Fragment key={key}>
@@ -144,6 +145,7 @@ export function InteractionBar({
                 aria-pressed={active}
                 className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
               >
+
                 <span
                   className="transition-transform duration-200 ease-out group-active:scale-90"
                   style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
