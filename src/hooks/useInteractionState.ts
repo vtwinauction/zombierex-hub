@@ -44,26 +44,24 @@ export function useInteractionState(
   }, [targetId]);
 
   const toggleLike = useCallback(() => {
-    setLiked((prev) => {
-      const next = !prev;
-      setLikes((n) => n + (next ? 1 : -1));
-      enqueue(targetId, next ? "like" : "unlike");
-      return next;
-    });
-  }, [targetId]);
+    const next = !liked;
+    setLiked(next);
+    setLikes((n) => n + (next ? 1 : -1));
+    try { enqueue(targetId, next ? "like" : "unlike"); } catch (e) { console.error("enqueue like failed", e); }
+  }, [liked, targetId]);
 
   const toggleSave = useCallback(() => {
-    setSaved((prev) => {
-      const next = !prev;
-      enqueue(targetId, next ? "save" : "unsave");
-      return next;
-    });
-  }, [targetId]);
+    const next = !saved;
+    setSaved(next);
+    try { enqueue(targetId, next ? "save" : "unsave"); } catch (e) { console.error("enqueue save failed", e); }
+  }, [saved, targetId]);
 
   const share = useCallback(() => {
     setShares((n) => n + 1);
-    enqueue(targetId, "share");
+    try { enqueue(targetId, "share"); } catch (e) { console.error("enqueue share failed", e); }
   }, [targetId]);
+
+
 
   const hasFailed = pending.some((a) => a.status === "failed");
   const isSyncing = pending.some((a) => a.status === "retrying");
