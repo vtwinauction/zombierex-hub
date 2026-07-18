@@ -110,11 +110,13 @@ export function InteractionBar({
             (key === "like" && liked) || (key === "save" && saved);
           const disabled = key === "views";
           const onClick = () => {
+            console.log("[IBar] click", key, "id=", id);
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
             else if (key === "comment") setCommentsOpen(true);
           };
+
           return (
             <Fragment key={key}>
               <button
