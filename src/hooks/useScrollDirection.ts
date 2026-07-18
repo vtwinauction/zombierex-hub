@@ -14,6 +14,11 @@ export function useScrollDirection(threshold = 18) {
   const lastY = useRef(0);
   const accumulator = useRef(0);
   const settleTimer = useRef<number | null>(null);
+  const directionRef = useRef<"up" | "down" | null>(null);
+
+  useEffect(() => {
+    directionRef.current = direction;
+  }, [direction]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -42,7 +47,10 @@ export function useScrollDirection(threshold = 18) {
         if (Math.abs(accumulator.current) < threshold) return;
 
         const next = accumulator.current > 0 ? "down" : "up";
-        if (next === direction) return;
+        if (next === directionRef.current) {
+          accumulator.current = 0;
+          return;
+        }
 
         if (settleTimer.current) window.clearTimeout(settleTimer.current);
         settleTimer.current = window.setTimeout(() => {
@@ -58,7 +66,7 @@ export function useScrollDirection(threshold = 18) {
       if (raf) cancelAnimationFrame(raf);
       if (settleTimer.current) window.clearTimeout(settleTimer.current);
     };
-  }, [threshold, direction]);
+  }, [threshold]);
 
   return direction;
 }
