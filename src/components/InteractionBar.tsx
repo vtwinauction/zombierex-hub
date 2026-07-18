@@ -125,22 +125,31 @@ export function InteractionBar({
 
                 <span
                   className="transition-transform duration-200 ease-out group-active:scale-90"
-                  style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
+                  style={{
+                    color: "var(--color-neon)",
+                    lineHeight: 0,
+                    opacity: accent ? 1 : 0.82,
+                    filter: accent
+                      ? "drop-shadow(0 0 6px rgba(198,255,61,0.85)) drop-shadow(0 0 14px rgba(126,224,28,0.55))"
+                      : "drop-shadow(0 0 3px rgba(198,255,61,0.35))",
+                  }}
                 >
-                  <Icon size={20} strokeWidth={1.8} fill={accent ? "currentColor" : "none"} />
+                  <Icon size={22} strokeWidth={2} fill={accent ? "currentColor" : "none"} />
                 </span>
 
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
-                    color: accent ? "var(--color-neon)" : idleColor,
-                    letterSpacing: "0.02em",
-                    fontWeight: 500,
-                    fontStyle: key === "save" && !accent ? "normal" : accent ? "italic" : "normal",
+                    color: "var(--color-neon)",
+                    opacity: accent ? 1 : 0.75,
+                    letterSpacing: "0.06em",
+                    fontWeight: 600,
+                    textShadow: accent ? "0 0 8px rgba(198,255,61,0.6)" : "none",
                   }}
                 >
                   {values[key]}
                 </span>
+
               </button>
               {idx < ACTIONS.length - 1 && (
                 <span
