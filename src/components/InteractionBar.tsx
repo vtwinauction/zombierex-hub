@@ -145,8 +145,9 @@ export function InteractionBar({
                   className="transition-transform duration-200 ease-out group-active:scale-90"
                   style={{ color: accent ? "var(--color-neon)" : idleColor, lineHeight: 0 }}
                 >
-                  <Icon size={18} />
+                  <Icon size={20} strokeWidth={1.8} fill={accent ? "currentColor" : "none"} />
                 </span>
+
                 <span
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
