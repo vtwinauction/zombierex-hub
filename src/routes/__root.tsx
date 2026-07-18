@@ -96,6 +96,15 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const scrollDir = useScrollDirection(12);
+  const [isTop, setIsTop] = useState(true);
+
+  useEffect(() => {
+    const onScroll = () => setIsTop(window.scrollY < 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
@@ -106,13 +115,16 @@ function RootComponent() {
     return () => data.subscription.unsubscribe();
   }, [router, queryClient]);
 
+  // Hide while scrolling down; always visible at the top of the page.
+  const navHidden = !isTop && scrollDir === "down";
+
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative min-h-[100svh] bg-background text-foreground">
         <main className="min-h-[100svh] pb-[calc(64px+env(safe-area-inset-bottom))]">
           <Outlet />
         </main>
-        <BottomNav />
+        <BottomNav hidden={navHidden} />
       </div>
     </QueryClientProvider>
   );
