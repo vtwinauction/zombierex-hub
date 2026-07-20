@@ -205,7 +205,7 @@ function ProfilePage() {
                 }}
               >
                 <span className="mono-tag" style={{ fontSize: 8, letterSpacing: "0.18em" }}>LVL</span>
-                <span className="mono-num text-[15px] font-bold leading-none">{rider.level}</span>
+                <span className="mono-num text-[15px] font-bold leading-none">{level}</span>
               </div>
             </div>
           </div>
