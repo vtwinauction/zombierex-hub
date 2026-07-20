@@ -41,27 +41,20 @@ export function BottomNav({ hidden = false }: { hidden?: boolean }) {
       <div className="mx-auto grid max-w-md grid-cols-5 items-center px-2 pt-1.5 pb-1.5">
         {LEFT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
 
-        {/* Center Create — ZombieRex-green nib pen → Atlas POIs */}
+        {/* Center — old-school compass, neon-green ZombieRex → Atlas */}
         <Link
           to="/atlas"
-          aria-label="Drop a pin on Route Atlas"
+          aria-label="Open Route Atlas"
           className="tap mx-auto grid h-12 w-12 place-items-center"
           style={{
-            borderRadius: 14,
-            background: "linear-gradient(180deg, #1f2b1a 0%, #0f1a0c 100%)",
+            borderRadius: 999,
+            background: "radial-gradient(circle at 30% 25%, #172114 0%, #0a0f08 70%)",
             color: "var(--color-neon, #7cff3f)",
             boxShadow:
-              "0 0 0 1px rgba(124,255,63,0.35), 0 8px 18px -6px rgba(124,255,63,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
+              "0 0 0 1px rgba(124,255,63,0.45), 0 0 14px rgba(124,255,63,0.35), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -6px 12px rgba(0,0,0,0.6)",
           }}
         >
-          <PenTool
-            size={22}
-            strokeWidth={2}
-            style={{
-              filter: "drop-shadow(0 0 6px rgba(124,255,63,0.75))",
-              transform: "rotate(-8deg)",
-            }}
-          />
+          <CompassMark />
         </Link>
 
         {RIGHT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
