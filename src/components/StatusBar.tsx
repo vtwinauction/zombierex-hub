@@ -66,7 +66,7 @@ function ActionCell({
     <Link
       to={to}
       aria-label={label}
-      className="tap relative grid h-10 w-10 place-items-center"
+      className="tap relative grid h-9 w-9 place-items-center"
       style={{ color: "var(--color-ink-0)", borderRadius: 10 }}
     >
       {children}
