@@ -1,16 +1,20 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
 import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
+import { Map as MapIcon } from "lucide-react";
 // menu route lives at /menu (authenticated hub)
 
 type NavItem = {
-  to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor";
+  to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor" | "/atlas";
   label: string;
   icon: ComponentType<{ className?: string }>;
 };
 
+const AtlasIcon = ({ className }: { className?: string }) => <MapIcon className={className} strokeWidth={1.75} />;
+
 const LEFT: NavItem[] = [
   { to: "/",            label: "Feed",     icon: IconGarage },
+  { to: "/atlas",       label: "Atlas",    icon: AtlasIcon },
   { to: "/communities", label: "Crews",    icon: IconDiscover },
 ];
 const RIGHT: NavItem[] = [

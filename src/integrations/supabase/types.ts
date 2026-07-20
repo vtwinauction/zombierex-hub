@@ -2922,6 +2922,218 @@ export type Database = {
           },
         ]
       }
+      route_comments: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          route_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          route_id: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          route_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_comments_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_pois: {
+        Row: {
+          address: string | null
+          created_at: string
+          google_place_id: string | null
+          id: string
+          kind: Database["public"]["Enums"]["route_poi_kind"]
+          lat: number
+          lng: number
+          name: string
+          note: string | null
+          order_index: number
+          route_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["route_poi_kind"]
+          lat: number
+          lng: number
+          name: string
+          note?: string | null
+          order_index?: number
+          route_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          google_place_id?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["route_poi_kind"]
+          lat?: number
+          lng?: number
+          name?: string
+          note?: string | null
+          order_index?: number
+          route_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_pois_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_rides: {
+        Row: {
+          id: string
+          route_id: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          route_id: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          route_id?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_rides_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      route_saves: {
+        Row: {
+          created_at: string
+          route_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          route_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          route_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "route_saves_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      routes: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          difficulty: Database["public"]["Enums"]["route_difficulty"]
+          distance_m: number
+          duration_s: number
+          end_lat: number | null
+          end_lng: number | null
+          id: string
+          likes_count: number
+          owner_id: string
+          path: Json
+          region: string | null
+          rides_count: number
+          saves_count: number
+          source: string
+          start_lat: number | null
+          start_lng: number | null
+          surface: Database["public"]["Enums"]["route_surface"]
+          title: string
+          updated_at: string
+          visibility: Database["public"]["Enums"]["route_visibility"]
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["route_difficulty"]
+          distance_m?: number
+          duration_s?: number
+          end_lat?: number | null
+          end_lng?: number | null
+          id?: string
+          likes_count?: number
+          owner_id: string
+          path?: Json
+          region?: string | null
+          rides_count?: number
+          saves_count?: number
+          source?: string
+          start_lat?: number | null
+          start_lng?: number | null
+          surface?: Database["public"]["Enums"]["route_surface"]
+          title: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["route_visibility"]
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          difficulty?: Database["public"]["Enums"]["route_difficulty"]
+          distance_m?: number
+          duration_s?: number
+          end_lat?: number | null
+          end_lng?: number | null
+          id?: string
+          likes_count?: number
+          owner_id?: string
+          path?: Json
+          region?: string | null
+          rides_count?: number
+          saves_count?: number
+          source?: string
+          start_lat?: number | null
+          start_lng?: number | null
+          surface?: Database["public"]["Enums"]["route_surface"]
+          title?: string
+          updated_at?: string
+          visibility?: Database["public"]["Enums"]["route_visibility"]
+        }
+        Relationships: []
+      }
       scheduled_posts: {
         Row: {
           author_id: string
@@ -3950,6 +4162,17 @@ export type Database = {
       reaction_kind: "like" | "save" | "share"
       report_status: "open" | "reviewing" | "resolved" | "dismissed"
       rider_tier: "rookie" | "turbo" | "nitro" | "elite" | "apex_rex" | "legend"
+      route_difficulty: "easy" | "moderate" | "hard" | "expert"
+      route_poi_kind:
+        | "hotel"
+        | "food"
+        | "fuel"
+        | "scenic"
+        | "repair"
+        | "viewpoint"
+        | "custom"
+      route_surface: "paved" | "mixed" | "offroad"
+      route_visibility: "public" | "private"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4188,6 +4411,18 @@ export const Constants = {
       reaction_kind: ["like", "save", "share"],
       report_status: ["open", "reviewing", "resolved", "dismissed"],
       rider_tier: ["rookie", "turbo", "nitro", "elite", "apex_rex", "legend"],
+      route_difficulty: ["easy", "moderate", "hard", "expert"],
+      route_poi_kind: [
+        "hotel",
+        "food",
+        "fuel",
+        "scenic",
+        "repair",
+        "viewpoint",
+        "custom",
+      ],
+      route_surface: ["paved", "mixed", "offroad"],
+      route_visibility: ["public", "private"],
     },
   },
 } as const
