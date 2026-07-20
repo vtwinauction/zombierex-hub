@@ -215,7 +215,7 @@ function ProfilePage() {
             <div className="flex items-baseline justify-between">
               <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>EXPERIENCE · NEXT TIER</span>
               <span className="mono-num text-[11px] font-semibold" style={{ color: "var(--color-ink-0)" }}>
-                {rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} XP
+                {xpDisplay.toLocaleString()} / {xpNextDisplay.toLocaleString()} XP
               </span>
             </div>
             <div className="relative h-2 w-full overflow-hidden rounded-full" style={{ background: "var(--color-paper-2)" }}>
