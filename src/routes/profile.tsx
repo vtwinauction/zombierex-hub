@@ -191,7 +191,7 @@ function ProfilePage() {
                 {displayName}
               </p>
               <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
-                {rider.title.toUpperCase()} · ◎ {me.location}
+                {title} · ◎ {location}
               </p>
             </div>
 
