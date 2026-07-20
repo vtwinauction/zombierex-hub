@@ -449,3 +449,54 @@
   100% { transform: scale(1); }
 }
 .ibar-pop { animation: ibar-pop 360ms cubic-bezier(0.34,1.56,0.64,1); }
+
+/* ============================================================
+   LIGHT-THEME COMPAT LAYER
+   Many legacy pages hardcoded text-white / white borders / dark
+   surfaces from the old obsidian theme. Rather than touch every
+   file, we reinterpret those utilities for the light theme, and
+   opt out via a `.on-dark` ancestor for genuinely dark surfaces
+   (fullscreen reels, video overlays, gradient hero cards).
+   ============================================================ */
+@layer utilities {
+  .text-white       { color: var(--color-ink-0); }
+  .text-white\/90   { color: var(--color-ink-1); }
+  .text-white\/80   { color: var(--color-ink-2); }
+  .text-white\/70   { color: var(--color-ink-3); }
+  .text-white\/60   { color: var(--color-ink-3); }
+  .text-white\/50   { color: var(--color-ink-4); }
+  .text-white\/40   { color: var(--color-ink-4); }
+  .text-white\/30   { color: var(--color-ink-4); }
+
+  .border-white\/5  { border-color: var(--color-line); }
+  .border-white\/10 { border-color: var(--color-line); }
+  .border-white\/15 { border-color: var(--color-line); }
+  .border-white\/20 { border-color: var(--color-line-2); }
+  .border-white\/30 { border-color: var(--color-line-2); }
+
+  .bg-white\/5      { background-color: var(--color-paper-2); }
+  .bg-white\/10     { background-color: var(--color-paper-2); }
+  .bg-white\/15     { background-color: var(--color-paper-2); }
+  .bg-white\/20     { background-color: var(--color-paper-3); }
+
+  /* Genuinely dark surfaces re-enable white text */
+  .on-dark, .on-dark * {
+    &.text-white       { color: #ffffff !important; }
+    &.text-white\/90   { color: rgba(255,255,255,0.90) !important; }
+    &.text-white\/80   { color: rgba(255,255,255,0.80) !important; }
+    &.text-white\/70   { color: rgba(255,255,255,0.70) !important; }
+    &.text-white\/60   { color: rgba(255,255,255,0.60) !important; }
+    &.text-white\/50   { color: rgba(255,255,255,0.50) !important; }
+    &.text-white\/40   { color: rgba(255,255,255,0.40) !important; }
+    &.text-white\/30   { color: rgba(255,255,255,0.30) !important; }
+    &.border-white\/5  { border-color: rgba(255,255,255,0.05) !important; }
+    &.border-white\/10 { border-color: rgba(255,255,255,0.10) !important; }
+    &.border-white\/15 { border-color: rgba(255,255,255,0.15) !important; }
+    &.border-white\/20 { border-color: rgba(255,255,255,0.20) !important; }
+    &.border-white\/30 { border-color: rgba(255,255,255,0.30) !important; }
+    &.bg-white\/5      { background-color: rgba(255,255,255,0.05) !important; }
+    &.bg-white\/10     { background-color: rgba(255,255,255,0.10) !important; }
+    &.bg-white\/15     { background-color: rgba(255,255,255,0.15) !important; }
+    &.bg-white\/20     { background-color: rgba(255,255,255,0.20) !important; }
+  }
+}

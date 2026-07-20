@@ -58,7 +58,7 @@ function ReelsPage() {
 
   return (
     <div
-      className="fixed inset-0 z-40"
+      className="on-dark fixed inset-0 z-40"
       style={{ background: "var(--color-obsidian)" }}
     >
       {/* Top overlay: tabs + back */}
