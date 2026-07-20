@@ -417,7 +417,7 @@ function ProfilePage() {
 
         {tab === "TROPHIES" && (
           <div className="grid grid-cols-2 gap-2">
-            {achievements.map((a, i) => {
+            {achList.map((a, i) => {
               const meta = RARITY[a.rarity] ?? RARITY.common;
               return (
                 <div
