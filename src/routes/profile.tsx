@@ -188,7 +188,7 @@ function ProfilePage() {
 
             <div className="min-w-0">
               <p className="truncate text-[15px] font-semibold" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.01em" }}>
-                {me.handle.replace("@", "")}
+                {displayName}
               </p>
               <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
                 {rider.title.toUpperCase()} · ◎ {me.location}
