@@ -39,16 +39,16 @@ export function StatusBar({ index, section }: { index: string; section: string }
           </span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <BluetoothCell />
           <ActionCell to="/post/new" label="New post">
             <Plus size={19} strokeWidth={2} />
           </ActionCell>
           <ActionCell to="/search" label="Search">
-            <Search size={18} strokeWidth={1.75} />
+            <Search size={17} strokeWidth={1.8} />
           </ActionCell>
           <ActionCell to="/notifications" label="Notifications" pulse>
-            <Bell size={18} strokeWidth={1.75} />
+            <Bell size={17} strokeWidth={1.8} />
           </ActionCell>
           <ActionCell to="/menu" label="Menu">
             <Menu size={18} strokeWidth={1.9} />
@@ -66,7 +66,7 @@ function ActionCell({
     <Link
       to={to}
       aria-label={label}
-      className="tap relative grid h-10 w-10 place-items-center"
+      className="tap relative grid h-9 w-9 place-items-center"
       style={{ color: "var(--color-ink-0)", borderRadius: 10 }}
     >
       {children}
@@ -130,17 +130,21 @@ function BluetoothCell() {
           ? "Camera linked"
           : "Pair action camera"
       }
-      className="tap relative grid h-10 w-10 place-items-center"
-      style={{ color: linked ? "var(--color-neon, #7cff3f)" : "var(--color-ink-0)", borderRadius: 10 }}
+      className="tap relative grid h-9 w-9 place-items-center"
+      style={{
+        color: linked ? "var(--color-neon, #7cff3f)" : "var(--color-ink-0)",
+        borderRadius: 10,
+        background: linked ? "rgba(124,255,63,0.10)" : "transparent",
+      }}
     >
       <Bluetooth
-        size={18}
-        strokeWidth={1.9}
+        size={17}
+        strokeWidth={2}
         style={
           state === "scanning"
-            ? { animation: "pulse 1.2s ease-in-out infinite" }
+            ? { animation: "pulse 1.2s ease-in-out infinite", color: "var(--color-neon, #7cff3f)" }
             : linked
-            ? { filter: "drop-shadow(0 0 5px rgba(124,255,63,0.7))" }
+            ? { filter: "drop-shadow(0 0 5px rgba(124,255,63,0.75))" }
             : undefined
         }
       />

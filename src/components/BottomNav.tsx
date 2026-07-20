@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
-import { Home, Search, PenTool, Play, User } from "lucide-react";
+import { Home, Search, Play, User } from "lucide-react";
 
 type NavItem = {
   to: "/" | "/search" | "/reels" | "/profile";
@@ -41,27 +41,20 @@ export function BottomNav({ hidden = false }: { hidden?: boolean }) {
       <div className="mx-auto grid max-w-md grid-cols-5 items-center px-2 pt-1.5 pb-1.5">
         {LEFT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
 
-        {/* Center Create — ZombieRex-green nib pen → Atlas POIs */}
+        {/* Center — old-school compass, neon-green ZombieRex → Atlas */}
         <Link
           to="/atlas"
-          aria-label="Drop a pin on Route Atlas"
+          aria-label="Open Route Atlas"
           className="tap mx-auto grid h-12 w-12 place-items-center"
           style={{
-            borderRadius: 14,
-            background: "linear-gradient(180deg, #1f2b1a 0%, #0f1a0c 100%)",
+            borderRadius: 999,
+            background: "radial-gradient(circle at 30% 25%, #172114 0%, #0a0f08 70%)",
             color: "var(--color-neon, #7cff3f)",
             boxShadow:
-              "0 0 0 1px rgba(124,255,63,0.35), 0 8px 18px -6px rgba(124,255,63,0.45), inset 0 1px 0 rgba(255,255,255,0.06)",
+              "0 0 0 1px rgba(124,255,63,0.45), 0 0 14px rgba(124,255,63,0.35), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -6px 12px rgba(0,0,0,0.6)",
           }}
         >
-          <PenTool
-            size={22}
-            strokeWidth={2}
-            style={{
-              filter: "drop-shadow(0 0 6px rgba(124,255,63,0.75))",
-              transform: "rotate(-8deg)",
-            }}
-          />
+          <CompassMark />
         </Link>
 
         {RIGHT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
@@ -101,5 +94,67 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
         />
       )}
     </Link>
+  );
+}
+
+/**
+ * Old-school compass mark — bezel + cardinal ticks + N/S needle, all rendered
+ * in the ZombieRex neon-green palette. Used as the elevated center button.
+ */
+function CompassMark() {
+  const NEON = "var(--color-neon, #7cff3f)";
+  const DIM = "rgba(124,255,63,0.55)";
+  const ticks = Array.from({ length: 24 }, (_, i) => i * 15);
+  return (
+    <svg
+      width={30}
+      height={30}
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+      style={{ filter: "drop-shadow(0 0 4px rgba(124,255,63,0.55))" }}
+    >
+      {/* outer bezel */}
+      <circle cx="24" cy="24" r="22" fill="none" stroke={NEON} strokeWidth="1.2" />
+      <circle cx="24" cy="24" r="18.5" fill="none" stroke={DIM} strokeWidth="0.6" />
+
+      {/* tick ring */}
+      <g stroke={DIM} strokeLinecap="round">
+        {ticks.map((deg) => {
+          const cardinal = deg % 90 === 0;
+          const len = cardinal ? 3.2 : 1.6;
+          const sw = cardinal ? 1.2 : 0.6;
+          return (
+            <line
+              key={deg}
+              x1="24"
+              y1={4.5}
+              x2="24"
+              y2={4.5 + len}
+              strokeWidth={sw}
+              stroke={cardinal ? NEON : DIM}
+              transform={`rotate(${deg} 24 24)`}
+            />
+          );
+        })}
+      </g>
+
+      {/* cardinal letters */}
+      <g fill={NEON} style={{ font: "bold 5px ui-sans-serif, system-ui" }} textAnchor="middle">
+        <text x="24" y="12.2">N</text>
+        <text x="24" y="39.6">S</text>
+        <text x="36.4" y="25.9">E</text>
+        <text x="11.6" y="25.9">W</text>
+      </g>
+
+      {/* needle — north bright, south dim (old-school two-tone) */}
+      <g transform="rotate(-8 24 24)">
+        <polygon points="24,10 21.6,24 26.4,24" fill={NEON} />
+        <polygon points="24,38 21.6,24 26.4,24" fill="rgba(124,255,63,0.28)" stroke={DIM} strokeWidth="0.4" />
+      </g>
+
+      {/* pivot cap */}
+      <circle cx="24" cy="24" r="2" fill="#0a0f08" stroke={NEON} strokeWidth="1" />
+      <circle cx="24" cy="24" r="0.7" fill={NEON} />
+    </svg>
   );
 }
