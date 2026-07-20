@@ -35,6 +35,7 @@ export function RouteMap({
   interactive = true,
   onMapClick,
   className = "h-72 w-full",
+  theme = "dark",
 }: {
   path?: LatLng[];
   pois?: Poi[];
@@ -43,7 +44,9 @@ export function RouteMap({
   interactive?: boolean;
   onMapClick?: (p: LatLng) => void;
   className?: string;
+  theme?: "dark" | "light";
 }) {
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const polylineRef = useRef<any>(null);
@@ -62,7 +65,10 @@ export function RouteMap({
         disableDefaultUI: !interactive,
         gestureHandling: interactive ? "greedy" : "cooperative",
         clickableIcons: false,
-        styles: [
+        styles: theme === "light" ? [
+          { featureType: "poi", stylers: [{ visibility: "off" }] },
+          { featureType: "transit", stylers: [{ visibility: "off" }] },
+        ] : [
           { elementType: "geometry", stylers: [{ color: "#0f1114" }] },
           { elementType: "labels.text.fill", stylers: [{ color: "#8a8f98" }] },
           { elementType: "labels.text.stroke", stylers: [{ color: "#0b0d10" }] },
@@ -71,6 +77,7 @@ export function RouteMap({
           { featureType: "poi", stylers: [{ visibility: "off" }] },
         ],
       });
+
       if (onMapClick && interactive) {
         mapRef.current.addListener("click", (e: any) => {
           const lat = e.latLng.lat(); const lng = e.latLng.lng();
