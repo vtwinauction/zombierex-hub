@@ -35,6 +35,7 @@ export function RouteMap({
   interactive = true,
   onMapClick,
   className = "h-72 w-full",
+  theme = "dark",
 }: {
   path?: LatLng[];
   pois?: Poi[];
@@ -43,7 +44,9 @@ export function RouteMap({
   interactive?: boolean;
   onMapClick?: (p: LatLng) => void;
   className?: string;
+  theme?: "dark" | "light";
 }) {
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<any>(null);
   const polylineRef = useRef<any>(null);
