@@ -96,3 +96,65 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
     </Link>
   );
 }
+
+/**
+ * Old-school compass mark — bezel + cardinal ticks + N/S needle, all rendered
+ * in the ZombieRex neon-green palette. Used as the elevated center button.
+ */
+function CompassMark() {
+  const NEON = "var(--color-neon, #7cff3f)";
+  const DIM = "rgba(124,255,63,0.55)";
+  const ticks = Array.from({ length: 24 }, (_, i) => i * 15);
+  return (
+    <svg
+      width={30}
+      height={30}
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+      style={{ filter: "drop-shadow(0 0 4px rgba(124,255,63,0.55))" }}
+    >
+      {/* outer bezel */}
+      <circle cx="24" cy="24" r="22" fill="none" stroke={NEON} strokeWidth="1.2" />
+      <circle cx="24" cy="24" r="18.5" fill="none" stroke={DIM} strokeWidth="0.6" />
+
+      {/* tick ring */}
+      <g stroke={DIM} strokeLinecap="round">
+        {ticks.map((deg) => {
+          const cardinal = deg % 90 === 0;
+          const len = cardinal ? 3.2 : 1.6;
+          const sw = cardinal ? 1.2 : 0.6;
+          return (
+            <line
+              key={deg}
+              x1="24"
+              y1={4.5}
+              x2="24"
+              y2={4.5 + len}
+              strokeWidth={sw}
+              stroke={cardinal ? NEON : DIM}
+              transform={`rotate(${deg} 24 24)`}
+            />
+          );
+        })}
+      </g>
+
+      {/* cardinal letters */}
+      <g fill={NEON} style={{ font: "bold 5px ui-sans-serif, system-ui" }} textAnchor="middle">
+        <text x="24" y="12.2">N</text>
+        <text x="24" y="39.6">S</text>
+        <text x="36.4" y="25.9">E</text>
+        <text x="11.6" y="25.9">W</text>
+      </g>
+
+      {/* needle — north bright, south dim (old-school two-tone) */}
+      <g transform="rotate(-8 24 24)">
+        <polygon points="24,10 21.6,24 26.4,24" fill={NEON} />
+        <polygon points="24,38 21.6,24 26.4,24" fill="rgba(124,255,63,0.28)" stroke={DIM} strokeWidth="0.4" />
+      </g>
+
+      {/* pivot cap */}
+      <circle cx="24" cy="24" r="2" fill="#0a0f08" stroke={NEON} strokeWidth="1" />
+      <circle cx="24" cy="24" r="0.7" fill={NEON} />
+    </svg>
+  );
+}
