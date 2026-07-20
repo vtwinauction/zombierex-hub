@@ -39,16 +39,16 @@ export function StatusBar({ index, section }: { index: string; section: string }
           </span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <BluetoothCell />
           <ActionCell to="/post/new" label="New post">
             <Plus size={19} strokeWidth={2} />
           </ActionCell>
           <ActionCell to="/search" label="Search">
-            <Search size={18} strokeWidth={1.75} />
+            <Search size={17} strokeWidth={1.8} />
           </ActionCell>
           <ActionCell to="/notifications" label="Notifications" pulse>
-            <Bell size={18} strokeWidth={1.75} />
+            <Bell size={17} strokeWidth={1.8} />
           </ActionCell>
           <ActionCell to="/menu" label="Menu">
             <Menu size={18} strokeWidth={1.9} />
