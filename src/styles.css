@@ -500,3 +500,24 @@
     &.bg-white\/20     { background-color: rgba(255,255,255,0.20) !important; }
   }
 }
+
+/* ============================================================
+   LEGACY DARK-SURFACE NEUTRALIZER
+   Many legacy pages set inline `background: var(--color-obsidian)`
+   on full-page wrappers. In the light theme that alias resolves to
+   dark ink and renders those pages fully black. Override inline
+   background uses of the dark aliases to the light page surface,
+   while leaving text-color/border uses untouched. Opt out with
+   `.on-dark` for genuinely dark surfaces (reels, video overlays).
+   ============================================================ */
+@layer utilities {
+  :not(.on-dark):not(.on-dark *)[style*="background: var(--color-obsidian"],
+  :not(.on-dark):not(.on-dark *)[style*="background:var(--color-obsidian"],
+  :not(.on-dark):not(.on-dark *)[style*="background: var(--color-ink-0"],
+  :not(.on-dark):not(.on-dark *)[style*="background:var(--color-ink-0"],
+  :not(.on-dark):not(.on-dark *)[style*="background: var(--color-ink)"],
+  :not(.on-dark):not(.on-dark *)[style*="background:var(--color-ink)"] {
+    background: var(--color-paper-1) !important;
+  }
+}
+

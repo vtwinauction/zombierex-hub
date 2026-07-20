@@ -83,7 +83,7 @@ export function CommentsSheet({
         onClick={onClose}
         className="absolute inset-0 transition-opacity duration-200"
         style={{
-          background: "rgba(0,0,0,0.55)",
+          background: "rgba(15,15,15,0.32)",
           backdropFilter: "blur(6px)",
           opacity: open ? 1 : 0,
         }}
@@ -97,30 +97,30 @@ export function CommentsSheet({
         className="absolute inset-x-0 bottom-0 flex flex-col transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
         style={{
           height: "82vh",
-          background: "var(--color-obsidian, #08090b)",
-          color: "var(--color-ink, #e6e8ec)",
-          borderTop: "1px solid rgba(255,255,255,0.10)",
+          background: "var(--color-paper-0)",
+          color: "var(--color-ink-0)",
+          borderTop: "1px solid var(--color-line)",
           borderTopLeftRadius: 22,
           borderTopRightRadius: 22,
           transform: open ? "translateY(0)" : "translateY(100%)",
-          boxShadow: "0 -30px 80px -20px rgba(0,0,0,0.8)",
+          boxShadow: "0 -30px 80px -20px rgba(15,15,15,0.18)",
         }}
       >
         {/* grabber */}
         <div className="flex justify-center pt-2.5 pb-1">
           <span
             className="block h-1 w-10 rounded-full"
-            style={{ background: "rgba(255,255,255,0.22)" }}
+            style={{ background: "var(--color-line-2)" }}
           />
         </div>
 
         {/* header */}
         <div className="flex items-center justify-between px-5 pb-3">
-          <h3 className="text-[15px] font-semibold tracking-tight">
+          <h3 className="text-[15px] font-semibold tracking-tight" style={{ color: "var(--color-ink-0)" }}>
             {title}
             <span
               className="mono-num ml-2 text-[11px]"
-              style={{ color: "var(--color-silver, #8b8f97)" }}
+              style={{ color: "var(--color-ink-3)" }}
             >
               {items.length}
             </span>
@@ -129,22 +129,18 @@ export function CommentsSheet({
             onClick={onClose}
             aria-label="Close comments"
             className="tap grid h-8 w-8 place-items-center rounded-full"
-            style={{ background: "rgba(255,255,255,0.06)", color: "var(--color-ink)" }}
+            style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)" }}
           >
             ✕
           </button>
         </div>
 
-        <div
-          aria-hidden
-          className="mx-5 h-px"
-          style={{ background: "rgba(255,255,255,0.08)" }}
-        />
+        <div aria-hidden className="mx-5 h-px" style={{ background: "var(--color-line)" }} />
 
         {/* list */}
         <div className="flex-1 overflow-y-auto px-5 py-3 space-y-4">
           {items.length === 0 && (
-            <p className="pt-10 text-center text-[13px]" style={{ color: "var(--color-silver, #8b8f97)" }}>
+            <p className="pt-10 text-center text-[13px]" style={{ color: "var(--color-ink-3)" }}>
               Be the first to comment.
             </p>
           )}
@@ -153,23 +149,24 @@ export function CommentsSheet({
               <div
                 className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-[11px] font-semibold"
                 style={{
-                  background: "linear-gradient(135deg,#2a2d34,#14161a)",
-                  border: "1px solid rgba(255,255,255,0.10)",
+                  background: "var(--color-paper-2)",
+                  border: "1px solid var(--color-line)",
+                  color: "var(--color-ink-0)",
                 }}
               >
                 {c.author.slice(0, 2).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-[13px] font-semibold">{c.author}</span>
-                  <span className="mono-num text-[10px]" style={{ color: "var(--color-silver, #8b8f97)" }}>
+                  <span className="text-[13px] font-semibold" style={{ color: "var(--color-ink-0)" }}>{c.author}</span>
+                  <span className="mono-num text-[10px]" style={{ color: "var(--color-ink-3)" }}>
                     {timeAgo(c.createdAt)}
                   </span>
                 </div>
-                <p className="mt-0.5 text-[13.5px] leading-snug" style={{ color: "var(--color-ink, #e6e8ec)" }}>
+                <p className="mt-0.5 text-[13.5px] leading-snug" style={{ color: "var(--color-ink-1)" }}>
                   {c.body}
                 </p>
-                <div className="mt-1 flex gap-4 text-[11px]" style={{ color: "var(--color-silver, #8b8f97)" }}>
+                <div className="mt-1 flex gap-4 text-[11px]" style={{ color: "var(--color-ink-3)" }}>
                   <button className="tap">Reply</button>
                   <button className="tap">Like</button>
                 </div>
@@ -184,8 +181,8 @@ export function CommentsSheet({
           className="flex items-center gap-2 px-4 pt-3"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(8,9,11,0.95)",
+            borderTop: "1px solid var(--color-line)",
+            background: "var(--color-paper-0)",
           }}
         >
           <input
@@ -199,9 +196,9 @@ export function CommentsSheet({
             inputMode="text"
             className="flex-1 rounded-full px-4 py-3 text-[15px] outline-none"
             style={{
-              background: "rgba(255,255,255,0.08)",
-              color: "var(--color-ink)",
-              border: "1px solid rgba(255,255,255,0.14)",
+              background: "var(--color-paper-2)",
+              color: "var(--color-ink-0)",
+              border: "1px solid var(--color-line)",
               WebkitAppearance: "none",
             }}
           />
@@ -211,8 +208,8 @@ export function CommentsSheet({
             className="tap px-4 py-3 text-[13px] font-semibold"
             style={{
               borderRadius: 999,
-              background: text.trim() ? "var(--color-neon, #c6ff3d)" : "rgba(255,255,255,0.08)",
-              color: text.trim() ? "var(--color-obsidian, #08090b)" : "var(--color-silver, #8b8f97)",
+              background: text.trim() ? "var(--color-ink-0)" : "var(--color-paper-2)",
+              color: text.trim() ? "var(--color-paper-0)" : "var(--color-ink-3)",
               transition: "all 160ms ease",
             }}
           >
