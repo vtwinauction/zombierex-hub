@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
-import { Home, Search, PenTool, Play, User } from "lucide-react";
+import { Home, Search, Play, User } from "lucide-react";
 
 type NavItem = {
   to: "/" | "/search" | "/reels" | "/profile";
