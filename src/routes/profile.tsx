@@ -88,6 +88,11 @@ function ProfilePage() {
   const topSpeed = bike.hp + 45;
   const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n));
 
+  const displayName = p?.display_name || p?.handle || me.handle.replace("@", "");
+  const location = p?.location || me.location;
+  const title = p ? `LEVEL ${level} · ${(p.tier || "ROOKIE").toString().toUpperCase()}` : rider.title.toUpperCase();
+  const idLabel = (p?.id ?? me.id).slice(0, 8).toUpperCase();
+
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
       <StatusBar index="05" section="GARAGE · OPERATOR" />
