@@ -72,8 +72,8 @@ function ProfilePage() {
   const xpNext = p ? xpForLevel(level + 1) : rider.xpToNext;
   const xpSpan = Math.max(1, xpNext - xpFloor);
   const xpPct = Math.max(0, Math.min(100, Math.round(((xp - xpFloor) / xpSpan) * 100)));
-  const xpDisplay = p ? xp - xpFloor : rider.xp;
-  const xpNextDisplay = p ? xpNext - xpFloor : rider.xpToNext;
+  const xpDisplay = p ? Math.max(0, xp - xpFloor) : rider.xp;
+  const xpNextDisplay = p ? Math.max(1, xpNext - xpFloor) : rider.xpToNext;
 
   const totalAch = live?.totalAchievements ?? achievements.length;
   const earnedCount = live?.earnedCount ?? achievements.filter((a) => a.earned).length;
