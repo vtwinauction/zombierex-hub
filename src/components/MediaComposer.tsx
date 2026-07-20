@@ -142,6 +142,27 @@ export function MediaComposer({ onDone }: Props) {
     if (!items.length && next.length) setActive(0);
   }, [items.length]);
 
+  // Consume camera capture handed off from the status-bar long-press
+  useEffect(() => {
+    const raw = typeof window !== "undefined" ? sessionStorage.getItem("zrex:capture") : null;
+    if (!raw) return;
+    sessionStorage.removeItem("zrex:capture");
+    try {
+      const payload = JSON.parse(raw) as { url: string; type: string; name: string };
+      (async () => {
+        const res = await fetch(payload.url);
+        const blob = await res.blob();
+        const file = new File([blob], payload.name || "capture", { type: payload.type || blob.type });
+        try { URL.revokeObjectURL(payload.url); } catch { /* noop */ }
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        addFiles(dt.files);
+      })().catch(() => { /* noop */ });
+    } catch { /* noop */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+
   const patchActive = (patch: Partial<MediaItem>) =>
     setItems((prev) => prev.map((it, i) => (i === active ? { ...it, ...patch } : it)));
 
