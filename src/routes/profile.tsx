@@ -302,10 +302,11 @@ function ProfilePage() {
 
           {/* Ledger row */}
           <div className="mt-3 grid grid-cols-4 gap-2">
-            <Ledger k="NET"     v="12.4K" dot="#00e5ff" />
-            <Ledger k="SORTIES" v="47"    dot="var(--color-neon)" />
-            <Ledger k="ODO"     v="8.9K"  u="mi" dot="#ff9500" />
-            <Ledger k="TROPHY"  v={`${earnedCount}/${achievements.length}`} dot="#ff3d5a" />
+            <Ledger k="NET"     v={fmt(followers)} dot="#00e5ff" />
+            <Ledger k="SORTIES" v={fmt(postsCount)} dot="var(--color-neon)" />
+            <Ledger k="LISTINGS" v={fmt(listingsCount)} dot="#ff9500" />
+            <Ledger k="TROPHY"  v={`${earnedCount}/${totalAch}`} dot="#ff3d5a" />
+
           </div>
         </div>
       </section>
