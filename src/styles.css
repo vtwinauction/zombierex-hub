@@ -1,175 +1,182 @@
 @import "tailwindcss";
 
 /* ============================================================
-   ZOMBIEREX · OBSIDIAN & SIGNAL
-   Editorial serif + technical mono on obsidian, one neon signal.
-   Layered floating surfaces, sculpted depth, hairline geometry.
+   ZOMBIEREX · TITANIUM EDITORIAL
+   Light premium surfaces, graphite ink, one toxic-green accent.
+   Space Grotesk display · DM Sans body · JetBrains Mono numerals.
    ============================================================ */
 
 @theme {
-  /* Raw palette */
-  --color-obsidian: #08090b;      /* deepest surface */
-  --color-slate:    #0f1114;      /* elevated dark */
-  --color-graphite: #16181d;      /* card */
-  --color-gunmetal: #2a2d34;      /* control */
-  --color-titanium: #6e727a;      /* muted text */
-  --color-silver:   #b8bcc4;      /* secondary text */
-  --color-bone:     #eceae4;      /* off-white paper */
-  --color-paper:    #f6f4ee;      /* warm paper accent */
-  --color-ink:      #f2efe7;      /* primary text on dark */
-  --color-neon:     #c6ff3d;      /* SIGNAL green */
-  --color-neon-deep:#7ee01c;
-  --color-ember:    #ff5b3a;      /* danger only */
+  /* ---- Titanium Editorial palette ---- */
+  --color-paper-0:  #ffffff;     /* pure surface */
+  --color-paper-1:  #fafafa;     /* page bg */
+  --color-paper-2:  #f4f4f5;     /* muted surface */
+  --color-paper-3:  #ececec;     /* raised chip */
 
-  /* Semantic — dark-first, screens read these */
-  --color-bg:          var(--color-obsidian);
-  --color-fg:          var(--color-ink);
-  --color-mist:        var(--color-slate);
-  --color-ash:         var(--color-titanium);
-  --color-hair:        #23262c;
-  --color-hair-strong: #33373f;
-  --color-signal:      var(--color-neon);
+  --color-line:     #e6e6e6;     /* hairline */
+  --color-line-2:   #d4d4d4;     /* hairline strong */
+
+  --color-ink-0:    #0a0a0a;     /* primary text / dark surface */
+  --color-ink-1:    #1a1a1a;
+  --color-ink-2:    #3a3a3a;     /* secondary text */
+  --color-ink-3:    #6b6b6b;     /* muted text */
+  --color-ink-4:    #9a9a9a;     /* micro text */
+
+  --color-neon:     #00c853;     /* signal green (legible on white) */
+  --color-neon-deep:#00a844;
+  --color-ember:    #e11d2a;     /* danger only */
+
+  /* ---- Legacy aliases (many components still reference these) ---- */
+  --color-obsidian: var(--color-ink-0);        /* dark ink; used as dark surfaces & text */
+  --color-slate:    var(--color-paper-2);      /* elevated light surface */
+  --color-graphite: var(--color-paper-0);      /* cards → white */
+  --color-gunmetal: var(--color-paper-3);      /* controls */
+  --color-titanium: var(--color-ink-3);        /* muted */
+  --color-silver:   var(--color-ink-2);        /* secondary */
+  --color-bone:     var(--color-paper-1);
+  --color-paper:    var(--color-paper-1);
+  --color-ink:      var(--color-ink-0);        /* primary text (was light, now dark) */
+  --color-hair:     var(--color-line);
+  --color-hair-strong: var(--color-line-2);
+  --color-hair-soft: #efefef;
+  --color-signal:   var(--color-neon);
   --color-signal-deep: var(--color-neon-deep);
-  --color-heat:        var(--color-ember);
-  --color-cool:        var(--color-silver);
+  --color-heat:     var(--color-ember);
+  --color-cool:     var(--color-ink-3);
+  --color-mist:     var(--color-paper-2);
+  --color-ash:      var(--color-ink-3);
+  --color-white:    #ffffff;
+  --color-matte:    var(--color-paper-1);
+  --color-platinum: var(--color-paper-0);
+  --color-neon-deep-glow: rgba(0,200,83,0.35);
 
-  /* shadcn map */
-  --color-background: var(--color-obsidian);
-  --color-foreground: var(--color-ink);
-  --color-muted: var(--color-graphite);
-  --color-muted-foreground: var(--color-titanium);
-  --color-border: var(--color-hair);
-  --color-primary: var(--color-neon);
-  --color-primary-foreground: var(--color-obsidian);
-  --color-accent: var(--color-neon);
-  --color-accent-foreground: var(--color-obsidian);
-  --color-destructive: var(--color-ember);
-  --color-destructive-foreground: var(--color-ink);
-  --color-card: var(--color-graphite);
-  --color-card-foreground: var(--color-ink);
-  --color-input: var(--color-hair);
-  --color-ring: var(--color-neon);
-  --color-popover: var(--color-graphite);
-  --color-popover-foreground: var(--color-ink);
-  --color-secondary: var(--color-graphite);
-  --color-secondary-foreground: var(--color-ink);
-  --color-sidebar: var(--color-slate);
-  --color-sidebar-foreground: var(--color-ink);
-  --color-sidebar-primary: var(--color-neon);
-  --color-sidebar-primary-foreground: var(--color-obsidian);
-  --color-sidebar-accent: var(--color-graphite);
-  --color-sidebar-accent-foreground: var(--color-ink);
-  --color-sidebar-border: var(--color-hair);
-  --color-sidebar-ring: var(--color-neon);
+  /* ---- shadcn semantic tokens ---- */
+  --color-bg:                    var(--color-paper-1);
+  --color-fg:                    var(--color-ink-0);
+  --color-background:            var(--color-paper-1);
+  --color-foreground:            var(--color-ink-0);
+  --color-muted:                 var(--color-paper-2);
+  --color-muted-foreground:      var(--color-ink-3);
+  --color-border:                var(--color-line);
+  --color-primary:               var(--color-ink-0);
+  --color-primary-foreground:    var(--color-paper-0);
+  --color-accent:                var(--color-neon);
+  --color-accent-foreground:     var(--color-ink-0);
+  --color-destructive:           var(--color-ember);
+  --color-destructive-foreground:#ffffff;
+  --color-card:                  var(--color-paper-0);
+  --color-card-foreground:       var(--color-ink-0);
+  --color-input:                 var(--color-line);
+  --color-ring:                  var(--color-ink-0);
+  --color-popover:               var(--color-paper-0);
+  --color-popover-foreground:    var(--color-ink-0);
+  --color-secondary:             var(--color-paper-2);
+  --color-secondary-foreground:  var(--color-ink-0);
+  --color-sidebar:               var(--color-paper-0);
+  --color-sidebar-foreground:    var(--color-ink-0);
+  --color-sidebar-primary:       var(--color-ink-0);
+  --color-sidebar-primary-foreground: var(--color-paper-0);
+  --color-sidebar-accent:        var(--color-paper-2);
+  --color-sidebar-accent-foreground: var(--color-ink-0);
+  --color-sidebar-border:        var(--color-line);
+  --color-sidebar-ring:          var(--color-ink-0);
   --color-chart-1: var(--color-neon);
-  --color-chart-2: var(--color-silver);
-  --color-chart-3: var(--color-gunmetal);
-  --color-chart-4: var(--color-titanium);
+  --color-chart-2: var(--color-ink-2);
+  --color-chart-3: var(--color-ink-3);
+  --color-chart-4: var(--color-ink-4);
   --color-chart-5: var(--color-ember);
 
-  /* Legacy aliases still used by components */
-  --color-white: var(--color-ink);
-  --color-matte: var(--color-obsidian);
-  --color-platinum: var(--color-graphite);
-  --color-hair-soft: #1c1e23;
+  /* ---- Typography ---- */
+  --font-display:   "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-editorial: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans:      "DM Sans", "Inter", system-ui, sans-serif;
+  --font-mono:      "JetBrains Mono", ui-monospace, monospace;
 
-  --font-editorial: "Instrument Serif", "Times New Roman", serif;
-  --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-sans: "Work Sans", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-
-  --radius: 4px;
+  --radius: 12px;
 }
 
 @layer base {
-  * { border-color: var(--color-hair); }
+  * { border-color: var(--color-line); }
   html, body {
-    background: var(--color-obsidian);
-    color: var(--color-ink);
+    background: var(--color-paper-1);
+    color: var(--color-ink-0);
   }
   body {
     font-family: var(--font-sans);
     font-feature-settings: "ss01","cv11","tnum";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    /* Layered ambient depth: dot grid + soft signal glow + film grain */
-    background-color: var(--color-obsidian);
-    background-image:
-      radial-gradient(900px 500px at 100% -10%, rgba(198,255,61,0.06), transparent 60%),
-      radial-gradient(700px 500px at -10% 110%, rgba(120,140,255,0.04), transparent 60%),
-      radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
-    background-size: auto, auto, 22px 22px;
-    background-attachment: fixed;
     overscroll-behavior-y: none;
   }
   h1,h2,h3,h4 {
-    font-family: var(--font-editorial);
-    font-weight: 400;
+    font-family: var(--font-display);
+    font-weight: 600;
     letter-spacing: -0.02em;
+    color: var(--color-ink-0);
   }
-  .mono { font-family: var(--font-mono); }
-  .serif { font-family: var(--font-editorial); }
+  .mono  { font-family: var(--font-mono); }
+  .serif { font-family: var(--font-display); font-weight: 600; letter-spacing: -0.02em; font-style: normal; }
   ::-webkit-scrollbar { display: none; }
   * { scrollbar-width: none; }
-  ::selection { background: var(--color-neon); color: var(--color-obsidian); }
+  ::selection { background: var(--color-ink-0); color: var(--color-paper-0); }
 }
 
 /* ============ SURFACES ============ */
-@utility surface-1 { background: var(--color-slate); border: 1px solid var(--color-hair); }
-@utility surface-2 { background: var(--color-graphite); border: 1px solid var(--color-hair); }
-@utility surface-paper { background: var(--color-paper); color: var(--color-obsidian); border: 1px solid #d9d4c6; }
-@utility surface-ink { background: var(--color-obsidian); color: var(--color-ink); border: 1px solid var(--color-hair-strong); }
+@utility surface-1 { background: var(--color-paper-0); border: 1px solid var(--color-line); }
+@utility surface-2 { background: var(--color-paper-2); border: 1px solid var(--color-line); }
+@utility surface-paper { background: var(--color-paper-1); color: var(--color-ink-0); border: 1px solid var(--color-line); }
+@utility surface-ink { background: var(--color-ink-0); color: var(--color-paper-0); border: 1px solid var(--color-ink-0); }
 
-/* Legacy names still referenced elsewhere */
-@utility card-surface { background: var(--color-graphite); border: 1px solid var(--color-hair); border-radius: 4px; }
-@utility card-ink { background: var(--color-obsidian); color: var(--color-ink); border: 1px solid var(--color-hair-strong); border-radius: 4px; }
+@utility card-surface { background: var(--color-paper-0); border: 1px solid var(--color-line); border-radius: 12px; }
+@utility card-ink { background: var(--color-ink-0); color: var(--color-paper-0); border: 1px solid var(--color-ink-0); border-radius: 12px; }
 
 @utility glass {
-  background: color-mix(in oklab, #0b0c0f 62%, transparent);
+  background: color-mix(in oklab, #ffffff 78%, transparent);
   backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid var(--color-line);
 }
 @utility glass-light {
-  background: color-mix(in oklab, #f2efe7 70%, transparent);
+  background: color-mix(in oklab, #ffffff 82%, transparent);
   backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(0,0,0,0.06);
-  color: var(--color-obsidian);
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-0);
+}
+@utility glass-dark {
+  background: color-mix(in oklab, #0a0a0a 65%, transparent);
+  backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #fff;
 }
 
-@utility hairline { border: 1px solid var(--color-hair); }
-@utility hairline-t { border-top: 1px solid var(--color-hair); }
-@utility hairline-b { border-bottom: 1px solid var(--color-hair); }
+@utility hairline   { border: 1px solid var(--color-line); }
+@utility hairline-t { border-top: 1px solid var(--color-line); }
+@utility hairline-b { border-bottom: 1px solid var(--color-line); }
 
-/* Layered floating shadow — premium depth */
-@utility lift-1 { box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 12px 32px -18px rgba(0,0,0,0.7); }
-@utility lift-2 { box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 24px 60px -28px rgba(0,0,0,0.85), 0 2px 6px -2px rgba(0,0,0,0.5); }
-@utility lift-signal { box-shadow: 0 0 0 1px rgba(198,255,61,0.35), 0 18px 40px -18px rgba(198,255,61,0.35); }
+/* Elevation */
+@utility lift-1 { box-shadow: 0 1px 2px rgba(15,15,15,0.04), 0 8px 24px -14px rgba(15,15,15,0.10); }
+@utility lift-2 { box-shadow: 0 1px 2px rgba(15,15,15,0.06), 0 18px 40px -18px rgba(15,15,15,0.18); }
+@utility lift-signal { box-shadow: 0 0 0 1px rgba(0,200,83,0.35), 0 18px 40px -18px rgba(0,200,83,0.45); }
 
-/* Etched horizontal separator */
-
-/* Etched horizontal separator (dashed + label pocket) */
 @utility etch {
-  background-image: repeating-linear-gradient(90deg, var(--color-hair) 0 6px, transparent 6px 10px);
+  background-image: repeating-linear-gradient(90deg, var(--color-line) 0 6px, transparent 6px 10px);
   height: 1px;
 }
 
-/* CNC bolt marker */
 @utility bolt {
   display: inline-block;
   width: 6px; height: 6px;
   border-radius: 999px;
-  background: radial-gradient(circle at 35% 30%, #fff, var(--color-silver) 40%, var(--color-gunmetal) 100%);
-  box-shadow: 0 0 0 1px #000, inset 0 0 0 1px rgba(255,255,255,0.4);
+  background: radial-gradient(circle at 35% 30%, #fff, #d4d4d4 40%, #6b6b6b 100%);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
 }
 
-/* Brushed metal (dark) */
 @utility surface-brushed {
   background:
-    linear-gradient(180deg, #1a1d22 0%, #101215 100%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 3px);
-  background-blend-mode: overlay;
-  border: 1px solid var(--color-hair-strong);
-  color: var(--color-ink);
+    linear-gradient(180deg, #ffffff 0%, #f2f2f2 100%),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.02) 0 1px, transparent 1px 3px);
+  background-blend-mode: multiply;
+  border: 1px solid var(--color-line);
+  color: var(--color-ink-0);
 }
 
 @utility gradient-brand { background-image: linear-gradient(135deg, var(--color-neon) 0%, var(--color-neon-deep) 100%); }
@@ -177,10 +184,18 @@
   background-image: linear-gradient(180deg,
     transparent 0%,
     rgba(0,0,0,0.15) 30%,
-    rgba(0,0,0,0.95) 100%);
+    rgba(0,0,0,0.90) 100%);
 }
 
 /* ============ TYPOGRAPHY ============ */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-ink-3);
+}
 @utility mono-caps {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -194,7 +209,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   font-weight: 500;
-  color: var(--color-titanium);
+  color: var(--color-ink-3);
 }
 @utility mono-num {
   font-family: var(--font-mono);
@@ -202,27 +217,25 @@
   letter-spacing: -0.01em;
 }
 @utility display-xl {
-  font-family: var(--font-editorial);
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 0.92;
-  font-style: italic;
+  line-height: 0.94;
 }
 @utility display-roman {
-  font-family: var(--font-editorial);
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 600;
   letter-spacing: -0.02em;
-  line-height: 0.92;
+  line-height: 0.94;
 }
 @utility display-numeral {
-  font-family: var(--font-editorial);
-  font-weight: 400;
+  font-family: var(--font-display);
+  font-weight: 600;
   letter-spacing: -0.03em;
-  line-height: 0.88;
+  line-height: 0.9;
   font-variant-numeric: tabular-nums;
 }
 
-/* Vertical rotated label — editorial spine */
 @utility spine {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
@@ -230,7 +243,7 @@
   font-size: 9.5px;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: var(--color-titanium);
+  color: var(--color-ink-3);
 }
 
 /* ============ CHIPS & BUTTONS ============ */
@@ -238,50 +251,48 @@
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 10px;
   border-radius: 999px;
-  background: var(--color-graphite);
-  border: 1px solid var(--color-hair);
+  background: var(--color-paper-0);
+  border: 1px solid var(--color-line);
   font-family: var(--font-mono);
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-silver);
+  color: var(--color-ink-2);
 }
 @utility chip-active {
-  background: var(--color-ink);
-  color: var(--color-obsidian);
-  border-color: var(--color-ink);
+  background: var(--color-ink-0);
+  color: var(--color-paper-0);
+  border-color: var(--color-ink-0);
 }
 @utility chip-neon {
   background: var(--color-neon);
-  color: var(--color-obsidian);
+  color: var(--color-ink-0);
   border-color: var(--color-neon-deep);
 }
 
 @utility btn-solid {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 13px 20px;
-  background: var(--color-ink);
-  color: var(--color-obsidian);
-  border-radius: 2px;
+  background: var(--color-ink-0);
+  color: var(--color-paper-0);
+  border-radius: 10px;
   font-weight: 600;
   font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), background 200ms ease, box-shadow 200ms ease;
+  letter-spacing: 0.02em;
+  transition: transform 140ms cubic-bezier(0.2,0.7,0.2,1), background 200ms ease;
   &:active { transform: translateY(1px); }
-  &:hover { background: var(--color-neon); box-shadow: 0 8px 24px -8px rgba(198,255,61,0.5); }
+  &:hover { background: var(--color-ink-1); }
 }
 @utility btn-neon {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 13px 20px;
   background: var(--color-neon);
-  color: var(--color-obsidian);
-  border-radius: 2px;
+  color: var(--color-ink-0);
+  border-radius: 10px;
   font-weight: 700;
   font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  box-shadow: 0 12px 32px -12px rgba(198,255,61,0.6);
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 24px -12px rgba(0,200,83,0.5);
   transition: transform 140ms ease;
   &:active { transform: translateY(1px); }
 }
@@ -289,15 +300,13 @@
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 13px 20px;
   background: transparent;
-  color: var(--color-ink);
-  border: 1px solid var(--color-hair-strong);
-  border-radius: 2px;
+  color: var(--color-ink-0);
+  border: 1px solid var(--color-line-2);
+  border-radius: 10px;
   font-weight: 500;
   font-size: 13px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   transition: border-color 200ms ease, background 200ms ease;
-  &:hover { border-color: var(--color-ink); background: var(--color-slate); }
+  &:hover { border-color: var(--color-ink-0); background: var(--color-paper-2); }
 }
 
 @utility tap {
@@ -305,41 +314,38 @@
   &:active { transform: scale(0.98); opacity: 0.9; }
 }
 
-/* Hex avatar frame */
 @utility hex-frame {
   clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
-  background: var(--color-graphite);
+  background: var(--color-paper-2);
 }
 
-/* Story rings */
 @utility story-ring {
   padding: 2.5px;
   border-radius: 999px;
   background: conic-gradient(from 210deg, var(--color-neon) 0deg, var(--color-ember) 140deg, var(--color-neon-deep) 260deg, var(--color-neon) 360deg);
 }
-@utility story-ring-seen { padding: 2.5px; border-radius: 999px; background: var(--color-hair-strong); }
+@utility story-ring-seen { padding: 2.5px; border-radius: 999px; background: var(--color-line-2); }
 @utility story-ring-live { padding: 2.5px; border-radius: 999px; background: conic-gradient(from 0deg, var(--color-ember), #ff9a3a, var(--color-ember)); }
 
-/* Rider badges */
 @utility badge-metal {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 8px 3px 6px;
-  border-radius: 2px;
+  border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 9px;
   letter-spacing: 0.16em;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-ink);
-  background: linear-gradient(180deg, #2a2d33 0%, #16181d 100%);
-  border: 1px solid var(--color-hair-strong);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  color: var(--color-paper-0);
+  background: linear-gradient(180deg, #3a3a3a 0%, #0a0a0a 100%);
+  border: 1px solid #000;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
   clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
 }
 @utility badge-neon {
-  background: linear-gradient(180deg, #dbff8b 0%, var(--color-neon) 55%, var(--color-neon-deep) 100%);
+  background: linear-gradient(180deg, #4dff8a 0%, var(--color-neon) 55%, var(--color-neon-deep) 100%);
   border-color: var(--color-neon-deep);
-  color: var(--color-obsidian);
+  color: var(--color-ink-0);
 }
 @utility badge-carbon {
   background: linear-gradient(180deg, #2a2d33 0%, #0e0f11 100%);
@@ -391,7 +397,7 @@
 
 @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
 @utility skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.03) 100%);
+  background: linear-gradient(90deg, rgba(0,0,0,0.03) 0%, rgba(0,0,0,0.08) 50%, rgba(0,0,0,0.03) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.4s linear infinite;
 }
@@ -408,7 +414,7 @@
   position: relative; overflow: hidden;
   &::after {
     content: ""; position: absolute; inset: 0;
-    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.35) 45%, transparent 60%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.55) 45%, transparent 60%);
     background-size: 200% 100%;
     mix-blend-mode: overlay;
     animation: sheen 3.4s ease-in-out infinite;
@@ -417,8 +423,8 @@
 }
 
 @keyframes engine-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(198,255,61,0.55); }
-  50% { box-shadow: 0 0 0 6px rgba(198,255,61,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0,200,83,0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(0,200,83,0); }
 }
 @utility engine-pulse { animation: engine-pulse 1.8s ease-out infinite; }
 
@@ -443,5 +449,3 @@
   100% { transform: scale(1); }
 }
 .ibar-pop { animation: ibar-pop 360ms cubic-bezier(0.34,1.56,0.64,1); }
-
-

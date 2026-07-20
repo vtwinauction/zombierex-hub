@@ -1,80 +1,52 @@
+# ZOMBIEREX — Professional Reorganization
 
-# Plan — Route Atlas + Reel Speed Upgrades
+Locking in **Titanium Editorial** (light premium: #fafafa surfaces, graphite ink, single toxic-green accent) and the **industry-standard 5-tab nav** used by IG/TikTok/Snapchat: Home · Search · Create (center) · Reels · Profile. Everything else moves behind a top-bar Menu.
 
-Two shipments in one turn. Both are additive and won't touch existing feature logic.
+## 1. Design system — `src/styles.css`
 
-## Decisions locked in
+Rewrite the theme layer only (keep existing utility classes wired):
+- Surfaces: `--bg #fafafa`, `--surface #ffffff`, `--surface-2 #f2f2f2`, `--hair #e6e6e6`, `--hair-strong #d4d4d4`
+- Ink: `--ink #0a0a0a`, `--ink-2 #3a3a3a`, `--ink-3 #8a8a8a`
+- Accent: `--neon #00c853` (toned toxic green — legible on white), `--danger #e11d2a`
+- Radius scale 8/12/16, single soft elevation `0 1px 2px + 0 8px 24px -12px`, hairline dividers 1px
+- Type: Space Grotesk display / DM Sans body (already loaded via head); tighten tracking, add `.eyebrow` micro-label utility
+- Keep `.mono-num`, `.mono-caps`, `.serif` classes and existing animations so no consumer breaks
 
-- **Route creation:** support both **plan-on-map** and **live GPS record**. Live recording runs only while the user is on the "Record" screen (foreground only) — no background tracking service, so battery and app health stay clean.
-- **Map provider:** Google Maps Platform (Lovable-managed connector). Used for map rendering, Places (hotels, restaurants, fuel, scenic), and directions.
-- **Sharing (my recommendation):** **per-route visibility** — every route is either `private` (link only) or `public` (discoverable in the Atlas). Riders pick when saving. Others can "Ride this route" which clones it into their own garage. Best of both worlds, minimal extra UI.
+## 2. Navigation — IG-style
 
-## Shipment 1 — Route Atlas (new feature)
+Rebuild `src/components/BottomNav.tsx`:
+- 5 slots: **Home /**, **Search /search**, **Create (center, elevated, filled accent)**, **Reels /reels**, **Profile /profile**
+- White surface, hairline top border, safe-area padding, active state = filled ink icon + 2px underline
+- Keep auto-hide on scroll-down (already wired)
+- Center Create button: tap → `/post/new`, long-press → native camera (reuse existing capture logic from StatusBar)
 
-### New routes (pages)
-- `/atlas` — discovery hub: featured + nearby public routes, filters (difficulty, distance, region, surface).
-- `/atlas/$id` — route detail: map preview, elevation-ish stats, POIs list, "Ride this route", "Save", comments.
-- `/_authenticated/atlas/new` — plan mode: tap map to add waypoints, search Places to add POIs, save with visibility toggle.
-- `/_authenticated/atlas/record` — live record mode: Start / Pause / Stop with live distance + duration; on Stop, jumps to save screen prefilled with the tracked path.
-- `/_authenticated/atlas/mine` — my saved + created routes.
+Rebuild `src/components/StatusBar.tsx` as a clean editorial masthead:
+- Left: wordmark "ZOMBIEREX" (Space Grotesk, tight tracking) + tiny section eyebrow
+- Right: Search icon, Notifications, **Menu (hamburger)** → routes to `/menu` (Atlas, Crews, Vault, Events, Creators, Vendor, Settings, Admin…)
+- Remove the Camera/Plus from the top bar (now lives in bottom Create)
 
-### Data model (new tables, all with GRANTs + RLS)
-- `routes` — id, owner_id, title, description, visibility (`public`/`private`), distance_m, duration_s, difficulty, surface, region, cover_url, path (jsonb: array of `{lat,lng}`), start/end point, stats, counters (saves, rides, likes), created_at.
-- `route_pois` — id, route_id, name, kind (`hotel`/`food`/`fuel`/`scenic`/`repair`/`custom`), google_place_id, lat, lng, note, order_index.
-- `route_saves` — user_id + route_id (bookmark).
-- `route_rides` — user_id + route_id + started_at (increments "ride count" when someone follows a route).
-- `route_comments` — id, route_id, user_id, body, created_at.
+## 3. Home restructure — `src/routes/index.tsx`
 
-Public policies: anyone can SELECT `routes` where `visibility='public'`; owners can SELECT/INSERT/UPDATE/DELETE their own. POIs/comments inherit route visibility via join checks.
+Editorial dashboard + feed hybrid:
+1. Stories rail (existing)
+2. **Pulse strip**: 3 compact stat tiles (Followers, XP, Rides) — light cards, mono numerals
+3. **Quick actions row**: Atlas · Crews · Vault · Events (icon + label, horizontal scroll)
+4. **For You** feed of TelemetryPosts + Reels + Sponsored
+- Remove neon-heavy panels; use hairlines, generous whitespace, single accent
 
-### Server functions (`src/lib/routes.functions.ts`)
-- `listPublicRoutes` (publishable client) — Atlas hub feed.
-- `getRoute` — public if public, else owner-only.
-- `listMyRoutes`, `createRoute`, `updateRoute`, `deleteRoute` (auth).
-- `saveRoute` / `unsaveRoute`, `startRide` (auth).
-- `searchPlacesNearby` (auth) — calls Google Places via gateway to find hotels/food/fuel around a point.
-- `addComment` / `listComments`.
+## 4. Touch-ups only (no logic changes)
 
-### Client components
-- `RouteMap.tsx` — loads Google Maps JS API via managed browser key (`loading=async` + callback), draws polyline + markers. Uses standard `google.maps.Marker` (no mapId).
-- `RoutePlanner.tsx` — wraps RouteMap in edit mode; waypoint list + POI search sheet.
-- `RouteRecorder.tsx` — uses `navigator.geolocation.watchPosition` only while mounted; downsamples points; shows live HUD (distance, duration, avg speed).
-- `RouteCard.tsx` — Atlas hub tile, obsidian-glass style consistent with existing HUD.
-- Add "Atlas" entry to `BottomNav` (replacing the least-used slot, TBD with you post-ship).
+- `src/components/TelemetryPost.tsx`, `Reel.tsx`, `InteractionBar.tsx`, `RouteCard.tsx`, `FeedHeader.tsx`: swap hard blacks → `--ink`, neon backgrounds → hairline + accent text where appropriate. Keep icons, keep behavior.
+- `/menu`: reorder into sections (Ride, Social, Commerce, You, Admin) with hairline groups.
 
-### Performance guardrails
-- Map component is `React.lazy` + `<ClientOnly>` — never loaded on SSR, doesn't touch bundle of other pages.
-- Geolocation watcher unmounts cleanly on route change.
-- Path polylines are downsampled (Douglas-Peucker) before insert — capped at 2k points per route.
-- Places lookups are debounced 400ms and cached per session.
-- Atlas hub uses standard `useSuspenseQuery` with `ensureQueryData` in the loader.
+## 5. Out of scope
 
-## Shipment 2 — Reel speed upgrades
+- No backend / server function / RLS changes
+- No feature additions or removals
+- Individual sub-routes (admin, creator, vendor, marketplace detail) inherit new tokens automatically; no per-file rewrites
 
-- **Camera-first "+":** long-press opens native camera (`<input capture>` on mobile); tap opens existing composer.
-- **Double-tap-to-like** in `Reel.tsx` with heart burst animation, wired to existing `useInteractionState`.
-- **Preload next 2 reels:** create hidden `<video preload="metadata">` for `items[i+1]` and `items[i+2]` on index change; free them when they slide past.
+## Technical notes
 
-## Files touched
-
-New:
-- `src/lib/routes.functions.ts`
-- `src/components/RouteMap.tsx`, `RoutePlanner.tsx`, `RouteRecorder.tsx`, `RouteCard.tsx`
-- `src/routes/atlas.tsx`, `atlas.$id.tsx`
-- `src/routes/_authenticated/atlas.new.tsx`, `atlas.record.tsx`, `atlas.mine.tsx`
-- One Supabase migration for the 5 new tables + policies + GRANTs.
-
-Modified:
-- `src/components/BottomNav.tsx` — add Atlas entry.
-- `src/components/Reel.tsx` — double-tap + preload.
-- `src/routes/reels.tsx` — thread preload indices.
-- `src/components/StatusBar.tsx` — long-press on "+" for camera-first.
-
-## What I need from you
-Just approval. I'll also need to link the **Google Maps (managed by Lovable)** connector — I'll trigger that step during build; you click "Connect" once in the popup.
-
-## Not in this shipment (call out for later)
-- Turn-by-turn voice navigation (needs native or heavy JS overlay).
-- Offline map tiles.
-- Live "group ride" tracking (multiple riders on one map in real time).
-- Elevation profiles from Google Elevation API (easy add-on next round).
+- All color changes flow through `src/styles.css` CSS custom properties; component `style={{ background: "var(--color-obsidian)" }}` refs remap by aliasing the old token names to the new palette (e.g. `--color-obsidian` → `--ink`) to avoid touching 40+ files.
+- Typecheck + build must stay green after each file batch.
+- Verify visually at 384×681 (current viewport) via preview screenshot.
