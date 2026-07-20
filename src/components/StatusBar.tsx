@@ -40,6 +40,10 @@ export function StatusBar({ index, section }: { index: string; section: string }
         </Link>
 
         <div className="flex items-center gap-1">
+          <BluetoothCell />
+          <ActionCell to="/post/new" label="New post">
+            <Plus size={19} strokeWidth={2} />
+          </ActionCell>
           <ActionCell to="/search" label="Search">
             <Search size={18} strokeWidth={1.75} />
           </ActionCell>
