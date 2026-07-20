@@ -1,0 +1,152 @@
+/**
+ * RouteMap — thin wrapper around Google Maps JS API.
+ * Loads only in the browser (behind <ClientOnly>), never during SSR.
+ * Emits map clicks and exposes ref-free onReady for parents that need the map.
+ */
+import { useEffect, useRef, useState } from "react";
+
+type LatLng = { lat: number; lng: number };
+type Poi = { lat: number; lng: number; name?: string; kind?: string };
+
+let loaderPromise: Promise<typeof google> | null = null;
+function loadGoogleMaps(): Promise<typeof google> {
+  if (typeof window === "undefined") return Promise.reject(new Error("SSR"));
+  if ((window as any).google?.maps) return Promise.resolve((window as any).google);
+  if (loaderPromise) return loaderPromise;
+  const key = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string;
+  const channel = (import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string) || "";
+  if (!key) return Promise.reject(new Error("Missing maps key"));
+  loaderPromise = new Promise((resolve, reject) => {
+    (window as any).__rexInitMap = () => resolve((window as any).google);
+    const s = document.createElement("script");
+    s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&loading=async&callback=__rexInitMap${channel ? `&channel=${channel}` : ""}&libraries=places`;
+    s.async = true;
+    s.onerror = () => reject(new Error("Google Maps failed to load"));
+    document.head.appendChild(s);
+  });
+  return loaderPromise;
+}
+
+export function RouteMap({
+  path = [],
+  pois = [],
+  center,
+  zoom = 8,
+  interactive = true,
+  onMapClick,
+  className = "h-72 w-full",
+}: {
+  path?: LatLng[];
+  pois?: Poi[];
+  center?: LatLng;
+  zoom?: number;
+  interactive?: boolean;
+  onMapClick?: (p: LatLng) => void;
+  className?: string;
+}) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<any>(null);
+  const polylineRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+  const [err, setErr] = useState<string | null>(null);
+
+  // init
+  useEffect(() => {
+    let cancelled = false;
+    loadGoogleMaps().then((g) => {
+      if (cancelled || !containerRef.current) return;
+      const first = path[0] ?? center ?? { lat: 25.2048, lng: 55.2708 };
+      mapRef.current = new g.maps.Map(containerRef.current, {
+        center: first,
+        zoom,
+        disableDefaultUI: !interactive,
+        gestureHandling: interactive ? "greedy" : "cooperative",
+        clickableIcons: false,
+        styles: [
+          { elementType: "geometry", stylers: [{ color: "#0f1114" }] },
+          { elementType: "labels.text.fill", stylers: [{ color: "#8a8f98" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#0b0d10" }] },
+          { featureType: "road", elementType: "geometry", stylers: [{ color: "#1c1f24" }] },
+          { featureType: "water", elementType: "geometry", stylers: [{ color: "#05070a" }] },
+          { featureType: "poi", stylers: [{ visibility: "off" }] },
+        ],
+      });
+      if (onMapClick && interactive) {
+        mapRef.current.addListener("click", (e: any) => {
+          const lat = e.latLng.lat(); const lng = e.latLng.lng();
+          onMapClick({ lat, lng });
+        });
+      }
+      drawPath(g);
+      drawPois(g);
+    }).catch((e) => setErr(e.message));
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // redraw when data changes
+  useEffect(() => {
+    if (!(window as any).google?.maps || !mapRef.current) return;
+    drawPath((window as any).google);
+    drawPois((window as any).google);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, pois]);
+
+  function drawPath(g: typeof google) {
+    if (polylineRef.current) polylineRef.current.setMap(null);
+    if (!path.length) return;
+    polylineRef.current = new g.maps.Polyline({
+      path,
+      strokeColor: "#c6ff3d",
+      strokeOpacity: 0.95,
+      strokeWeight: 4,
+      map: mapRef.current,
+    });
+    // fit bounds
+    if (path.length > 1) {
+      const b = new g.maps.LatLngBounds();
+      path.forEach((p) => b.extend(p));
+      mapRef.current.fitBounds(b, 40);
+    } else {
+      mapRef.current.setCenter(path[0]);
+    }
+  }
+
+  function drawPois(g: typeof google) {
+    markersRef.current.forEach((m) => m.setMap(null));
+    markersRef.current = [];
+    pois.forEach((p) => {
+      const m = new g.maps.Marker({
+        position: { lat: p.lat, lng: p.lng },
+        map: mapRef.current,
+        title: p.name ?? "",
+        label: p.kind ? { text: iconForKind(p.kind), color: "#0b0d10", fontSize: "12px", fontWeight: "700" } : undefined,
+        icon: {
+          path: g.maps.SymbolPath.CIRCLE,
+          scale: 12,
+          fillColor: "#c6ff3d",
+          fillOpacity: 1,
+          strokeColor: "#0b0d10",
+          strokeWeight: 2,
+        },
+      });
+      markersRef.current.push(m);
+    });
+  }
+
+  if (err) {
+    return (
+      <div className={className + " grid place-items-center border border-white/10 text-xs text-white/60"}>
+        Map unavailable — {err}
+      </div>
+    );
+  }
+  return <div ref={containerRef} className={className} style={{ background: "#0b0d10" }} />;
+}
+
+function iconForKind(k: string) {
+  const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", custom: "•" };
+  return map[k] ?? "•";
+}
+
+export default RouteMap;
