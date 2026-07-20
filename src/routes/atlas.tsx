@@ -44,7 +44,8 @@ function AtlasPage() {
   const nav = useNavigate();
   const hidden = useScrollDirection() === "down";
 
-  const { data: routes } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
+  const { data: routesRaw } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
+  const routes = (routesRaw ?? []) as any[];
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -68,6 +69,7 @@ function AtlasPage() {
     : filtered[0]?.start_lat
       ? { lat: filtered[0].start_lat, lng: filtered[0].start_lng }
       : undefined;
+
 
   useEffect(() => {
     if (activeId && cardRefs.current[activeId]) {
