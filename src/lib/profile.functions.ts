@@ -24,6 +24,60 @@ export const getMyProfile = createServerFn({ method: "GET" })
     return data;
   });
 
+export const getMyProfileMetrics = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const uid = context.userId;
+    const [profileRes, vehicleRes, uaRes, achRes] = await Promise.all([
+      context.supabase
+        .from("profiles")
+        .select(
+          "id, handle, display_name, avatar_url, cover_url, location, tier, is_verified, is_premium, followers_count, following_count, posts_count, listings_count, xp_total, level, streak_days"
+        )
+        .eq("id", uid)
+        .maybeSingle(),
+      context.supabase
+        .from("vehicles")
+        .select("id, kind, make, model, year, nickname, spec, hero_image_url, is_primary")
+        .eq("owner_id", uid)
+        .is("deleted_at", null)
+        .order("is_primary", { ascending: false })
+        .order("created_at", { ascending: true })
+        .limit(1)
+        .maybeSingle(),
+      context.supabase
+        .from("user_achievements")
+        .select("achievement_slug, progress, target, unlocked_at")
+        .eq("user_id", uid),
+      context.supabase
+        .from("achievements")
+        .select("slug, title, description, tier, category"),
+    ]);
+
+    if (profileRes.error) throw new Error(profileRes.error.message);
+
+    const profile = profileRes.data;
+    const vehicle = vehicleRes.data ?? null;
+    const userAch = uaRes.data ?? [];
+    const allAch = achRes.data ?? [];
+
+    const earnedSlugs = new Set(userAch.filter((r) => r.unlocked_at).map((r) => r.achievement_slug));
+
+    return {
+      profile,
+      vehicle,
+      earnedCount: earnedSlugs.size,
+      totalAchievements: allAch.length,
+      achievements: allAch.map((a) => ({
+        slug: a.slug,
+        title: a.title,
+        detail: a.description,
+        tier: a.tier,
+        earned: earnedSlugs.has(a.slug),
+      })),
+    };
+  });
+
 export const updateMyProfile = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw) =>
