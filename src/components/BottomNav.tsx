@@ -1,75 +1,105 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import type { ComponentType } from "react";
-import { IconGarage, IconDiscover, IconMarket, IconHelmet, IconBoltCross } from "./icons/RexIcons";
-import { Map as MapIcon } from "lucide-react";
-// menu route lives at /menu (authenticated hub)
+import { useRef } from "react";
+import { Home, Search, Play, User, Plus } from "lucide-react";
 
 type NavItem = {
-  to: "/" | "/search" | "/communities" | "/marketplace" | "/profile" | "/vendor" | "/atlas";
+  to: "/" | "/search" | "/reels" | "/profile";
   label: string;
-  icon: ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string; strokeWidth?: number }>;
 };
 
-const AtlasIcon = ({ className }: { className?: string }) => <MapIcon className={className} strokeWidth={1.75} />;
-
 const LEFT: NavItem[] = [
-  { to: "/",            label: "Feed",     icon: IconGarage },
-  { to: "/atlas",       label: "Atlas",    icon: AtlasIcon },
-  { to: "/communities", label: "Crews",    icon: IconDiscover },
+  { to: "/",       label: "Home",   icon: Home },
+  { to: "/search", label: "Search", icon: Search },
 ];
 const RIGHT: NavItem[] = [
-  { to: "/marketplace", label: "Vault",    icon: IconMarket },
-  { to: "/profile",     label: "Garage",   icon: IconHelmet },
+  { to: "/reels",   label: "Reels",   icon: Play },
+  { to: "/profile", label: "Profile", icon: User },
 ];
 
 /**
- * Floating obsidian dock — not a full-width tab bar.
- * A pill-island with a raised neon "create" bolt at center-left offset.
- * Hides automatically when the user scrolls down so it never covers content.
+ * Industry-standard 5-tab bottom nav (IG / TikTok pattern).
+ * Home · Search · Create (elevated center) · Reels · Profile
+ * Auto-hides on scroll-down. Light editorial surface with hairline.
  */
 export function BottomNav({ hidden = false }: { hidden?: boolean }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+  const camInputRef = useRef<HTMLInputElement>(null);
+  const pressTimer = useRef<number | null>(null);
+  const longPressed = useRef(false);
+
+  function startPress() {
+    longPressed.current = false;
+    pressTimer.current = window.setTimeout(() => {
+      longPressed.current = true;
+      camInputRef.current?.click();
+    }, 380);
+  }
+  function endPress() {
+    if (pressTimer.current) window.clearTimeout(pressTimer.current);
+    pressTimer.current = null;
+  }
+  function onCreate() {
+    if (longPressed.current) { longPressed.current = false; return; }
+    navigate({ to: "/post/new" });
+  }
+  function onCapture(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = URL.createObjectURL(file);
+      sessionStorage.setItem("zrex:capture", JSON.stringify({ url, type: file.type, name: file.name }));
+    } catch {}
+    navigate({ to: "/post/new" });
+  }
 
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50 flex justify-center pointer-events-none transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+      className="fixed inset-x-0 bottom-0 z-50 transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
       style={{
-        paddingBottom: "calc(env(safe-area-inset-bottom) + 14px)",
-        transform: hidden ? "translateY(calc(100% + 24px))" : "translateY(0)",
+        transform: hidden ? "translateY(100%)" : "translateY(0)",
+        background: "color-mix(in oklab, #ffffff 92%, transparent)",
+        backdropFilter: "blur(20px) saturate(160%)",
+        borderTop: "1px solid var(--color-line)",
+        paddingBottom: "env(safe-area-inset-bottom)",
       }}
     >
-      <div
-        className="glass lift-2 pointer-events-auto flex items-center gap-1 px-2 py-2"
-        style={{
-          borderRadius: 999,
-          border: "1px solid var(--color-hair-strong)",
-        }}
-      >
-        {LEFT.map((it) => (
-          <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
-        ))}
+      <div className="mx-auto grid max-w-md grid-cols-5 items-center px-2 pt-1.5 pb-1.5">
+        {LEFT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
 
-        {/* Central CREATE bolt → opens menu hub */}
-        <Link
-          to="/menu"
-          aria-label="Open menu"
-          className="tap group relative mx-1 grid h-12 w-12 place-items-center"
+        {/* Center Create — elevated */}
+        <button
+          type="button"
+          onClick={onCreate}
+          onPointerDown={startPress}
+          onPointerUp={endPress}
+          onPointerLeave={endPress}
+          onPointerCancel={endPress}
+          onContextMenu={(e) => e.preventDefault()}
+          aria-label="Create (long-press for camera)"
+          className="tap mx-auto grid h-11 w-11 place-items-center"
           style={{
-            borderRadius: 999,
-            background: "linear-gradient(180deg, #dbff8b 0%, #c6ff3d 55%, #7ee01c 100%)",
-            color: "var(--color-obsidian)",
-            boxShadow: "0 10px 26px -10px rgba(198,255,61,0.7), inset 0 1px 0 rgba(255,255,255,0.5)",
-            border: "1px solid #6bb318",
+            borderRadius: 12,
+            background: "var(--color-ink-0)",
+            color: "var(--color-paper-0)",
+            boxShadow: "0 6px 14px -6px rgba(0,0,0,0.35)",
           }}
         >
-          <IconBoltCross size={20} />
-          <span className="engine-pulse absolute inset-0 rounded-full" />
-        </Link>
+          <Plus size={22} strokeWidth={2.4} />
+        </button>
+        <input
+          ref={camInputRef}
+          type="file"
+          accept="image/*,video/*"
+          capture="environment"
+          hidden
+          onChange={onCapture}
+        />
 
-        {RIGHT.map((it) => (
-          <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />
-        ))}
+        {RIGHT.map((it) => <NavCell key={it.to} item={it} active={isActive(pathname, it.to)} />)}
       </div>
     </nav>
   );
@@ -86,15 +116,25 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
     <Link
       to={item.to}
       aria-current={active ? "page" : undefined}
-      className="tap relative grid h-11 w-14 place-items-center"
-      style={{
-        borderRadius: 999,
-        color: active ? "var(--color-neon)" : "var(--color-silver)",
-        background: active ? "rgba(198,255,61,0.08)" : "transparent",
-      }}
+      className="tap relative flex flex-col items-center justify-center gap-0.5 py-1.5"
+      style={{ color: active ? "var(--color-ink-0)" : "var(--color-ink-3)" }}
     >
-      <Icon className="h-[19px] w-[19px]" />
-      <span className="mono-caps absolute -bottom-0.5 hidden" style={{ fontSize: 8 }}>{item.label}</span>
+      <Icon
+        className="h-[22px] w-[22px]"
+        strokeWidth={active ? 2.2 : 1.75}
+      />
+      <span
+        className="text-[10px] font-medium leading-none"
+        style={{ letterSpacing: "-0.01em" }}
+      >
+        {item.label}
+      </span>
+      {active && (
+        <span
+          className="absolute -bottom-1 h-[3px] w-6 rounded-full"
+          style={{ background: "var(--color-ink-0)" }}
+        />
+      )}
     </Link>
   );
 }
