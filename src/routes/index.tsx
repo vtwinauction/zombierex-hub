@@ -54,48 +54,83 @@ function HomePage() {
   return (
     <div className="pb-24">
       {/* ==================================================
-         TOP BAR — Instagram-style masthead
-         Logo left · camera + chat right (Snap DNA)
+         MASTHEAD — editorial, light glass, wordmark + actions
          ================================================== */}
       <header
-        className="sticky top-0 z-40 flex items-center justify-between px-4 pb-3 pt-[max(env(safe-area-inset-top),12px)]"
+        className="sticky top-0 z-40"
         style={{
-          background: "color-mix(in oklab, var(--color-obsidian) 82%, transparent)",
-          backdropFilter: "blur(18px) saturate(160%)",
-          borderBottom: "1px solid var(--color-hair)",
+          paddingTop: "env(safe-area-inset-top)",
+          background: "color-mix(in oklab, #ffffff 88%, transparent)",
+          backdropFilter: "blur(20px) saturate(160%)",
+          borderBottom: "1px solid var(--color-line)",
         }}
       >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="grid h-8 w-8 place-items-center overflow-hidden rounded-full"
-            style={{ boxShadow: "0 0 0 1px rgba(198,255,61,0.35), 0 0 16px -4px rgba(198,255,61,0.45)" }}
-          >
-            <img src={brandLogo.url} alt="ZOMBIEREX" className="h-full w-full object-cover" />
+        <div className="grid grid-cols-[1fr_auto] items-center gap-3 px-4 py-3">
+          <Link to="/" className="tap flex items-center gap-2.5">
+            <div
+              className="grid h-8 w-8 place-items-center overflow-hidden rounded-full"
+              style={{ boxShadow: "0 0 0 1px var(--color-line-2)" }}
+            >
+              <img src={brandLogo.url} alt="" className="h-full w-full object-cover" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="serif text-[19px]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.03em", fontWeight: 700 }}>
+                ZOMBIEREX
+              </span>
+              <span className="mono-tag mt-1" style={{ fontSize: 9, letterSpacing: "0.28em", color: "var(--color-ink-3)" }}>
+                № 01 · Home
+              </span>
+            </div>
+          </Link>
+          <div className="flex items-center gap-1">
+            <Link to="/notifications" aria-label="Notifications" className="tap relative grid h-10 w-10 place-items-center" style={{ color: "var(--color-ink-0)", borderRadius: 10 }}>
+              <Bell size={18} strokeWidth={1.9} />
+              <span className="absolute right-2 top-2 h-[7px] w-[7px] rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 0 2px #fff" }} />
+            </Link>
+            <Link to="/messages" aria-label="Messages" className="tap grid h-10 w-10 place-items-center" style={{ color: "var(--color-ink-0)", borderRadius: 10 }}>
+              <MessageCircle size={18} strokeWidth={1.9} />
+            </Link>
           </div>
-          <h1 className="serif text-[26px] italic leading-none" style={{ color: "var(--color-ink)" }}>
-            Zombierex
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link to="/post/new" aria-label="Create new post" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", boxShadow: "0 6px 18px -6px rgba(198,255,61,0.6)" }}>
-            <Plus size={18} strokeWidth={2.4} />
-          </Link>
-          <Link to="/notifications" aria-label="Notifications" className="tap relative grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)", color: "var(--color-ink)" }}>
-            <Bell size={16} strokeWidth={1.9} />
-            <span className="engine-pulse absolute right-1 top-1 h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-ember)" }} />
-          </Link>
-          <Link to="/messages" aria-label="Messages" className="tap grid h-9 w-9 place-items-center rounded-full" style={{ border: "1px solid var(--color-hair)", color: "var(--color-ink)" }}>
-            <MessageCircle size={16} strokeWidth={1.9} />
-          </Link>
         </div>
       </header>
 
       {/* ==================================================
-         STORIES RAIL — IG + Snap hybrid
-         First tile is a camera-first "Your story" (Snap DNA)
-         Ring gradients use logo colors (neon → ember)
+         DASHBOARD — Pulse + Quick actions (bento)
          ================================================== */}
-      <section className="mt-3">
+      <section className="px-4 pt-4">
+        <div
+          className="grid grid-cols-3 gap-2"
+          style={{ borderRadius: 14, background: "var(--color-paper-0)", border: "1px solid var(--color-line)", padding: 12 }}
+        >
+          <PulseStat label="XP today" value="+184" tone="neon" />
+          <PulseStat label="Streak"   value="12d" />
+          <PulseStat label="Rides"    value="3" />
+        </div>
+        <div className="mt-3 grid grid-cols-4 gap-2">
+          {QUICK_ACTIONS.map((a) => (
+            <Link
+              key={a.to}
+              to={a.to}
+              className="tap flex flex-col items-center justify-center gap-1.5 py-3"
+              style={{ background: "var(--color-paper-0)", border: "1px solid var(--color-line)", borderRadius: 12 }}
+            >
+              <span
+                className="grid h-8 w-8 place-items-center"
+                style={{ background: "var(--color-paper-2)", borderRadius: 8, color: "var(--color-ink-0)" }}
+                aria-hidden
+              >
+                <a.icon size={16} strokeWidth={1.9} />
+              </span>
+              <span className="text-[11px] font-semibold" style={{ color: "var(--color-ink-1)" }}>{a.label}</span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ==================================================
+         STORIES RAIL
+         ================================================== */}
+      <section className="mt-4">
         <div className="no-scrollbar flex gap-3.5 overflow-x-auto px-4 pb-3">
           {storiesV2.map((s, i) => {
             const isYou = i === 0;
@@ -103,13 +138,13 @@ function HomePage() {
             return (
               <button key={s.id} className="tap shrink-0 flex flex-col items-center" style={{ width: 68 }}>
                 <div className={ringClass}>
-                  <div style={{ background: "var(--color-obsidian)", padding: 2, borderRadius: 999 }}>
+                  <div style={{ background: "var(--color-paper-0)", padding: 2, borderRadius: 999 }}>
                     <div className="relative h-[60px] w-[60px] overflow-hidden rounded-full">
                       <img src={s.cover} alt="" className="h-full w-full object-cover" />
                       {isYou && (
                         <span
                           className="absolute -bottom-0.5 -right-0.5 grid h-5 w-5 place-items-center rounded-full text-[13px] font-bold leading-none"
-                          style={{ background: "var(--color-neon)", color: "var(--color-obsidian)", boxShadow: "0 0 0 2px var(--color-obsidian)" }}
+                          style={{ background: "var(--color-neon)", color: "var(--color-ink-0)", boxShadow: "0 0 0 2px #ffffff" }}
                         >
                           +
                         </span>
@@ -125,25 +160,25 @@ function HomePage() {
                     </div>
                   </div>
                 </div>
-                <p className="mt-1.5 max-w-[64px] truncate text-[11px]" style={{ color: "var(--color-silver)" }}>
+                <p className="mt-1.5 max-w-[64px] truncate text-[11px]" style={{ color: "var(--color-ink-2)" }}>
                   {isYou ? "Your story" : s.user.handle.replace("@", "")}
                 </p>
               </button>
             );
           })}
         </div>
-        <div style={{ height: 1, background: "var(--color-hair)" }} />
+        <div style={{ height: 1, background: "var(--color-line)" }} />
       </section>
 
       {/* ==================================================
          FEED TABS — For You / Following
          ================================================== */}
       <div
-        className="sticky top-[calc(env(safe-area-inset-top)+56px)] z-30 flex items-center gap-1 px-4 py-2"
+        className="sticky top-[calc(env(safe-area-inset-top)+58px)] z-30 flex items-center gap-1 px-4 py-2"
         style={{
-          background: "color-mix(in oklab, var(--color-obsidian) 82%, transparent)",
+          background: "color-mix(in oklab, #ffffff 90%, transparent)",
           backdropFilter: "blur(18px) saturate(160%)",
-          borderBottom: "1px solid var(--color-hair)",
+          borderBottom: "1px solid var(--color-line)",
         }}
       >
         {(["for_you", "following"] as const).map((k) => {
@@ -153,22 +188,23 @@ function HomePage() {
               key={k}
               onClick={() => setTab(k)}
               className="tap relative px-3 py-1.5 text-[13px] font-semibold"
-              style={{ color: active ? "var(--color-ink)" : "var(--color-titanium)" }}
+              style={{ color: active ? "var(--color-ink-0)" : "var(--color-ink-3)" }}
             >
               {k === "for_you" ? "For you" : "Following"}
               {active && (
                 <span
                   className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 rounded-full"
-                  style={{ height: 3, width: 22, background: "var(--color-neon)", boxShadow: "0 0 12px rgba(198,255,61,0.7)" }}
+                  style={{ height: 3, width: 22, background: "var(--color-ink-0)" }}
                 />
               )}
             </button>
           );
         })}
-        <span className="ml-auto mono-tag" style={{ color: "var(--color-titanium)" }}>
+        <span className="ml-auto mono-tag" style={{ color: "var(--color-ink-3)" }}>
           ● Live · {tab === "for_you" ? "personalized" : `${suggestedCreators.length} riders`}
         </span>
       </div>
+
 
       {/* ==================================================
          FEATURED REEL — TikTok DNA · tap → /reels
