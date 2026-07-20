@@ -220,7 +220,7 @@ function AtlasPage() {
           <div className="flex gap-3 overflow-x-auto px-4 pb-4 snap-x snap-mandatory scrollbar-none">
             {filtered.length === 0 && <EmptyState />}
             {filtered.map((r: any) => (
-              <div key={r.id} ref={(el) => (cardRefs.current[r.id] = el)} className="snap-start shrink-0 w-[78%]">
+              <div key={r.id} ref={(el) => { cardRefs.current[r.id] = el; }} className="snap-start shrink-0 w-[78%]">
                 <MapRouteCard route={r} active={activeId === r.id}
                   onSelect={() => setActiveId(r.id)}
                   onOpen={() => nav({ to: "/atlas/$id", params: { id: r.id } })} />
@@ -232,7 +232,7 @@ function AtlasPage() {
             {filtered.length === 0 ? <EmptyState /> : (
               <div className="grid gap-3">
                 {filtered.map((r: any) => (
-                  <div key={r.id} ref={(el) => (cardRefs.current[r.id] = el)}>
+                  <div key={r.id} ref={(el) => { cardRefs.current[r.id] = el; }}>
                     <MapRouteCard route={r} active={activeId === r.id}
                       onSelect={() => { setActiveId(r.id); setSheet("peek"); }}
                       onOpen={() => nav({ to: "/atlas/$id", params: { id: r.id } })} />
