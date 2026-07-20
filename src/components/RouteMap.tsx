@@ -8,8 +8,8 @@ import { useEffect, useRef, useState } from "react";
 type LatLng = { lat: number; lng: number };
 type Poi = { lat: number; lng: number; name?: string; kind?: string };
 
-let loaderPromise: Promise<typeof google> | null = null;
-function loadGoogleMaps(): Promise<typeof google> {
+let loaderPromise: Promise<any> | null = null;
+function loadGoogleMaps(): Promise<any> {
   if (typeof window === "undefined") return Promise.reject(new Error("SSR"));
   if ((window as any).google?.maps) return Promise.resolve((window as any).google);
   if (loaderPromise) return loaderPromise;
@@ -92,7 +92,7 @@ export function RouteMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, pois]);
 
-  function drawPath(g: typeof google) {
+  function drawPath(g: any) {
     if (polylineRef.current) polylineRef.current.setMap(null);
     if (!path.length) return;
     polylineRef.current = new g.maps.Polyline({
@@ -112,7 +112,7 @@ export function RouteMap({
     }
   }
 
-  function drawPois(g: typeof google) {
+  function drawPois(g: any) {
     markersRef.current.forEach((m) => m.setMap(null));
     markersRef.current = [];
     pois.forEach((p) => {
