@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
+import { getMyProfileMetrics } from "@/lib/profile.functions";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -16,21 +19,79 @@ export const Route = createFileRoute("/profile")({
 const TABS = ["REELS", "GARAGE", "TROPHIES", "LOG"] as const;
 type Tab = typeof TABS[number];
 
-/* ============================================================
-   Rarity color map — used across trophies + ribbons
-   ============================================================ */
 const RARITY: Record<string, { hue: string; label: string }> = {
   common:    { hue: "#7c7c86", label: "COMMON" },
+  bronze:    { hue: "#c98a4b", label: "BRONZE" },
   rare:      { hue: "#2e9bff", label: "RARE" },
+  silver:    { hue: "#b8bcc4", label: "SILVER" },
+  gold:      { hue: "#ffb547", label: "GOLD" },
   legendary: { hue: "#ff9500", label: "LEGENDARY" },
+  platinum:  { hue: "#8be8ff", label: "PLATINUM" },
 };
+
+// DB level formula: level = 1 + floor(sqrt(xp/100)) → threshold for `lvl` = (lvl-1)^2 * 100
+const xpForLevel = (lvl: number) => Math.max(0, lvl - 1) ** 2 * 100;
+function estimateHp(spec: Record<string, unknown> | null | undefined, kind: string): number {
+  if (!spec) return kind === "car" ? 220 : 110;
+  const s = spec as Record<string, number | string>;
+  const raw = s.hp ?? s.horsepower ?? s.power_hp;
+  const hp = typeof raw === "string" ? parseFloat(raw) : raw;
+  if (typeof hp === "number" && !isNaN(hp) && hp > 0) return Math.round(hp);
+  const cc = typeof s.displacement === "number" ? s.displacement : typeof s.cc === "number" ? s.cc : null;
+  if (cc) return Math.round(cc * (kind === "car" ? 0.1 : 0.12));
+  return kind === "car" ? 240 : 110;
+}
 
 function ProfilePage() {
   const [tab, setTab] = useState<Tab>("REELS");
-  const bike = myVehicles[0];
-  const xpPct = Math.min(100, Math.round((rider.xp / rider.xpToNext) * 100));
-  const earnedCount = achievements.filter((a) => a.earned).length;
+  const fetchMetrics = useServerFn(getMyProfileMetrics);
+  const metricsQuery = useQuery({
+    queryKey: ["profile", "metrics"],
+    queryFn: () => fetchMetrics(),
+    retry: false,
+    staleTime: 30_000,
+  });
+
+  const live = metricsQuery.data;
+  const p = live?.profile;
+  const v = live?.vehicle;
+  const mockBike = myVehicles[0];
+
+  const bike = {
+    id: v?.id ?? mockBike.id,
+    name: v ? (v.nickname || `${v.year ?? ""} ${v.make} ${v.model}`.trim()) : mockBike.name,
+    year: v?.year ?? mockBike.year,
+    type: v ? (v.kind === "car" ? "Car" : "Motorcycle") : mockBike.type,
+    cover: v?.hero_image_url || mockBike.cover,
+    hp: v ? estimateHp(v.spec as Record<string, unknown>, v.kind) : mockBike.hp,
+  };
+
+  const level = p?.level ?? rider.level;
+  const xp = p?.xp_total ?? rider.xp;
+  const xpFloor = p ? xpForLevel(level) : 0;
+  const xpNext = p ? xpForLevel(level + 1) : rider.xpToNext;
+  const xpSpan = Math.max(1, xpNext - xpFloor);
+  const xpPct = Math.max(0, Math.min(100, Math.round(((xp - xpFloor) / xpSpan) * 100)));
+  const xpDisplay = p ? Math.max(0, xp - xpFloor) : rider.xp;
+  const xpNextDisplay = p ? Math.max(1, xpNext - xpFloor) : rider.xpToNext;
+
+  const totalAch = live?.totalAchievements ?? achievements.length;
+  const earnedCount = live?.earnedCount ?? achievements.filter((a) => a.earned).length;
+  const achList = (live?.achievements?.length
+    ? live.achievements.map((a) => ({ id: a.slug, title: a.title, detail: a.detail, rarity: a.tier, earned: a.earned }))
+    : achievements.map((a) => ({ id: a.id, title: a.title, detail: a.detail, rarity: a.rarity, earned: a.earned })));
+
+  const followers = p?.followers_count ?? 12_400;
+  const postsCount = p?.posts_count ?? 47;
+  const listingsCount = p?.listings_count ?? 0;
+
   const topSpeed = bike.hp + 45;
+  const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n));
+
+  const displayName = p?.display_name || p?.handle || me.handle.replace("@", "");
+  const location = p?.location || me.location;
+  const title = p ? `LEVEL ${level} · ${(p.tier || "ROOKIE").toString().toUpperCase()}` : rider.title.toUpperCase();
+  const idLabel = (p?.id ?? me.id).slice(0, 8).toUpperCase();
 
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
@@ -81,7 +142,7 @@ function ProfilePage() {
               }}
             >
               <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
-              ACTIVE · ID-{me.id.toUpperCase()}
+              ACTIVE · ID-{idLabel}
             </span>
             <span
               className="mono-tag rounded-md px-2 py-1"
@@ -127,10 +188,10 @@ function ProfilePage() {
 
             <div className="min-w-0">
               <p className="truncate text-[15px] font-semibold" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.01em" }}>
-                {me.handle.replace("@", "")}
+                {displayName}
               </p>
               <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
-                {rider.title.toUpperCase()} · ◎ {me.location}
+                {title} · ◎ {location}
               </p>
             </div>
 
@@ -144,7 +205,7 @@ function ProfilePage() {
                 }}
               >
                 <span className="mono-tag" style={{ fontSize: 8, letterSpacing: "0.18em" }}>LVL</span>
-                <span className="mono-num text-[15px] font-bold leading-none">{rider.level}</span>
+                <span className="mono-num text-[15px] font-bold leading-none">{level}</span>
               </div>
             </div>
           </div>
@@ -154,7 +215,7 @@ function ProfilePage() {
             <div className="flex items-baseline justify-between">
               <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>EXPERIENCE · NEXT TIER</span>
               <span className="mono-num text-[11px] font-semibold" style={{ color: "var(--color-ink-0)" }}>
-                {rider.xp.toLocaleString()} / {rider.xpToNext.toLocaleString()} XP
+                {xpDisplay.toLocaleString()} / {xpNextDisplay.toLocaleString()} XP
               </span>
             </div>
             <div className="relative h-2 w-full overflow-hidden rounded-full" style={{ background: "var(--color-paper-2)" }}>
@@ -241,10 +302,11 @@ function ProfilePage() {
 
           {/* Ledger row */}
           <div className="mt-3 grid grid-cols-4 gap-2">
-            <Ledger k="NET"     v="12.4K" dot="#00e5ff" />
-            <Ledger k="SORTIES" v="47"    dot="var(--color-neon)" />
-            <Ledger k="ODO"     v="8.9K"  u="mi" dot="#ff9500" />
-            <Ledger k="TROPHY"  v={`${earnedCount}/${achievements.length}`} dot="#ff3d5a" />
+            <Ledger k="NET"     v={fmt(followers)} dot="#00e5ff" />
+            <Ledger k="SORTIES" v={fmt(postsCount)} dot="var(--color-neon)" />
+            <Ledger k="LISTINGS" v={fmt(listingsCount)} dot="#ff9500" />
+            <Ledger k="TROPHY"  v={`${earnedCount}/${totalAch}`} dot="#ff3d5a" />
+
           </div>
         </div>
       </section>
@@ -257,7 +319,7 @@ function ProfilePage() {
           <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>{earnedCount} EARNED</span>
         </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          {achievements.map((a) => {
+          {achList.map((a) => {
             const meta = RARITY[a.rarity] ?? RARITY.common;
             const on = a.earned;
             return (
@@ -355,7 +417,7 @@ function ProfilePage() {
 
         {tab === "TROPHIES" && (
           <div className="grid grid-cols-2 gap-2">
-            {achievements.map((a, i) => {
+            {achList.map((a, i) => {
               const meta = RARITY[a.rarity] ?? RARITY.common;
               return (
                 <div
