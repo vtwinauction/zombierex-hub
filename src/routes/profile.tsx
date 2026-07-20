@@ -1,7 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
+import { getMyProfileMetrics } from "@/lib/profile.functions";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -16,21 +19,74 @@ export const Route = createFileRoute("/profile")({
 const TABS = ["REELS", "GARAGE", "TROPHIES", "LOG"] as const;
 type Tab = typeof TABS[number];
 
-/* ============================================================
-   Rarity color map — used across trophies + ribbons
-   ============================================================ */
 const RARITY: Record<string, { hue: string; label: string }> = {
   common:    { hue: "#7c7c86", label: "COMMON" },
+  bronze:    { hue: "#c98a4b", label: "BRONZE" },
   rare:      { hue: "#2e9bff", label: "RARE" },
+  silver:    { hue: "#b8bcc4", label: "SILVER" },
+  gold:      { hue: "#ffb547", label: "GOLD" },
   legendary: { hue: "#ff9500", label: "LEGENDARY" },
+  platinum:  { hue: "#8be8ff", label: "PLATINUM" },
 };
+
+// DB level formula: level = 1 + floor(sqrt(xp/100)) → threshold for `lvl` = (lvl-1)^2 * 100
+const xpForLevel = (lvl: number) => Math.max(0, lvl - 1) ** 2 * 100;
+function estimateHp(spec: Record<string, unknown> | null | undefined, kind: string): number {
+  if (!spec) return kind === "car" ? 220 : 110;
+  const s = spec as Record<string, number | string>;
+  const raw = s.hp ?? s.horsepower ?? s.power_hp;
+  const hp = typeof raw === "string" ? parseFloat(raw) : raw;
+  if (typeof hp === "number" && !isNaN(hp) && hp > 0) return Math.round(hp);
+  const cc = typeof s.displacement === "number" ? s.displacement : typeof s.cc === "number" ? s.cc : null;
+  if (cc) return Math.round(cc * (kind === "car" ? 0.1 : 0.12));
+  return kind === "car" ? 240 : 110;
+}
 
 function ProfilePage() {
   const [tab, setTab] = useState<Tab>("REELS");
-  const bike = myVehicles[0];
-  const xpPct = Math.min(100, Math.round((rider.xp / rider.xpToNext) * 100));
-  const earnedCount = achievements.filter((a) => a.earned).length;
+  const fetchMetrics = useServerFn(getMyProfileMetrics);
+  const metricsQuery = useQuery({
+    queryKey: ["profile", "metrics"],
+    queryFn: () => fetchMetrics(),
+    retry: false,
+    staleTime: 30_000,
+  });
+
+  const live = metricsQuery.data;
+  const p = live?.profile;
+  const v = live?.vehicle;
+  const mockBike = myVehicles[0];
+
+  const bike = {
+    id: v?.id ?? mockBike.id,
+    name: v ? (v.nickname || `${v.year ?? ""} ${v.make} ${v.model}`.trim()) : mockBike.name,
+    year: v?.year ?? mockBike.year,
+    type: v ? (v.kind === "car" ? "Car" : "Motorcycle") : mockBike.type,
+    cover: v?.hero_image_url || mockBike.cover,
+    hp: v ? estimateHp(v.spec as Record<string, unknown>, v.kind) : mockBike.hp,
+  };
+
+  const level = p?.level ?? rider.level;
+  const xp = p?.xp_total ?? rider.xp;
+  const xpFloor = p ? xpForLevel(level) : 0;
+  const xpNext = p ? xpForLevel(level + 1) : rider.xpToNext;
+  const xpSpan = Math.max(1, xpNext - xpFloor);
+  const xpPct = Math.max(0, Math.min(100, Math.round(((xp - xpFloor) / xpSpan) * 100)));
+  const xpDisplay = p ? xp - xpFloor : rider.xp;
+  const xpNextDisplay = p ? xpNext - xpFloor : rider.xpToNext;
+
+  const totalAch = live?.totalAchievements ?? achievements.length;
+  const earnedCount = live?.earnedCount ?? achievements.filter((a) => a.earned).length;
+  const achList = (live?.achievements?.length
+    ? live.achievements.map((a) => ({ id: a.slug, title: a.title, detail: a.detail, rarity: a.tier, earned: a.earned }))
+    : achievements.map((a) => ({ id: a.id, title: a.title, detail: a.detail, rarity: a.rarity, earned: a.earned })));
+
+  const followers = p?.followers_count ?? 12_400;
+  const postsCount = p?.posts_count ?? 47;
+  const listingsCount = p?.listings_count ?? 0;
+
   const topSpeed = bike.hp + 45;
+  const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n));
 
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
