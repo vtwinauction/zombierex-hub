@@ -8,7 +8,7 @@ import {
   IconMechClaw,
   IconBoneMark,
 } from "@/components/icons/RexIcons";
-import { Plus, Bell, MessageCircle } from "lucide-react";
+import { Plus, Bell, MessageCircle, Map, Store, CalendarDays, Users } from "lucide-react";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
 import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
 import { SponsoredCard } from "@/components/SponsoredCard";
@@ -34,6 +34,27 @@ const TRENDING_TAGS = [
   { tag: "#jdm", posts: "72.1K" },
   { tag: "#turbolife", posts: "14.8K" },
 ];
+
+const QUICK_ACTIONS = [
+  { to: "/atlas" as const,        label: "Atlas",    icon: Map },
+  { to: "/marketplace" as const,  label: "Vault",    icon: Store },
+  { to: "/events" as const,       label: "Events",   icon: CalendarDays },
+  { to: "/communities" as const,  label: "Crews",    icon: Users },
+];
+
+function PulseStat({ label, value, tone }: { label: string; value: string; tone?: "neon" }) {
+  return (
+    <div className="flex flex-col items-start gap-1">
+      <span className="mono-tag" style={{ fontSize: 9, color: "var(--color-ink-3)" }}>{label}</span>
+      <span
+        className="display-numeral text-[22px]"
+        style={{ color: tone === "neon" ? "var(--color-neon-deep)" : "var(--color-ink-0)" }}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
 
 function HomePage() {
   const [tab, setTab] = useState<"for_you" | "following">("for_you");
