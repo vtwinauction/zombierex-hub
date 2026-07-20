@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, Bluetooth, Plus } from "lucide-react";
+import { useState } from "react";
 
 /**
  * Editorial masthead — light glass, wordmark left, system actions right.
@@ -39,6 +40,10 @@ export function StatusBar({ index, section }: { index: string; section: string }
         </Link>
 
         <div className="flex items-center gap-1">
+          <BluetoothCell />
+          <ActionCell to="/post/new" label="New post">
+            <Plus size={19} strokeWidth={2} />
+          </ActionCell>
           <ActionCell to="/search" label="Search">
             <Search size={18} strokeWidth={1.75} />
           </ActionCell>
@@ -75,6 +80,77 @@ function ActionCell({
         />
       )}
     </Link>
+  );
+}
+
+/**
+ * Bluetooth pairing button — connects to action cameras / helmet cams via
+ * Web Bluetooth so riders can trigger capture from the app. Falls back
+ * gracefully when the API isn't available (iOS Safari, desktop Firefox).
+ */
+function BluetoothCell() {
+  const [state, setState] = useState<"idle" | "scanning" | "linked" | "unsupported">("idle");
+
+  async function onPair() {
+    const nav = typeof navigator !== "undefined" ? (navigator as Navigator & { bluetooth?: { requestDevice: (opts: unknown) => Promise<{ name?: string }> } }) : undefined;
+    if (!nav?.bluetooth) {
+      setState("unsupported");
+      window.setTimeout(() => setState("idle"), 1800);
+      return;
+    }
+    try {
+      setState("scanning");
+      const device = await nav.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ["battery_service", "device_information"],
+      });
+      if (device) {
+        setState("linked");
+        try {
+          sessionStorage.setItem("zrex:btcam", JSON.stringify({ name: device.name ?? "Camera", at: Date.now() }));
+        } catch { /* noop */ }
+      } else {
+        setState("idle");
+      }
+    } catch {
+      setState("idle");
+    }
+  }
+
+  const linked = state === "linked";
+  return (
+    <button
+      type="button"
+      onClick={onPair}
+      aria-label={linked ? "Camera linked via Bluetooth" : "Pair camera via Bluetooth"}
+      title={
+        state === "unsupported"
+          ? "Bluetooth not supported on this device"
+          : linked
+          ? "Camera linked"
+          : "Pair action camera"
+      }
+      className="tap relative grid h-10 w-10 place-items-center"
+      style={{ color: linked ? "var(--color-neon, #7cff3f)" : "var(--color-ink-0)", borderRadius: 10 }}
+    >
+      <Bluetooth
+        size={18}
+        strokeWidth={1.9}
+        style={
+          state === "scanning"
+            ? { animation: "pulse 1.2s ease-in-out infinite" }
+            : linked
+            ? { filter: "drop-shadow(0 0 5px rgba(124,255,63,0.7))" }
+            : undefined
+        }
+      />
+      {linked && (
+        <span
+          className="absolute right-1.5 top-1.5 h-[7px] w-[7px] rounded-full"
+          style={{ background: "var(--color-neon, #7cff3f)", boxShadow: "0 0 0 2px #fff" }}
+        />
+      )}
+    </button>
   );
 }
 
