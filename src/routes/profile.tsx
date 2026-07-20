@@ -319,7 +319,7 @@ function ProfilePage() {
           <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>{earnedCount} EARNED</span>
         </div>
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-          {achievements.map((a) => {
+          {achList.map((a) => {
             const meta = RARITY[a.rarity] ?? RARITY.common;
             const on = a.earned;
             return (
