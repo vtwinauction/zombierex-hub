@@ -142,7 +142,7 @@ function ProfilePage() {
               }}
             >
               <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
-              ACTIVE · ID-{me.id.toUpperCase()}
+              ACTIVE · ID-{idLabel}
             </span>
             <span
               className="mono-tag rounded-md px-2 py-1"
