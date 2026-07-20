@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Search, Menu, Bluetooth, Plus } from "lucide-react";
+import { useState } from "react";
 
 /**
  * Editorial masthead — light glass, wordmark left, system actions right.
