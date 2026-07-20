@@ -56,7 +56,9 @@ export function RouteMap({
   // init
   useEffect(() => {
     let cancelled = false;
+    console.log("[RouteMap] mount");
     loadGoogleMaps().then((g) => {
+      console.log("[RouteMap] loaded", { cancelled, hasContainer: !!containerRef.current });
       if (cancelled || !containerRef.current) return;
       const first = path[0] ?? center ?? { lat: 25.2048, lng: 55.2708 };
       mapRef.current = new g.maps.Map(containerRef.current, {
@@ -86,7 +88,7 @@ export function RouteMap({
       }
       drawPath(g);
       drawPois(g);
-    }).catch((e) => setErr(e.message));
+    }).catch((e) => { console.error("[RouteMap] err", e); setErr(e.message); });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

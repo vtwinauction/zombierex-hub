@@ -50,7 +50,7 @@ function AtlasPage() {
   const [surface, setSurface] = useState<string | undefined>();
   const [query, setQuery] = useState("");
   const [showFilters, setShowFilters] = useState(false);
-  const [sheet, setSheet] = useState<SheetSize>("half");
+  const [sheet, setSheet] = useState<SheetSize>("peek");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [category, setCategory] = useState<string>("all");
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -89,9 +89,9 @@ function AtlasPage() {
   }, [activeId]);
 
   const sheetHeight: Record<SheetSize, string> = {
-    peek: "26svh",
-    half: "54svh",
-    full: "88svh",
+    peek: "18svh",
+    half: "44svh",
+    full: "82svh",
   };
 
   return (
