@@ -1,12 +1,44 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { brand } from "@/lib/mock-data";
-import { Bell, MessageCircle } from "lucide-react";
+import { Bell, MessageCircle, Camera } from "lucide-react";
+import { useRef } from "react";
 
 /**
  * Editorial masthead — sticky, glassy obsidian bar.
  * Serif wordmark + technical spine index + system actions.
  */
 export function StatusBar({ index, section }: { index: string; section: string }) {
+  const navigate = useNavigate();
+  const camInputRef = useRef<HTMLInputElement>(null);
+  const pressTimer = useRef<number | null>(null);
+  const longPressed = useRef(false);
+
+  function startPress() {
+    longPressed.current = false;
+    pressTimer.current = window.setTimeout(() => {
+      longPressed.current = true;
+      // Long-press → open native camera directly
+      camInputRef.current?.click();
+    }, 380);
+  }
+  function endPress() {
+    if (pressTimer.current) window.clearTimeout(pressTimer.current);
+    pressTimer.current = null;
+  }
+  function onCameraClick() {
+    if (longPressed.current) { longPressed.current = false; return; }
+    navigate({ to: "/post/new" });
+  }
+  function onCaptureChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const url = URL.createObjectURL(file);
+      sessionStorage.setItem("zrex:capture", JSON.stringify({ url, type: file.type, name: file.name }));
+    } catch {}
+    navigate({ to: "/post/new" });
+  }
+
   return (
     <header
       className="glass sticky top-0 z-40"
@@ -42,6 +74,33 @@ export function StatusBar({ index, section }: { index: string; section: string }
         <div />
 
         <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            aria-label="Capture (long-press for camera)"
+            onClick={onCameraClick}
+            onPointerDown={startPress}
+            onPointerUp={endPress}
+            onPointerLeave={endPress}
+            onPointerCancel={endPress}
+            onContextMenu={(e) => e.preventDefault()}
+            className="tap relative grid h-10 w-10 place-items-center"
+            style={{
+              background: "var(--color-graphite)",
+              border: "1px solid var(--color-hair-strong)",
+              color: "var(--color-ink)",
+              borderRadius: 3,
+            }}
+          >
+            <Camera size={17} strokeWidth={1.75} />
+          </button>
+          <input
+            ref={camInputRef}
+            type="file"
+            accept="image/*,video/*"
+            capture="environment"
+            hidden
+            onChange={onCaptureChange}
+          />
           <ActionCell to="/notifications" label="Notifications" pulse>
             <Bell size={17} strokeWidth={1.75} />
           </ActionCell>
@@ -92,3 +151,4 @@ function friendlyLabel(section: string) {
   };
   return map[section] ?? section;
 }
+

@@ -44,6 +44,18 @@ function ReelsPage() {
     return () => io.disconnect();
   }, []);
 
+  // Prefetch next 2 posters for instant snap
+  useEffect(() => {
+    for (let k = 1; k <= 2; k++) {
+      const next = feed[activeIdx + k];
+      if (!next) break;
+      const img = new Image();
+      img.decoding = "async";
+      img.src = next.poster;
+    }
+  }, [activeIdx]);
+
+
   return (
     <div
       className="fixed inset-0 z-40"
