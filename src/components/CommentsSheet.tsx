@@ -37,7 +37,6 @@ export function CommentsSheet({
   title?: string;
   onSubmitted?: () => void;
 }) {
-
   const [items, setItems] = useState<CommentItem[]>(() => seed(targetId));
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -117,9 +116,9 @@ export function CommentsSheet({
         {/* header */}
         <div className="flex items-center justify-between px-5 pb-3">
           <h3 className="text-[15px] font-semibold tracking-tight" style={{ color: "var(--color-ink-0)" }}>
-            {title}
+            {title}{" "}
             <span
-              className="mono-num ml-2 text-[11px]"
+              className="mono-num text-[11px]"
               style={{ color: "var(--color-ink-3)" }}
             >
               {items.length}

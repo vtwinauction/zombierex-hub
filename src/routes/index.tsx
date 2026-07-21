@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { InteractionBar } from "@/components/InteractionBar";
+import { CommentsSheet } from "@/components/CommentsSheet";
 import { RiderMark } from "@/components/RiderBadge";
 import {
   IconClaw,
@@ -67,6 +68,7 @@ function PulseStat({ label, value, tone }: { label: string; value: string; tone?
 
 function HomePage() {
   const [tab, setTab] = useState<"for_you" | "following">("for_you");
+  const [commentTarget, setCommentTarget] = useState<string | null>(null);
   const featured = reels[1];
   const gridReels = [reels[0], reels[2], reels[3]];
   const suggestedCreators = users.slice(0, 6);
@@ -548,9 +550,9 @@ function HomePage() {
                 counts={{
                   likes: p.likes,
                   comments: p.comments,
-                  views: fmt(Math.round(p.likes * 6.2)),
                   shares: Math.round(p.likes * 0.08),
                 }}
+                onComment={() => setCommentTarget(`post:${p.id}`)}
               />
             </div>
 
@@ -564,7 +566,11 @@ function HomePage() {
                 {p.tags.join(" ")}
               </p>
               {p.comments > 0 && (
-                <button className="mt-2 text-[12px]" style={{ color: "var(--color-ink-3)" }}>
+                <button
+                  onClick={() => setCommentTarget(`post:${p.id}`)}
+                  className="mt-2 text-[12px]"
+                  style={{ color: "var(--color-ink-3)" }}
+                >
                   View all {p.comments} comments
                 </button>
               )}
@@ -612,6 +618,12 @@ function HomePage() {
           ))}
         </div>
       </section>
+
+      <CommentsSheet
+        open={!!commentTarget}
+        targetId={commentTarget ?? "anon"}
+        onClose={() => setCommentTarget(null)}
+      />
     </div>
   );
 }
