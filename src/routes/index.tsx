@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { InteractionBar } from "@/components/InteractionBar";
 import { RiderMark } from "@/components/RiderBadge";
 import {
@@ -8,7 +8,7 @@ import {
   IconMechClaw,
   IconBoneMark,
 } from "@/components/icons/RexIcons";
-import { Plus, Bell, MessageCircle, Map, Store, CalendarDays, Users } from "lucide-react";
+import { Bell, MessageCircle, Map, Store, CalendarDays, Users, Bluetooth, Gauge } from "lucide-react";
 import brandLogo from "@/assets/zombierex-logo.png.asset.json";
 import { reels, storiesV2, posts, chats, users, clubs } from "@/lib/mock-data";
 import { SponsoredCard } from "@/components/SponsoredCard";
