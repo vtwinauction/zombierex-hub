@@ -58,15 +58,15 @@ export function RouteMap({
   const polylineRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const userMarkerRef = useRef<any>(null);
 
   // init
   useEffect(() => {
     let cancelled = false;
     console.log("[RouteMap] mount");
     loadGoogleMaps().then((g) => {
-      console.log("[RouteMap] loaded", { cancelled, hasContainer: !!containerRef.current });
       if (cancelled || !containerRef.current) return;
-      const first = path[0] ?? center ?? { lat: 25.2048, lng: 55.2708 };
+      const first = path[0] ?? center ?? userLocation ?? { lat: 25.2048, lng: 55.2708 };
       mapRef.current = new g.maps.Map(containerRef.current, {
         center: first,
         zoom,
@@ -94,6 +94,7 @@ export function RouteMap({
       }
       drawPath(g);
       drawPois(g);
+      drawUser(g);
     }).catch((e) => { console.error("[RouteMap] err", e); setErr(e.message); });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,6 +107,22 @@ export function RouteMap({
     drawPois((window as any).google);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, pois]);
+
+  // user location updates
+  useEffect(() => {
+    if (!(window as any).google?.maps || !mapRef.current) return;
+    drawUser((window as any).google);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLocation, userHeading]);
+
+  // external recenter to user
+  useEffect(() => {
+    if (recenterKey === undefined) return;
+    if (!mapRef.current || !userLocation) return;
+    mapRef.current.panTo(userLocation);
+    mapRef.current.setZoom(15);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recenterKey]);
 
   function drawPath(g: any) {
     if (polylineRef.current) polylineRef.current.setMap(null);
