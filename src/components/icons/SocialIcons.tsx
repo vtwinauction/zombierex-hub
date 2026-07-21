@@ -1,14 +1,12 @@
 /**
  * ZOMBIEREX-native social action icons.
  *
- * These are NOT generic heart/comment/share/bookmark glyphs.
- * Each icon is built from the ZOMBIEREX visual language:
- * dinosaur bones, raptor claws, machined metal, helmet visors,
- * motorcycle chains and gauge clusters.
+ * Real-world object glyphs rendered in the ZombieRex green accent.
+ * Each icon is built as a recognizable physical object so the feed
+ * feels familiar, but the set is 100% custom-drawn and copyright-safe.
  *
- * - Uses currentColor so the parent drives the neon-green tint + glow.
+ * - Uses currentColor so the parent drives the ZombieRex green tint + glow.
  * - Active states use solid fills rather than outline strokes.
- * - Stroke-linecap is "square" for a CNC/machined feel.
  */
 
 type IconProps = {
@@ -18,8 +16,9 @@ type IconProps = {
 };
 
 const squareCap = { strokeLinecap: "square" as const, strokeLinejoin: "miter" as const };
+const roundJoin = { strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
-/** Like — three raptor claw slashes. Fills with solid neon when active. */
+/** Like — realistic heart with an EKG/heartbeat line across it. Fills neon when active. */
 export function HeartIcon({ size = 24, active = false, className }: IconProps) {
   return (
     <svg
@@ -29,27 +28,35 @@ export function HeartIcon({ size = 24, active = false, className }: IconProps) {
       className={className}
       fill="none"
       stroke="currentColor"
-      strokeWidth={active ? 2.2 : 1.8}
-      {...squareCap}
+      strokeWidth={active ? 1.6 : 1.5}
+      {...roundJoin}
     >
       {active ? (
         <g fill="currentColor" stroke="none">
-          <path d="M5 21c1.2-5.8 3.2-10.6 6-14.5 1 4.8 1.4 9.6 1.8 14.5-2.2-2.4-5-3.6-7.8 0z" />
-          <path d="M10 21.5c1.2-5.8 3.2-10.6 6-14.5 1 4.8 1.4 9.6 1.8 14.5-2.2-2.4-5-3.6-7.8 0z" />
-          <path d="M15 22c1.2-5.8 3.2-10.6 6-14.5 1 4.8 1.4 9.6 1.8 14.5-2.2-2.4-5-3.6-7.8 0z" />
+          <path d="M12 21.35s-6.8-4.35-9.2-8.35C1.1 10.1 2.55 6 6.25 6c2.1 0 4.05 1.25 5.75 3.35C13.7 7.25 15.65 6 17.75 6 21.45 6 22.9 10.1 21.2 13c-2.4 4-9.2 8.35-9.2 8.35z" />
+          <path
+            d="M5 12.5l2.5-1.5 1.5 3 2.5-5 2 4 2-2.5 2.5 2"
+            fill="none"
+            stroke="var(--color-paper-0, #fff)"
+            strokeWidth={1.4}
+            opacity={0.85}
+          />
         </g>
       ) : (
         <>
-          <path d="M5 21c1-6 3-11 6-15" />
-          <path d="M10 21.5c1-6 3-11 6-15" />
-          <path d="M15 22c1-6 3-11 6-15" />
+          <path d="M12 21.35s-6.8-4.35-9.2-8.35C1.1 10.1 2.55 6 6.25 6c2.1 0 4.05 1.25 5.75 3.35C13.7 7.25 15.65 6 17.75 6 21.45 6 22.9 10.1 21.2 13c-2.4 4-9.2 8.35-9.2 8.35z" />
+          <path
+            d="M5 12.5l2.5-1.5 1.5 3 2.5-5 2 4 2-2.5 2.5 2"
+            strokeWidth={1.3}
+            opacity={0.75}
+          />
         </>
       )}
     </svg>
   );
 }
 
-/** Comment — helmet visor + speech tail. Fills when active. */
+/** Comment — realistic speech bubble with rounded tail. Fills when active. */
 export function CommentIcon({ size = 24, active = false, className }: IconProps) {
   return (
     <svg
@@ -59,23 +66,22 @@ export function CommentIcon({ size = 24, active = false, className }: IconProps)
       className={className}
       fill={active ? "currentColor" : "none"}
       stroke="currentColor"
-      strokeWidth={1.7}
-      {...squareCap}
+      strokeWidth={1.5}
+      {...roundJoin}
     >
-      <path d="M4 8a3 3 0 013-3h10a3 3 0 013 3v7a3 3 0 01-3 3h-4l-5 3.5V18H7a3 3 0 01-3-3z" />
-      <path d="M7 10.5h10" strokeWidth={active ? 2 : 1.6} />
+      <path d="M20 10c0-2.8-2.2-5-5-5H9c-2.8 0-5 2.2-5 5v5c0 2.8 2.2 5 5 5h1.5l3.5 2.5 3.5-2.5H15c2.8 0 5-2.2 5-5v-5z" />
       {!active && (
         <>
-          <circle cx="8.5" cy="14" r="1" fill="currentColor" stroke="none" />
-          <circle cx="12" cy="14" r="1" fill="currentColor" stroke="none" />
-          <circle cx="15.5" cy="14" r="1" fill="currentColor" stroke="none" />
+          <circle cx="8.5" cy="12.5" r="1" fill="currentColor" stroke="none" />
+          <circle cx="12" cy="12.5" r="1" fill="currentColor" stroke="none" />
+          <circle cx="15.5" cy="12.5" r="1" fill="currentColor" stroke="none" />
         </>
       )}
     </svg>
   );
 }
 
-/** Views — gauge cluster / tachometer eye. No active state. */
+/** Views — realistic microscope silhouette. No active state. */
 export function EyeIcon({ size = 24, className }: IconProps) {
   return (
     <svg
@@ -85,18 +91,27 @@ export function EyeIcon({ size = 24, className }: IconProps) {
       className={className}
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.7}
-      {...squareCap}
+      strokeWidth={1.5}
+      {...roundJoin}
     >
-      <path d="M2.5 12s3.6-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.6 6.5-9.5 6.5S2.5 12 2.5 12z" />
-      <circle cx="12" cy="12" r="3.2" fill="currentColor" stroke="none" opacity="0.9" />
-      <circle cx="13" cy="11" r="0.9" fill="var(--color-obsidian,#08090b)" stroke="none" />
-      <path d="M12 6v2M17.5 8.5l-1.4 1.4M18 12h-2" strokeWidth={1.2} opacity="0.7" />
+      {/* Base */}
+      <path d="M5 19h14" />
+      <path d="M7 19l1.5-4h7l1.5 4" />
+      {/* Arm */}
+      <path d="M10.5 15V9c0-1.1.9-2 2-2h0c1.1 0 2 .9 2 2v6" />
+      {/* Stage */}
+      <path d="M8 13h8" />
+      {/* Eyepiece tube */}
+      <path d="M13.5 7l2-3" />
+      <path d="M15.5 4h2" />
+      {/* Objective lens / lens barrel */}
+      <path d="M11.5 11c0-1.1.9-2 2-2s2 .9 2 2" />
+      <circle cx="12.5" cy="11" r="1.2" fill="currentColor" stroke="none" opacity={0.85} />
     </svg>
   );
 }
 
-/** Share — motorcycle chain link with outward arrows. Fills when active. */
+/** Share — realistic handheld radio / walkie-talkie with antenna and speaker grille. Fills when active. */
 export function ShareIcon({ size = 24, active = false, className }: IconProps) {
   return (
     <svg
@@ -106,30 +121,51 @@ export function ShareIcon({ size = 24, active = false, className }: IconProps) {
       className={className}
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.7}
-      {...squareCap}
+      strokeWidth={1.5}
+      {...roundJoin}
     >
-      <path
-        d="M7 9a3 3 0 110-6 3 3 0 010 6z"
+      <rect
+        x="7"
+        y="6"
+        width="10"
+        height="14"
+        rx="1.5"
         fill={active ? "currentColor" : "none"}
       />
-      <path
-        d="M17 15a3 3 0 110-6 3 3 0 010 6z"
-        fill={active ? "currentColor" : "none"}
+      <path d="M12 6V3" />
+      <circle
+        cx="12"
+        cy="4.5"
+        r="0.8"
+        fill={active ? "var(--color-paper-0, #fff)" : "currentColor"}
+        stroke="none"
       />
-      <path
-        d="M17 21a3 3 0 110-6 3 3 0 010 6z"
-        fill={active ? "currentColor" : "none"}
+      {/* Speaker grille */}
+      <circle
+        cx="12"
+        cy="10"
+        r="2.2"
+        fill="none"
+        stroke={active ? "var(--color-paper-0, #fff)" : "currentColor"}
       />
-      <path d="M9.3 7.3l5.4-1.4" />
-      <path d="M9.3 13.7l5.4 1.4" />
-      <path d="m14 5 2.5-1.5L17 6" />
-      <path d="m14 17 2.5 1.5L17 16" />
+      <circle
+        cx="12"
+        cy="10"
+        r="0.8"
+        fill={active ? "var(--color-paper-0, #fff)" : "currentColor"}
+        stroke="none"
+      />
+      {/* Buttons */}
+      <path
+        d="M9 14.5h6M9 17h6"
+        stroke={active ? "var(--color-paper-0, #fff)" : "currentColor"}
+        strokeWidth={1.2}
+      />
     </svg>
   );
 }
 
-/** Save — dinosaur bone bookmark. Fills solid when active. */
+/** Save — realistic 3.5" floppy disk with metal shutter and label window. Fills solid when active. */
 export function BookmarkIcon({ size = 24, active = false, className }: IconProps) {
   return (
     <svg
@@ -137,16 +173,34 @@ export function BookmarkIcon({ size = 24, active = false, className }: IconProps
       height={size}
       viewBox="0 0 24 24"
       className={className}
-      fill={active ? "currentColor" : "none"}
+      fill="none"
       stroke="currentColor"
-      strokeWidth={1.7}
-      {...squareCap}
+      strokeWidth={1.5}
+      {...roundJoin}
     >
-      <path d="M8 3a2 2 0 10-2 3v11.5a1 1 0 001.6.8L12 15l4.4 3.3a1 1 0 001.6-.8V6A2 2 0 1016 3a2 2 0 00-4 0 2 2 0 00-4 0z" />
+      <path
+        d="M5 4.5A1.5 1.5 0 016.5 3h11A1.5 1.5 0 0119 4.5v15a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 015 19.5v-15z"
+        fill={active ? "currentColor" : "none"}
+      />
+      {/* Metal shutter */}
+      <path
+        d="M7 3h6v4a1 1 0 01-1 1H8a1 1 0 01-1-1V3z"
+        fill={active ? "var(--color-paper-0, #fff)" : "none"}
+        stroke={active ? "var(--color-paper-0, #fff)" : "currentColor"}
+        opacity={active ? 0.9 : 1}
+      />
+      {/* Label window */}
+      <path
+        d="M7 10h10v7a1 1 0 01-1 1H8a1 1 0 01-1-1v-7z"
+        fill={active ? "var(--color-paper-0, #fff)" : "none"}
+        stroke={active ? "var(--color-paper-0, #fff)" : "currentColor"}
+        opacity={active ? 0.85 : 1}
+      />
+      {/* Label lines */}
       {!active && (
         <>
-          <circle cx="6.5" cy="5.5" r="0.7" fill="currentColor" stroke="none" />
-          <circle cx="17.5" cy="5.5" r="0.7" fill="currentColor" stroke="none" />
+          <path d="M8.5 12h7" strokeWidth={1} opacity={0.7} />
+          <path d="M8.5 14.5h5" strokeWidth={1} opacity={0.5} />
         </>
       )}
     </svg>
