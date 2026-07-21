@@ -44,11 +44,20 @@ const QUICK_ACTIONS = [
 
 function PulseStat({ label, value, tone }: { label: string; value: string; tone?: "neon" }) {
   return (
-    <div className="flex flex-col items-start gap-1">
-      <span className="mono-tag" style={{ fontSize: 9, color: "var(--color-ink-3)" }}>{label}</span>
+    <div className="flex min-w-0 flex-col items-start gap-2">
       <span
-        className="display-numeral text-[22px]"
-        style={{ color: tone === "neon" ? "var(--color-neon-deep)" : "var(--color-ink-0)" }}
+        className="mono-tag truncate"
+        style={{ fontSize: 9, letterSpacing: "0.2em", color: "var(--color-ink-3)", lineHeight: 1 }}
+      >
+        {label}
+      </span>
+      <span
+        className="display-numeral truncate text-[22px]"
+        style={{
+          color: tone === "neon" ? "var(--color-neon-deep)" : "var(--color-ink-0)",
+          lineHeight: 1.05,
+          maxWidth: "100%",
+        }}
       >
         {value}
       </span>
