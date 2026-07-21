@@ -36,6 +36,9 @@ export function RouteMap({
   onMapClick,
   className = "h-72 w-full",
   theme = "dark",
+  userLocation,
+  userHeading,
+  recenterKey,
 }: {
   path?: LatLng[];
   pois?: Poi[];
@@ -45,6 +48,9 @@ export function RouteMap({
   onMapClick?: (p: LatLng) => void;
   className?: string;
   theme?: "dark" | "light";
+  userLocation?: LatLng | null;
+  userHeading?: number | null;
+  recenterKey?: number;
 }) {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
