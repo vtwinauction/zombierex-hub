@@ -166,6 +166,36 @@ export function RouteMap({
     });
   }
 
+  function drawUser(g: any) {
+    if (userMarkerRef.current) { userMarkerRef.current.setMap(null); userMarkerRef.current = null; }
+    if (!userLocation) return;
+    const heading = typeof userHeading === "number" ? userHeading : null;
+    userMarkerRef.current = new g.maps.Marker({
+      position: userLocation,
+      map: mapRef.current,
+      zIndex: 999,
+      icon: heading !== null
+        ? {
+            path: "M0,-14 L8,10 L0,4 L-8,10 Z",
+            fillColor: "#22c55e",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+            scale: 1,
+            rotation: heading,
+            anchor: new g.maps.Point(0, 0),
+          }
+        : {
+            path: g.maps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: "#22c55e",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 3,
+          },
+    });
+  }
+
   if (err) {
     return (
       <div className={className + " grid place-items-center border border-white/10 text-xs text-white/60"}>
