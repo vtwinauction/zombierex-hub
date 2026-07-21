@@ -403,3 +403,41 @@ function Chip({ label, active, onClick }: { label: string; active?: boolean; onC
     >{label}</button>
   );
 }
+
+/** Compact Bluetooth pairing chip for helmet cams / intercoms — shows link state, degrades on unsupported browsers. */
+function BluetoothChip() {
+  const [state, setState] = useState<"idle" | "scanning" | "linked" | "unsupported">("idle");
+  useEffect(() => {
+    try {
+      const raw = typeof localStorage !== "undefined" ? localStorage.getItem("zrex:bt") : null;
+      if (raw) setState("linked");
+    } catch { /* noop */ }
+  }, []);
+  async function onPair() {
+    const n = typeof navigator !== "undefined" ? (navigator as Navigator & { bluetooth?: { requestDevice: (o: unknown) => Promise<{ name?: string }> } }) : undefined;
+    if (!n?.bluetooth) { setState("unsupported"); window.setTimeout(() => setState("idle"), 1600); return; }
+    try {
+      setState("scanning");
+      const d = await n.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: ["battery_service", "device_information"] });
+      const name = d?.name ?? "Device";
+      try { localStorage.setItem("zrex:bt", JSON.stringify({ name, at: Date.now() })); } catch { /* noop */ }
+      setState("linked");
+    } catch { setState((p) => (p === "linked" ? "linked" : "idle")); }
+  }
+  const linked = state === "linked";
+  return (
+    <button
+      type="button"
+      onClick={onPair}
+      aria-label={linked ? "Bluetooth linked" : "Pair Bluetooth"}
+      title={state === "unsupported" ? "Bluetooth not supported" : linked ? "Bluetooth linked" : "Pair helmet cam / intercom"}
+      className="tap grid h-10 w-10 place-items-center rounded-full border border-border shadow-sm"
+      style={{
+        background: linked ? "color-mix(in oklab, var(--color-neon) 20%, hsl(var(--card)))" : "hsl(var(--card) / 0.9)",
+        color: linked ? "var(--color-neon-deep, #4b8f00)" : "hsl(var(--foreground))",
+      }}
+    >
+      <Bluetooth size={16} strokeWidth={2} style={state === "scanning" ? { animation: "pulse 1.1s ease-in-out infinite" } : linked ? { filter: "drop-shadow(0 0 4px rgba(124,255,63,0.6))" } : undefined} />
+    </button>
+  );
+}
