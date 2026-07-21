@@ -1,4 +1,4 @@
-import { useRef, useState, type ComponentType } from "react";
+import { useRef, useState, type ComponentType, type CSSProperties } from "react";
 import { HeartIcon, CommentIcon, EyeIcon, ShareIcon, BookmarkIcon } from "./icons/SocialIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
 
@@ -56,7 +56,7 @@ export function InteractionBar({
   const isDark = variant === "dark";
 
 
-  const surface: React.CSSProperties = {
+  const surface: CSSProperties = {
     background: "transparent",
     border: "none",
     boxShadow: "none",
