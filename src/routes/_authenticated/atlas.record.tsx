@@ -9,6 +9,12 @@ const RouteMap = lazy(() => import("@/components/RouteMap"));
 type LatLng = { lat: number; lng: number };
 
 export const Route = createFileRoute("/_authenticated/atlas/record")({
+  head: () => ({
+    meta: [
+      { title: "Record route · ZOMBIEREX" },
+      { name: "description", content: "Record a live GPS route and save it to your Atlas." },
+    ],
+  }),
   component: RecordPage,
 });
 
