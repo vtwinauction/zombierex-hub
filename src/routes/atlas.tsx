@@ -5,8 +5,8 @@ import { BottomNav } from "@/components/BottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X,
-  Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Navigation,
+  Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
+  Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
 } from "lucide-react";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
@@ -53,12 +53,34 @@ function AtlasPage() {
   const [sheet, setSheet] = useState<SheetSize>("peek");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [category, setCategory] = useState<string>("all");
+  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [userHeading, setUserHeading] = useState<number | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "locating" | "ok" | "denied" | "unsupported">("idle");
+  const [recenterTick, setRecenterTick] = useState(0);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const nav = useNavigate();
   const hidden = useScrollDirection() === "down";
 
   const { data: routesRaw } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
   const routes = (routesRaw ?? []) as any[];
+
+  // Auto-request location on first mount, then watch for movement updates
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setGeoStatus("unsupported"); return;
+    }
+    setGeoStatus("locating");
+    const opts: PositionOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 };
+    const onPos = (p: GeolocationPosition) => {
+      setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude });
+      if (typeof p.coords.heading === "number" && !isNaN(p.coords.heading)) setUserHeading(p.coords.heading);
+      setGeoStatus("ok");
+    };
+    const onErr = () => setGeoStatus("denied");
+    navigator.geolocation.getCurrentPosition(onPos, onErr, opts);
+    const id = navigator.geolocation.watchPosition(onPos, onErr, opts);
+    return () => navigator.geolocation.clearWatch(id);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -78,15 +100,33 @@ function AtlasPage() {
   const mapPath = activeRoute?.path ?? [];
   const mapCenter = activeRoute?.start_lat
     ? { lat: activeRoute.start_lat, lng: activeRoute.start_lng }
-    : filtered[0]?.start_lat
-      ? { lat: filtered[0].start_lat, lng: filtered[0].start_lng }
-      : undefined;
+    : userLoc
+      ? userLoc
+      : filtered[0]?.start_lat
+        ? { lat: filtered[0].start_lat, lng: filtered[0].start_lng }
+        : undefined;
 
   useEffect(() => {
     if (activeId && cardRefs.current[activeId]) {
       cardRefs.current[activeId]!.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
   }, [activeId]);
+
+  function recenterMe() {
+    if (userLoc) { setRecenterTick((t) => t + 1); return; }
+    if (typeof navigator === "undefined" || !navigator.geolocation) { setGeoStatus("unsupported"); return; }
+    setGeoStatus("locating");
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude });
+        if (typeof p.coords.heading === "number" && !isNaN(p.coords.heading)) setUserHeading(p.coords.heading);
+        setGeoStatus("ok");
+        setRecenterTick((t) => t + 1);
+      },
+      () => setGeoStatus("denied"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+  }
 
   const sheetHeight: Record<SheetSize, string> = {
     peek: "18svh",
@@ -110,10 +150,13 @@ function AtlasPage() {
             path={mapPath}
             pois={mapPois}
             center={mapCenter}
-            zoom={activeRoute ? 10 : 6}
+            zoom={activeRoute ? 10 : userLoc ? 13 : 6}
             interactive
             theme="light"
             className="h-full w-full"
+            userLocation={userLoc}
+            userHeading={userHeading}
+            recenterKey={recenterTick}
           />
         </Suspense>
         {/* soft top gradient for control legibility */}
@@ -155,6 +198,7 @@ function AtlasPage() {
           >
             <Bookmark size={16} />
           </Link>
+          <BluetoothChip />
         </div>
 
         {/* Category chips — horizontal, iconified */}
@@ -213,10 +257,11 @@ function AtlasPage() {
           <Circle size={20} strokeWidth={2.5} fill="#e11d48" />
         </Link>
         <button
-          aria-label="Recenter"
-          onClick={() => setActiveId(null)}
-          className="tap grid h-10 w-10 place-items-center rounded-full bg-card border border-border shadow-lg text-foreground">
-          <Navigation size={16} />
+          aria-label="Recenter on my location"
+          onClick={recenterMe}
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: geoStatus === "ok" ? "var(--color-neon-deep, #4b8f00)" : "var(--color-ink-0)" }}>
+          <Locate size={18} strokeWidth={2.2} style={geoStatus === "locating" ? { animation: "pulse 1.1s ease-in-out infinite" } : undefined} />
         </button>
       </div>
 
@@ -356,5 +401,43 @@ function Chip({ label, active, onClick }: { label: string; active?: boolean; onC
         borderColor: active ? "var(--color-neon)" : "hsl(var(--border))",
       }}
     >{label}</button>
+  );
+}
+
+/** Compact Bluetooth pairing chip for helmet cams / intercoms — shows link state, degrades on unsupported browsers. */
+function BluetoothChip() {
+  const [state, setState] = useState<"idle" | "scanning" | "linked" | "unsupported">("idle");
+  useEffect(() => {
+    try {
+      const raw = typeof localStorage !== "undefined" ? localStorage.getItem("zrex:bt") : null;
+      if (raw) setState("linked");
+    } catch { /* noop */ }
+  }, []);
+  async function onPair() {
+    const n = typeof navigator !== "undefined" ? (navigator as Navigator & { bluetooth?: { requestDevice: (o: unknown) => Promise<{ name?: string }> } }) : undefined;
+    if (!n?.bluetooth) { setState("unsupported"); window.setTimeout(() => setState("idle"), 1600); return; }
+    try {
+      setState("scanning");
+      const d = await n.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: ["battery_service", "device_information"] });
+      const name = d?.name ?? "Device";
+      try { localStorage.setItem("zrex:bt", JSON.stringify({ name, at: Date.now() })); } catch { /* noop */ }
+      setState("linked");
+    } catch { setState((p) => (p === "linked" ? "linked" : "idle")); }
+  }
+  const linked = state === "linked";
+  return (
+    <button
+      type="button"
+      onClick={onPair}
+      aria-label={linked ? "Bluetooth linked" : "Pair Bluetooth"}
+      title={state === "unsupported" ? "Bluetooth not supported" : linked ? "Bluetooth linked" : "Pair helmet cam / intercom"}
+      className="tap grid h-10 w-10 place-items-center rounded-full border border-border shadow-sm"
+      style={{
+        background: linked ? "color-mix(in oklab, var(--color-neon) 20%, hsl(var(--card)))" : "hsl(var(--card) / 0.9)",
+        color: linked ? "var(--color-neon-deep, #4b8f00)" : "hsl(var(--foreground))",
+      }}
+    >
+      <Bluetooth size={16} strokeWidth={2} style={state === "scanning" ? { animation: "pulse 1.1s ease-in-out infinite" } : linked ? { filter: "drop-shadow(0 0 4px rgba(124,255,63,0.6))" } : undefined} />
+    </button>
   );
 }

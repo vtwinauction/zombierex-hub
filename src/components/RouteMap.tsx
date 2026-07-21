@@ -36,6 +36,9 @@ export function RouteMap({
   onMapClick,
   className = "h-72 w-full",
   theme = "dark",
+  userLocation,
+  userHeading,
+  recenterKey,
 }: {
   path?: LatLng[];
   pois?: Poi[];
@@ -45,6 +48,9 @@ export function RouteMap({
   onMapClick?: (p: LatLng) => void;
   className?: string;
   theme?: "dark" | "light";
+  userLocation?: LatLng | null;
+  userHeading?: number | null;
+  recenterKey?: number;
 }) {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -52,15 +58,15 @@ export function RouteMap({
   const polylineRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
+  const userMarkerRef = useRef<any>(null);
 
   // init
   useEffect(() => {
     let cancelled = false;
     console.log("[RouteMap] mount");
     loadGoogleMaps().then((g) => {
-      console.log("[RouteMap] loaded", { cancelled, hasContainer: !!containerRef.current });
       if (cancelled || !containerRef.current) return;
-      const first = path[0] ?? center ?? { lat: 25.2048, lng: 55.2708 };
+      const first = path[0] ?? center ?? userLocation ?? { lat: 25.2048, lng: 55.2708 };
       mapRef.current = new g.maps.Map(containerRef.current, {
         center: first,
         zoom,
@@ -88,6 +94,7 @@ export function RouteMap({
       }
       drawPath(g);
       drawPois(g);
+      drawUser(g);
     }).catch((e) => { console.error("[RouteMap] err", e); setErr(e.message); });
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,6 +107,22 @@ export function RouteMap({
     drawPois((window as any).google);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, pois]);
+
+  // user location updates
+  useEffect(() => {
+    if (!(window as any).google?.maps || !mapRef.current) return;
+    drawUser((window as any).google);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLocation, userHeading]);
+
+  // external recenter to user
+  useEffect(() => {
+    if (recenterKey === undefined) return;
+    if (!mapRef.current || !userLocation) return;
+    mapRef.current.panTo(userLocation);
+    mapRef.current.setZoom(15);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recenterKey]);
 
   function drawPath(g: any) {
     if (polylineRef.current) polylineRef.current.setMap(null);
@@ -140,6 +163,36 @@ export function RouteMap({
         },
       });
       markersRef.current.push(m);
+    });
+  }
+
+  function drawUser(g: any) {
+    if (userMarkerRef.current) { userMarkerRef.current.setMap(null); userMarkerRef.current = null; }
+    if (!userLocation) return;
+    const heading = typeof userHeading === "number" ? userHeading : null;
+    userMarkerRef.current = new g.maps.Marker({
+      position: userLocation,
+      map: mapRef.current,
+      zIndex: 999,
+      icon: heading !== null
+        ? {
+            path: "M0,-14 L8,10 L0,4 L-8,10 Z",
+            fillColor: "#22c55e",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 2,
+            scale: 1,
+            rotation: heading,
+            anchor: new g.maps.Point(0, 0),
+          }
+        : {
+            path: g.maps.SymbolPath.CIRCLE,
+            scale: 9,
+            fillColor: "#22c55e",
+            fillOpacity: 1,
+            strokeColor: "#ffffff",
+            strokeWeight: 3,
+          },
     });
   }
 
