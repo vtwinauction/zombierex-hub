@@ -198,6 +198,7 @@ function AtlasPage() {
           >
             <Bookmark size={16} />
           </Link>
+          <BluetoothChip />
         </div>
 
         {/* Category chips — horizontal, iconified */}
