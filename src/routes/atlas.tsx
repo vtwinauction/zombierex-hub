@@ -5,8 +5,8 @@ import { BottomNav } from "@/components/BottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
-  Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X,
-  Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Navigation,
+  Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
+  Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
 } from "lucide-react";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
