@@ -113,6 +113,7 @@ function HomePage() {
             </div>
           </Link>
           <div className="flex items-center gap-1">
+            <BluetoothPill />
             <Link to="/notifications" aria-label="Notifications" className="tap relative grid h-10 w-10 place-items-center" style={{ color: "var(--color-ink-0)", borderRadius: 10 }}>
               <Bell size={18} strokeWidth={1.9} />
               <span className="absolute right-2 top-2 h-[7px] w-[7px] rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 0 2px #fff" }} />
