@@ -677,3 +677,81 @@ function fmt(n: number) {
   if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   return String(n);
 }
+
+/**
+ * BluetoothPill — masthead status chip for helmet cams / intercoms.
+ * Persists a linked device across sessions and shows live state.
+ * Falls back gracefully on browsers without Web Bluetooth (iOS Safari).
+ */
+function BluetoothPill() {
+  const [state, setState] = useState<"idle" | "scanning" | "linked" | "unsupported">("idle");
+  const [name, setName] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem("zrex:bt");
+      if (raw) {
+        const d = JSON.parse(raw) as { name?: string };
+        if (d?.name) { setName(d.name); setState("linked"); }
+      }
+    } catch { /* noop */ }
+  }, []);
+
+  async function onPair() {
+    const n = typeof navigator !== "undefined" ? (navigator as Navigator & { bluetooth?: { requestDevice: (o: unknown) => Promise<{ name?: string }> } }) : undefined;
+    if (!n?.bluetooth) {
+      setState("unsupported");
+      window.setTimeout(() => setState("idle"), 1600);
+      return;
+    }
+    try {
+      setState("scanning");
+      const device = await n.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: ["battery_service", "device_information"],
+      });
+      const dn = device?.name ?? "Device";
+      setName(dn);
+      setState("linked");
+      try { localStorage.setItem("zrex:bt", JSON.stringify({ name: dn, at: Date.now() })); } catch { /* noop */ }
+    } catch {
+      setState((prev) => (prev === "linked" ? "linked" : "idle"));
+    }
+  }
+
+  const linked = state === "linked";
+  const scanning = state === "scanning";
+  return (
+    <button
+      type="button"
+      onClick={onPair}
+      aria-label={linked ? `Bluetooth: ${name ?? "linked"}` : "Pair Bluetooth device"}
+      title={
+        state === "unsupported" ? "Bluetooth not supported here"
+        : linked ? `Linked · ${name ?? "device"}`
+        : scanning ? "Scanning…"
+        : "Pair helmet cam / intercom"
+      }
+      className="tap relative grid h-10 place-items-center gap-1 px-2"
+      style={{
+        color: linked ? "var(--color-neon-deep, #4b8f00)" : "var(--color-ink-0)",
+        borderRadius: 999,
+        background: linked ? "color-mix(in oklab, var(--color-neon) 18%, transparent)" : "transparent",
+        display: "inline-flex",
+      }}
+    >
+      <Bluetooth
+        size={15}
+        strokeWidth={2.1}
+        style={
+          scanning ? { animation: "pulse 1.1s ease-in-out infinite" }
+          : linked ? { filter: "drop-shadow(0 0 5px rgba(124,255,63,0.6))" }
+          : undefined
+        }
+      />
+      <span className="mono-tag" style={{ fontSize: 9, letterSpacing: "0.16em" }}>
+        {linked ? "ON" : scanning ? "…" : state === "unsupported" ? "N/A" : "BT"}
+      </span>
+    </button>
+  );
+}
