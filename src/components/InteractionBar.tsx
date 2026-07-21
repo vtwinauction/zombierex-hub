@@ -84,13 +84,13 @@ export function InteractionBar({
       className="relative"
       style={{
         ...surface,
-        padding: "6px 4px",
+        padding: "4px 2px",
       }}
     >
 
 
-      <div className="flex items-center justify-between">
-        {ACTIONS.map(({ key, label, icon: Icon }, idx) => {
+      <div className="grid grid-cols-5 items-center gap-1">
+        {ACTIONS.map(({ key, label, icon: Icon }) => {
           const active =
             (key === "like" && liked) || (key === "save" && saved);
           const disabled = key === "views";
@@ -109,7 +109,7 @@ export function InteractionBar({
                 onClick={disabled ? undefined : onClick}
                 aria-label={label}
                 aria-pressed={active}
-                className="tap group relative flex flex-1 flex-col items-center justify-center gap-1.5 py-1.5"
+                className="tap group relative flex min-h-11 flex-col items-center justify-center gap-1"
               >
                 <span
                   key={active ? "on" : "off"}
@@ -122,7 +122,7 @@ export function InteractionBar({
                       : "drop-shadow(0 0 4px rgba(198,255,61,0.45))",
                   }}
                 >
-                  <Icon size={24} active={active} />
+                  <Icon size={22} active={active} />
                 </span>
 
 
@@ -130,7 +130,7 @@ export function InteractionBar({
                   className="mono-num text-[10px] tabular-nums leading-none"
                   style={{
                     color: active ? "var(--color-neon)" : iconColor,
-                    letterSpacing: "0.06em",
+                    letterSpacing: "0.04em",
                     fontWeight: 600,
                     textShadow: active ? "0 0 8px rgba(198,255,61,0.55)" : "none",
                   }}
@@ -138,13 +138,6 @@ export function InteractionBar({
                   {values[key]}
                 </span>
               </button>
-              {idx < ACTIONS.length - 1 && (
-                <span
-                  aria-hidden
-                  className="h-6 w-px shrink-0"
-                  style={{ background: dividerColor }}
-                />
-              )}
             </Fragment>
           );
         })}

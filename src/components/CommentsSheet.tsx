@@ -178,13 +178,21 @@ export function CommentsSheet({
         {/* composer */}
         <form
           onSubmit={(e) => { e.preventDefault(); submit(); }}
-          className="flex items-center gap-2 px-4 pt-3"
+          className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 px-4 pt-3"
           style={{
             paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)",
             borderTop: "1px solid var(--color-line)",
             background: "var(--color-paper-0)",
           }}
         >
+          <button
+            type="button"
+            aria-label="Add emoji"
+            className="tap grid h-11 w-11 shrink-0 place-items-center rounded-full text-[18px]"
+            style={{ background: "var(--color-paper-2)", color: "var(--color-ink-1)" }}
+          >
+            😊
+          </button>
           <input
             ref={inputRef}
             value={text}
@@ -194,8 +202,9 @@ export function CommentsSheet({
             autoComplete="off"
             autoCapitalize="sentences"
             inputMode="text"
-            className="flex-1 rounded-full px-4 py-3 text-[15px] outline-none"
+            className="min-w-0 rounded-full px-4 text-[15px] outline-none"
             style={{
+              height: 44,
               background: "var(--color-paper-2)",
               color: "var(--color-ink-0)",
               border: "1px solid var(--color-line)",
@@ -205,11 +214,13 @@ export function CommentsSheet({
           <button
             type="submit"
             disabled={!text.trim()}
-            className="tap px-4 py-3 text-[13px] font-semibold"
+            aria-label="Post comment"
+            className="tap shrink-0 px-4 text-[13px] font-semibold"
             style={{
+              height: 44,
               borderRadius: 999,
-              background: text.trim() ? "var(--color-ink-0)" : "var(--color-paper-2)",
-              color: text.trim() ? "var(--color-paper-0)" : "var(--color-ink-3)",
+              background: text.trim() ? "var(--color-neon)" : "var(--color-paper-2)",
+              color: text.trim() ? "var(--color-ink-0)" : "var(--color-ink-3)",
               transition: "all 160ms ease",
             }}
           >
