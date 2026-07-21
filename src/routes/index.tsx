@@ -486,25 +486,38 @@ function HomePage() {
          FEED — Instagram DNA
          Square media · caption · InteractionBar
          ================================================== */}
-      <section className="mt-8 space-y-6">
+      <section className="mt-8 space-y-10">
         {feedPosts.map((p, idx) => (
           <div key={p.id}>
           <article className="rise" style={{ animationDelay: `${idx * 40}ms` }}>
-            {/* post header */}
-            <div className="flex items-center gap-2.5 px-4 pb-2.5">
-              <div className="story-ring">
-                <div style={{ background: "var(--color-obsidian)", padding: 1.5, borderRadius: 999 }}>
-                  <img src={p.user.avatar} alt="" className="h-8 w-8 rounded-full object-cover" />
+            {/* post header — single baseline, 8pt rhythm, no crowding */}
+            <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 px-4 pb-3">
+              <div className="story-ring shrink-0">
+                <div style={{ background: "var(--color-paper-0)", padding: 2, borderRadius: 999 }}>
+                  <img src={p.user.avatar} alt="" className="h-9 w-9 rounded-full object-cover" />
                 </div>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5 truncate text-[13px] font-semibold" style={{ color: "var(--color-ink)" }}>
-                  {p.user.handle}
-                  {p.user.verified && <RiderMark tier="LEGEND" />}
+              <div className="min-w-0">
+                <div className="flex min-w-0 items-center gap-1.5">
+                  <p className="truncate text-[13.5px] font-semibold" style={{ color: "var(--color-ink-0)" }}>
+                    {p.user.handle}
+                  </p>
+                  {p.user.verified && <span className="shrink-0"><RiderMark tier="LEGEND" /></span>}
+                </div>
+                <p
+                  className="mt-1 truncate text-[11px]"
+                  style={{ color: "var(--color-ink-3)", letterSpacing: "0.02em" }}
+                >
+                  {p.user.location} · {p.timeAgo}
                 </p>
-                <p className="mono-tag" style={{ fontSize: 8.5 }}>◎ {p.user.location} · {p.timeAgo}</p>
               </div>
-              <button aria-label="More" className="tap px-2 text-lg leading-none" style={{ color: "var(--color-silver)" }}>⋯</button>
+              <button
+                aria-label="More"
+                className="tap grid h-9 w-9 shrink-0 place-items-center text-lg leading-none"
+                style={{ color: "var(--color-ink-3)" }}
+              >
+                ⋯
+              </button>
             </div>
 
             {/* square media */}
@@ -512,18 +525,22 @@ function HomePage() {
               <img src={p.image} alt="" className="block aspect-square w-full object-cover" />
               {p.vehicle && (
                 <div
-                  className="absolute left-3 bottom-3 flex items-center gap-1.5 rounded-full px-2 py-1"
-                  style={{ background: "rgba(8,9,11,0.7)", backdropFilter: "blur(10px)", border: "1px solid rgba(255,255,255,0.14)" }}
+                  className="absolute right-3 top-3 flex max-w-[calc(100%-24px)] items-center gap-1.5 rounded-full px-2.5 py-1"
+                  style={{
+                    background: "rgba(10,10,10,0.55)",
+                    backdropFilter: "blur(14px) saturate(160%)",
+                    border: "1px solid rgba(255,255,255,0.18)",
+                  }}
                 >
-                  <span style={{ color: "var(--color-neon)" }}>◇</span>
-                  <span className="text-[11px] font-semibold text-white">{p.vehicle.name}</span>
-                  <span className="mono-num text-[10px]" style={{ color: "var(--color-neon)" }}>{p.vehicle.hp}hp</span>
+                  <span className="shrink-0" style={{ color: "var(--color-neon)" }}>◇</span>
+                  <span className="truncate text-[11px] font-semibold text-white">{p.vehicle.name}</span>
+                  <span className="mono-num shrink-0 text-[10px]" style={{ color: "var(--color-neon)" }}>{p.vehicle.hp}hp</span>
                 </div>
               )}
             </div>
 
             {/* interaction bar */}
-            <div className="px-4 pt-3">
+            <div className="px-2 pt-4">
               <InteractionBar
                 variant="dark"
                 targetId={`post:${p.id}`}
@@ -537,23 +554,23 @@ function HomePage() {
             </div>
 
             {/* caption */}
-            <div className="mt-3 px-4">
-              <p className="text-[13.5px] leading-snug" style={{ color: "var(--color-ink)" }}>
+            <div className="mt-4 px-4">
+              <p className="text-[13.5px] leading-relaxed" style={{ color: "var(--color-ink-0)" }}>
                 <span className="font-semibold">{p.user.handle}</span>{" "}
                 {p.caption}
               </p>
-              <p className="mt-1 text-[12.5px]" style={{ color: "var(--color-neon)" }}>
+              <p className="mt-2 text-[12.5px]" style={{ color: "var(--color-neon-deep)" }}>
                 {p.tags.join(" ")}
               </p>
               {p.comments > 0 && (
-                <button className="mt-1.5 text-[12px]" style={{ color: "var(--color-titanium)" }}>
+                <button className="mt-2 text-[12px]" style={{ color: "var(--color-ink-3)" }}>
                   View all {p.comments} comments
                 </button>
               )}
             </div>
           </article>
           {idx > 0 && idx % 3 === 0 && sponsored.data?.[Math.floor(idx / 3) % (sponsored.data?.length || 1)] && (
-            <div className="px-4">
+            <div className="mt-6 px-4">
               <SponsoredCard
                 creative={sponsored.data[Math.floor(idx / 3) % sponsored.data.length] as any}
                 placement="feed"
