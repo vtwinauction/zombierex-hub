@@ -533,7 +533,7 @@ function HomePage() {
                     border: "1px solid rgba(255,255,255,0.18)",
                   }}
                 >
-                  <span className="shrink-0" style={{ color: "var(--color-neon)" }}>◇</span>
+                  <Gauge size={12} className="shrink-0" style={{ color: "var(--color-neon)" }} strokeWidth={2.2} />
                   <span className="truncate text-[11px] font-semibold text-white">{p.vehicle.name}</span>
                   <span className="mono-num shrink-0 text-[10px]" style={{ color: "var(--color-neon)" }}>{p.vehicle.hp}hp</span>
                 </div>
