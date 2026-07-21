@@ -1,7 +1,6 @@
-import { Fragment, useState, type ComponentType } from "react";
+import { useRef, useState, type ComponentType } from "react";
 import { HeartIcon, CommentIcon, EyeIcon, ShareIcon, BookmarkIcon } from "./icons/SocialIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
-import { CommentsSheet } from "./CommentsSheet";
 
 export type InteractionCounts = {
   likes: number;
@@ -50,8 +49,9 @@ export function InteractionBar({
     retry,
   } = useInteractionState(id, { likes: counts.likes, shares: counts.shares });
 
-  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentText, setCommentText] = useState("");
   const [commentDelta, setCommentDelta] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const isDark = variant === "dark";
 
@@ -60,7 +60,7 @@ export function InteractionBar({
     background: "transparent",
     border: "none",
     boxShadow: "none",
-    color: isDark ? "var(--color-ink)" : "var(--color-obsidian)",
+    color: isDark ? "var(--color-ink-0)" : "var(--color-ink-0)",
   };
 
   void isDark;
@@ -79,17 +79,23 @@ export function InteractionBar({
   const queuedCount = pending.length;
   const status = getStatus({ online, hasFailed, isSyncing, queuedCount });
 
+  const submitComment = () => {
+    if (!commentText.trim()) return;
+    setCommentDelta((n) => n + 1);
+    setCommentText("");
+  };
+
   return (
     <div
       className="relative"
       style={{
         ...surface,
-        padding: "4px 2px",
+        padding: "0",
       }}
     >
 
 
-      <div className="grid grid-cols-5 items-center gap-1">
+      <div className="grid grid-cols-5 items-center gap-1 px-1">
         {ACTIONS.map(({ key, label, icon: Icon }) => {
           const active =
             (key === "like" && liked) || (key === "save" && saved);
@@ -98,50 +104,98 @@ export function InteractionBar({
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
-            else if (key === "comment") setCommentsOpen(true);
+            else if (key === "comment") inputRef.current?.focus();
           };
 
           const iconColor = "var(--color-neon)";
 
           return (
-            <Fragment key={key}>
-              <button
-                onClick={disabled ? undefined : onClick}
-                aria-label={label}
-                aria-pressed={active}
-                className="tap group relative flex min-h-11 flex-col items-center justify-center gap-1"
+            <button
+              key={key}
+              type="button"
+              onClick={disabled ? undefined : onClick}
+              aria-label={label}
+              aria-pressed={active}
+              className="tap group relative flex h-12 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-xl"
+              style={{ background: "transparent" }}
+            >
+              <span
+                key={active ? "on" : "off"}
+                className={`transition-transform duration-200 ease-out group-active:scale-90 ${active ? "ibar-pop" : ""}`}
+                style={{
+                  color: iconColor,
+                  lineHeight: 0,
+                  filter: active
+                    ? "drop-shadow(0 0 8px rgba(0,200,83,0.95)) drop-shadow(0 0 18px rgba(0,200,83,0.45))"
+                    : "drop-shadow(0 0 3px rgba(0,200,83,0.42))",
+                }}
               >
-                <span
-                  key={active ? "on" : "off"}
-                  className={`transition-transform duration-200 ease-out group-active:scale-90 ${active ? "ibar-pop" : ""}`}
-                  style={{
-                    color: iconColor,
-                    lineHeight: 0,
-                    filter: active
-                      ? "drop-shadow(0 0 8px rgba(198,255,61,0.95)) drop-shadow(0 0 22px rgba(126,224,28,0.65))"
-                      : "drop-shadow(0 0 4px rgba(198,255,61,0.45))",
-                  }}
-                >
-                  <Icon size={22} active={active} />
-                </span>
+                <Icon size={23} active={active} />
+              </span>
 
-
-                <span
-                  className="mono-num text-[10px] tabular-nums leading-none"
-                  style={{
-                    color: active ? "var(--color-neon)" : iconColor,
-                    letterSpacing: "0.04em",
-                    fontWeight: 600,
-                    textShadow: active ? "0 0 8px rgba(198,255,61,0.55)" : "none",
-                  }}
-                >
-                  {values[key]}
-                </span>
-              </button>
-            </Fragment>
+              <span
+                className="mono-num max-w-full truncate text-[10px] tabular-nums leading-none"
+                style={{
+                  color: iconColor,
+                  letterSpacing: 0,
+                  fontWeight: 700,
+                  textShadow: active ? "0 0 8px rgba(0,200,83,0.45)" : "none",
+                }}
+              >
+                {values[key]}
+              </span>
+            </button>
           );
         })}
       </div>
+
+      <form
+        onSubmit={(e) => { e.preventDefault(); submitComment(); }}
+        className="mt-3 grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full px-2 py-2"
+        style={{
+          background: "var(--color-paper-2)",
+          border: "1px solid var(--color-line)",
+        }}
+      >
+        <button
+          type="button"
+          aria-label="Add emoji"
+          className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full text-[18px]"
+          style={{ color: "var(--color-ink-2)", background: "var(--color-paper-0)" }}
+        >
+          😊
+        </button>
+        <input
+          ref={inputRef}
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
+          placeholder="Add a comment…"
+          enterKeyHint="send"
+          autoComplete="off"
+          autoCapitalize="sentences"
+          className="min-w-0 bg-transparent px-1 text-[15px] outline-none"
+          style={{ color: "var(--color-ink-0)", WebkitAppearance: "none" }}
+        />
+        <button
+          type="button"
+          aria-label="Attach media"
+          className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full text-[17px]"
+          style={{ color: "var(--color-ink-2)", background: "var(--color-paper-0)" }}
+        >
+          ＋
+        </button>
+        <button
+          type="submit"
+          disabled={!commentText.trim()}
+          className="tap h-9 shrink-0 rounded-full px-3 text-[12px] font-bold"
+          style={{
+            background: commentText.trim() ? "var(--color-neon)" : "var(--color-paper-0)",
+            color: commentText.trim() ? "var(--color-ink-0)" : "var(--color-ink-3)",
+          }}
+        >
+          Post
+        </button>
+      </form>
 
 
       {/* ── Sync status rail ── */}
@@ -184,13 +238,6 @@ export function InteractionBar({
           )}
         </div>
       )}
-
-      <CommentsSheet
-        open={commentsOpen}
-        onClose={() => setCommentsOpen(false)}
-        targetId={id}
-        onSubmitted={() => setCommentDelta((n) => n + 1)}
-      />
 
     </div>
   );
