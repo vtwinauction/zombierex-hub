@@ -150,10 +150,13 @@ function AtlasPage() {
             path={mapPath}
             pois={mapPois}
             center={mapCenter}
-            zoom={activeRoute ? 10 : 6}
+            zoom={activeRoute ? 10 : userLoc ? 13 : 6}
             interactive
             theme="light"
             className="h-full w-full"
+            userLocation={userLoc}
+            userHeading={userHeading}
+            recenterKey={recenterTick}
           />
         </Suspense>
         {/* soft top gradient for control legibility */}
