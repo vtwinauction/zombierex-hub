@@ -257,10 +257,11 @@ function AtlasPage() {
           <Circle size={20} strokeWidth={2.5} fill="#e11d48" />
         </Link>
         <button
-          aria-label="Recenter"
-          onClick={() => setActiveId(null)}
-          className="tap grid h-10 w-10 place-items-center rounded-full bg-card border border-border shadow-lg text-foreground">
-          <Navigation size={16} />
+          aria-label="Recenter on my location"
+          onClick={recenterMe}
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: geoStatus === "ok" ? "var(--color-neon-deep, #4b8f00)" : "var(--color-ink-0)" }}>
+          <Locate size={18} strokeWidth={2.2} style={geoStatus === "locating" ? { animation: "pulse 1.1s ease-in-out infinite" } : undefined} />
         </button>
       </div>
 
