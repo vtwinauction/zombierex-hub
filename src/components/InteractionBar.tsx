@@ -1,37 +1,36 @@
-import { useRef, useState, type ComponentType, type CSSProperties } from "react";
-import { HeartIcon, CommentIcon, EyeIcon, ShareIcon, BookmarkIcon } from "./icons/SocialIcons";
+import { useState, type ComponentType, type CSSProperties } from "react";
+import { HeartIcon, CommentIcon, ShareIcon, BookmarkIcon } from "./icons/SocialIcons";
 import { useInteractionState } from "@/hooks/useInteractionState";
 
 export type InteractionCounts = {
   likes: number;
   comments: number;
-  views: number | string;
   shares: number;
 };
 
-type ActionKey = "like" | "comment" | "views" | "share" | "save";
+type ActionKey = "like" | "comment" | "share" | "save";
 
 type IconCmp = ComponentType<{ size?: number; active?: boolean; className?: string }>;
 
 const ACTIONS: { key: ActionKey; label: string; icon: IconCmp }[] = [
   { key: "like",    label: "Like",     icon: HeartIcon },
   { key: "comment", label: "Comment",  icon: CommentIcon },
-  { key: "views",   label: "Views",    icon: EyeIcon },
   { key: "share",   label: "Share",    icon: ShareIcon },
   { key: "save",    label: "Save",     icon: BookmarkIcon },
 ];
-
-
 
 export function InteractionBar({
   counts,
   variant = "dark",
   targetId,
+  onComment,
 }: {
   counts: InteractionCounts;
   variant?: "dark" | "light";
   /** Stable id for the media this bar controls; used for queue keying. */
   targetId?: string;
+  /** Called when the user taps the comment icon. */
+  onComment?: () => void;
 }) {
   const id = targetId ?? "anon";
   const {
@@ -49,12 +48,8 @@ export function InteractionBar({
     retry,
   } = useInteractionState(id, { likes: counts.likes, shares: counts.shares });
 
-  const [commentText, setCommentText] = useState("");
   const [commentDelta, setCommentDelta] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
   const isDark = variant === "dark";
-
 
   const surface: CSSProperties = {
     background: "transparent",
@@ -66,24 +61,17 @@ export function InteractionBar({
   void isDark;
   const dividerColor = "transparent";
 
-
   const values: Record<ActionKey, string> = {
     like: fmt(likes),
     comment: fmt(counts.comments + commentDelta),
-    views: typeof counts.views === "string" ? counts.views : fmt(counts.views),
     share: fmt(shares),
     save: saved ? "SAVED" : "SAVE",
   };
 
-
   const queuedCount = pending.length;
   const status = getStatus({ online, hasFailed, isSyncing, queuedCount });
 
-  const submitComment = () => {
-    if (!commentText.trim()) return;
-    setCommentDelta((n) => n + 1);
-    setCommentText("");
-  };
+  const bumpComment = () => setCommentDelta((n) => n + 1);
 
   return (
     <div
@@ -93,27 +81,30 @@ export function InteractionBar({
         padding: "0",
       }}
     >
-
-
-      <div className="grid grid-cols-5 items-center gap-1 px-1">
+      <div className="grid grid-cols-4 items-center gap-1 px-1">
         {ACTIONS.map(({ key, label, icon: Icon }) => {
           const active =
             (key === "like" && liked) || (key === "save" && saved);
-          const disabled = key === "views";
+
           const onClick = () => {
             if (key === "like") toggleLike();
             else if (key === "save") toggleSave();
             else if (key === "share") share();
-            else if (key === "comment") inputRef.current?.focus();
+            else if (key === "comment") {
+              bumpComment();
+              onComment?.();
+            }
           };
 
           const iconColor = "var(--color-neon)";
 
           return (
             <button
+              data-testid={`ib-${key}`}
               key={key}
               type="button"
-              onClick={disabled ? undefined : onClick}
+              onClick={onClick}
+              onMouseDown={() => key === "comment" && console.log("[InteractionBar] comment mousedown")}
               aria-label={label}
               aria-pressed={active}
               className="tap group relative flex h-12 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-xl"
@@ -148,55 +139,6 @@ export function InteractionBar({
           );
         })}
       </div>
-
-      <form
-        onSubmit={(e) => { e.preventDefault(); submitComment(); }}
-        className="mt-3 grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-full px-2 py-2"
-        style={{
-          background: "var(--color-paper-2)",
-          border: "1px solid var(--color-line)",
-        }}
-      >
-        <button
-          type="button"
-          aria-label="Add emoji"
-          className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full text-[18px]"
-          style={{ color: "var(--color-ink-2)", background: "var(--color-paper-0)" }}
-        >
-          😊
-        </button>
-        <input
-          ref={inputRef}
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          placeholder="Add a comment…"
-          enterKeyHint="send"
-          autoComplete="off"
-          autoCapitalize="sentences"
-          className="min-w-0 bg-transparent px-1 text-[15px] outline-none"
-          style={{ color: "var(--color-ink-0)", WebkitAppearance: "none" }}
-        />
-        <button
-          type="button"
-          aria-label="Attach media"
-          className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full text-[17px]"
-          style={{ color: "var(--color-ink-2)", background: "var(--color-paper-0)" }}
-        >
-          ＋
-        </button>
-        <button
-          type="submit"
-          disabled={!commentText.trim()}
-          className="tap h-9 shrink-0 rounded-full px-3 text-[12px] font-bold"
-          style={{
-            background: commentText.trim() ? "var(--color-neon)" : "var(--color-paper-0)",
-            color: commentText.trim() ? "var(--color-ink-0)" : "var(--color-ink-3)",
-          }}
-        >
-          Post
-        </button>
-      </form>
-
 
       {/* ── Sync status rail ── */}
       {status && (
@@ -238,12 +180,9 @@ export function InteractionBar({
           )}
         </div>
       )}
-
     </div>
   );
 }
-
-
 
 function getStatus({
   online,
@@ -298,4 +237,3 @@ function fmt(n: number) {
   if (n >= 10_000) return (n / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
   return n.toLocaleString("en-US");
 }
-
