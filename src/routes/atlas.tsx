@@ -53,12 +53,34 @@ function AtlasPage() {
   const [sheet, setSheet] = useState<SheetSize>("peek");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [category, setCategory] = useState<string>("all");
+  const [userLoc, setUserLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [userHeading, setUserHeading] = useState<number | null>(null);
+  const [geoStatus, setGeoStatus] = useState<"idle" | "locating" | "ok" | "denied" | "unsupported">("idle");
+  const [recenterTick, setRecenterTick] = useState(0);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const nav = useNavigate();
   const hidden = useScrollDirection() === "down";
 
   const { data: routesRaw } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
   const routes = (routesRaw ?? []) as any[];
+
+  // Auto-request location on first mount, then watch for movement updates
+  useEffect(() => {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
+      setGeoStatus("unsupported"); return;
+    }
+    setGeoStatus("locating");
+    const opts: PositionOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 };
+    const onPos = (p: GeolocationPosition) => {
+      setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude });
+      if (typeof p.coords.heading === "number" && !isNaN(p.coords.heading)) setUserHeading(p.coords.heading);
+      setGeoStatus("ok");
+    };
+    const onErr = () => setGeoStatus("denied");
+    navigator.geolocation.getCurrentPosition(onPos, onErr, opts);
+    const id = navigator.geolocation.watchPosition(onPos, onErr, opts);
+    return () => navigator.geolocation.clearWatch(id);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -78,15 +100,33 @@ function AtlasPage() {
   const mapPath = activeRoute?.path ?? [];
   const mapCenter = activeRoute?.start_lat
     ? { lat: activeRoute.start_lat, lng: activeRoute.start_lng }
-    : filtered[0]?.start_lat
-      ? { lat: filtered[0].start_lat, lng: filtered[0].start_lng }
-      : undefined;
+    : userLoc
+      ? userLoc
+      : filtered[0]?.start_lat
+        ? { lat: filtered[0].start_lat, lng: filtered[0].start_lng }
+        : undefined;
 
   useEffect(() => {
     if (activeId && cardRefs.current[activeId]) {
       cardRefs.current[activeId]!.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     }
   }, [activeId]);
+
+  function recenterMe() {
+    if (userLoc) { setRecenterTick((t) => t + 1); return; }
+    if (typeof navigator === "undefined" || !navigator.geolocation) { setGeoStatus("unsupported"); return; }
+    setGeoStatus("locating");
+    navigator.geolocation.getCurrentPosition(
+      (p) => {
+        setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude });
+        if (typeof p.coords.heading === "number" && !isNaN(p.coords.heading)) setUserHeading(p.coords.heading);
+        setGeoStatus("ok");
+        setRecenterTick((t) => t + 1);
+      },
+      () => setGeoStatus("denied"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+    );
+  }
 
   const sheetHeight: Record<SheetSize, string> = {
     peek: "18svh",
