@@ -167,6 +167,12 @@ function AtlasPage() {
           <RouteMap
             path={mapPath}
             pois={mapPois}
+            communityPois={showCommunity ? community.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, name: p.name, kind: p.kind })) : []}
+            onCommunityPoiClick={(p) => {
+              const found = community.find((c: any) => c.id === p.id);
+              if (found) toast(found.name, { description: found.note ?? found.address ?? `${found.kind.toUpperCase()} · added by rider` });
+            }}
+            onMapClick={dropMode ? (p) => { setPendingDrop(p); } : undefined}
             center={mapCenter}
             zoom={activeRoute ? 10 : userLoc ? 13 : 6}
             interactive
@@ -179,6 +185,20 @@ function AtlasPage() {
         </Suspense>
         {/* soft top gradient for control legibility */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-background/85 via-background/40 to-transparent" />
+        {/* Speedometer HUD overlay */}
+        {showSpeedo && (
+          <div className="pointer-events-none absolute left-3 z-20" style={{ bottom: "calc(18svh + 12px)" }}>
+            <SpeedoHUD unit="kmh" compact />
+          </div>
+        )}
+        {/* Drop-mode hint */}
+        {dropMode && (
+          <div className="pointer-events-none absolute inset-x-0 z-20 flex justify-center" style={{ top: 120 }}>
+            <div className="rounded-full bg-foreground text-background px-3 py-1.5 text-xs font-semibold shadow-lg pointer-events-none">
+              Tap the map to drop a point
+            </div>
+          </div>
+        )}
       </div>
 
       {/* TOP BAR */}
