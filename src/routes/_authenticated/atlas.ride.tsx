@@ -9,6 +9,8 @@ import { planRoute } from "@/lib/nav.functions";
 import { createRide } from "@/lib/rides.functions";
 import { emptyState, ingest, requestWakeLock, type TrackerState, haversine } from "@/lib/ride-tracker";
 import { speak, cancelSpeech, isSpeechSupported } from "@/lib/voice";
+import { getFuelPrefs } from "@/lib/fuel-prefs";
+import { Fuel as FuelIcon } from "lucide-react";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
 
