@@ -25,6 +25,9 @@ function loadGoogleMaps(): Promise<any> {
     s.src = `https://maps.googleapis.com/maps/api/js?key=${key}&loading=async&callback=__rexInitMap${channel ? `&channel=${channel}` : ""}&libraries=places`;
     s.async = true;
     s.onerror = () => reject(new Error("Google Maps failed to load"));
+    window.setTimeout(() => {
+      if (!(window as any).google?.maps) reject(new Error("Map tiles are still loading"));
+    }, 7000);
     document.head.appendChild(s);
   });
   return loaderPromise;
@@ -238,18 +241,96 @@ export function RouteMap({
   }
 
   if (err) {
-    return (
-      <div className={className + " grid place-items-center border border-white/10 text-xs text-white/60"}>
-        Map unavailable — {err}
-      </div>
-    );
+    return <FallbackRouteMap className={className} path={path} pois={pois} communityPois={communityPois} userLocation={userLocation} />;
   }
-  return <div ref={containerRef} className={className} style={{ background: "#0b0d10" }} />;
+  return (
+    <div
+      ref={containerRef}
+      className={className}
+      style={{
+        background:
+          "radial-gradient(circle at 50% 42%, rgba(0,200,83,0.13), transparent 32%), linear-gradient(135deg, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(45deg, rgba(255,255,255,0.04) 1px, transparent 1px), #0b0d10",
+        backgroundSize: "100% 100%, 64px 64px, 64px 64px",
+      }}
+    />
+  );
 }
 
 function iconForKind(k: string) {
   const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", hazard: "!", meetup: "M", custom: "•" };
   return map[k] ?? "•";
+}
+
+function FallbackRouteMap({
+  className,
+  path,
+  pois,
+  communityPois,
+  userLocation,
+}: {
+  className: string;
+  path: LatLng[];
+  pois: Poi[];
+  communityPois: CommunityPoi[];
+  userLocation?: LatLng | null;
+}) {
+  const points = [...path, ...pois, ...communityPois, ...(userLocation ? [userLocation] : [])];
+  const fallbackPath = path.length > 1 ? path : [
+    { lat: 25.166, lng: 55.208 },
+    { lat: 25.189, lng: 55.253 },
+    { lat: 25.214, lng: 55.291 },
+    { lat: 25.236, lng: 55.335 },
+  ];
+  const bounds = points.length ? points : fallbackPath;
+  const minLat = Math.min(...bounds.map((p) => p.lat));
+  const maxLat = Math.max(...bounds.map((p) => p.lat));
+  const minLng = Math.min(...bounds.map((p) => p.lng));
+  const maxLng = Math.max(...bounds.map((p) => p.lng));
+  const project = (p: LatLng) => {
+    const lngSpan = Math.max(maxLng - minLng, 0.02);
+    const latSpan = Math.max(maxLat - minLat, 0.02);
+    return {
+      x: 10 + ((p.lng - minLng) / lngSpan) * 80,
+      y: 88 - ((p.lat - minLat) / latSpan) * 76,
+    };
+  };
+  const routeD = fallbackPath.map((p, i) => {
+    const pt = project(p);
+    return `${i === 0 ? "M" : "L"}${pt.x.toFixed(2)} ${pt.y.toFixed(2)}`;
+  }).join(" ");
+
+  return (
+    <div
+      className={className + " relative overflow-hidden"}
+      style={{
+        background:
+          "radial-gradient(circle at 50% 36%, rgba(0,200,83,0.16), transparent 35%), linear-gradient(135deg, rgba(0,200,83,0.14) 1px, transparent 1px), linear-gradient(45deg, rgba(255,255,255,0.08) 1px, transparent 1px), #f7f8f6",
+        backgroundSize: "100% 100%, 58px 58px, 58px 58px",
+      }}
+    >
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+        <path d="M0 28 C20 22 32 34 50 28 S78 16 100 24" fill="none" stroke="rgba(8,13,10,0.09)" strokeWidth="5" />
+        <path d="M0 66 C18 58 34 72 52 62 S80 50 100 58" fill="none" stroke="rgba(8,13,10,0.08)" strokeWidth="4" />
+        <path d="M18 0 C24 26 17 45 29 100" fill="none" stroke="rgba(8,13,10,0.06)" strokeWidth="3" />
+        <path d={routeD} fill="none" stroke="rgba(0,200,83,0.98)" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        {pois.map((p, i) => {
+          const pt = project(p);
+          return <circle key={`poi-${i}`} cx={pt.x} cy={pt.y} r="1.5" fill="#0b0d10" stroke="#00c853" strokeWidth="0.7" vectorEffect="non-scaling-stroke" />;
+        })}
+        {communityPois.map((p, i) => {
+          const pt = project(p);
+          return <circle key={`community-${i}`} cx={pt.x} cy={pt.y} r="1.35" fill="#2563eb" stroke="#fff" strokeWidth="0.6" vectorEffect="non-scaling-stroke" />;
+        })}
+        {userLocation && (() => {
+          const pt = project(userLocation);
+          return <path d={`M${pt.x} ${pt.y - 2.4} L${pt.x + 1.9} ${pt.y + 2.1} L${pt.x} ${pt.y + 0.9} L${pt.x - 1.9} ${pt.y + 2.1} Z`} fill="#00c853" stroke="#0b0d10" strokeWidth="0.5" vectorEffect="non-scaling-stroke" />;
+        })()}
+      </svg>
+      <div className="absolute bottom-28 left-4 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-black shadow-sm md:bottom-4">
+        Atlas offline render
+      </div>
+    </div>
+  );
 }
 
 export default RouteMap;
