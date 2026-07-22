@@ -1311,6 +1311,39 @@ export type Database = {
           },
         ]
       }
+      emergency_contacts: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          is_primary: boolean
+          name: string
+          phone: string | null
+          relation: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_primary?: boolean
+          name: string
+          phone?: string | null
+          relation?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_primary?: boolean
+          name?: string
+          phone?: string | null
+          relation?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       event_announcements: {
         Row: {
           author_id: string
@@ -2966,6 +2999,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      rides: {
+        Row: {
+          avg_speed_kmh: number
+          created_at: string
+          distance_m: number
+          duration_s: number
+          elev_gain_m: number
+          ended_at: string | null
+          id: string
+          max_speed_kmh: number
+          moving_s: number
+          notes: string | null
+          path: Json
+          photos: Json
+          started_at: string
+          title: string | null
+          updated_at: string
+          user_id: string
+          visibility: string
+        }
+        Insert: {
+          avg_speed_kmh?: number
+          created_at?: string
+          distance_m?: number
+          duration_s?: number
+          elev_gain_m?: number
+          ended_at?: string | null
+          id?: string
+          max_speed_kmh?: number
+          moving_s?: number
+          notes?: string | null
+          path?: Json
+          photos?: Json
+          started_at?: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+          visibility?: string
+        }
+        Update: {
+          avg_speed_kmh?: number
+          created_at?: string
+          distance_m?: number
+          duration_s?: number
+          elev_gain_m?: number
+          ended_at?: string | null
+          id?: string
+          max_speed_kmh?: number
+          moving_s?: number
+          notes?: string | null
+          path?: Json
+          photos?: Json
+          started_at?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+          visibility?: string
+        }
+        Relationships: []
       }
       route_comments: {
         Row: {
