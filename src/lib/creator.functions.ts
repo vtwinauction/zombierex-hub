@@ -101,7 +101,7 @@ export const getCreatorProfile = createServerFn({ method: "GET" })
   .handler(async ({ data, context }) => {
     const { data: cp, error } = await context.supabase
       .from("creator_profiles")
-      .select("id, user_id, category, tagline, bio, cover_url, accepts_collabs, is_verified, is_featured, status, subscribers_count, tips_total_cents, created_at, updated_at")
+      .select("id, user_id, category, tagline, accepts_collabs, is_verified, is_featured, status, subscribers_count, tips_total_cents, social_links, portfolio_url, featured_post_ids, created_at, updated_at, approved_at")
       .eq("user_id", data.user_id)
       .maybeSingle();
     if (error) throw new Error(error.message);
