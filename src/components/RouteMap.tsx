@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 type LatLng = { lat: number; lng: number };
 type Poi = { lat: number; lng: number; name?: string; kind?: string };
+type CommunityPoi = { id?: string; lat: number; lng: number; name?: string; kind?: string };
 
 let loaderPromise: Promise<any> | null = null;
 function loadGoogleMaps(): Promise<any> {
@@ -30,6 +31,8 @@ function loadGoogleMaps(): Promise<any> {
 export function RouteMap({
   path = [],
   pois = [],
+  communityPois = [],
+  onCommunityPoiClick,
   center,
   zoom = 8,
   interactive = true,
@@ -42,6 +45,8 @@ export function RouteMap({
 }: {
   path?: LatLng[];
   pois?: Poi[];
+  communityPois?: CommunityPoi[];
+  onCommunityPoiClick?: (p: CommunityPoi) => void;
   center?: LatLng;
   zoom?: number;
   interactive?: boolean;
@@ -59,6 +64,7 @@ export function RouteMap({
   const markersRef = useRef<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const userMarkerRef = useRef<any>(null);
+  const communityMarkersRef = useRef<any[]>([]);
 
   // init
   useEffect(() => {
@@ -94,6 +100,7 @@ export function RouteMap({
       }
       drawPath(g);
       drawPois(g);
+      drawCommunity(g);
       drawUser(g);
     }).catch((e) => { console.error("[RouteMap] err", e); setErr(e.message); });
     return () => { cancelled = true; };
@@ -107,6 +114,12 @@ export function RouteMap({
     drawPois((window as any).google);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, pois]);
+
+  useEffect(() => {
+    if (!(window as any).google?.maps || !mapRef.current) return;
+    drawCommunity((window as any).google);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [communityPois]);
 
   // user location updates
   useEffect(() => {
@@ -166,6 +179,32 @@ export function RouteMap({
     });
   }
 
+  function drawCommunity(g: any) {
+    communityMarkersRef.current.forEach((m) => m.setMap(null));
+    communityMarkersRef.current = [];
+    communityPois.forEach((p) => {
+      const m = new g.maps.Marker({
+        position: { lat: p.lat, lng: p.lng },
+        map: mapRef.current,
+        title: p.name ?? "",
+        label: p.kind ? { text: iconForKind(p.kind), color: "#ffffff", fontSize: "11px", fontWeight: "700" } : undefined,
+        icon: {
+          path: g.maps.SymbolPath.CIRCLE,
+          scale: 11,
+          fillColor: "#2563eb",
+          fillOpacity: 0.95,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+        zIndex: 500,
+      });
+      if (onCommunityPoiClick) {
+        m.addListener("click", () => onCommunityPoiClick(p));
+      }
+      communityMarkersRef.current.push(m);
+    });
+  }
+
   function drawUser(g: any) {
     if (userMarkerRef.current) { userMarkerRef.current.setMap(null); userMarkerRef.current = null; }
     if (!userLocation) return;
@@ -207,7 +246,7 @@ export function RouteMap({
 }
 
 function iconForKind(k: string) {
-  const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", custom: "•" };
+  const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", hazard: "!", meetup: "M", custom: "•" };
   return map[k] ?? "•";
 }
 

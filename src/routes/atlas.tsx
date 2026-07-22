@@ -1,13 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { listPublicRoutes } from "@/lib/routes.functions";
+import { queryOptions, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { listPublicRoutes, listCommunityPois, createCommunityPoi, deleteCommunityPoi, COMMUNITY_POI_KINDS } from "@/lib/routes.functions";
 import { BottomNav } from "@/components/BottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { SpeedoHUD } from "@/components/SpeedoHUD";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
   Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
+  Gauge, Users, Trash2, AlertTriangle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
 
@@ -16,6 +19,12 @@ const atlasQuery = (filters: { difficulty?: string; surface?: string; region?: s
     queryKey: ["atlas", filters],
     queryFn: () => listPublicRoutes({ data: filters }),
   });
+
+const communityPoisQuery = queryOptions({
+  queryKey: ["community_pois"],
+  queryFn: () => listCommunityPois({ data: {} }),
+  staleTime: 30_000,
+});
 
 export const Route = createFileRoute("/atlas")({
   head: () => ({
@@ -57,12 +66,21 @@ function AtlasPage() {
   const [userHeading, setUserHeading] = useState<number | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "locating" | "ok" | "denied" | "unsupported">("idle");
   const [recenterTick, setRecenterTick] = useState(0);
+  const [showSpeedo, setShowSpeedo] = useState(false);
+  const [showCommunity, setShowCommunity] = useState(true);
+  const [dropMode, setDropMode] = useState(false);
+  const [pendingDrop, setPendingDrop] = useState<{ lat: number; lng: number } | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const nav = useNavigate();
   const hidden = useScrollDirection() === "down";
+  const qc = useQueryClient();
 
   const { data: routesRaw } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
   const routes = (routesRaw ?? []) as any[];
+  const { data: communityRaw } = useQuery(communityPoisQuery);
+  const community = ((communityRaw ?? []) as any[]).filter((p) =>
+    category === "all" ? true : p.kind === category
+  );
 
   // Auto-request location on first mount, then watch for movement updates
   useEffect(() => {
@@ -149,6 +167,12 @@ function AtlasPage() {
           <RouteMap
             path={mapPath}
             pois={mapPois}
+            communityPois={showCommunity ? community.map((p) => ({ id: p.id, lat: p.lat, lng: p.lng, name: p.name, kind: p.kind })) : []}
+            onCommunityPoiClick={(p) => {
+              const found = community.find((c: any) => c.id === p.id);
+              if (found) toast(found.name, { description: found.note ?? found.address ?? `${found.kind.toUpperCase()} · added by rider` });
+            }}
+            onMapClick={dropMode ? (p) => { setPendingDrop(p); } : undefined}
             center={mapCenter}
             zoom={activeRoute ? 10 : userLoc ? 13 : 6}
             interactive
@@ -161,6 +185,20 @@ function AtlasPage() {
         </Suspense>
         {/* soft top gradient for control legibility */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-background/85 via-background/40 to-transparent" />
+        {/* Speedometer HUD overlay */}
+        {showSpeedo && (
+          <div className="pointer-events-none absolute left-3 z-20" style={{ bottom: "calc(18svh + 12px)" }}>
+            <SpeedoHUD unit="kmh" compact />
+          </div>
+        )}
+        {/* Drop-mode hint */}
+        {dropMode && (
+          <div className="pointer-events-none absolute inset-x-0 z-20 flex justify-center" style={{ top: 120 }}>
+            <div className="rounded-full bg-foreground text-background px-3 py-1.5 text-xs font-semibold shadow-lg pointer-events-none">
+              Tap the map to drop a point
+            </div>
+          </div>
+        )}
       </div>
 
       {/* TOP BAR */}
@@ -263,7 +301,50 @@ function AtlasPage() {
           style={{ color: geoStatus === "ok" ? "var(--color-neon-deep, #4b8f00)" : "var(--color-ink-0)" }}>
           <Locate size={18} strokeWidth={2.2} style={geoStatus === "locating" ? { animation: "pulse 1.1s ease-in-out infinite" } : undefined} />
         </button>
+        <button
+          aria-label="Toggle speedometer"
+          onClick={() => setShowSpeedo((s) => !s)}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: showSpeedo ? "var(--color-neon)" : "hsl(var(--card))",
+            color: showSpeedo ? "var(--color-obsidian)" : "hsl(var(--foreground))",
+          }}>
+          <Gauge size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          aria-label="Toggle community points"
+          onClick={() => setShowCommunity((s) => !s)}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: showCommunity ? "#2563eb" : "hsl(var(--card))",
+            color: showCommunity ? "#ffffff" : "hsl(var(--foreground))",
+          }}>
+          <Users size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          aria-label={dropMode ? "Cancel drop point" : "Drop a community point"}
+          onClick={() => { setDropMode((m) => !m); setPendingDrop(null); }}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: dropMode ? "#e11d48" : "hsl(var(--card))",
+            color: dropMode ? "#ffffff" : "hsl(var(--foreground))",
+          }}>
+          <MapPin size={18} strokeWidth={2.4} />
+        </button>
       </div>
+
+      {/* PENDING DROP CARD */}
+      {pendingDrop && (
+        <DropPointCard
+          point={pendingDrop}
+          onCancel={() => setPendingDrop(null)}
+          onSaved={() => {
+            setPendingDrop(null);
+            setDropMode(false);
+            qc.invalidateQueries({ queryKey: ["community_pois"] });
+          }}
+        />
+      )}
 
       {/* BOTTOM SHEET — light theme */}
       <div
@@ -439,5 +520,76 @@ function BluetoothChip() {
     >
       <Bluetooth size={16} strokeWidth={2} style={state === "scanning" ? { animation: "pulse 1.1s ease-in-out infinite" } : linked ? { filter: "drop-shadow(0 0 4px rgba(124,255,63,0.6))" } : undefined} />
     </button>
+  );
+}
+
+/** Compact confirmation card shown after tapping the map in drop mode. */
+function DropPointCard({
+  point, onCancel, onSaved,
+}: { point: { lat: number; lng: number }; onCancel: () => void; onSaved: () => void }) {
+  const [name, setName] = useState("");
+  const [kind, setKind] = useState<typeof COMMUNITY_POI_KINDS[number]>("scenic");
+  const [note, setNote] = useState("");
+  const [saving, setSaving] = useState(false);
+  async function save() {
+    if (!name.trim()) { toast.error("Give it a name"); return; }
+    setSaving(true);
+    try {
+      await createCommunityPoi({ data: { name: name.trim(), kind, lat: point.lat, lng: point.lng, note: note.trim() || null } });
+      toast.success("Point shared");
+      onSaved();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to save");
+    } finally { setSaving(false); }
+  }
+  return (
+    <div className="absolute inset-x-3 z-40 rounded-2xl border border-border bg-card p-4 shadow-2xl"
+      style={{ bottom: "calc(18svh + 16px)" }}>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-semibold text-foreground">Drop a community point</p>
+        <button onClick={onCancel} className="tap text-muted-foreground" aria-label="Cancel"><X size={16} /></button>
+      </div>
+      <p className="text-[11px] text-muted-foreground mono-caps mb-3">
+        {point.lat.toFixed(5)}, {point.lng.toFixed(5)}
+      </p>
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Point name (e.g. Sunset viewpoint)"
+        maxLength={120}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40"
+      />
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {COMMUNITY_POI_KINDS.map((k) => (
+          <button
+            key={k}
+            onClick={() => setKind(k)}
+            className="tap rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wide"
+            style={{
+              background: kind === k ? "var(--color-neon)" : "hsl(var(--muted))",
+              color: kind === k ? "var(--color-obsidian)" : "hsl(var(--foreground))",
+              borderColor: kind === k ? "var(--color-neon)" : "hsl(var(--border))",
+            }}
+          >{k}</button>
+        ))}
+      </div>
+      <textarea
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Optional note for riders…"
+        maxLength={600}
+        rows={2}
+        className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none resize-none focus:border-foreground/40"
+      />
+      <div className="mt-3 flex items-center justify-end gap-2">
+        <button onClick={onCancel} className="tap rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground">Cancel</button>
+        <button
+          onClick={save}
+          disabled={saving}
+          className="tap rounded-full px-4 py-1.5 text-xs font-bold shadow disabled:opacity-60"
+          style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}
+        >{saving ? "Saving…" : "Share point"}</button>
+      </div>
+    </div>
   );
 }

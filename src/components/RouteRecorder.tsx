@@ -3,6 +3,7 @@
  * Downsamples points (min 15m between samples) so payloads stay small.
  */
 import { useEffect, useRef, useState } from "react";
+import { SpeedoHUD } from "@/components/SpeedoHUD";
 
 type LatLng = { lat: number; lng: number };
 
@@ -79,6 +80,11 @@ export function RouteRecorder({ onFinish }: { onFinish: (data: { path: LatLng[];
   return (
     <div className="space-y-3">
       {err && <div className="border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-200">{err}</div>}
+      {tracking && (
+        <div className="flex justify-center">
+          <SpeedoHUD unit="kmh" />
+        </div>
+      )}
       <div className="grid grid-cols-3 gap-2">
         <Stat label="DIST" value={`${(distance / 1000).toFixed(2)} km`} />
         <Stat label="TIME" value={fmtDur(dur)} />

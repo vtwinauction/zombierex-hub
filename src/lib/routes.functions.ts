@@ -229,3 +229,149 @@ export const searchPlacesNearby = createServerFn({ method: "POST" })
       rating: p.rating ?? null,
     })).filter((p: any) => typeof p.lat === "number");
   });
+
+/* ------------------------------ Community POIs ------------------------------ */
+
+export const COMMUNITY_POI_KINDS = ["hotel","food","fuel","scenic","repair","viewpoint","hazard","meetup","custom"] as const;
+
+const BBox = z.object({
+  minLat: z.number(), maxLat: z.number(),
+  minLng: z.number(), maxLng: z.number(),
+});
+
+export const listCommunityPois = createServerFn({ method: "GET" })
+  .inputValidator((d: { minLat?: number; maxLat?: number; minLng?: number; maxLng?: number; kind?: string; limit?: number } = {}) => d)
+  .handler(async ({ data }) => {
+    const s = publicClient();
+    let q = s.from("community_pois" as any)
+      .select("id,name,kind,lat,lng,address,note,region,upvotes_count,created_by,created_at")
+      .eq("is_hidden", false)
+      .order("created_at", { ascending: false })
+      .limit(Math.min(Math.max(data.limit ?? 200, 1), 500));
+    if (data.kind && data.kind !== "all") q = q.eq("kind", data.kind);
+    if (typeof data.minLat === "number" && typeof data.maxLat === "number") {
+      q = q.gte("lat", data.minLat).lte("lat", data.maxLat);
+    }
+    if (typeof data.minLng === "number" && typeof data.maxLng === "number") {
+      q = q.gte("lng", data.minLng).lte("lng", data.maxLng);
+    }
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const createCommunityPoi = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({
+    name: z.string().trim().min(1).max(120),
+    kind: z.enum(COMMUNITY_POI_KINDS).default("custom"),
+    lat: z.number().min(-90).max(90),
+    lng: z.number().min(-180).max(180),
+    address: z.string().max(400).optional().nullable(),
+    note: z.string().max(600).optional().nullable(),
+    region: z.string().max(120).optional().nullable(),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("community_pois" as any)
+      .insert({ ...data, created_by: context.userId })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    return { id: (row as any).id as string };
+  });
+
+export const deleteCommunityPoi = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("community_pois" as any)
+      .delete()
+      .eq("id", data.id)
+      .eq("created_by", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+/* ------------------------------ Assistant: POIs along a route ------------------------------ */
+
+/**
+ * Given a route path, sample midpoints and query Google Places for each kind,
+ * returning a de-duplicated ranked list of POIs the rider might want to add.
+ */
+export const suggestPoisForRoute = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) => z.object({
+    path: z.array(z.object({ lat: z.number(), lng: z.number() })).min(2).max(2000),
+    kinds: z.array(z.enum(POI_KINDS)).min(1).max(6).default(["hotel","food","fuel","scenic"] as any),
+    samples: z.number().int().min(1).max(6).default(3),
+    radius: z.number().min(1000).max(30000).default(8000),
+  }).parse(d))
+  .handler(async ({ data }) => {
+    const LOVABLE = process.env.LOVABLE_API_KEY;
+    const GKEY = process.env.GOOGLE_MAPS_API_KEY;
+    if (!LOVABLE || !GKEY) throw new Error("Maps not configured");
+    const kindQuery: Record<string, string> = {
+      hotel: "hotel motel lodging", food: "restaurant cafe diner", fuel: "gas station fuel",
+      scenic: "scenic viewpoint", repair: "motorcycle repair mechanic",
+      viewpoint: "viewpoint scenic overlook", custom: "point of interest",
+    };
+    const anchors: Array<{ lat: number; lng: number }> = [];
+    const step = Math.max(1, Math.floor(data.path.length / (data.samples + 1)));
+    for (let i = 1; i <= data.samples; i++) {
+      const p = data.path[Math.min(data.path.length - 1, i * step)];
+      if (p) anchors.push(p);
+    }
+
+    const out: Array<{ google_place_id: string; name: string; address: string | null; lat: number; lng: number; kind: string; rating: number | null; distance_hint_m: number }> = [];
+    const seen = new Set<string>();
+
+    await Promise.all(anchors.flatMap((anchor) =>
+      data.kinds.map(async (kind) => {
+        const resp = await fetch("https://connector-gateway.lovable.dev/google_maps/places/v1/places:searchText", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${LOVABLE}`,
+            "X-Connection-Api-Key": GKEY,
+            "Content-Type": "application/json",
+            "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.rating",
+          },
+          body: JSON.stringify({
+            textQuery: kindQuery[kind] ?? kind,
+            maxResultCount: 5,
+            locationBias: { circle: { center: { latitude: anchor.lat, longitude: anchor.lng }, radius: data.radius } },
+          }),
+        });
+        if (!resp.ok) return;
+        const json = await resp.json() as any;
+        for (const p of (json.places ?? [])) {
+          const id = p.id as string | undefined;
+          if (!id || seen.has(id)) continue;
+          const loc = p.location;
+          if (!loc || typeof loc.latitude !== "number") continue;
+          seen.add(id);
+          out.push({
+            google_place_id: id,
+            name: p.displayName?.text ?? "Unnamed",
+            address: p.formattedAddress ?? null,
+            lat: loc.latitude, lng: loc.longitude,
+            kind,
+            rating: typeof p.rating === "number" ? p.rating : null,
+            distance_hint_m: Math.round(haversineMeters(anchor, { lat: loc.latitude, lng: loc.longitude })),
+          });
+        }
+      })
+    ));
+
+    // sort by rating desc, then distance asc
+    out.sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0) || a.distance_hint_m - b.distance_hint_m);
+    return out.slice(0, 40);
+  });
+
+function haversineMeters(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const R = 6371000, toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+  const s = Math.sin(dLat/2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng/2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
