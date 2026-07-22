@@ -243,17 +243,7 @@ export function RouteMap({
   if (err) {
     return <FallbackRouteMap className={className} path={path} pois={pois} communityPois={communityPois} userLocation={userLocation} />;
   }
-  return (
-    <div
-      ref={containerRef}
-      className={className}
-      style={{
-        background:
-          "radial-gradient(circle at 50% 42%, rgba(0,200,83,0.13), transparent 32%), linear-gradient(135deg, rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(45deg, rgba(255,255,255,0.04) 1px, transparent 1px), #0b0d10",
-        backgroundSize: "100% 100%, 64px 64px, 64px 64px",
-      }}
-    />
-  );
+  return <LiveMapShell ref={containerRef} className={className} path={path} pois={pois} communityPois={communityPois} userLocation={userLocation} />;
 }
 
 function iconForKind(k: string) {
@@ -332,5 +322,27 @@ function FallbackRouteMap({
     </div>
   );
 }
+
+const LiveMapShell = ({
+  ref,
+  className,
+  path,
+  pois,
+  communityPois,
+  userLocation,
+}: {
+  ref: React.Ref<HTMLDivElement>;
+  className: string;
+  path: LatLng[];
+  pois: Poi[];
+  communityPois: CommunityPoi[];
+  userLocation?: LatLng | null;
+}) => (
+  <div ref={ref} className={className + " relative overflow-hidden"}>
+    <div className="absolute inset-0">
+      <FallbackRouteMap className="h-full w-full" path={path} pois={pois} communityPois={communityPois} userLocation={userLocation} />
+    </div>
+  </div>
+);
 
 export default RouteMap;
