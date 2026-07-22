@@ -41,19 +41,13 @@ function SosTracker() {
     let stop = false;
     async function poll() {
       const { data: a } = await supabase
-        .from("sos_alerts")
-        .select("id,kind,status,message,latitude,longitude,accuracy_m,speed_kmh,heading,created_at,resolved_at,contacts_snapshot")
-        .eq("share_token", token)
+        .rpc("get_sos_by_token", { _token: token })
         .maybeSingle();
       if (stop) return;
       if (!a) { setAlert("missing"); return; }
       setAlert(a as Alert);
       const { data: p } = await supabase
-        .from("sos_pings")
-        .select("id,latitude,longitude,recorded_at,speed_kmh")
-        .eq("alert_id", (a as any).id)
-        .order("recorded_at", { ascending: true })
-        .limit(500);
+        .rpc("get_sos_pings_by_token", { _token: token, _limit: 500 });
       if (!stop) setPings((p ?? []) as Ping[]);
     }
     poll();
