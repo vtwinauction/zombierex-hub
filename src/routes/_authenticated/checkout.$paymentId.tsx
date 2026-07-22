@@ -11,6 +11,13 @@ export const Route = createFileRoute("/_authenticated/checkout/$paymentId")({
   head: () => ({ meta: [{ title: "Checkout · ZOMBIEREX" }] }),
   loader: ({ context, params }) => context.queryClient.ensureQueryData(paymentQuery(params.paymentId)),
   component: CheckoutPage,
+  errorComponent: ({ error, reset }) => (
+    <div className="p-6 text-foreground">
+      <p className="text-sm text-red-500">Payment unavailable: {error.message}</p>
+      <button onClick={reset} className="mt-3 border border-border px-3 py-1 text-xs">Retry</button>
+    </div>
+  ),
+  notFoundComponent: () => <div className="p-6 text-foreground">Payment not found.</div>,
 });
 
 function CheckoutPage() {

@@ -34,13 +34,13 @@ export const Route = createFileRoute("/atlas/$id")({
   errorComponent: ({ error, reset }) => {
     const router = useRouter();
     return (
-      <div className="p-6 text-white">
+      <div className="p-6 text-foreground">
         <p>Failed to load route: {error.message}</p>
-        <button onClick={() => { reset(); router.invalidate(); }} className="mt-3 border border-white/20 px-3 py-1 text-xs">Retry</button>
+        <button onClick={() => { reset(); router.invalidate(); }} className="mt-3 border border-border px-3 py-1 text-xs">Retry</button>
       </div>
     );
   },
-  notFoundComponent: () => <div className="p-6 text-white">Route not found</div>,
+  notFoundComponent: () => <div className="p-6 text-foreground">Route not found</div>,
 });
 
 function RouteDetail() {

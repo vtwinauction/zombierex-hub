@@ -16,6 +16,13 @@ export const Route = createFileRoute("/_authenticated/admin/vendors/$id")({
   ] }),
   loader: ({ context, params }) => context.queryClient.ensureQueryData(vendorQuery(params.id)),
   component: AdminVendorDetail,
+  errorComponent: ({ error, reset }) => (
+    <div className="p-6 text-foreground">
+      <p className="text-sm text-red-500">Failed to load vendor: {error.message}</p>
+      <button onClick={reset} className="mt-3 border border-border px-3 py-1 text-xs">Retry</button>
+    </div>
+  ),
+  notFoundComponent: () => <div className="p-6 text-foreground">Vendor not found.</div>,
 });
 
 function AdminVendorDetail() {

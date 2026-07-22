@@ -20,6 +20,13 @@ export const Route = createFileRoute("/_authenticated/rides/$id")({
   }),
   loader: ({ params }) => ({ id: params.id }),
   component: RideDetail,
+  errorComponent: ({ error, reset }) => (
+    <div className="p-6 text-foreground">
+      <p className="text-sm text-red-500">Failed to load ride: {error.message}</p>
+      <button onClick={reset} className="mt-3 border border-border px-3 py-1 text-xs">Retry</button>
+    </div>
+  ),
+  notFoundComponent: () => <div className="p-6 text-foreground">Ride not found.</div>,
 });
 
 function RideDetail() {
