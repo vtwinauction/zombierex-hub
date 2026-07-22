@@ -58,6 +58,7 @@ import { Route as AuthenticatedCreatorApplyRouteImport } from './routes/_authent
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedBusinessShowcaseRouteImport } from './routes/_authenticated/business.showcase'
+import { Route as AuthenticatedAtlasVoiceRouteImport } from './routes/_authenticated/atlas.voice'
 import { Route as AuthenticatedAtlasSosRouteImport } from './routes/_authenticated/atlas.sos'
 import { Route as AuthenticatedAtlasRideRouteImport } from './routes/_authenticated/atlas.ride'
 import { Route as AuthenticatedAtlasRecordRouteImport } from './routes/_authenticated/atlas.record'
@@ -335,6 +336,11 @@ const AuthenticatedBusinessShowcaseRoute =
     path: '/business/showcase',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAtlasVoiceRoute = AuthenticatedAtlasVoiceRouteImport.update({
+  id: '/atlas/voice',
+  path: '/atlas/voice',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAtlasSosRoute = AuthenticatedAtlasSosRouteImport.update({
   id: '/atlas/sos',
   path: '/atlas/sos',
@@ -481,6 +487,7 @@ export interface FileRoutesByFullPath {
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
   '/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/atlas/sos': typeof AuthenticatedAtlasSosRoute
+  '/atlas/voice': typeof AuthenticatedAtlasVoiceRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -548,6 +555,7 @@ export interface FileRoutesByTo {
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
   '/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/atlas/sos': typeof AuthenticatedAtlasSosRoute
+  '/atlas/voice': typeof AuthenticatedAtlasVoiceRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -619,6 +627,7 @@ export interface FileRoutesById {
   '/_authenticated/atlas/record': typeof AuthenticatedAtlasRecordRoute
   '/_authenticated/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/_authenticated/atlas/sos': typeof AuthenticatedAtlasSosRoute
+  '/_authenticated/atlas/voice': typeof AuthenticatedAtlasVoiceRoute
   '/_authenticated/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -690,6 +699,7 @@ export interface FileRouteTypes {
     | '/atlas/record'
     | '/atlas/ride'
     | '/atlas/sos'
+    | '/atlas/voice'
     | '/business/showcase'
     | '/checkout/$paymentId'
     | '/communities/create'
@@ -757,6 +767,7 @@ export interface FileRouteTypes {
     | '/atlas/record'
     | '/atlas/ride'
     | '/atlas/sos'
+    | '/atlas/voice'
     | '/business/showcase'
     | '/checkout/$paymentId'
     | '/communities/create'
@@ -827,6 +838,7 @@ export interface FileRouteTypes {
     | '/_authenticated/atlas/record'
     | '/_authenticated/atlas/ride'
     | '/_authenticated/atlas/sos'
+    | '/_authenticated/atlas/voice'
     | '/_authenticated/business/showcase'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/communities/create'
@@ -1227,6 +1239,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBusinessShowcaseRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/atlas/voice': {
+      id: '/_authenticated/atlas/voice'
+      path: '/atlas/voice'
+      fullPath: '/atlas/voice'
+      preLoaderRoute: typeof AuthenticatedAtlasVoiceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/atlas/sos': {
       id: '/_authenticated/atlas/sos'
       path: '/atlas/sos'
@@ -1425,6 +1444,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAtlasRecordRoute: typeof AuthenticatedAtlasRecordRoute
   AuthenticatedAtlasRideRoute: typeof AuthenticatedAtlasRideRoute
   AuthenticatedAtlasSosRoute: typeof AuthenticatedAtlasSosRoute
+  AuthenticatedAtlasVoiceRoute: typeof AuthenticatedAtlasVoiceRoute
   AuthenticatedBusinessShowcaseRoute: typeof AuthenticatedBusinessShowcaseRoute
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
@@ -1465,6 +1485,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtlasRecordRoute: AuthenticatedAtlasRecordRoute,
   AuthenticatedAtlasRideRoute: AuthenticatedAtlasRideRoute,
   AuthenticatedAtlasSosRoute: AuthenticatedAtlasSosRoute,
+  AuthenticatedAtlasVoiceRoute: AuthenticatedAtlasVoiceRoute,
   AuthenticatedBusinessShowcaseRoute: AuthenticatedBusinessShowcaseRoute,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
