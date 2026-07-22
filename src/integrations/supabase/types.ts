@@ -1921,6 +1921,310 @@ export type Database = {
         }
         Relationships: []
       }
+      judge_entries: {
+        Row: {
+          ai_comments: string | null
+          awards: string[]
+          category_scores: Json
+          city: string | null
+          country: string | null
+          created_at: string
+          defects: Json
+          display_name: string
+          engine_cc: number | null
+          engine_score: number | null
+          event_id: string
+          exhaust_score: number | null
+          fraud_score: number | null
+          highlights: Json
+          id: string
+          make: string | null
+          model: string | null
+          overall_score: number | null
+          processing_error: string | null
+          scored_at: string | null
+          status: string
+          submitted_at: string | null
+          suggestions: Json
+          updated_at: string
+          user_id: string
+          vehicle_id: string | null
+          vehicle_type: string
+          year: number | null
+        }
+        Insert: {
+          ai_comments?: string | null
+          awards?: string[]
+          category_scores?: Json
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          defects?: Json
+          display_name: string
+          engine_cc?: number | null
+          engine_score?: number | null
+          event_id: string
+          exhaust_score?: number | null
+          fraud_score?: number | null
+          highlights?: Json
+          id?: string
+          make?: string | null
+          model?: string | null
+          overall_score?: number | null
+          processing_error?: string | null
+          scored_at?: string | null
+          status?: string
+          submitted_at?: string | null
+          suggestions?: Json
+          updated_at?: string
+          user_id: string
+          vehicle_id?: string | null
+          vehicle_type?: string
+          year?: number | null
+        }
+        Update: {
+          ai_comments?: string | null
+          awards?: string[]
+          category_scores?: Json
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          defects?: Json
+          display_name?: string
+          engine_cc?: number | null
+          engine_score?: number | null
+          event_id?: string
+          exhaust_score?: number | null
+          fraud_score?: number | null
+          highlights?: Json
+          id?: string
+          make?: string | null
+          model?: string | null
+          overall_score?: number | null
+          processing_error?: string | null
+          scored_at?: string | null
+          status?: string
+          submitted_at?: string | null
+          suggestions?: Json
+          updated_at?: string
+          user_id?: string
+          vehicle_id?: string | null
+          vehicle_type?: string
+          year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "judge_entries_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "judge_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "judge_entries_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      judge_entry_media: {
+        Row: {
+          created_at: string
+          duration_ms: number | null
+          entry_id: string
+          height: number | null
+          id: string
+          kind: string
+          mime: string | null
+          order_index: number
+          sha256: string | null
+          storage_path: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string
+          duration_ms?: number | null
+          entry_id: string
+          height?: number | null
+          id?: string
+          kind: string
+          mime?: string | null
+          order_index?: number
+          sha256?: string | null
+          storage_path: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string
+          duration_ms?: number | null
+          entry_id?: string
+          height?: number | null
+          id?: string
+          kind?: string
+          mime?: string | null
+          order_index?: number
+          sha256?: string | null
+          storage_path?: string
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "judge_entry_media_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "judge_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      judge_events: {
+        Row: {
+          award_categories: Json
+          category_weights: Json
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          host_id: string | null
+          id: string
+          is_public: boolean
+          judged_at: string | null
+          registration_closes_at: string | null
+          registration_opens_at: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          vehicle_types: string[]
+        }
+        Insert: {
+          award_categories?: Json
+          category_weights?: Json
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          host_id?: string | null
+          id?: string
+          is_public?: boolean
+          judged_at?: string | null
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          vehicle_types?: string[]
+        }
+        Update: {
+          award_categories?: Json
+          category_weights?: Json
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          host_id?: string | null
+          id?: string
+          is_public?: boolean
+          judged_at?: string | null
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          vehicle_types?: string[]
+        }
+        Relationships: []
+      }
+      judge_flags: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          detail: string | null
+          entry_id: string
+          id: string
+          reason: string
+          resolved: boolean
+          resolved_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          detail?: string | null
+          entry_id: string
+          id?: string
+          reason: string
+          resolved?: boolean
+          resolved_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          detail?: string | null
+          entry_id?: string
+          id?: string
+          reason?: string
+          resolved?: boolean
+          resolved_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "judge_flags_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "judge_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      judge_leaderboard_cache: {
+        Row: {
+          entry_id: string
+          event_id: string | null
+          id: string
+          rank: number
+          refreshed_at: string
+          scope: string
+          scope_key: string | null
+          score: number
+        }
+        Insert: {
+          entry_id: string
+          event_id?: string | null
+          id?: string
+          rank: number
+          refreshed_at?: string
+          scope: string
+          scope_key?: string | null
+          score: number
+        }
+        Update: {
+          entry_id?: string
+          event_id?: string | null
+          id?: string
+          rank?: number
+          refreshed_at?: string
+          scope?: string
+          scope_key?: string | null
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "judge_leaderboard_cache_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "judge_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "judge_leaderboard_cache_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "judge_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       keyword_filters: {
         Row: {
           created_at: string
