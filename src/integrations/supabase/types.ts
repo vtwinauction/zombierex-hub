@@ -4369,6 +4369,19 @@ export type Database = {
     }
     Functions: {
       calc_level: { Args: { _xp: number }; Returns: number }
+      can_view_event: {
+        Args: { _event_id: string; _user: string }
+        Returns: boolean
+      }
+      find_group_ride_by_code: {
+        Args: { _code: string }
+        Returns: {
+          host_id: string
+          id: string
+          status: string
+          title: string
+        }[]
+      }
       get_sos_by_token: {
         Args: { _token: string }
         Returns: {
