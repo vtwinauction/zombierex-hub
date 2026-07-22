@@ -168,6 +168,8 @@ function RideMode() {
           </div>
         )}
 
+        {!pickMode && <FuelWarning distanceM={tracker.distance_m} onSpoke={(msg) => voiceOn && speak(msg)} />}
+
         {/* Pick destination banner */}
         {pickMode && (
           <div className="absolute left-3 right-3 top-3 rounded-2xl border border-white/10 bg-black/75 p-4 backdrop-blur-md">
