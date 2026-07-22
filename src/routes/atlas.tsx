@@ -8,7 +8,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
   Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
-  Gauge, Users, Trash2, AlertTriangle, Mic,
+  Gauge, Users, Trash2, AlertTriangle, Mic, Activity,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -308,6 +308,11 @@ function AtlasPage() {
           className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
           style={{ color: "var(--color-ink-0)" }}>
           <Mic size={20} strokeWidth={2.4} />
+        </Link>
+        <Link to="/atlas/diag" aria-label="Bike diagnostics"
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: "var(--color-ink-0)" }}>
+          <Activity size={20} strokeWidth={2.4} />
         </Link>
         <Link to="/atlas/new" aria-label="Plan route"
           className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
