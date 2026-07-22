@@ -23,6 +23,7 @@ import { Route as AtlasRouteImport } from './routes/atlas'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
+import { Route as SosTokenRouteImport } from './routes/sos.$token'
 import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
 import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
@@ -143,6 +144,11 @@ const IndexRoute = IndexRouteImport.update({
 const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
   id: '/communities/',
   path: '/communities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SosTokenRoute = SosTokenRouteImport.update({
+  id: '/sos/$token',
+  path: '/sos/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketplaceIdRoute = MarketplaceIdRouteImport.update({
@@ -457,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
+  '/sos/$token': typeof SosTokenRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -522,6 +529,7 @@ export interface FileRoutesByTo {
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
+  '/sos/$token': typeof SosTokenRoute
   '/communities': typeof CommunitiesIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -591,6 +599,7 @@ export interface FileRoutesById {
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
+  '/sos/$token': typeof SosTokenRoute
   '/communities/': typeof CommunitiesIndexRoute
   '/_authenticated/admin/health': typeof AuthenticatedAdminHealthRoute
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
@@ -660,6 +669,7 @@ export interface FileRouteTypes {
     | '/communities/$slug'
     | '/creator/$id'
     | '/marketplace/$id'
+    | '/sos/$token'
     | '/communities/'
     | '/admin/health'
     | '/admin/moderation'
@@ -725,6 +735,7 @@ export interface FileRouteTypes {
     | '/communities/$slug'
     | '/creator/$id'
     | '/marketplace/$id'
+    | '/sos/$token'
     | '/communities'
     | '/admin/health'
     | '/admin/moderation'
@@ -793,6 +804,7 @@ export interface FileRouteTypes {
     | '/communities/$slug'
     | '/creator/$id'
     | '/marketplace/$id'
+    | '/sos/$token'
     | '/communities/'
     | '/_authenticated/admin/health'
     | '/_authenticated/admin/moderation'
@@ -852,6 +864,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   CommunitiesSlugRoute: typeof CommunitiesSlugRouteWithChildren
   CreatorIdRoute: typeof CreatorIdRoute
+  SosTokenRoute: typeof SosTokenRoute
   CommunitiesIndexRoute: typeof CommunitiesIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
@@ -955,6 +968,13 @@ declare module '@tanstack/react-router' {
       path: '/communities'
       fullPath: '/communities/'
       preLoaderRoute: typeof CommunitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sos/$token': {
+      id: '/sos/$token'
+      path: '/sos/$token'
+      fullPath: '/sos/$token'
+      preLoaderRoute: typeof SosTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketplace/$id': {
@@ -1509,6 +1529,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   CommunitiesSlugRoute: CommunitiesSlugRouteWithChildren,
   CreatorIdRoute: CreatorIdRoute,
+  SosTokenRoute: SosTokenRoute,
   CommunitiesIndexRoute: CommunitiesIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
