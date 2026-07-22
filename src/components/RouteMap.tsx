@@ -64,6 +64,7 @@ export function RouteMap({
   const markersRef = useRef<any[]>([]);
   const [err, setErr] = useState<string | null>(null);
   const userMarkerRef = useRef<any>(null);
+  const communityMarkersRef = useRef<any[]>([]);
 
   // init
   useEffect(() => {
