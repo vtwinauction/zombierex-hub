@@ -108,10 +108,9 @@ function SosTracker() {
         {center ? (
           <Suspense fallback={<FullMsg>Loading map…</FullMsg>}>
             <RouteMap
-              markers={center ? [{ ...center, color: "#dc2626", label: "Rider" }] : []}
-              polyline={polyline.length > 1 ? polyline : undefined}
+              path={polyline.length > 1 ? polyline : []}
+              userLocation={center}
               center={center}
-              zoom={15}
             />
           </Suspense>
         ) : (
