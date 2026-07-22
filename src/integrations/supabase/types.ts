@@ -2551,18 +2551,21 @@ export type Database = {
       }
       platform_settings: {
         Row: {
+          is_public: boolean
           key: string
           updated_at: string
           updated_by: string | null
           value: Json
         }
         Insert: {
+          is_public?: boolean
           key: string
           updated_at?: string
           updated_by?: string | null
           value: Json
         }
         Update: {
+          is_public?: boolean
           key?: string
           updated_at?: string
           updated_by?: string | null
@@ -4381,6 +4384,35 @@ export type Database = {
           status: string
           title: string
         }[]
+      }
+      get_creator_collab_email: { Args: { _creator: string }; Returns: string }
+      get_my_creator_profile: {
+        Args: never
+        Returns: {
+          accepts_collabs: boolean
+          approved_at: string | null
+          category: string
+          collab_email: string | null
+          created_at: string
+          featured_post_ids: string[] | null
+          id: string
+          is_featured: boolean
+          is_verified: boolean
+          portfolio_url: string | null
+          social_links: Json | null
+          status: string
+          subscribers_count: number
+          tagline: string | null
+          tips_total_cents: number
+          updated_at: string
+          user_id: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "creator_profiles"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       get_sos_by_token: {
         Args: { _token: string }
