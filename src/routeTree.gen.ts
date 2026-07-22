@@ -65,6 +65,7 @@ import { Route as AuthenticatedAdsNewRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin.moderation'
 import { Route as AuthenticatedAdminHealthRouteImport } from './routes/_authenticated/admin.health'
+import { Route as AuthenticatedAtlasGroupIndexRouteImport } from './routes/_authenticated/atlas.group.index'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
@@ -369,6 +370,12 @@ const AuthenticatedAdminHealthRoute =
     path: '/health',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAtlasGroupIndexRoute =
+  AuthenticatedAtlasGroupIndexRouteImport.update({
+    id: '/atlas/group/',
+    path: '/atlas/group/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const CommunitiesSlugChallengesChallengeIdRoute =
   CommunitiesSlugChallengesChallengeIdRouteImport.update({
     id: '/challenges/$challengeId',
@@ -472,6 +479,7 @@ export interface FileRoutesByFullPath {
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -534,6 +542,7 @@ export interface FileRoutesByTo {
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/atlas/group': typeof AuthenticatedAtlasGroupIndexRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -600,6 +609,7 @@ export interface FileRoutesById {
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/_authenticated/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
   '/_authenticated/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/_authenticated/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
   '/_authenticated/communities/$slug/post/new': typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -666,6 +676,7 @@ export interface FileRouteTypes {
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/atlas/group/'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
@@ -728,6 +739,7 @@ export interface FileRouteTypes {
     | '/communities/$slug/manage'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/atlas/group'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
     | '/communities/$slug/post/new'
@@ -793,6 +805,7 @@ export interface FileRouteTypes {
     | '/_authenticated/communities/$slug/manage'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/_authenticated/atlas/group/'
     | '/_authenticated/communities/$slug/challenges/new'
     | '/_authenticated/communities/$slug/events/new'
     | '/_authenticated/communities/$slug/post/new'
@@ -1213,6 +1226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminHealthRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/atlas/group/': {
+      id: '/_authenticated/atlas/group/'
+      path: '/atlas/group'
+      fullPath: '/atlas/group/'
+      preLoaderRoute: typeof AuthenticatedAtlasGroupIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/communities/$slug/challenges/$challengeId': {
       id: '/communities/$slug/challenges/$challengeId'
       path: '/challenges/$challengeId'
@@ -1342,6 +1362,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
   AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedAtlasGroupIndexRoute: typeof AuthenticatedAtlasGroupIndexRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
   AuthenticatedCommunitiesSlugPostNewRoute: typeof AuthenticatedCommunitiesSlugPostNewRoute
@@ -1380,6 +1401,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRidesIndexRoute: AuthenticatedRidesIndexRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedAtlasGroupIndexRoute: AuthenticatedAtlasGroupIndexRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
     AuthenticatedCommunitiesSlugChallengesNewRoute,
   AuthenticatedCommunitiesSlugEventsNewRoute:

@@ -9,7 +9,7 @@ import { ArrowLeft, Users, Plus, LogIn, Radio } from "lucide-react";
 import { toast } from "sonner";
 import { createGroupRide, joinGroupRide, listMyGroupRides } from "@/lib/group-rides.functions";
 
-export const Route = createFileRoute("/_authenticated/atlas/group")({
+export const Route = createFileRoute("/_authenticated/atlas/group/")({
   head: () => ({
     meta: [
       { title: "Group Rides · ZOMBIEREX" },
