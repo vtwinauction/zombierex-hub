@@ -50,6 +50,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     items: [
       { to: "/assistant", label: "Ask REX", hint: "AI companion · chat" },
       { to: "/onboarding", label: "Personalize for me", hint: "AI picks crews · events · listings" },
+      { to: "/judge", label: "🏆 AI Show Judge", hint: "Concours judging by algorithm" },
     ],
   },
   {
@@ -89,6 +90,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { to: "/admin/vendors", label: "Vendor verifications" },
       { to: "/admin/moderation", label: "Moderation queue", hint: "Reports · warnings · bans" },
       { to: "/admin/health", label: "Platform Health", hint: "Live stats · feature flags · maintenance" },
+      { to: "/admin/judge", label: "AI Judge admin", hint: "Events · awards · publish" },
     ],
   },
 ];

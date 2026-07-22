@@ -22,9 +22,11 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AtlasRouteImport } from './routes/atlas'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as JudgeIndexRouteImport } from './routes/judge.index'
 import { Route as CommunitiesIndexRouteImport } from './routes/communities.index'
 import { Route as SosTokenRouteImport } from './routes/sos.$token'
 import { Route as MarketplaceIdRouteImport } from './routes/marketplace.$id'
+import { Route as JudgeLeaderboardsRouteImport } from './routes/judge.leaderboards'
 import { Route as CreatorIdRouteImport } from './routes/creator.$id'
 import { Route as CommunitiesSlugRouteImport } from './routes/communities.$slug'
 import { Route as AtlasIdRouteImport } from './routes/atlas.$id'
@@ -42,6 +44,8 @@ import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedAdsIndexRouteImport } from './routes/_authenticated/ads.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as MarketplaceSellerIdRouteImport } from './routes/marketplace.seller.$id'
+import { Route as JudgeEventsSlugRouteImport } from './routes/judge.events.$slug'
+import { Route as JudgeEntriesIdRouteImport } from './routes/judge.entries.$id'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
@@ -49,6 +53,7 @@ import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
 import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/_authenticated/marketplace.dashboard'
+import { Route as AuthenticatedJudgeMineRouteImport } from './routes/_authenticated/judge.mine'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
@@ -70,10 +75,12 @@ import { Route as AuthenticatedAtlasCockpitRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdsNewRouteImport } from './routes/_authenticated/ads.new'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin.moderation'
+import { Route as AuthenticatedAdminJudgeRouteImport } from './routes/_authenticated/admin.judge'
 import { Route as AuthenticatedAdminHealthRouteImport } from './routes/_authenticated/admin.health'
 import { Route as AuthenticatedAtlasGroupIndexRouteImport } from './routes/_authenticated/atlas.group.index'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
+import { Route as AuthenticatedJudgeSubmitEventSlugRouteImport } from './routes/_authenticated/judge.submit.$eventSlug'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAtlasGroupIdRouteImport } from './routes/_authenticated/atlas.group.$id'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
@@ -145,6 +152,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const JudgeIndexRoute = JudgeIndexRouteImport.update({
+  id: '/judge/',
+  path: '/judge/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunitiesIndexRoute = CommunitiesIndexRouteImport.update({
   id: '/communities/',
   path: '/communities/',
@@ -159,6 +171,11 @@ const MarketplaceIdRoute = MarketplaceIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => MarketplaceRoute,
+} as any)
+const JudgeLeaderboardsRoute = JudgeLeaderboardsRouteImport.update({
+  id: '/judge/leaderboards',
+  path: '/judge/leaderboards',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const CreatorIdRoute = CreatorIdRouteImport.update({
   id: '/creator/$id',
@@ -247,6 +264,16 @@ const MarketplaceSellerIdRoute = MarketplaceSellerIdRouteImport.update({
   path: '/seller/$id',
   getParentRoute: () => MarketplaceRoute,
 } as any)
+const JudgeEventsSlugRoute = JudgeEventsSlugRouteImport.update({
+  id: '/judge/events/$slug',
+  path: '/judge/events/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JudgeEntriesIdRoute = JudgeEntriesIdRouteImport.update({
+  id: '/judge/entries/$id',
+  path: '/judge/entries/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHealthRoute = ApiPublicHealthRouteImport.update({
   id: '/api/public/health',
   path: '/api/public/health',
@@ -286,6 +313,11 @@ const AuthenticatedMarketplaceDashboardRoute =
     path: '/marketplace/dashboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedJudgeMineRoute = AuthenticatedJudgeMineRouteImport.update({
+  id: '/judge/mine',
+  path: '/judge/mine',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEventsNewRoute = AuthenticatedEventsNewRouteImport.update({
   id: '/events/new',
   path: '/events/new',
@@ -402,6 +434,11 @@ const AuthenticatedAdminModerationRoute =
     path: '/moderation',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminJudgeRoute = AuthenticatedAdminJudgeRouteImport.update({
+  id: '/judge',
+  path: '/judge',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminHealthRoute =
   AuthenticatedAdminHealthRouteImport.update({
     id: '/health',
@@ -425,6 +462,12 @@ const ApiPublicWebhooksPaymentsRoute =
     id: '/api/public/webhooks/payments',
     path: '/api/public/webhooks/payments',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedJudgeSubmitEventSlugRoute =
+  AuthenticatedJudgeSubmitEventSlugRouteImport.update({
+    id: '/judge/submit/$eventSlug',
+    path: '/judge/submit/$eventSlug',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCommunitiesSlugManageRoute =
   AuthenticatedCommunitiesSlugManageRouteImport.update({
@@ -487,10 +530,13 @@ export interface FileRoutesByFullPath {
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/judge/leaderboards': typeof JudgeLeaderboardsRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/sos/$token': typeof SosTokenRoute
   '/communities/': typeof CommunitiesIndexRoute
+  '/judge/': typeof JudgeIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
@@ -512,6 +558,7 @@ export interface FileRoutesByFullPath {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -519,6 +566,8 @@ export interface FileRoutesByFullPath {
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/judge/entries/$id': typeof JudgeEntriesIdRoute
+  '/judge/events/$slug': typeof JudgeEventsSlugRoute
   '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/ads/': typeof AuthenticatedAdsIndexRoute
@@ -528,6 +577,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
@@ -557,10 +607,13 @@ export interface FileRoutesByTo {
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/judge/leaderboards': typeof JudgeLeaderboardsRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/sos/$token': typeof SosTokenRoute
   '/communities': typeof CommunitiesIndexRoute
+  '/judge': typeof JudgeIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
@@ -582,6 +635,7 @@ export interface FileRoutesByTo {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
+  '/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
@@ -589,6 +643,8 @@ export interface FileRoutesByTo {
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/judge/entries/$id': typeof JudgeEntriesIdRoute
+  '/judge/events/$slug': typeof JudgeEventsSlugRoute
   '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/ads': typeof AuthenticatedAdsIndexRoute
@@ -598,6 +654,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/atlas/group': typeof AuthenticatedAtlasGroupIndexRoute
@@ -631,10 +688,13 @@ export interface FileRoutesById {
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
+  '/judge/leaderboards': typeof JudgeLeaderboardsRoute
   '/marketplace/$id': typeof MarketplaceIdRoute
   '/sos/$token': typeof SosTokenRoute
   '/communities/': typeof CommunitiesIndexRoute
+  '/judge/': typeof JudgeIndexRoute
   '/_authenticated/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/_authenticated/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/ads/new': typeof AuthenticatedAdsNewRoute
@@ -656,6 +716,7 @@ export interface FileRoutesById {
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
+  '/_authenticated/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/_authenticated/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
@@ -663,6 +724,8 @@ export interface FileRoutesById {
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
+  '/judge/entries/$id': typeof JudgeEntriesIdRoute
+  '/judge/events/$slug': typeof JudgeEventsSlugRoute
   '/marketplace/seller/$id': typeof MarketplaceSellerIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/ads/': typeof AuthenticatedAdsIndexRoute
@@ -672,6 +735,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/_authenticated/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/_authenticated/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
@@ -705,10 +769,13 @@ export interface FileRouteTypes {
     | '/atlas/$id'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/judge/leaderboards'
     | '/marketplace/$id'
     | '/sos/$token'
     | '/communities/'
+    | '/judge/'
     | '/admin/health'
+    | '/admin/judge'
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
@@ -730,6 +797,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/judge/mine'
     | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
@@ -737,6 +805,8 @@ export interface FileRouteTypes {
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/judge/entries/$id'
+    | '/judge/events/$slug'
     | '/marketplace/seller/$id'
     | '/admin/'
     | '/ads/'
@@ -746,6 +816,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
+    | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/atlas/group/'
@@ -775,10 +846,13 @@ export interface FileRouteTypes {
     | '/atlas/$id'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/judge/leaderboards'
     | '/marketplace/$id'
     | '/sos/$token'
     | '/communities'
+    | '/judge'
     | '/admin/health'
+    | '/admin/judge'
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
@@ -800,6 +874,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/events/$id'
     | '/events/new'
+    | '/judge/mine'
     | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
@@ -807,6 +882,8 @@ export interface FileRouteTypes {
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
+    | '/judge/entries/$id'
+    | '/judge/events/$slug'
     | '/marketplace/seller/$id'
     | '/admin'
     | '/ads'
@@ -816,6 +893,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
+    | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/atlas/group'
@@ -848,10 +926,13 @@ export interface FileRouteTypes {
     | '/atlas/$id'
     | '/communities/$slug'
     | '/creator/$id'
+    | '/judge/leaderboards'
     | '/marketplace/$id'
     | '/sos/$token'
     | '/communities/'
+    | '/judge/'
     | '/_authenticated/admin/health'
+    | '/_authenticated/admin/judge'
     | '/_authenticated/admin/moderation'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/ads/new'
@@ -873,6 +954,7 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/tiers'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
+    | '/_authenticated/judge/mine'
     | '/_authenticated/marketplace/dashboard'
     | '/_authenticated/marketplace/new'
     | '/_authenticated/post/new'
@@ -880,6 +962,8 @@ export interface FileRouteTypes {
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
+    | '/judge/entries/$id'
+    | '/judge/events/$slug'
     | '/marketplace/seller/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/ads/'
@@ -889,6 +973,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/atlas/group/$id'
     | '/_authenticated/communities/$slug/manage'
+    | '/_authenticated/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/_authenticated/atlas/group/'
@@ -913,9 +998,13 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   CommunitiesSlugRoute: typeof CommunitiesSlugRouteWithChildren
   CreatorIdRoute: typeof CreatorIdRoute
+  JudgeLeaderboardsRoute: typeof JudgeLeaderboardsRoute
   SosTokenRoute: typeof SosTokenRoute
   CommunitiesIndexRoute: typeof CommunitiesIndexRoute
+  JudgeIndexRoute: typeof JudgeIndexRoute
   ApiPublicHealthRoute: typeof ApiPublicHealthRoute
+  JudgeEntriesIdRoute: typeof JudgeEntriesIdRoute
+  JudgeEventsSlugRoute: typeof JudgeEventsSlugRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
 }
 
@@ -1012,6 +1101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/judge/': {
+      id: '/judge/'
+      path: '/judge'
+      fullPath: '/judge/'
+      preLoaderRoute: typeof JudgeIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/communities/': {
       id: '/communities/'
       path: '/communities'
@@ -1032,6 +1128,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/marketplace/$id'
       preLoaderRoute: typeof MarketplaceIdRouteImport
       parentRoute: typeof MarketplaceRoute
+    }
+    '/judge/leaderboards': {
+      id: '/judge/leaderboards'
+      path: '/judge/leaderboards'
+      fullPath: '/judge/leaderboards'
+      preLoaderRoute: typeof JudgeLeaderboardsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/creator/$id': {
       id: '/creator/$id'
@@ -1152,6 +1255,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MarketplaceSellerIdRouteImport
       parentRoute: typeof MarketplaceRoute
     }
+    '/judge/events/$slug': {
+      id: '/judge/events/$slug'
+      path: '/judge/events/$slug'
+      fullPath: '/judge/events/$slug'
+      preLoaderRoute: typeof JudgeEventsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/judge/entries/$id': {
+      id: '/judge/entries/$id'
+      path: '/judge/entries/$id'
+      fullPath: '/judge/entries/$id'
+      preLoaderRoute: typeof JudgeEntriesIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/health': {
       id: '/api/public/health'
       path: '/api/public/health'
@@ -1199,6 +1316,13 @@ declare module '@tanstack/react-router' {
       path: '/marketplace/dashboard'
       fullPath: '/marketplace/dashboard'
       preLoaderRoute: typeof AuthenticatedMarketplaceDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/judge/mine': {
+      id: '/_authenticated/judge/mine'
+      path: '/judge/mine'
+      fullPath: '/judge/mine'
+      preLoaderRoute: typeof AuthenticatedJudgeMineRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/events/new': {
@@ -1348,6 +1472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminModerationRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/judge': {
+      id: '/_authenticated/admin/judge'
+      path: '/judge'
+      fullPath: '/admin/judge'
+      preLoaderRoute: typeof AuthenticatedAdminJudgeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/health': {
       id: '/_authenticated/admin/health'
       path: '/health'
@@ -1375,6 +1506,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/webhooks/payments'
       preLoaderRoute: typeof ApiPublicWebhooksPaymentsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/judge/submit/$eventSlug': {
+      id: '/_authenticated/judge/submit/$eventSlug'
+      path: '/judge/submit/$eventSlug'
+      fullPath: '/judge/submit/$eventSlug'
+      preLoaderRoute: typeof AuthenticatedJudgeSubmitEventSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/communities/$slug/manage': {
       id: '/_authenticated/communities/$slug/manage'
@@ -1437,6 +1575,7 @@ const AuthenticatedAdminVendorsRouteWithChildren =
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminHealthRoute: typeof AuthenticatedAdminHealthRoute
+  AuthenticatedAdminJudgeRoute: typeof AuthenticatedAdminJudgeRoute
   AuthenticatedAdminModerationRoute: typeof AuthenticatedAdminModerationRoute
   AuthenticatedAdminVendorsRoute: typeof AuthenticatedAdminVendorsRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1444,6 +1583,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminHealthRoute: AuthenticatedAdminHealthRoute,
+  AuthenticatedAdminJudgeRoute: AuthenticatedAdminJudgeRoute,
   AuthenticatedAdminModerationRoute: AuthenticatedAdminModerationRoute,
   AuthenticatedAdminVendorsRoute: AuthenticatedAdminVendorsRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -1495,6 +1635,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
+  AuthenticatedJudgeMineRoute: typeof AuthenticatedJudgeMineRoute
   AuthenticatedMarketplaceDashboardRoute: typeof AuthenticatedMarketplaceDashboardRoute
   AuthenticatedMarketplaceNewRoute: typeof AuthenticatedMarketplaceNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
@@ -1504,6 +1645,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedAtlasGroupIdRoute: typeof AuthenticatedAtlasGroupIdRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedJudgeSubmitEventSlugRoute: typeof AuthenticatedJudgeSubmitEventSlugRoute
   AuthenticatedAtlasGroupIndexRoute: typeof AuthenticatedAtlasGroupIndexRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -1538,6 +1680,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
+  AuthenticatedJudgeMineRoute: AuthenticatedJudgeMineRoute,
   AuthenticatedMarketplaceDashboardRoute:
     AuthenticatedMarketplaceDashboardRoute,
   AuthenticatedMarketplaceNewRoute: AuthenticatedMarketplaceNewRoute,
@@ -1549,6 +1692,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtlasGroupIdRoute: AuthenticatedAtlasGroupIdRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedJudgeSubmitEventSlugRoute:
+    AuthenticatedJudgeSubmitEventSlugRoute,
   AuthenticatedAtlasGroupIndexRoute: AuthenticatedAtlasGroupIndexRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
     AuthenticatedCommunitiesSlugChallengesNewRoute,
@@ -1614,21 +1759,15 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   CommunitiesSlugRoute: CommunitiesSlugRouteWithChildren,
   CreatorIdRoute: CreatorIdRoute,
+  JudgeLeaderboardsRoute: JudgeLeaderboardsRoute,
   SosTokenRoute: SosTokenRoute,
   CommunitiesIndexRoute: CommunitiesIndexRoute,
+  JudgeIndexRoute: JudgeIndexRoute,
   ApiPublicHealthRoute: ApiPublicHealthRoute,
+  JudgeEntriesIdRoute: JudgeEntriesIdRoute,
+  JudgeEventsSlugRoute: JudgeEventsSlugRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
