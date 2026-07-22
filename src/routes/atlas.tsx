@@ -301,7 +301,50 @@ function AtlasPage() {
           style={{ color: geoStatus === "ok" ? "var(--color-neon-deep, #4b8f00)" : "var(--color-ink-0)" }}>
           <Locate size={18} strokeWidth={2.2} style={geoStatus === "locating" ? { animation: "pulse 1.1s ease-in-out infinite" } : undefined} />
         </button>
+        <button
+          aria-label="Toggle speedometer"
+          onClick={() => setShowSpeedo((s) => !s)}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: showSpeedo ? "var(--color-neon)" : "hsl(var(--card))",
+            color: showSpeedo ? "var(--color-obsidian)" : "hsl(var(--foreground))",
+          }}>
+          <Gauge size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          aria-label="Toggle community points"
+          onClick={() => setShowCommunity((s) => !s)}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: showCommunity ? "#2563eb" : "hsl(var(--card))",
+            color: showCommunity ? "#ffffff" : "hsl(var(--foreground))",
+          }}>
+          <Users size={18} strokeWidth={2.2} />
+        </button>
+        <button
+          aria-label={dropMode ? "Cancel drop point" : "Drop a community point"}
+          onClick={() => { setDropMode((m) => !m); setPendingDrop(null); }}
+          className="tap grid h-12 w-12 place-items-center rounded-full border border-border shadow-lg"
+          style={{
+            background: dropMode ? "#e11d48" : "hsl(var(--card))",
+            color: dropMode ? "#ffffff" : "hsl(var(--foreground))",
+          }}>
+          <MapPin size={18} strokeWidth={2.4} />
+        </button>
       </div>
+
+      {/* PENDING DROP CARD */}
+      {pendingDrop && (
+        <DropPointCard
+          point={pendingDrop}
+          onCancel={() => setPendingDrop(null)}
+          onSaved={() => {
+            setPendingDrop(null);
+            setDropMode(false);
+            qc.invalidateQueries({ queryKey: ["community_pois"] });
+          }}
+        />
+      )}
 
       {/* BOTTOM SHEET — light theme */}
       <div
