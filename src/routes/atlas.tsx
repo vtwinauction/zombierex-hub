@@ -289,6 +289,11 @@ function AtlasPage() {
           style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
           RIDE
         </Link>
+        <Link to="/atlas/group" aria-label="Live group ride"
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: "var(--color-ink-0)" }}>
+          <Users size={20} strokeWidth={2.4} />
+        </Link>
         <Link to="/atlas/new" aria-label="Plan route"
           className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
           style={{ color: "hsl(var(--foreground))" }}>
