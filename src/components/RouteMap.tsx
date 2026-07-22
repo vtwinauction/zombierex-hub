@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 type LatLng = { lat: number; lng: number };
 type Poi = { lat: number; lng: number; name?: string; kind?: string };
+type CommunityPoi = { id?: string; lat: number; lng: number; name?: string; kind?: string };
 
 let loaderPromise: Promise<any> | null = null;
 function loadGoogleMaps(): Promise<any> {
