@@ -63,6 +63,7 @@ import { Route as AuthenticatedAtlasRideRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAtlasRecordRouteImport } from './routes/_authenticated/atlas.record'
 import { Route as AuthenticatedAtlasNewRouteImport } from './routes/_authenticated/atlas.new'
 import { Route as AuthenticatedAtlasMineRouteImport } from './routes/_authenticated/atlas.mine'
+import { Route as AuthenticatedAtlasFuelRouteImport } from './routes/_authenticated/atlas.fuel'
 import { Route as AuthenticatedAdsNewRouteImport } from './routes/_authenticated/ads.new'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin.moderation'
@@ -360,6 +361,11 @@ const AuthenticatedAtlasMineRoute = AuthenticatedAtlasMineRouteImport.update({
   path: '/atlas/mine',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAtlasFuelRoute = AuthenticatedAtlasFuelRouteImport.update({
+  id: '/atlas/fuel',
+  path: '/atlas/fuel',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdsNewRoute = AuthenticatedAdsNewRouteImport.update({
   id: '/ads/new',
   path: '/ads/new',
@@ -469,6 +475,7 @@ export interface FileRoutesByFullPath {
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
+  '/atlas/fuel': typeof AuthenticatedAtlasFuelRoute
   '/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
@@ -535,6 +542,7 @@ export interface FileRoutesByTo {
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
+  '/atlas/fuel': typeof AuthenticatedAtlasFuelRoute
   '/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
@@ -605,6 +613,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/ads/new': typeof AuthenticatedAdsNewRoute
+  '/_authenticated/atlas/fuel': typeof AuthenticatedAtlasFuelRoute
   '/_authenticated/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/_authenticated/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/_authenticated/atlas/record': typeof AuthenticatedAtlasRecordRoute
@@ -675,6 +684,7 @@ export interface FileRouteTypes {
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
+    | '/atlas/fuel'
     | '/atlas/mine'
     | '/atlas/new'
     | '/atlas/record'
@@ -741,6 +751,7 @@ export interface FileRouteTypes {
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
+    | '/atlas/fuel'
     | '/atlas/mine'
     | '/atlas/new'
     | '/atlas/record'
@@ -810,6 +821,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/moderation'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/ads/new'
+    | '/_authenticated/atlas/fuel'
     | '/_authenticated/atlas/mine'
     | '/_authenticated/atlas/new'
     | '/_authenticated/atlas/record'
@@ -1250,6 +1262,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAtlasMineRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/atlas/fuel': {
+      id: '/_authenticated/atlas/fuel'
+      path: '/atlas/fuel'
+      fullPath: '/atlas/fuel'
+      preLoaderRoute: typeof AuthenticatedAtlasFuelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/ads/new': {
       id: '/_authenticated/ads/new'
       path: '/ads/new'
@@ -1400,6 +1419,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedAdsNewRoute: typeof AuthenticatedAdsNewRoute
+  AuthenticatedAtlasFuelRoute: typeof AuthenticatedAtlasFuelRoute
   AuthenticatedAtlasMineRoute: typeof AuthenticatedAtlasMineRoute
   AuthenticatedAtlasNewRoute: typeof AuthenticatedAtlasNewRoute
   AuthenticatedAtlasRecordRoute: typeof AuthenticatedAtlasRecordRoute
@@ -1439,6 +1459,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedAdsNewRoute: AuthenticatedAdsNewRoute,
+  AuthenticatedAtlasFuelRoute: AuthenticatedAtlasFuelRoute,
   AuthenticatedAtlasMineRoute: AuthenticatedAtlasMineRoute,
   AuthenticatedAtlasNewRoute: AuthenticatedAtlasNewRoute,
   AuthenticatedAtlasRecordRoute: AuthenticatedAtlasRecordRoute,
