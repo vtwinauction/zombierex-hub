@@ -98,6 +98,8 @@ function RootComponent() {
   const router = useRouter();
   const scrollDir = useScrollDirection(12);
   const [isTop, setIsTop] = useState(true);
+  const pathname = router.state.location.pathname;
+  const isImmersive = pathname.startsWith("/atlas/cockpit");
 
   useEffect(() => {
     const onScroll = () => setIsTop(window.scrollY < 40);
@@ -121,10 +123,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="relative min-h-[100svh] bg-background text-foreground">
-        <main className="min-h-[100svh] pb-[calc(64px+env(safe-area-inset-bottom))]">
+        <main className={isImmersive ? "min-h-[100svh]" : "min-h-[100svh] pb-[calc(64px+env(safe-area-inset-bottom))]"}>
           <Outlet />
         </main>
-        <BottomNav hidden={navHidden} />
+        {!isImmersive && <BottomNav hidden={navHidden} />}
       </div>
     </QueryClientProvider>
   );
