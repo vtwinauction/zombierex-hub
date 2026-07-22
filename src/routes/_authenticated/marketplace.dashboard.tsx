@@ -26,7 +26,7 @@ function Dashboard() {
   async function remove(id: string) { if (confirm("Delete listing?")) { await delFn({ data: { id } }); refetch(); } }
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="DSH" section="SELLER DASHBOARD" />
 
       <div className="flex items-end justify-between px-4 pt-6">

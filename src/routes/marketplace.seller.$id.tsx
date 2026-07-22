@@ -25,7 +25,7 @@ function SellerPage() {
   const listings = ((data as any)?.active_listings ?? []) as any[];
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="SLR" section="SELLER PROFILE" />
 
       <div className="px-4 pt-6">

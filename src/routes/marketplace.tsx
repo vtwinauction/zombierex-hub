@@ -64,7 +64,7 @@ function MarketplacePage() {
   const rest = useMemo(() => rows.filter((l: any) => l.id !== featured?.id), [rows, featured]);
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="09" section="MARKETPLACE" />
 
       <div className="flex items-end justify-between px-4 pt-6">

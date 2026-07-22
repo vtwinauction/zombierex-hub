@@ -1785,6 +1785,121 @@ export type Database = {
           },
         ]
       }
+      group_ride_members: {
+        Row: {
+          group_ride_id: string
+          joined_at: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          group_ride_id: string
+          joined_at?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          group_ride_id?: string
+          joined_at?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_ride_members_group_ride_id_fkey"
+            columns: ["group_ride_id"]
+            isOneToOne: false
+            referencedRelation: "group_rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_ride_pings: {
+        Row: {
+          battery: number | null
+          created_at: string
+          group_ride_id: string
+          heading: number | null
+          id: number
+          lat: number
+          lng: number
+          speed_kmh: number | null
+          user_id: string
+        }
+        Insert: {
+          battery?: number | null
+          created_at?: string
+          group_ride_id: string
+          heading?: number | null
+          id?: number
+          lat: number
+          lng: number
+          speed_kmh?: number | null
+          user_id: string
+        }
+        Update: {
+          battery?: number | null
+          created_at?: string
+          group_ride_id?: string
+          heading?: number | null
+          id?: number
+          lat?: number
+          lng?: number
+          speed_kmh?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_ride_pings_group_ride_id_fkey"
+            columns: ["group_ride_id"]
+            isOneToOne: false
+            referencedRelation: "group_rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_rides: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          host_id: string
+          id: string
+          join_code: string
+          meet_label: string | null
+          meet_lat: number | null
+          meet_lng: number | null
+          started_at: string
+          status: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          host_id: string
+          id?: string
+          join_code: string
+          meet_label?: string | null
+          meet_lat?: number | null
+          meet_lng?: number | null
+          started_at?: string
+          status?: string
+          title?: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          host_id?: string
+          id?: string
+          join_code?: string
+          meet_label?: string | null
+          meet_lat?: number | null
+          meet_lng?: number | null
+          started_at?: string
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
       hashtags: {
         Row: {
           created_at: string
@@ -4187,6 +4302,10 @@ export type Database = {
       }
       is_conversation_member: {
         Args: { _conv: string; _user: string }
+        Returns: boolean
+      }
+      is_group_ride_member: {
+        Args: { _ride: string; _user: string }
         Returns: boolean
       }
       show_limit: { Args: never; Returns: number }
