@@ -83,6 +83,7 @@ function AtlasPage() {
   );
 
   // Auto-request location on first mount, then watch for movement updates
+  const didAutoCenter = useRef(false);
   useEffect(() => {
     if (typeof navigator === "undefined" || !navigator.geolocation) {
       setGeoStatus("unsupported"); return;
@@ -93,6 +94,10 @@ function AtlasPage() {
       setUserLoc({ lat: p.coords.latitude, lng: p.coords.longitude });
       if (typeof p.coords.heading === "number" && !isNaN(p.coords.heading)) setUserHeading(p.coords.heading);
       setGeoStatus("ok");
+      if (!didAutoCenter.current) {
+        didAutoCenter.current = true;
+        setRecenterTick((t) => t + 1);
+      }
     };
     const onErr = () => setGeoStatus("denied");
     navigator.geolocation.getCurrentPosition(onPos, onErr, opts);
