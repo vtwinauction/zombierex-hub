@@ -179,6 +179,32 @@ export function RouteMap({
     });
   }
 
+  function drawCommunity(g: any) {
+    communityMarkersRef.current.forEach((m) => m.setMap(null));
+    communityMarkersRef.current = [];
+    communityPois.forEach((p) => {
+      const m = new g.maps.Marker({
+        position: { lat: p.lat, lng: p.lng },
+        map: mapRef.current,
+        title: p.name ?? "",
+        label: p.kind ? { text: iconForKind(p.kind), color: "#ffffff", fontSize: "11px", fontWeight: "700" } : undefined,
+        icon: {
+          path: g.maps.SymbolPath.CIRCLE,
+          scale: 11,
+          fillColor: "#2563eb",
+          fillOpacity: 0.95,
+          strokeColor: "#ffffff",
+          strokeWeight: 2,
+        },
+        zIndex: 500,
+      });
+      if (onCommunityPoiClick) {
+        m.addListener("click", () => onCommunityPoiClick(p));
+      }
+      communityMarkersRef.current.push(m);
+    });
+  }
+
   function drawUser(g: any) {
     if (userMarkerRef.current) { userMarkerRef.current.setMap(null); userMarkerRef.current = null; }
     if (!userLocation) return;
