@@ -66,7 +66,7 @@ function SubmitWizard() {
 
   const mediaQ = queryOptions({
     queryKey: ["judge-entry-media", entryId ?? "none"],
-    queryFn: () => (entryId ? judgeListEntryMedia({ data: { entry_id: entryId } }) : Promise.resolve([] as any[])),
+    queryFn: () => (entryId ? judgeListEntryMedia({ data: { entry_id: entryId } }) : Promise.resolve({ media: [] as any[], urls: {} as Record<string, string> })),
     enabled: !!entryId,
   });
 
@@ -245,7 +245,8 @@ function MediaStep({
   entryId: string; mediaQ: any; uploading: Kind | null;
   onUpload: (k: Kind, f: File) => void; onNext: () => void;
 }) {
-  const { data: media } = useSuspenseQuery(mediaQ) as { data: any[] };
+  const { data } = useSuspenseQuery(mediaQ) as { data: { media: any[]; urls: Record<string, string> } };
+  const media = data.media;
   const countBy = (k: Kind) => media.filter((m: any) => m.kind === k).length;
   const totalPhotos = media.filter((m: any) => (m.kind ?? "").startsWith("photo_")).length;
   const canProceed = totalPhotos >= 3;

@@ -75,10 +75,12 @@ import { Route as AuthenticatedAtlasCockpitRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdsNewRouteImport } from './routes/_authenticated/ads.new'
 import { Route as AuthenticatedAdminVendorsRouteImport } from './routes/_authenticated/admin.vendors'
 import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_authenticated/admin.moderation'
+import { Route as AuthenticatedAdminJudgeRouteImport } from './routes/_authenticated/admin.judge'
 import { Route as AuthenticatedAdminHealthRouteImport } from './routes/_authenticated/admin.health'
 import { Route as AuthenticatedAtlasGroupIndexRouteImport } from './routes/_authenticated/atlas.group.index'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
+import { Route as AuthenticatedJudgeSubmitEventSlugRouteImport } from './routes/_authenticated/judge.submit.$eventSlug'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAtlasGroupIdRouteImport } from './routes/_authenticated/atlas.group.$id'
 import { Route as AuthenticatedAdminVendorsIdRouteImport } from './routes/_authenticated/admin.vendors.$id'
@@ -432,6 +434,11 @@ const AuthenticatedAdminModerationRoute =
     path: '/moderation',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminJudgeRoute = AuthenticatedAdminJudgeRouteImport.update({
+  id: '/judge',
+  path: '/judge',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminHealthRoute =
   AuthenticatedAdminHealthRouteImport.update({
     id: '/health',
@@ -455,6 +462,12 @@ const ApiPublicWebhooksPaymentsRoute =
     id: '/api/public/webhooks/payments',
     path: '/api/public/webhooks/payments',
     getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedJudgeSubmitEventSlugRoute =
+  AuthenticatedJudgeSubmitEventSlugRouteImport.update({
+    id: '/judge/submit/$eventSlug',
+    path: '/judge/submit/$eventSlug',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedCommunitiesSlugManageRoute =
   AuthenticatedCommunitiesSlugManageRouteImport.update({
@@ -523,6 +536,7 @@ export interface FileRoutesByFullPath {
   '/communities/': typeof CommunitiesIndexRoute
   '/judge/': typeof JudgeIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
@@ -563,6 +577,7 @@ export interface FileRoutesByFullPath {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
@@ -598,6 +613,7 @@ export interface FileRoutesByTo {
   '/communities': typeof CommunitiesIndexRoute
   '/judge': typeof JudgeIndexRoute
   '/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/ads/new': typeof AuthenticatedAdsNewRoute
@@ -638,6 +654,7 @@ export interface FileRoutesByTo {
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/atlas/group': typeof AuthenticatedAtlasGroupIndexRoute
@@ -677,6 +694,7 @@ export interface FileRoutesById {
   '/communities/': typeof CommunitiesIndexRoute
   '/judge/': typeof JudgeIndexRoute
   '/_authenticated/admin/health': typeof AuthenticatedAdminHealthRoute
+  '/_authenticated/admin/judge': typeof AuthenticatedAdminJudgeRoute
   '/_authenticated/admin/moderation': typeof AuthenticatedAdminModerationRoute
   '/_authenticated/admin/vendors': typeof AuthenticatedAdminVendorsRouteWithChildren
   '/_authenticated/ads/new': typeof AuthenticatedAdsNewRoute
@@ -717,6 +735,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
+  '/_authenticated/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/_authenticated/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
@@ -756,6 +775,7 @@ export interface FileRouteTypes {
     | '/communities/'
     | '/judge/'
     | '/admin/health'
+    | '/admin/judge'
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
@@ -796,6 +816,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
+    | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/atlas/group/'
@@ -831,6 +852,7 @@ export interface FileRouteTypes {
     | '/communities'
     | '/judge'
     | '/admin/health'
+    | '/admin/judge'
     | '/admin/moderation'
     | '/admin/vendors'
     | '/ads/new'
@@ -871,6 +893,7 @@ export interface FileRouteTypes {
     | '/admin/vendors/$id'
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
+    | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/atlas/group'
@@ -909,6 +932,7 @@ export interface FileRouteTypes {
     | '/communities/'
     | '/judge/'
     | '/_authenticated/admin/health'
+    | '/_authenticated/admin/judge'
     | '/_authenticated/admin/moderation'
     | '/_authenticated/admin/vendors'
     | '/_authenticated/ads/new'
@@ -949,6 +973,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/atlas/group/$id'
     | '/_authenticated/communities/$slug/manage'
+    | '/_authenticated/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/_authenticated/atlas/group/'
@@ -1447,6 +1472,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminModerationRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/judge': {
+      id: '/_authenticated/admin/judge'
+      path: '/judge'
+      fullPath: '/admin/judge'
+      preLoaderRoute: typeof AuthenticatedAdminJudgeRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/health': {
       id: '/_authenticated/admin/health'
       path: '/health'
@@ -1474,6 +1506,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/webhooks/payments'
       preLoaderRoute: typeof ApiPublicWebhooksPaymentsRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/judge/submit/$eventSlug': {
+      id: '/_authenticated/judge/submit/$eventSlug'
+      path: '/judge/submit/$eventSlug'
+      fullPath: '/judge/submit/$eventSlug'
+      preLoaderRoute: typeof AuthenticatedJudgeSubmitEventSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/communities/$slug/manage': {
       id: '/_authenticated/communities/$slug/manage'
@@ -1536,6 +1575,7 @@ const AuthenticatedAdminVendorsRouteWithChildren =
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminHealthRoute: typeof AuthenticatedAdminHealthRoute
+  AuthenticatedAdminJudgeRoute: typeof AuthenticatedAdminJudgeRoute
   AuthenticatedAdminModerationRoute: typeof AuthenticatedAdminModerationRoute
   AuthenticatedAdminVendorsRoute: typeof AuthenticatedAdminVendorsRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1543,6 +1583,7 @@ interface AuthenticatedAdminRouteChildren {
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminHealthRoute: AuthenticatedAdminHealthRoute,
+  AuthenticatedAdminJudgeRoute: AuthenticatedAdminJudgeRoute,
   AuthenticatedAdminModerationRoute: AuthenticatedAdminModerationRoute,
   AuthenticatedAdminVendorsRoute: AuthenticatedAdminVendorsRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -1604,6 +1645,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedAtlasGroupIdRoute: typeof AuthenticatedAtlasGroupIdRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
+  AuthenticatedJudgeSubmitEventSlugRoute: typeof AuthenticatedJudgeSubmitEventSlugRoute
   AuthenticatedAtlasGroupIndexRoute: typeof AuthenticatedAtlasGroupIndexRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -1650,6 +1692,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtlasGroupIdRoute: AuthenticatedAtlasGroupIdRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
+  AuthenticatedJudgeSubmitEventSlugRoute:
+    AuthenticatedJudgeSubmitEventSlugRoute,
   AuthenticatedAtlasGroupIndexRoute: AuthenticatedAtlasGroupIndexRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
     AuthenticatedCommunitiesSlugChallengesNewRoute,
