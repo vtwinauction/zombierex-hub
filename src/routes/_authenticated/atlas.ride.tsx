@@ -9,6 +9,8 @@ import { planRoute } from "@/lib/nav.functions";
 import { createRide } from "@/lib/rides.functions";
 import { emptyState, ingest, requestWakeLock, type TrackerState, haversine } from "@/lib/ride-tracker";
 import { speak, cancelSpeech, isSpeechSupported } from "@/lib/voice";
+import { getFuelPrefs } from "@/lib/fuel-prefs";
+import { Fuel as FuelIcon } from "lucide-react";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
 
@@ -166,6 +168,8 @@ function RideMode() {
           </div>
         )}
 
+        {!pickMode && <FuelWarning distanceM={tracker.distance_m} onSpoke={(msg) => voiceOn && speak(msg)} />}
+
         {/* Pick destination banner */}
         {pickMode && (
           <div className="absolute left-3 right-3 top-3 rounded-2xl border border-white/10 bg-black/75 p-4 backdrop-blur-md">
@@ -281,3 +285,32 @@ function decodePolyline(str: string): LatLng[] {
   }
   return points;
 }
+
+function FuelWarning({ distanceM, onSpoke }: { distanceM: number; onSpoke: (msg: string) => void }) {
+  const prefs = useMemo(() => getFuelPrefs(), []);
+  const consumedL = (distanceM / 1000) / Math.max(prefs.economyKmPerL, 1);
+  const litresLeft = Math.max(0, (prefs.tankCapacityL * prefs.currentPct) / 100 - consumedL);
+  const kmLeft = Math.round(litresLeft * prefs.economyKmPerL);
+  const low = kmLeft <= prefs.warnKm && kmLeft > 0;
+  const empty = kmLeft <= 0;
+  const firedRef = useRef(false);
+  useEffect(() => {
+    if ((low || empty) && !firedRef.current) {
+      firedRef.current = true;
+      onSpoke(empty ? "Fuel critical. Find a station now." : `Low fuel. Approximately ${kmLeft} kilometers remaining.`);
+    }
+  }, [low, empty, kmLeft, onSpoke]);
+  if (!low && !empty) return null;
+  return (
+    <Link to="/atlas/fuel"
+      className="absolute left-3 right-3 bottom-3 flex items-center gap-3 rounded-xl border p-3 backdrop-blur-md"
+      style={{ background: "rgba(60,0,0,0.85)", borderColor: "rgba(255,80,80,0.5)" }}>
+      <FuelIcon className="h-5 w-5 text-red-300" />
+      <div className="flex-1">
+        <p className="text-xs font-bold uppercase tracking-wider text-red-200">{empty ? "Fuel critical" : "Low fuel"}</p>
+        <p className="text-sm font-semibold text-white">~{kmLeft} km left · tap to find stations</p>
+      </div>
+    </Link>
+  );
+}
+
