@@ -246,7 +246,7 @@ export function RouteMap({
 }
 
 function iconForKind(k: string) {
-  const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", custom: "•" };
+  const map: Record<string, string> = { hotel: "H", food: "F", fuel: "⛽", scenic: "★", repair: "R", viewpoint: "◈", hazard: "!", meetup: "M", custom: "•" };
   return map[k] ?? "•";
 }
 
