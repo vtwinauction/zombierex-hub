@@ -3545,6 +3545,115 @@ export type Database = {
           },
         ]
       }
+      sos_alerts: {
+        Row: {
+          accuracy_m: number | null
+          contacts_snapshot: Json
+          created_at: string
+          heading: number | null
+          id: string
+          kind: string
+          latitude: number | null
+          longitude: number | null
+          message: string | null
+          resolved_at: string | null
+          ride_id: string | null
+          share_token: string
+          speed_kmh: number | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy_m?: number | null
+          contacts_snapshot?: Json
+          created_at?: string
+          heading?: number | null
+          id?: string
+          kind?: string
+          latitude?: number | null
+          longitude?: number | null
+          message?: string | null
+          resolved_at?: string | null
+          ride_id?: string | null
+          share_token?: string
+          speed_kmh?: number | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy_m?: number | null
+          contacts_snapshot?: Json
+          created_at?: string
+          heading?: number | null
+          id?: string
+          kind?: string
+          latitude?: number | null
+          longitude?: number | null
+          message?: string | null
+          resolved_at?: string | null
+          ride_id?: string | null
+          share_token?: string
+          speed_kmh?: number | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_alerts_ride_id_fkey"
+            columns: ["ride_id"]
+            isOneToOne: false
+            referencedRelation: "rides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sos_pings: {
+        Row: {
+          accuracy_m: number | null
+          alert_id: string
+          created_at: string
+          heading: number | null
+          id: string
+          latitude: number
+          longitude: number
+          recorded_at: string
+          speed_kmh: number | null
+        }
+        Insert: {
+          accuracy_m?: number | null
+          alert_id: string
+          created_at?: string
+          heading?: number | null
+          id?: string
+          latitude: number
+          longitude: number
+          recorded_at?: string
+          speed_kmh?: number | null
+        }
+        Update: {
+          accuracy_m?: number | null
+          alert_id?: string
+          created_at?: string
+          heading?: number | null
+          id?: string
+          latitude?: number
+          longitude?: number
+          recorded_at?: string
+          speed_kmh?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sos_pings_alert_id_fkey"
+            columns: ["alert_id"]
+            isOneToOne: false
+            referencedRelation: "sos_alerts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscription_plans: {
         Row: {
           code: string
