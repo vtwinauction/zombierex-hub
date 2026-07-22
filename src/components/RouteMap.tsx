@@ -100,6 +100,7 @@ export function RouteMap({
       }
       drawPath(g);
       drawPois(g);
+      drawCommunity(g);
       drawUser(g);
     }).catch((e) => { console.error("[RouteMap] err", e); setErr(e.message); });
     return () => { cancelled = true; };
@@ -113,6 +114,12 @@ export function RouteMap({
     drawPois((window as any).google);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, pois]);
+
+  useEffect(() => {
+    if (!(window as any).google?.maps || !mapRef.current) return;
+    drawCommunity((window as any).google);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [communityPois]);
 
   // user location updates
   useEffect(() => {
