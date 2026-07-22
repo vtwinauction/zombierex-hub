@@ -29,7 +29,7 @@ function RidesList() {
       </div>
       <div className="mt-4 space-y-2 px-4">
         {data.length === 0 && (
-          <div className="border border-dashed border-white/15 p-8 text-center text-sm text-white/70">
+          <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink-3)" }}>
             No rides yet. Start Ride Mode to record your first one.
           </div>
         )}
