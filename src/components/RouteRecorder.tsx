@@ -3,6 +3,7 @@
  * Downsamples points (min 15m between samples) so payloads stay small.
  */
 import { useEffect, useRef, useState } from "react";
+import { SpeedoHUD } from "@/components/SpeedoHUD";
 
 type LatLng = { lat: number; lng: number };
 
