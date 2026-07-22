@@ -938,6 +938,51 @@ export type Database = {
           },
         ]
       }
+      community_pois: {
+        Row: {
+          address: string | null
+          created_at: string
+          created_by: string
+          id: string
+          is_hidden: boolean
+          kind: string
+          lat: number
+          lng: number
+          name: string
+          note: string | null
+          region: string | null
+          upvotes_count: number
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          is_hidden?: boolean
+          kind?: string
+          lat: number
+          lng: number
+          name: string
+          note?: string | null
+          region?: string | null
+          upvotes_count?: number
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          is_hidden?: boolean
+          kind?: string
+          lat?: number
+          lng?: number
+          name?: string
+          note?: string | null
+          region?: string | null
+          upvotes_count?: number
+        }
+        Relationships: []
+      }
       conversation_members: {
         Row: {
           conversation_id: string
