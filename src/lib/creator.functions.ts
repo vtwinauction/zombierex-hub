@@ -68,13 +68,10 @@ export const applyAsCreator = createServerFn({ method: "POST" })
 export const getMyCreatorProfile = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data, error } = await context.supabase
-      .from("creator_profiles")
-      .select("*")
-      .eq("user_id", context.userId)
-      .maybeSingle();
+    const { data, error } = await context.supabase.rpc("get_my_creator_profile");
     if (error) throw new Error(error.message);
-    return data;
+    const row = Array.isArray(data) ? data[0] : data;
+    return row ?? null;
   });
 
 export const updateMyCreatorProfile = createServerFn({ method: "POST" })
