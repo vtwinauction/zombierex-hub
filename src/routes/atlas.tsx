@@ -522,3 +522,74 @@ function BluetoothChip() {
     </button>
   );
 }
+
+/** Compact confirmation card shown after tapping the map in drop mode. */
+function DropPointCard({
+  point, onCancel, onSaved,
+}: { point: { lat: number; lng: number }; onCancel: () => void; onSaved: () => void }) {
+  const [name, setName] = useState("");
+  const [kind, setKind] = useState<typeof COMMUNITY_POI_KINDS[number]>("scenic");
+  const [note, setNote] = useState("");
+  const [saving, setSaving] = useState(false);
+  async function save() {
+    if (!name.trim()) { toast.error("Give it a name"); return; }
+    setSaving(true);
+    try {
+      await createCommunityPoi({ data: { name: name.trim(), kind, lat: point.lat, lng: point.lng, note: note.trim() || null } });
+      toast.success("Point shared");
+      onSaved();
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to save");
+    } finally { setSaving(false); }
+  }
+  return (
+    <div className="absolute inset-x-3 z-40 rounded-2xl border border-border bg-card p-4 shadow-2xl"
+      style={{ bottom: "calc(18svh + 16px)" }}>
+      <div className="flex items-center justify-between mb-2">
+        <p className="text-sm font-semibold text-foreground">Drop a community point</p>
+        <button onClick={onCancel} className="tap text-muted-foreground" aria-label="Cancel"><X size={16} /></button>
+      </div>
+      <p className="text-[11px] text-muted-foreground mono-caps mb-3">
+        {point.lat.toFixed(5)}, {point.lng.toFixed(5)}
+      </p>
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Point name (e.g. Sunset viewpoint)"
+        maxLength={120}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-foreground/40"
+      />
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {COMMUNITY_POI_KINDS.map((k) => (
+          <button
+            key={k}
+            onClick={() => setKind(k)}
+            className="tap rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wide"
+            style={{
+              background: kind === k ? "var(--color-neon)" : "hsl(var(--muted))",
+              color: kind === k ? "var(--color-obsidian)" : "hsl(var(--foreground))",
+              borderColor: kind === k ? "var(--color-neon)" : "hsl(var(--border))",
+            }}
+          >{k}</button>
+        ))}
+      </div>
+      <textarea
+        value={note}
+        onChange={(e) => setNote(e.target.value)}
+        placeholder="Optional note for riders…"
+        maxLength={600}
+        rows={2}
+        className="mt-2 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none resize-none focus:border-foreground/40"
+      />
+      <div className="mt-3 flex items-center justify-end gap-2">
+        <button onClick={onCancel} className="tap rounded-full border border-border px-3 py-1.5 text-xs font-semibold text-foreground">Cancel</button>
+        <button
+          onClick={save}
+          disabled={saving}
+          className="tap rounded-full px-4 py-1.5 text-xs font-bold shadow disabled:opacity-60"
+          style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}
+        >{saving ? "Saving…" : "Share point"}</button>
+      </div>
+    </div>
+  );
+}
