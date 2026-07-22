@@ -176,7 +176,10 @@ function CockpitPage() {
       )}
 
       {/* Bottom action rail — huge gloved-hand tap targets */}
-      <div className="absolute bottom-0 inset-x-0 p-3 grid grid-cols-5 gap-2 z-10">
+      <div
+        className="absolute bottom-0 inset-x-0 px-3 pt-3 grid grid-cols-5 gap-2 z-10"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
+      >
         <CockpitButton label="Nav" onClick={() => nav({ to: "/atlas/ride" })} icon={<Navigation size={24} />} tint={ink} border={dim} />
         <CockpitButton label="Fuel" onClick={() => nav({ to: "/atlas/fuel" })} icon={<Fuel size={24} />} tint={ink} border={dim} />
         <CockpitButton
