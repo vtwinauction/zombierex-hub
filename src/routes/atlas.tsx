@@ -1,13 +1,16 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { listPublicRoutes } from "@/lib/routes.functions";
+import { queryOptions, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { listPublicRoutes, listCommunityPois, createCommunityPoi, deleteCommunityPoi, COMMUNITY_POI_KINDS } from "@/lib/routes.functions";
 import { BottomNav } from "@/components/BottomNav";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { SpeedoHUD } from "@/components/SpeedoHUD";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
   Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
+  Gauge, Users, Trash2, AlertTriangle,
 } from "lucide-react";
+import { toast } from "sonner";
 
 const RouteMap = lazy(() => import("@/components/RouteMap"));
 
@@ -16,6 +19,12 @@ const atlasQuery = (filters: { difficulty?: string; surface?: string; region?: s
     queryKey: ["atlas", filters],
     queryFn: () => listPublicRoutes({ data: filters }),
   });
+
+const communityPoisQuery = queryOptions({
+  queryKey: ["community_pois"],
+  queryFn: () => listCommunityPois({ data: {} }),
+  staleTime: 30_000,
+});
 
 export const Route = createFileRoute("/atlas")({
   head: () => ({
