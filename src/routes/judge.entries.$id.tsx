@@ -39,10 +39,10 @@ function EntryReport() {
   const e = data.entry!;
   const media = data.media;
   const urls = data.mediaUrls;
-  const categories: Record<string, number> = e.category_scores ?? {};
-  const defects: any[] = e.defects ?? [];
-  const highlights: string[] = e.highlights ?? [];
-  const suggestions: string[] = e.suggestions ?? [];
+  const categories = (e.category_scores ?? {}) as Record<string, number>;
+  const defects = (e.defects ?? []) as any[];
+  const highlights = (e.highlights ?? []) as string[];
+  const suggestions = (e.suggestions ?? []) as string[];
 
   return (
     <div className="pb-24 print:pb-0">
