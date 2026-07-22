@@ -4284,16 +4284,13 @@ export type Database = {
     Views: {
       vendors_public: {
         Row: {
-          address_line1: string | null
           business_name: string | null
           business_type: string | null
           city: string | null
-          contact_channels: Json | null
           country: string | null
           cover_url: string | null
           created_at: string | null
           description: string | null
-          email: string | null
           followers_count: number | null
           gallery: Json | null
           id: string | null
@@ -4303,8 +4300,6 @@ export type Database = {
           lng: number | null
           logo_url: string | null
           operating_hours: Json | null
-          phone: string | null
-          portfolio: Json | null
           premium_until: string | null
           products_showcase: Json | null
           profile_views_count: number | null
@@ -4313,20 +4308,16 @@ export type Database = {
           services_showcase: Json | null
           slug: string | null
           socials: Json | null
-          verification_status: string | null
           website: string | null
         }
         Insert: {
-          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
-          contact_channels?: Json | null
           country?: string | null
           cover_url?: string | null
           created_at?: string | null
           description?: string | null
-          email?: string | null
           followers_count?: number | null
           gallery?: Json | null
           id?: string | null
@@ -4336,8 +4327,6 @@ export type Database = {
           lng?: number | null
           logo_url?: string | null
           operating_hours?: Json | null
-          phone?: string | null
-          portfolio?: Json | null
           premium_until?: string | null
           products_showcase?: Json | null
           profile_views_count?: number | null
@@ -4346,20 +4335,16 @@ export type Database = {
           services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
-          verification_status?: string | null
           website?: string | null
         }
         Update: {
-          address_line1?: string | null
           business_name?: string | null
           business_type?: string | null
           city?: string | null
-          contact_channels?: Json | null
           country?: string | null
           cover_url?: string | null
           created_at?: string | null
           description?: string | null
-          email?: string | null
           followers_count?: number | null
           gallery?: Json | null
           id?: string | null
@@ -4369,8 +4354,6 @@ export type Database = {
           lng?: number | null
           logo_url?: string | null
           operating_hours?: Json | null
-          phone?: string | null
-          portfolio?: Json | null
           premium_until?: string | null
           products_showcase?: Json | null
           profile_views_count?: number | null
@@ -4379,7 +4362,6 @@ export type Database = {
           services_showcase?: Json | null
           slug?: string | null
           socials?: Json | null
-          verification_status?: string | null
           website?: string | null
         }
         Relationships: []
@@ -4387,6 +4369,35 @@ export type Database = {
     }
     Functions: {
       calc_level: { Args: { _xp: number }; Returns: number }
+      get_sos_by_token: {
+        Args: { _token: string }
+        Returns: {
+          accuracy_m: number
+          contacts_snapshot: Json
+          created_at: string
+          heading: number
+          id: string
+          kind: string
+          latitude: number
+          longitude: number
+          message: string
+          resolved_at: string
+          speed_kmh: number
+          status: string
+        }[]
+      }
+      get_sos_pings_by_token: {
+        Args: { _limit?: number; _token: string }
+        Returns: {
+          accuracy_m: number
+          heading: number
+          id: string
+          latitude: number
+          longitude: number
+          recorded_at: string
+          speed_kmh: number
+        }[]
+      }
       has_any_role: {
         Args: {
           _roles: Database["public"]["Enums"]["app_role"][]
