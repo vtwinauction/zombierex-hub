@@ -66,12 +66,21 @@ function AtlasPage() {
   const [userHeading, setUserHeading] = useState<number | null>(null);
   const [geoStatus, setGeoStatus] = useState<"idle" | "locating" | "ok" | "denied" | "unsupported">("idle");
   const [recenterTick, setRecenterTick] = useState(0);
+  const [showSpeedo, setShowSpeedo] = useState(false);
+  const [showCommunity, setShowCommunity] = useState(true);
+  const [dropMode, setDropMode] = useState(false);
+  const [pendingDrop, setPendingDrop] = useState<{ lat: number; lng: number } | null>(null);
   const cardRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const nav = useNavigate();
   const hidden = useScrollDirection() === "down";
+  const qc = useQueryClient();
 
   const { data: routesRaw } = useSuspenseQuery(atlasQuery({ difficulty, surface }));
   const routes = (routesRaw ?? []) as any[];
+  const { data: communityRaw } = useQuery(communityPoisQuery);
+  const community = ((communityRaw ?? []) as any[]).filter((p) =>
+    category === "all" ? true : p.kind === category
+  );
 
   // Auto-request location on first mount, then watch for movement updates
   useEffect(() => {
