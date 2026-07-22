@@ -8,7 +8,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import {
   Search, SlidersHorizontal, Plus, Circle, MapPin, ChevronUp, ChevronDown, X, Bluetooth,
   Hotel, UtensilsCrossed, Fuel, Mountain, Wrench, Route as RouteIcon, Bookmark, Locate,
-  Gauge, Users, Trash2, AlertTriangle, Mic, Activity,
+  Gauge, Users, Trash2, AlertTriangle, Mic, Activity, LayoutDashboard,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -288,6 +288,11 @@ function AtlasPage() {
           className="tap grid h-12 w-12 place-items-center rounded-full shadow-lg font-black text-[10px] tracking-wider"
           style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
           RIDE
+        </Link>
+        <Link to="/atlas/cockpit" aria-label="Cockpit — full-screen HUD"
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: "var(--color-ink-0)" }}>
+          <LayoutDashboard size={20} strokeWidth={2.4} />
         </Link>
         <Link to="/atlas/group" aria-label="Live group ride"
           className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
