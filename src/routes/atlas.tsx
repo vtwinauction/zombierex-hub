@@ -294,6 +294,11 @@ function AtlasPage() {
           style={{ color: "var(--color-ink-0)" }}>
           <Users size={20} strokeWidth={2.4} />
         </Link>
+        <Link to="/atlas/fuel" aria-label="Fuel finder"
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: "var(--color-ink-0)" }}>
+          <Fuel size={20} strokeWidth={2.4} />
+        </Link>
         <Link to="/atlas/sos" aria-label="Emergency SOS"
           className="tap grid h-12 w-12 place-items-center rounded-full shadow-lg"
           style={{ background: "#dc2626", color: "#fff" }}>
