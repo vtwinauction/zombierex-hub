@@ -31,6 +31,8 @@ function loadGoogleMaps(): Promise<any> {
 export function RouteMap({
   path = [],
   pois = [],
+  communityPois = [],
+  onCommunityPoiClick,
   center,
   zoom = 8,
   interactive = true,
@@ -43,6 +45,8 @@ export function RouteMap({
 }: {
   path?: LatLng[];
   pois?: Poi[];
+  communityPois?: CommunityPoi[];
+  onCommunityPoiClick?: (p: CommunityPoi) => void;
   center?: LatLng;
   zoom?: number;
   interactive?: boolean;
