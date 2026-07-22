@@ -10,6 +10,12 @@ import {
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/admin/moderation")({
+  head: () => ({ meta: [
+    { title: "Moderation · ZOMBIEREX Admin" },
+    { name: "description", content: "Review reports, appeals, and enforcement actions." },
+    { property: "og:title", content: "Moderation · ZOMBIEREX Admin" },
+    { property: "og:description", content: "Review reports, appeals, and enforcement actions." },
+  ] }),
   component: ModerationPage,
 });
 

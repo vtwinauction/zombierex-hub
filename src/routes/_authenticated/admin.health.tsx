@@ -10,6 +10,12 @@ import {
 } from "@/lib/ops.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/health")({
+  head: () => ({ meta: [
+    { title: "Admin Health · ZOMBIEREX" },
+    { name: "description", content: "System health checks and platform diagnostics." },
+    { property: "og:title", content: "Admin Health · ZOMBIEREX" },
+    { property: "og:description", content: "System health checks and platform diagnostics." },
+  ] }),
   component: HealthPage,
 });
 

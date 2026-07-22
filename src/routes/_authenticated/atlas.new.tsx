@@ -10,6 +10,12 @@ type LatLng = { lat: number; lng: number };
 type Poi = { name: string; kind: string; lat: number; lng: number; address?: string | null; google_place_id?: string | null };
 
 export const Route = createFileRoute("/_authenticated/atlas/new")({
+  head: () => ({ meta: [
+    { title: "New Route · ZOMBIEREX Atlas" },
+    { name: "description", content: "Plan a new ride and share it with the community." },
+    { property: "og:title", content: "New Route · ZOMBIEREX Atlas" },
+    { property: "og:description", content: "Plan a new ride and share it with the community." },
+  ] }),
   component: PlanPage,
 });
 

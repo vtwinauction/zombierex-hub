@@ -8,6 +8,12 @@ import { createCommunityEvent, getCommunityBySlug } from "@/lib/communities.func
 const TYPES = ["meet","ride","drag","drift","track_day","off_road","bike_night","show","cars_coffee","rally","monster_truck"] as const;
 
 export const Route = createFileRoute("/_authenticated/communities/$slug/events/new")({
+  head: () => ({ meta: [
+    { title: "New Event · ZOMBIEREX Communities" },
+    { name: "description", content: "Schedule a ride, meet, or event for your community." },
+    { property: "og:title", content: "New Event · ZOMBIEREX Communities" },
+    { property: "og:description", content: "Schedule a ride, meet, or event for your community." },
+  ] }),
   component: NewEvent,
 });
 

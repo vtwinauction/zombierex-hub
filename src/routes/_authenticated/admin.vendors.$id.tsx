@@ -8,6 +8,12 @@ const vendorQuery = (id: string) =>
   queryOptions({ queryKey: ["admin-vendor", id], queryFn: () => adminGetVendor({ data: { id } }) });
 
 export const Route = createFileRoute("/_authenticated/admin/vendors/$id")({
+  head: () => ({ meta: [
+    { title: "Vendor Detail · ZOMBIEREX Admin" },
+    { name: "description", content: "Review vendor profile, plans, and verification." },
+    { property: "og:title", content: "Vendor Detail · ZOMBIEREX Admin" },
+    { property: "og:description", content: "Review vendor profile, plans, and verification." },
+  ] }),
   loader: ({ context, params }) => context.queryClient.ensureQueryData(vendorQuery(params.id)),
   component: AdminVendorDetail,
 });

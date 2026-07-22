@@ -6,6 +6,12 @@ import { StatusBar } from "@/components/StatusBar";
 import { createChallenge, getCommunityBySlug } from "@/lib/communities.functions";
 
 export const Route = createFileRoute("/_authenticated/communities/$slug/challenges/new")({
+  head: () => ({ meta: [
+    { title: "New Challenge · ZOMBIEREX Communities" },
+    { name: "description", content: "Launch a weekly community challenge for your club." },
+    { property: "og:title", content: "New Challenge · ZOMBIEREX Communities" },
+    { property: "og:description", content: "Launch a weekly community challenge for your club." },
+  ] }),
   component: NewChallenge,
 });
 

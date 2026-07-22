@@ -6,6 +6,12 @@ import { StatusBar } from "@/components/StatusBar";
 import { createCommunityPost, getCommunityBySlug } from "@/lib/communities.functions";
 
 export const Route = createFileRoute("/_authenticated/communities/$slug/post/new")({
+  head: () => ({ meta: [
+    { title: "New Post · ZOMBIEREX Communities" },
+    { name: "description", content: "Share an update with your community." },
+    { property: "og:title", content: "New Post · ZOMBIEREX Communities" },
+    { property: "og:description", content: "Share an update with your community." },
+  ] }),
   component: NewPost,
 });
 

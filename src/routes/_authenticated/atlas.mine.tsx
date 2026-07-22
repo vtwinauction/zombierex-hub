@@ -16,6 +16,12 @@ const savedQuery = queryOptions({
 });
 
 export const Route = createFileRoute("/_authenticated/atlas/mine")({
+  head: () => ({ meta: [
+    { title: "My Routes · ZOMBIEREX Atlas" },
+    { name: "description", content: "Routes you've created and saved for future rides." },
+    { property: "og:title", content: "My Routes · ZOMBIEREX Atlas" },
+    { property: "og:description", content: "Routes you've created and saved for future rides." },
+  ] }),
   component: MinePage,
 });
 
@@ -47,7 +53,7 @@ function SavedList() {
   return <div className="grid gap-3">{data.map((r: any) => <RouteCard key={r.id} route={r} />)}</div>;
 }
 function Empty({ text }: { text: string }) {
-  return <div className="border border-dashed border-white/15 p-8 text-center text-white/70 text-sm">{text}</div>;
+  return <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink-3)" }}>{text}</div>;
 }
 function Tab({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
   return (
