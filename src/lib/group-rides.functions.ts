@@ -59,18 +59,15 @@ export const joinGroupRide = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const supabase = context.supabase;
     const code = data.code.toUpperCase();
-    const { data: ride, error } = await supabase
-      .from("group_rides")
-      .select("*")
-      .eq("join_code", code)
-      .eq("status", "active")
-      .maybeSingle();
-    if (error) throw error;
-    if (!ride) throw new Error("Ride not found or ended.");
+    const { data: found, error: rpcErr } = await supabase.rpc("find_group_ride_by_code", { _code: code });
+    if (rpcErr) throw rpcErr;
+    const match = Array.isArray(found) ? found[0] : found;
+    if (!match) throw new Error("Ride not found or ended.");
     await supabase
       .from("group_ride_members")
-      .upsert({ group_ride_id: ride.id, user_id: context.userId, role: "rider" }, { onConflict: "group_ride_id,user_id" });
-    return ride;
+      .upsert({ group_ride_id: match.id, user_id: context.userId, role: "rider" }, { onConflict: "group_ride_id,user_id" });
+    const { data: ride } = await supabase.from("group_rides").select("*").eq("id", match.id).maybeSingle();
+    return ride ?? match;
   });
 
 export const getGroupRide = createServerFn({ method: "GET" })
