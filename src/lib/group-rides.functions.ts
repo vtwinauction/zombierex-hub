@@ -100,7 +100,7 @@ export const getGroupRide = createServerFn({ method: "GET" })
       .limit(500);
     const latest: Record<string, any> = {};
     for (const p of pings ?? []) if (!latest[p.user_id]) latest[p.user_id] = p;
-    return { ride, members: members ?? [], latest };
+    return { ride, members, latest };
   });
 
 export const sendGroupPing = createServerFn({ method: "POST" })
