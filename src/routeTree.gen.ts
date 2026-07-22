@@ -36,6 +36,7 @@ import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/m
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
+import { Route as AuthenticatedRidesIndexRouteImport } from './routes/_authenticated/rides.index'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business.index'
 import { Route as AuthenticatedAdsIndexRouteImport } from './routes/_authenticated/ads.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -43,6 +44,7 @@ import { Route as MarketplaceSellerIdRouteImport } from './routes/marketplace.se
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
+import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticated/rides.$id'
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
 import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/_authenticated/marketplace.dashboard'
@@ -55,6 +57,7 @@ import { Route as AuthenticatedCreatorApplyRouteImport } from './routes/_authent
 import { Route as AuthenticatedCommunitiesCreateRouteImport } from './routes/_authenticated/communities.create'
 import { Route as AuthenticatedCheckoutPaymentIdRouteImport } from './routes/_authenticated/checkout.$paymentId'
 import { Route as AuthenticatedBusinessShowcaseRouteImport } from './routes/_authenticated/business.showcase'
+import { Route as AuthenticatedAtlasRideRouteImport } from './routes/_authenticated/atlas.ride'
 import { Route as AuthenticatedAtlasRecordRouteImport } from './routes/_authenticated/atlas.record'
 import { Route as AuthenticatedAtlasNewRouteImport } from './routes/_authenticated/atlas.new'
 import { Route as AuthenticatedAtlasMineRouteImport } from './routes/_authenticated/atlas.mine'
@@ -205,6 +208,11 @@ const AuthenticatedVendorIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedRidesIndexRoute = AuthenticatedRidesIndexRouteImport.update({
+  id: '/rides/',
+  path: '/rides/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedBusinessIndexRoute =
   AuthenticatedBusinessIndexRouteImport.update({
     id: '/business/',
@@ -243,6 +251,11 @@ const AuthenticatedVendorApplyRoute =
     path: '/apply',
     getParentRoute: () => AuthenticatedVendorRoute,
   } as any)
+const AuthenticatedRidesIdRoute = AuthenticatedRidesIdRouteImport.update({
+  id: '/rides/$id',
+  path: '/rides/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPostNewRoute = AuthenticatedPostNewRouteImport.update({
   id: '/post/new',
   path: '/post/new',
@@ -312,6 +325,11 @@ const AuthenticatedBusinessShowcaseRoute =
     path: '/business/showcase',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAtlasRideRoute = AuthenticatedAtlasRideRouteImport.update({
+  id: '/atlas/ride',
+  path: '/atlas/ride',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAtlasRecordRoute =
   AuthenticatedAtlasRecordRouteImport.update({
     id: '/atlas/record',
@@ -427,6 +445,7 @@ export interface FileRoutesByFullPath {
   '/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
+  '/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -439,6 +458,7 @@ export interface FileRoutesByFullPath {
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
+  '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -446,6 +466,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/ads/': typeof AuthenticatedAdsIndexRoute
   '/business/': typeof AuthenticatedBusinessIndexRoute
+  '/rides/': typeof AuthenticatedRidesIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
@@ -486,6 +507,7 @@ export interface FileRoutesByTo {
   '/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/atlas/record': typeof AuthenticatedAtlasRecordRoute
+  '/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -498,6 +520,7 @@ export interface FileRoutesByTo {
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/post/new': typeof AuthenticatedPostNewRoute
+  '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -505,6 +528,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/ads': typeof AuthenticatedAdsIndexRoute
   '/business': typeof AuthenticatedBusinessIndexRoute
+  '/rides': typeof AuthenticatedRidesIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
@@ -549,6 +573,7 @@ export interface FileRoutesById {
   '/_authenticated/atlas/mine': typeof AuthenticatedAtlasMineRoute
   '/_authenticated/atlas/new': typeof AuthenticatedAtlasNewRoute
   '/_authenticated/atlas/record': typeof AuthenticatedAtlasRecordRoute
+  '/_authenticated/atlas/ride': typeof AuthenticatedAtlasRideRoute
   '/_authenticated/business/showcase': typeof AuthenticatedBusinessShowcaseRoute
   '/_authenticated/checkout/$paymentId': typeof AuthenticatedCheckoutPaymentIdRoute
   '/_authenticated/communities/create': typeof AuthenticatedCommunitiesCreateRoute
@@ -561,6 +586,7 @@ export interface FileRoutesById {
   '/_authenticated/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
+  '/_authenticated/rides/$id': typeof AuthenticatedRidesIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -568,6 +594,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/ads/': typeof AuthenticatedAdsIndexRoute
   '/_authenticated/business/': typeof AuthenticatedBusinessIndexRoute
+  '/_authenticated/rides/': typeof AuthenticatedRidesIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
@@ -612,6 +639,7 @@ export interface FileRouteTypes {
     | '/atlas/mine'
     | '/atlas/new'
     | '/atlas/record'
+    | '/atlas/ride'
     | '/business/showcase'
     | '/checkout/$paymentId'
     | '/communities/create'
@@ -624,6 +652,7 @@ export interface FileRouteTypes {
     | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
+    | '/rides/$id'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -631,6 +660,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ads/'
     | '/business/'
+    | '/rides/'
     | '/vendor/'
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
@@ -671,6 +701,7 @@ export interface FileRouteTypes {
     | '/atlas/mine'
     | '/atlas/new'
     | '/atlas/record'
+    | '/atlas/ride'
     | '/business/showcase'
     | '/checkout/$paymentId'
     | '/communities/create'
@@ -683,6 +714,7 @@ export interface FileRouteTypes {
     | '/marketplace/dashboard'
     | '/marketplace/new'
     | '/post/new'
+    | '/rides/$id'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -690,6 +722,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ads'
     | '/business'
+    | '/rides'
     | '/vendor'
     | '/admin/vendors/$id'
     | '/communities/$slug/manage'
@@ -733,6 +766,7 @@ export interface FileRouteTypes {
     | '/_authenticated/atlas/mine'
     | '/_authenticated/atlas/new'
     | '/_authenticated/atlas/record'
+    | '/_authenticated/atlas/ride'
     | '/_authenticated/business/showcase'
     | '/_authenticated/checkout/$paymentId'
     | '/_authenticated/communities/create'
@@ -745,6 +779,7 @@ export interface FileRouteTypes {
     | '/_authenticated/marketplace/dashboard'
     | '/_authenticated/marketplace/new'
     | '/_authenticated/post/new'
+    | '/_authenticated/rides/$id'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
@@ -752,6 +787,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/ads/'
     | '/_authenticated/business/'
+    | '/_authenticated/rides/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
     | '/_authenticated/communities/$slug/manage'
@@ -974,6 +1010,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVendorIndexRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
     }
+    '/_authenticated/rides/': {
+      id: '/_authenticated/rides/'
+      path: '/rides'
+      fullPath: '/rides/'
+      preLoaderRoute: typeof AuthenticatedRidesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/': {
       id: '/_authenticated/business/'
       path: '/business'
@@ -1022,6 +1065,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/vendor/apply'
       preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
+    }
+    '/_authenticated/rides/$id': {
+      id: '/_authenticated/rides/$id'
+      path: '/rides/$id'
+      fullPath: '/rides/$id'
+      preLoaderRoute: typeof AuthenticatedRidesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/post/new': {
       id: '/_authenticated/post/new'
@@ -1105,6 +1155,13 @@ declare module '@tanstack/react-router' {
       path: '/business/showcase'
       fullPath: '/business/showcase'
       preLoaderRoute: typeof AuthenticatedBusinessShowcaseRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/atlas/ride': {
+      id: '/_authenticated/atlas/ride'
+      path: '/atlas/ride'
+      fullPath: '/atlas/ride'
+      preLoaderRoute: typeof AuthenticatedAtlasRideRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/atlas/record': {
@@ -1267,6 +1324,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAtlasMineRoute: typeof AuthenticatedAtlasMineRoute
   AuthenticatedAtlasNewRoute: typeof AuthenticatedAtlasNewRoute
   AuthenticatedAtlasRecordRoute: typeof AuthenticatedAtlasRecordRoute
+  AuthenticatedAtlasRideRoute: typeof AuthenticatedAtlasRideRoute
   AuthenticatedBusinessShowcaseRoute: typeof AuthenticatedBusinessShowcaseRoute
   AuthenticatedCheckoutPaymentIdRoute: typeof AuthenticatedCheckoutPaymentIdRoute
   AuthenticatedCommunitiesCreateRoute: typeof AuthenticatedCommunitiesCreateRoute
@@ -1279,8 +1337,10 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMarketplaceDashboardRoute: typeof AuthenticatedMarketplaceDashboardRoute
   AuthenticatedMarketplaceNewRoute: typeof AuthenticatedMarketplaceNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
+  AuthenticatedRidesIdRoute: typeof AuthenticatedRidesIdRoute
   AuthenticatedAdsIndexRoute: typeof AuthenticatedAdsIndexRoute
   AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
+  AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -1300,6 +1360,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtlasMineRoute: AuthenticatedAtlasMineRoute,
   AuthenticatedAtlasNewRoute: AuthenticatedAtlasNewRoute,
   AuthenticatedAtlasRecordRoute: AuthenticatedAtlasRecordRoute,
+  AuthenticatedAtlasRideRoute: AuthenticatedAtlasRideRoute,
   AuthenticatedBusinessShowcaseRoute: AuthenticatedBusinessShowcaseRoute,
   AuthenticatedCheckoutPaymentIdRoute: AuthenticatedCheckoutPaymentIdRoute,
   AuthenticatedCommunitiesCreateRoute: AuthenticatedCommunitiesCreateRoute,
@@ -1313,8 +1374,10 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMarketplaceDashboardRoute,
   AuthenticatedMarketplaceNewRoute: AuthenticatedMarketplaceNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
+  AuthenticatedRidesIdRoute: AuthenticatedRidesIdRoute,
   AuthenticatedAdsIndexRoute: AuthenticatedAdsIndexRoute,
   AuthenticatedBusinessIndexRoute: AuthenticatedBusinessIndexRoute,
+  AuthenticatedRidesIndexRoute: AuthenticatedRidesIndexRoute,
   AuthenticatedCommunitiesSlugManageRoute:
     AuthenticatedCommunitiesSlugManageRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
@@ -1388,13 +1451,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

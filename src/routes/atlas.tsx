@@ -284,9 +284,14 @@ function AtlasPage() {
       {/* RIGHT-SIDE FLOATING ACTIONS */}
       <div className="absolute right-3 z-20 flex flex-col gap-2"
         style={{ top: showFilters ? "260px" : "128px" }}>
-        <Link to="/atlas/new" aria-label="Plan route"
-          className="tap grid h-12 w-12 place-items-center rounded-full shadow-lg"
+        <Link to="/atlas/ride" aria-label="Ride Mode — turn-by-turn navigation"
+          className="tap grid h-12 w-12 place-items-center rounded-full shadow-lg font-black text-[10px] tracking-wider"
           style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
+          RIDE
+        </Link>
+        <Link to="/atlas/new" aria-label="Plan route"
+          className="tap grid h-12 w-12 place-items-center rounded-full bg-card border border-border shadow-lg"
+          style={{ color: "hsl(var(--foreground))" }}>
           <Plus size={22} strokeWidth={2.5} />
         </Link>
         <Link to="/atlas/record" aria-label="Record ride"

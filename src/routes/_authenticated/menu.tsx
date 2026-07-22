@@ -36,6 +36,16 @@ const SECTIONS: { title: string; items: Item[] }[] = [
     ],
   },
   {
+    title: "Ride",
+    items: [
+      { to: "/atlas/ride", label: "Ride Mode", hint: "Turn-by-turn · voice · HUD" },
+      { to: "/rides", label: "My rides", hint: "History · replay · GPX" },
+      { to: "/atlas", label: "Atlas map", hint: "Plan · POIs · community" },
+      { to: "/atlas/record", label: "Record route", hint: "Publish to the Atlas" },
+      { to: "/atlas/mine", label: "My routes" },
+    ],
+  },
+  {
     title: "AI · REX",
     items: [
       { to: "/assistant", label: "Ask REX", hint: "AI companion · chat" },
