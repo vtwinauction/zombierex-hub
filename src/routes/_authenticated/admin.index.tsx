@@ -2,6 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
+  head: () => ({ meta: [
+    { title: "Admin Console · ZOMBIEREX" },
+    { name: "description", content: "Moderation, vendors, health, and platform ops." },
+    { property: "og:title", content: "Admin Console · ZOMBIEREX" },
+    { property: "og:description", content: "Moderation, vendors, health, and platform ops." },
+  ] }),
   component: AdminOverview,
 });
 

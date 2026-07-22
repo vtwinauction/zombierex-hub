@@ -8,6 +8,12 @@ const statsQuery = queryOptions({
 });
 
 export const Route = createFileRoute("/_authenticated/vendor/")({
+  head: () => ({ meta: [
+    { title: "Vendor Console · ZOMBIEREX" },
+    { name: "description", content: "Manage your storefront, listings, and subscriptions." },
+    { property: "og:title", content: "Vendor Console · ZOMBIEREX" },
+    { property: "og:description", content: "Manage your storefront, listings, and subscriptions." },
+  ] }),
   loader: ({ context }) => context.queryClient.ensureQueryData(statsQuery),
   component: VendorOverview,
 });

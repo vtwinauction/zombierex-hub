@@ -16,6 +16,12 @@ const savedQuery = queryOptions({
 });
 
 export const Route = createFileRoute("/_authenticated/atlas/mine")({
+  head: () => ({ meta: [
+    { title: "My Routes · ZOMBIEREX Atlas" },
+    { name: "description", content: "Routes you've created and saved for future rides." },
+    { property: "og:title", content: "My Routes · ZOMBIEREX Atlas" },
+    { property: "og:description", content: "Routes you've created and saved for future rides." },
+  ] }),
   component: MinePage,
 });
 
