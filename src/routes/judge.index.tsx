@@ -43,7 +43,7 @@ function JudgeHub() {
 
         <div className="mt-4 flex gap-2">
           <Link to="/judge/leaderboards" className="chip" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}>Leaderboards</Link>
-          <Link to="/_authenticated/judge/mine" params={{}} className="chip" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}>My entries</Link>
+          <Link to="/judge/mine" className="chip" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}>My entries</Link>
         </div>
       </header>
 
