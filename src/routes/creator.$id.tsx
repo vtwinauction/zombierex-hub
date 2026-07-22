@@ -53,7 +53,7 @@ function CreatorPublicPage() {
   }
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="07" section="CREATOR" />
 
       {isLoading && <p className="px-4 pt-6 mono-tag" style={{ color: "var(--color-titanium)" }}>LOADING…</p>}
@@ -180,7 +180,7 @@ function CreatorPublicPage() {
 
 function MiniStat({ label, value }: { label: string; value: any }) {
   return (
-    <div className="p-3 text-center" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="p-3 text-center">
       <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{label}</p>
       <p className="mono-num mt-1 text-sm font-bold" style={{ color: "var(--color-ink)" }}>{value}</p>
     </div>

@@ -18,7 +18,7 @@ function CollabsPage() {
   const { data, isLoading } = useQuery({ queryKey: ["collab-inbox", status], queryFn: () => list({ data: { status } }) });
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="07" section="CREATOR · COLLAB INBOX" />
       <div className="px-4 pt-6">
         <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{(data ?? []).length} MESSAGES</p>

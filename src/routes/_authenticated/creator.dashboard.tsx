@@ -22,7 +22,7 @@ function DashboardPage() {
   const { data: tiers } = useQuery({ queryKey: ["my-tiers"], queryFn: () => listTiers() });
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="07" section="CREATOR · DASHBOARD" />
 
       <div className="flex items-end justify-between px-4 pt-6">
@@ -125,7 +125,7 @@ function DashboardPage() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="p-4" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="p-4">
       <p className="mono-tag" style={{ color: "var(--color-titanium)" }}>{label}</p>
       <p className="mono-num mt-1 text-xl font-bold" style={{ color: "var(--color-ink)" }}>{value}</p>
     </div>

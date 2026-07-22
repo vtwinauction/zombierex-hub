@@ -63,7 +63,7 @@ function ListingDetail() {
   const isMine = false; // simplified; owner actions gated by RLS anyway
 
   return (
-    <div className="pb-32" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-32">
       <StatusBar index={l.category?.slice(0,3).toUpperCase() ?? "LST"} section={String(l.title).toUpperCase().slice(0, 24)} />
 
       {/* Gallery */}

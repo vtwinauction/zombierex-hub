@@ -70,7 +70,7 @@ function ApplyPage() {
   }
 
   return (
-    <div className="pb-24" style={{ background: "var(--color-obsidian, #0a0a0a)" }}>
+    <div className="pb-24">
       <StatusBar index="07" section="CREATOR · APPLY" />
 
       <div className="px-4 pt-6">
