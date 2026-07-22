@@ -10,11 +10,13 @@ type Poi = { lat: number; lng: number; name?: string; kind?: string };
 type CommunityPoi = { id?: string; lat: number; lng: number; name?: string; kind?: string };
 
 let loaderPromise: Promise<any> | null = null;
+const GOOGLE_MAPS_BROWSER_KEY_FALLBACK = "AIzaSyBmvJph4LmrbtW7skeczzpBIyb9WWzFKo4";
+
 function loadGoogleMaps(): Promise<any> {
   if (typeof window === "undefined") return Promise.reject(new Error("SSR"));
   if ((window as any).google?.maps) return Promise.resolve((window as any).google);
   if (loaderPromise) return loaderPromise;
-  const key = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string;
+  const key = (import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_BROWSER_KEY as string) || GOOGLE_MAPS_BROWSER_KEY_FALLBACK;
   const channel = (import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_MAPS_TRACKING_ID as string) || "";
   if (!key) return Promise.reject(new Error("Missing maps key"));
   loaderPromise = new Promise((resolve, reject) => {
