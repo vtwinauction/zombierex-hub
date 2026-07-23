@@ -13,6 +13,8 @@ import { supabase } from "@/integrations/supabase/client";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { BottomNav } from "@/components/BottomNav";
+import { OwnerBroadcastBanner } from "@/components/OwnerBroadcastBanner";
+
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 
 function NotFoundComponent() {
