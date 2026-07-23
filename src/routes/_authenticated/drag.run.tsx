@@ -225,6 +225,41 @@ function Select({ label, value, onChange, options }: { label: string; value: str
   );
 }
 
+function CoachRow({ label, text }: { label: string; text?: string }) {
+  if (!text) return null;
+  return (
+    <div>
+      <span className="mono-tag mr-2" style={{ color: "var(--color-silver)", fontSize: 9 }}>{label.toUpperCase()}</span>
+      <span>{text}</span>
+    </div>
+  );
+}
+
+function LiveGPSHUD({ kmh, recording, armed, points }: { kmh: number; recording: boolean; armed: boolean; points: number }) {
+  const state = recording ? "REC" : armed ? "ARMED" : "IDLE";
+  const stateColor = recording ? "var(--color-heat, #ff3b30)" : armed ? "var(--color-neon)" : "var(--color-silver)";
+  return (
+    <div className="mt-4 rounded-2xl border p-5"
+      style={{ borderColor: "var(--color-hair-strong)", background: "linear-gradient(180deg, #0a0a0a, #141414)" }}>
+      <div className="flex items-center justify-between">
+        <span className="mono-caps text-[10px] font-black" style={{ color: stateColor }}>
+          ● {state} · GPS
+        </span>
+        <span className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 10 }}>{points} pts</span>
+      </div>
+      <div className="mt-2 flex items-end justify-center gap-2">
+        <span className="mono-num font-black tabular-nums" style={{ fontSize: 96, lineHeight: 1, color: "#fff", textShadow: "0 0 24px rgba(0,200,83,0.35)" }}>
+          {kmh.toFixed(0)}
+        </span>
+        <span className="mono-caps pb-3" style={{ color: "var(--color-silver)", fontSize: 12, letterSpacing: "0.3em" }}>km/h</span>
+      </div>
+      <div className="mt-2 h-1.5 w-full overflow-hidden rounded" style={{ background: "rgba(255,255,255,0.08)" }}>
+        <div style={{ width: `${Math.min(100, (kmh / 300) * 100)}%`, height: "100%", background: "var(--color-neon)", transition: "width 200ms ease-out" }} />
+      </div>
+    </div>
+  );
+}
+
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded border border-white/10 bg-graphite p-2">

@@ -38,6 +38,7 @@ const TRENDING_TAGS = [
 
 const QUICK_ACTIONS = [
   { to: "/atlas" as const,        label: "Atlas",    icon: Map },
+  { to: "/drag" as const,         label: "Drag",     icon: Gauge },
   { to: "/marketplace" as const,  label: "Vault",    icon: Store },
   { to: "/events" as const,       label: "Events",   icon: CalendarDays },
   { to: "/communities" as const,  label: "Crews",    icon: Users },
