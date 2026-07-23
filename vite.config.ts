@@ -18,6 +18,9 @@ const supabasePublishableKey =
 
 export default defineConfig({
   vite: {
+    optimizeDeps: {
+      disabled: true,
+    },
     define: {
       "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
       "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(supabasePublishableKey),
