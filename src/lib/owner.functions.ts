@@ -375,8 +375,9 @@ export const setPostHidden = createServerFn({ method: "POST" })
   .validator((raw) => z.object({ postId: z.string().uuid(), hidden: z.boolean() }).parse(raw))
   .handler(async ({ data, context }) => {
     await assertOwner(context.supabase, context.userId);
-    const { data: before } = await context.supabase.from("posts").select("id, is_hidden").eq("id", data.postId).maybeSingle();
-    const { error } = await context.supabase.from("posts").update({ is_hidden: data.hidden }).eq("id", data.postId);
+    const { data: before } = await (context.supabase as any).from("posts").select("id, is_hidden").eq("id", data.postId).maybeSingle();
+    const { error } = await (context.supabase as any).from("posts").update({ is_hidden: data.hidden }).eq("id", data.postId);
+
     if (error) throw new Error(error.message);
     await audit(context.supabase, context.userId, data.hidden ? "post.hide" : "post.restore", "post", data.postId, before, { is_hidden: data.hidden });
     return { ok: true };
