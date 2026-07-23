@@ -39,22 +39,25 @@ export const Route = createFileRoute("/_authenticated")({
 });
 
 function AuthGate() {
-  const [state, setState] = React.useState<"checking" | "ok" | "redirecting">(
-    typeof window === "undefined" ? "checking" : (hasLocalSession() ? "ok" : "redirecting"),
-  );
+  const [state, setState] = React.useState<"checking" | "ok" | "redirecting">("checking");
 
   React.useEffect(() => {
-    if (state === "redirecting") {
-      window.location.replace("/auth");
-    }
+    const ok = hasLocalSession();
+    console.log("[AuthGate] hasLocalSession=", ok, "key=", STORAGE_KEY);
+    if (ok) { setState("ok"); return; }
+    // Give supabase-js a brief moment to hydrate the token on cold starts.
+    const t = setTimeout(() => {
+      const ok2 = hasLocalSession();
+      console.log("[AuthGate] retry hasLocalSession=", ok2);
+      setState(ok2 ? "ok" : "redirecting");
+    }, 400);
+    return () => clearTimeout(t);
+  }, []);
+
+  React.useEffect(() => {
+    if (state === "redirecting") window.location.replace("/auth");
   }, [state]);
 
-  // Never hangs: client-side sync check on first render.
-  React.useEffect(() => {
-    if (state === "checking" && typeof window !== "undefined") {
-      setState(hasLocalSession() ? "ok" : "redirecting");
-    }
-  }, [state]);
 
   if (state === "ok") return <Outlet />;
   return (
