@@ -116,13 +116,8 @@ function NewRun() {
             <p className="mt-1 text-sm" style={{ color: "var(--color-ink-3)" }}>
               Arm the timer, then launch. Run auto-detects on 8 km/h and auto-stops when you coast down.
             </p>
-            <div className="mt-4 flex justify-center"><SpeedoHUD unit="kmh" /></div>
+            <LiveGPSHUD kmh={rec.liveKmh} recording={rec.recording} armed={rec.armed} points={rec.points.length} />
             {rec.error && <div className="mt-3 border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-200">{rec.error}</div>}
-            <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-              <Stat label="STATE" value={rec.recording ? "REC" : rec.armed ? "ARMED" : "IDLE"} />
-              <Stat label="POINTS" value={String(rec.points.length)} />
-              <Stat label="LIVE" value={`${rec.liveKmh.toFixed(0)} km/h`} />
-            </div>
             <div className="mt-4 flex gap-2">
               {!rec.armed && (
                 <button onClick={rec.arm} className="tap flex-1 rounded-lg py-3 mono-caps text-sm font-black" style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
@@ -167,6 +162,33 @@ function NewRun() {
               <Split label="1/4 mile" value={result.computed.quarter_mile_s} unit="s" />
               <Split label="Top speed" value={result.computed.top_speed_kmh} unit="km/h" />
             </div>
+
+            {/* AI Coach card */}
+            <div className="mt-6 rounded-lg border p-4" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
+              <div className="flex items-center justify-between">
+                <p className="mono-caps text-[10px] font-black" style={{ color: "var(--color-neon)" }}>◆ AI COACH · REX</p>
+                {coaching?.grade && (
+                  <span className="mono-num text-xl font-black" style={{ color: "var(--color-neon)" }}>{coaching.grade}</span>
+                )}
+              </div>
+              {coachLoading && <p className="mt-2 text-sm" style={{ color: "var(--color-ink-3)" }}>Analyzing your run…</p>}
+              {!coachLoading && !coaching && <p className="mt-2 text-sm" style={{ color: "var(--color-ink-3)" }}>Coaching unavailable right now.</p>}
+              {coaching && (
+                <div className="mt-2 space-y-2 text-[13px]" style={{ color: "var(--color-ink)" }}>
+                  <p className="serif text-base italic">{coaching.headline}</p>
+                  <CoachRow label="Launch" text={coaching.launch} />
+                  <CoachRow label="Shift" text={coaching.shift} />
+                  <CoachRow label="Weakness" text={coaching.weakness} />
+                  <CoachRow label="Next target" text={coaching.next_target} />
+                  {Array.isArray(coaching.tips) && coaching.tips.length > 0 && (
+                    <ul className="mt-2 list-disc pl-5" style={{ color: "var(--color-ink-2)" }}>
+                      {coaching.tips.map((t: string, i: number) => <li key={i}>{t}</li>)}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
+
             <button onClick={() => nav({ to: "/drag/$id", params: { id: result.id } })}
               className="tap mt-6 w-full rounded-lg py-3 mono-caps text-sm font-black"
               style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
