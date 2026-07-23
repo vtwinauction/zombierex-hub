@@ -117,14 +117,12 @@ export function useChristmasTree(mode: TreeMode = "sportsman") {
     setState((s) => {
       if (s.launchedAt != null) return s;
       const now = performance.now();
-      // Before amber sequence began → definitely foul
-      const isFoul = s.greenAt == null;
-      if (isFoul) {
+      const green = s.greenAt;
+      if (green == null) {
         beep(220, 0.6, 0.24);
         return { ...s, phase: "foul", launchedAt: now, reactionMs: null, foul: true };
       }
-      const rt = now - s.greenAt;
-      return { ...s, launchedAt: now, reactionMs: rt, foul: false };
+      return { ...s, launchedAt: now, reactionMs: now - green, foul: false };
     });
   }, []);
 
