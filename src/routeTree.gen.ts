@@ -34,6 +34,7 @@ import { Route as AuthenticatedVendorRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticated/security'
 import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticated/rewards'
+import { Route as AuthenticatedOwnerRouteImport } from './routes/_authenticated/owner'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
@@ -215,6 +216,11 @@ const AuthenticatedSecurityRoute = AuthenticatedSecurityRouteImport.update({
 const AuthenticatedRewardsRoute = AuthenticatedRewardsRouteImport.update({
   id: '/rewards',
   path: '/rewards',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedOwnerRoute = AuthenticatedOwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
@@ -554,6 +560,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/security': typeof AuthenticatedSecurityRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -637,6 +644,7 @@ export interface FileRoutesByTo {
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/security': typeof AuthenticatedSecurityRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -722,6 +730,7 @@ export interface FileRoutesById {
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/owner': typeof AuthenticatedOwnerRoute
   '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
   '/_authenticated/security': typeof AuthenticatedSecurityRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
@@ -808,6 +817,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/menu'
     | '/onboarding'
+    | '/owner'
     | '/rewards'
     | '/security'
     | '/settings'
@@ -891,6 +901,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/menu'
     | '/onboarding'
+    | '/owner'
     | '/rewards'
     | '/security'
     | '/settings'
@@ -975,6 +986,7 @@ export interface FileRouteTypes {
     | '/_authenticated/assistant'
     | '/_authenticated/menu'
     | '/_authenticated/onboarding'
+    | '/_authenticated/owner'
     | '/_authenticated/rewards'
     | '/_authenticated/security'
     | '/_authenticated/settings'
@@ -1244,6 +1256,13 @@ declare module '@tanstack/react-router' {
       path: '/rewards'
       fullPath: '/rewards'
       preLoaderRoute: typeof AuthenticatedRewardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/owner': {
+      id: '/_authenticated/owner'
+      path: '/owner'
+      fullPath: '/owner'
+      preLoaderRoute: typeof AuthenticatedOwnerRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/onboarding': {
@@ -1708,6 +1727,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRoute
   AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
   AuthenticatedSecurityRoute: typeof AuthenticatedSecurityRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -1758,6 +1778,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedOwnerRoute: AuthenticatedOwnerRoute,
   AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
   AuthenticatedSecurityRoute: AuthenticatedSecurityRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
