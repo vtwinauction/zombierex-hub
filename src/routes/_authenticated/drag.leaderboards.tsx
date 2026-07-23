@@ -41,6 +41,7 @@ function Board() {
   const { data } = useSuspenseQuery(
     queryOptions({ queryKey: ["drag", "board", search.kind, search.metric], queryFn: () => listDragLeaderboard({ data: search }) }),
   );
+  const rows = data as any[];
 
   return (
     <div className="min-h-svh pb-24">
@@ -49,7 +50,7 @@ function Board() {
         <h1 className="serif text-3xl" style={{ color: "var(--color-ink)" }}>Leaderboards</h1>
         <div className="mt-3 grid grid-cols-2 gap-2">
           {(["motorcycle", "car"] as const).map((k) => (
-            <button key={k} onClick={() => nav({ search: (s) => ({ ...s, kind: k }) })}
+            <button key={k} onClick={() => nav({ search: { ...search, kind: k } })}
               className="tap rounded-lg border py-2 text-sm font-bold"
               style={{
                 borderColor: search.kind === k ? "var(--color-neon)" : "var(--color-hair)",
@@ -62,7 +63,7 @@ function Board() {
         </div>
         <div className="mt-2 flex flex-wrap gap-2">
           {Object.entries(METRIC_LABELS).map(([m, l]) => (
-            <button key={m} onClick={() => nav({ search: (s) => ({ ...s, metric: m as any }) })}
+            <button key={m} onClick={() => nav({ search: { ...search, metric: m as any } })}
               className="tap rounded-full border px-3 py-1 text-xs"
               style={{
                 borderColor: search.metric === m ? "var(--color-neon)" : "var(--color-hair)",
@@ -74,12 +75,12 @@ function Board() {
         </div>
 
         <div className="mt-4 space-y-2">
-          {data.length === 0 && (
+          {rows.length === 0 && (
             <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink-3)" }}>
               No verified runs yet for this category.
             </div>
           )}
-          {data.map((r: any, i: number) => (
+          {rows.map((r, i) => (
             <div key={r.id} className="flex items-center gap-3 rounded-lg border p-3"
               style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
               <div className="mono-num text-lg font-bold" style={{ color: i < 3 ? "var(--color-neon)" : "var(--color-silver)", minWidth: 28 }}>
