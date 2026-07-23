@@ -35,6 +35,7 @@ import { Route as AuthenticatedSecurityRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedRewardsRouteImport } from './routes/_authenticated/rewards'
 import { Route as AuthenticatedOwnerRouteImport } from './routes/_authenticated/owner'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedMenuRouteImport } from './routes/_authenticated/menu'
 import { Route as AuthenticatedAssistantRouteImport } from './routes/_authenticated/assistant'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
@@ -52,6 +53,7 @@ import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenti
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticated/rides.$id'
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
+import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
 import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/_authenticated/marketplace.dashboard'
 import { Route as AuthenticatedJudgeMineRouteImport } from './routes/_authenticated/judge.mine'
@@ -222,6 +224,11 @@ const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMenuRoute = AuthenticatedMenuRouteImport.update({
   id: '/menu',
   path: '/menu',
@@ -310,6 +317,11 @@ const AuthenticatedPostNewRoute = AuthenticatedPostNewRouteImport.update({
   id: '/post/new',
   path: '/post/new',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMessagesIdRoute = AuthenticatedMessagesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedMessagesRoute,
 } as any)
 const AuthenticatedMarketplaceNewRoute =
   AuthenticatedMarketplaceNewRouteImport.update({
@@ -552,6 +564,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
@@ -596,6 +609,7 @@ export interface FileRoutesByFullPath {
   '/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -635,6 +649,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
+  '/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
@@ -678,6 +693,7 @@ export interface FileRoutesByTo {
   '/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/new': typeof AuthenticatedPostNewRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -720,6 +736,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
+  '/_authenticated/messages': typeof AuthenticatedMessagesRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/owner': typeof AuthenticatedOwnerRoute
   '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
@@ -764,6 +781,7 @@ export interface FileRoutesById {
   '/_authenticated/judge/mine': typeof AuthenticatedJudgeMineRoute
   '/_authenticated/marketplace/dashboard': typeof AuthenticatedMarketplaceDashboardRoute
   '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
+  '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
   '/_authenticated/rides/$id': typeof AuthenticatedRidesIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
@@ -806,6 +824,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/assistant'
     | '/menu'
+    | '/messages'
     | '/onboarding'
     | '/owner'
     | '/rewards'
@@ -850,6 +869,7 @@ export interface FileRouteTypes {
     | '/judge/mine'
     | '/marketplace/dashboard'
     | '/marketplace/new'
+    | '/messages/$id'
     | '/post/new'
     | '/rides/$id'
     | '/vendor/apply'
@@ -889,6 +909,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/assistant'
     | '/menu'
+    | '/messages'
     | '/onboarding'
     | '/owner'
     | '/rewards'
@@ -932,6 +953,7 @@ export interface FileRouteTypes {
     | '/judge/mine'
     | '/marketplace/dashboard'
     | '/marketplace/new'
+    | '/messages/$id'
     | '/post/new'
     | '/rides/$id'
     | '/vendor/apply'
@@ -973,6 +995,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/assistant'
     | '/_authenticated/menu'
+    | '/_authenticated/messages'
     | '/_authenticated/onboarding'
     | '/_authenticated/owner'
     | '/_authenticated/rewards'
@@ -1017,6 +1040,7 @@ export interface FileRouteTypes {
     | '/_authenticated/judge/mine'
     | '/_authenticated/marketplace/dashboard'
     | '/_authenticated/marketplace/new'
+    | '/_authenticated/messages/$id'
     | '/_authenticated/post/new'
     | '/_authenticated/rides/$id'
     | '/_authenticated/vendor/apply'
@@ -1252,6 +1276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/messages': {
+      id: '/_authenticated/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/menu': {
       id: '/_authenticated/menu'
       path: '/menu'
@@ -1370,6 +1401,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/post/new'
       preLoaderRoute: typeof AuthenticatedPostNewRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/messages/$id': {
+      id: '/_authenticated/messages/$id'
+      path: '/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof AuthenticatedMessagesIdRouteImport
+      parentRoute: typeof AuthenticatedMessagesRoute
     }
     '/_authenticated/marketplace/new': {
       id: '/_authenticated/marketplace/new'
@@ -1687,6 +1725,19 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
 const AuthenticatedAdminRouteWithChildren =
   AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
 
+interface AuthenticatedMessagesRouteChildren {
+  AuthenticatedMessagesIdRoute: typeof AuthenticatedMessagesIdRoute
+}
+
+const AuthenticatedMessagesRouteChildren: AuthenticatedMessagesRouteChildren = {
+  AuthenticatedMessagesIdRoute: AuthenticatedMessagesIdRoute,
+}
+
+const AuthenticatedMessagesRouteWithChildren =
+  AuthenticatedMessagesRoute._addFileChildren(
+    AuthenticatedMessagesRouteChildren,
+  )
+
 interface AuthenticatedVendorRouteChildren {
   AuthenticatedVendorApplyRoute: typeof AuthenticatedVendorApplyRoute
   AuthenticatedVendorPlansRoute: typeof AuthenticatedVendorPlansRoute
@@ -1706,6 +1757,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedAssistantRoute: typeof AuthenticatedAssistantRoute
   AuthenticatedMenuRoute: typeof AuthenticatedMenuRoute
+  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRouteWithChildren
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRoute
   AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
@@ -1757,6 +1809,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedAssistantRoute: AuthenticatedAssistantRoute,
   AuthenticatedMenuRoute: AuthenticatedMenuRoute,
+  AuthenticatedMessagesRoute: AuthenticatedMessagesRouteWithChildren,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOwnerRoute: AuthenticatedOwnerRoute,
   AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
