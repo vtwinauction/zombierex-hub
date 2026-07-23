@@ -8,8 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
 import { useDragRecorder } from "@/lib/drag-recorder";
-import { submitDragRun } from "@/lib/drag.functions";
-import { SpeedoHUD } from "@/components/SpeedoHUD";
+import { submitDragRun, coachDragRun } from "@/lib/drag.functions";
 
 export const Route = createFileRoute("/_authenticated/drag/run")({
   head: () => ({ meta: [{ title: "New drag run · ZOMBIEREX" }] }),
@@ -33,7 +32,10 @@ function NewRun() {
   });
   const rec = useDragRecorder();
   const submit = useServerFn(submitDragRun);
+  const coach = useServerFn(coachDragRun);
   const [result, setResult] = useState<any>(null);
+  const [coaching, setCoaching] = useState<any>(null);
+  const [coachLoading, setCoachLoading] = useState(false);
 
   const mut = useMutation({
     mutationFn: async () => {
@@ -52,7 +54,13 @@ function NewRun() {
         ended_at: new Date().toISOString(),
       } });
     },
-    onSuccess: (r: any) => { setResult(r); setStep("done"); },
+    onSuccess: async (r: any) => {
+      setResult(r); setStep("done");
+      setCoachLoading(true);
+      try { setCoaching(await coach({ data: { id: r.id } })); }
+      catch (e) { console.warn("Coach failed", e); }
+      finally { setCoachLoading(false); }
+    },
     onError: (e: any) => alert(e?.message ?? "Submit failed"),
   });
 
