@@ -244,17 +244,18 @@ export const setUserSuspension = createServerFn({ method: "POST" })
     await assertOwner(context.supabase, context.userId);
     if (data.userId === context.userId) throw new Error("Cannot suspend yourself");
     const { data: before } = await context.supabase.from("profiles").select("*").eq("id", data.userId).maybeSingle();
-    const patch: Record<string, unknown> = {
+    const patch = {
       is_suspended: data.suspend,
       suspended_reason: data.suspend ? (data.reason ?? null) : null,
       suspended_at: data.suspend ? new Date().toISOString() : null,
       suspended_by: data.suspend ? context.userId : null,
     };
-    const { data: after, error } = await context.supabase
+    const { data: after, error } = await (context.supabase as any)
       .from("profiles").update(patch).eq("id", data.userId).select("*").single();
     if (error) throw new Error(error.message);
     await audit(context.supabase, context.userId, data.suspend ? "user.suspend" : "user.unsuspend", "profile", data.userId, before, after);
     return after;
+
   });
 
 export const setUserVerified = createServerFn({ method: "POST" })
