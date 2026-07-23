@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
 import { getListing, toggleSaveListing, reportListing, updateListing, deleteListing } from "@/lib/marketplace.functions";
+import { startDirectMessage } from "@/lib/messages.functions";
+
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/marketplace/$id")({
@@ -28,7 +30,10 @@ function ListingDetail() {
   const report = useServerFn(reportListing);
   const update = useServerFn(updateListing);
   const del = useServerFn(deleteListing);
+  const startDM = useServerFn(startDirectMessage);
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [dmPending, setDmPending] = useState(false);
+
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("Spam");
 
@@ -111,8 +116,17 @@ function ListingDetail() {
         <ActionBtn onClick={async () => {
           const { data: sess } = await supabase.auth.getSession();
           if (!sess.session) { navigate({ to: "/auth" }); return; }
-          navigate({ to: "/messages" });
-        }}>MESSAGE</ActionBtn>
+          if (!l.seller?.id) { navigate({ to: "/messages" }); return; }
+          if (sess.session.user.id === l.seller.id) { navigate({ to: "/messages" }); return; }
+          try {
+            setDmPending(true);
+            const res: any = await startDM({ data: { recipientId: l.seller.id } });
+            navigate({ to: "/messages/$id", params: { id: res.id } });
+          } catch (e: any) {
+            alert(e?.message ?? "Could not open chat");
+          } finally { setDmPending(false); }
+        }}>{dmPending ? "…" : "MESSAGE"}</ActionBtn>
+
         <ActionBtn onClick={() => setReportOpen(true)}>REPORT</ActionBtn>
       </div>
 

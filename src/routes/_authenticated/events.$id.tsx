@@ -308,35 +308,58 @@ function PhotosTab({ eventId }: { eventId: string }) {
   const add = useServerFn(addEventPhoto);
   const qc = useQueryClient();
   const { data } = useQuery({ queryKey: ["event-photos", eventId], queryFn: () => list({ data: { event_id: eventId } }) });
-  const [url, setUrl] = useState("");
-  async function submit() {
-    if (!url) return;
-    await add({ data: { event_id: eventId, media_url: url, media_type: url.match(/\.(mp4|webm|mov)$/i) ? "video" : "image" } });
-    setUrl("");
-    qc.invalidateQueries({ queryKey: ["event-photos", eventId] });
+  const [uploading, setUploading] = useState(false);
+  const [pct, setPct] = useState(0);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function onFile(f: File | null) {
+    if (!f) return;
+    setErr(null);
+    try {
+      setUploading(true); setPct(0);
+      const { data: sess } = await supabase.auth.getSession();
+      const uid = sess.session?.user?.id;
+      if (!uid) throw new Error("Sign in required");
+      const { uploadWithRetry, compressImage } = await import("@/lib/media-upload");
+      const blob = f.type.startsWith("image/") ? await compressImage(f) : f;
+      const res = await uploadWithRetry(blob, { userId: uid, bucket: "posts", onProgress: (p) => setPct(Math.round(p.pct * 100)) });
+      await add({ data: { event_id: eventId, media_url: res.url, media_type: res.contentType.startsWith("video/") ? "video" : "image" } });
+      qc.invalidateQueries({ queryKey: ["event-photos", eventId] });
+    } catch (e: any) {
+      setErr(e?.message ?? "Upload failed");
+    } finally { setUploading(false); }
   }
+
   return (
     <div className="px-4 pt-4">
-      <div className="hairline p-3 flex gap-2">
-        <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Media URL"
-          className="flex-1 bg-transparent text-sm" />
-        <button onClick={submit} className="btn-solid" style={{ padding: "6px 10px", fontSize: 10 }}>ADD ▸</button>
-      </div>
+      <label className="hairline flex items-center justify-between p-3 cursor-pointer">
+        <div>
+          <p className="mono-tag" style={{ color: "var(--color-ash)" }}>UPLOAD PHOTO / VIDEO</p>
+          <p className="mt-1 text-xs" style={{ color: "var(--color-ash)" }}>JPG · PNG · WEBP · MP4 · WEBM</p>
+        </div>
+        <span className="btn-solid" style={{ padding: "8px 12px", fontSize: 10 }}>
+          {uploading ? `${pct}%` : "CHOOSE FILE ▸"}
+        </span>
+        <input type="file" accept="image/*,video/mp4,video/webm,video/quicktime" hidden disabled={uploading}
+          onChange={(e) => { const f = e.target.files?.[0]; e.currentTarget.value = ""; onFile(f ?? null); }} />
+      </label>
+      {err && <p className="mono-tag mt-2" style={{ color: "#c33" }}>{err}</p>}
       <div className="mt-4 grid grid-cols-3 gap-1">
         {(data ?? []).map((p: any) => (
           p.media_type === "video" ? (
-            <video key={p.id} src={p.media_url} className="aspect-square w-full object-cover" muted />
+            <video key={p.id} src={p.media_url} className="aspect-square w-full object-cover" muted playsInline />
           ) : (
-            <img key={p.id} src={p.media_url} alt="" className="aspect-square w-full object-cover" />
+            <img key={p.id} src={p.media_url} alt="" className="aspect-square w-full object-cover" loading="lazy" />
           )
         ))}
       </div>
-      {(data ?? []).length === 0 && (
+      {(data ?? []).length === 0 && !uploading && (
         <p className="mono-tag text-center py-10" style={{ color: "var(--color-ash)" }}>NO PHOTOS YET</p>
       )}
     </div>
   );
 }
+
 
 function AttendeesTab({ eventId }: { eventId: string }) {
   const list = useServerFn(listAttendees);
