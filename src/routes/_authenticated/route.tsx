@@ -4,12 +4,17 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
-    // getSession() is local-only (reads from storage) and can't hang on network.
-    const { data } = await supabase.auth.getSession();
-    if (!data.session) {
+    // getSession() is local-only, but can occasionally stall behind the
+    // Supabase client's internal lock (token refresh in another tab, etc).
+    // Cap it so the pending screen can never stick — fall through to /auth.
+    const session = await Promise.race([
+      supabase.auth.getSession().then(({ data }) => data.session),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
+    ]);
+    if (!session) {
       throw redirect({ to: "/auth" });
     }
-    return { user: data.session.user };
+    return { user: session.user };
   },
   component: () => <Outlet />,
   pendingComponent: () => (
