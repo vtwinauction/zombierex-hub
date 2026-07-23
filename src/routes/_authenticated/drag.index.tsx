@@ -48,11 +48,11 @@ function DragHub() {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2">
-          <Link to="/drag/leaderboards" search={{ kind: "motorcycle" as const }} className="tap rounded-lg border p-4" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
+          <Link to="/drag/leaderboards" search={{ kind: "motorcycle", metric: "quarter_mile_s" }} className="tap rounded-lg border p-4" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
             <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>LEADERBOARD</p>
             <p className="mt-1 text-sm font-bold" style={{ color: "var(--color-ink)" }}>Motorcycles</p>
           </Link>
-          <Link to="/drag/leaderboards" search={{ kind: "car" as const }} className="tap rounded-lg border p-4" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
+          <Link to="/drag/leaderboards" search={{ kind: "car", metric: "quarter_mile_s" }} className="tap rounded-lg border p-4" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
             <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>LEADERBOARD</p>
             <p className="mt-1 text-sm font-bold" style={{ color: "var(--color-ink)" }}>Cars</p>
           </Link>
