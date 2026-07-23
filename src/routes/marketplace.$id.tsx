@@ -116,8 +116,17 @@ function ListingDetail() {
         <ActionBtn onClick={async () => {
           const { data: sess } = await supabase.auth.getSession();
           if (!sess.session) { navigate({ to: "/auth" }); return; }
-          navigate({ to: "/messages" });
-        }}>MESSAGE</ActionBtn>
+          if (!l.seller?.id) { navigate({ to: "/messages" }); return; }
+          if (sess.session.user.id === l.seller.id) { navigate({ to: "/messages" }); return; }
+          try {
+            setDmPending(true);
+            const res: any = await startDM({ data: { recipientId: l.seller.id } });
+            navigate({ to: "/messages/$id", params: { id: res.id } });
+          } catch (e: any) {
+            alert(e?.message ?? "Could not open chat");
+          } finally { setDmPending(false); }
+        }}>{dmPending ? "…" : "MESSAGE"}</ActionBtn>
+
         <ActionBtn onClick={() => setReportOpen(true)}>REPORT</ActionBtn>
       </div>
 
