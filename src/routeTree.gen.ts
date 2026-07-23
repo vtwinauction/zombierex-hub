@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReelsRouteImport } from './routes/reels'
@@ -95,6 +96,11 @@ import { Route as AuthenticatedCommunitiesSlugPostNewRouteImport } from './route
 import { Route as AuthenticatedCommunitiesSlugEventsNewRouteImport } from './routes/_authenticated/communities.$slug.events.new'
 import { Route as AuthenticatedCommunitiesSlugChallengesNewRouteImport } from './routes/_authenticated/communities.$slug.challenges.new'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -561,6 +567,7 @@ export interface FileRoutesByFullPath {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
@@ -647,6 +654,7 @@ export interface FileRoutesByTo {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/assistant': typeof AuthenticatedAssistantRoute
   '/menu': typeof AuthenticatedMenuRoute
   '/messages': typeof AuthenticatedMessagesRouteWithChildren
@@ -733,6 +741,7 @@ export interface FileRoutesById {
   '/reels': typeof ReelsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/search': typeof SearchRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/assistant': typeof AuthenticatedAssistantRoute
   '/_authenticated/menu': typeof AuthenticatedMenuRoute
@@ -821,6 +830,7 @@ export interface FileRouteTypes {
     | '/reels'
     | '/reset-password'
     | '/search'
+    | '/sitemap.xml'
     | '/admin'
     | '/assistant'
     | '/menu'
@@ -907,6 +917,7 @@ export interface FileRouteTypes {
     | '/reels'
     | '/reset-password'
     | '/search'
+    | '/sitemap.xml'
     | '/assistant'
     | '/menu'
     | '/messages'
@@ -992,6 +1003,7 @@ export interface FileRouteTypes {
     | '/reels'
     | '/reset-password'
     | '/search'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/_authenticated/assistant'
     | '/_authenticated/menu'
@@ -1080,6 +1092,7 @@ export interface RootRouteChildren {
   ReelsRoute: typeof ReelsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SearchRoute: typeof SearchRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   CommunitiesSlugRoute: typeof CommunitiesSlugRouteWithChildren
   CreatorIdRoute: typeof CreatorIdRoute
   JudgeLeaderboardsRoute: typeof JudgeLeaderboardsRoute
@@ -1094,6 +1107,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -1916,6 +1936,7 @@ const rootRouteChildren: RootRouteChildren = {
   ReelsRoute: ReelsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SearchRoute: SearchRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   CommunitiesSlugRoute: CommunitiesSlugRouteWithChildren,
   CreatorIdRoute: CreatorIdRoute,
   JudgeLeaderboardsRoute: JudgeLeaderboardsRoute,
@@ -1930,13 +1951,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
