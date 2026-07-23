@@ -104,7 +104,7 @@ export function InteractionBar({
               key={key}
               type="button"
               onClick={onClick}
-              onMouseDown={() => key === "comment" && console.log("[InteractionBar] comment mousedown")}
+              
               aria-label={label}
               aria-pressed={active}
               className="tap group relative flex h-12 min-w-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-xl"

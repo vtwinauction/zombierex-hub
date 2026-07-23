@@ -74,7 +74,7 @@ export function RouteMap({
   // init
   useEffect(() => {
     let cancelled = false;
-    console.log("[RouteMap] mount");
+    
     loadGoogleMaps().then((g) => {
       if (cancelled || !containerRef.current) return;
       const first = path[0] ?? center ?? userLocation ?? { lat: 25.2048, lng: 55.2708 };
