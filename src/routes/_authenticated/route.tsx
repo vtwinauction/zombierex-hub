@@ -1,4 +1,6 @@
-import { createFileRoute, Outlet, redirect, Link } from "@tanstack/react-router";
+import * as React from "react";
+import { createFileRoute, Outlet, Link } from "@tanstack/react-router";
+
 
 const STORAGE_KEY = `sb-${import.meta.env.VITE_SUPABASE_PROJECT_ID}-auth-token`;
 
