@@ -117,9 +117,10 @@ export const sendMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .validator((raw) => z.object({
     conversationId: z.string().uuid(),
-    body: z.string().min(1).max(4000),
+    body: z.string().max(4000).default(""),
     mediaUrl: z.string().url().max(2048).optional(),
-  }).parse(raw))
+  }).refine((v) => v.body.trim().length > 0 || !!v.mediaUrl, { message: "Message is empty" }).parse(raw))
+
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("messages")
