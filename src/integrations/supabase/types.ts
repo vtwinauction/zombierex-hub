@@ -1877,6 +1877,36 @@ export type Database = {
         }
         Relationships: []
       }
+      feature_flags_v2: {
+        Row: {
+          category: string
+          description: string | null
+          enabled: boolean
+          key: string
+          label: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          key: string
+          label: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          category?: string
+          description?: string | null
+          enabled?: boolean
+          key?: string
+          label?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       follows: {
         Row: {
           created_at: string
@@ -2682,6 +2712,33 @@ export type Database = {
           },
         ]
       }
+      maintenance_state: {
+        Row: {
+          global_enabled: boolean
+          id: number
+          message: string | null
+          scheduled_until: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          global_enabled?: boolean
+          id?: number
+          message?: string | null
+          scheduled_until?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          global_enabled?: boolean
+          id?: number
+          message?: string | null
+          scheduled_until?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           body: string | null
@@ -2771,6 +2828,38 @@ export type Database = {
           target_user_id?: string | null
         }
         Relationships: []
+      }
+      module_maintenance: {
+        Row: {
+          enabled: boolean
+          message: string | null
+          module_key: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          enabled?: boolean
+          message?: string | null
+          module_key: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          enabled?: boolean
+          message?: string | null
+          module_key?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "module_maintenance_module_key_fkey"
+            columns: ["module_key"]
+            isOneToOne: true
+            referencedRelation: "feature_flags_v2"
+            referencedColumns: ["key"]
+          },
+        ]
       }
       notification_preferences: {
         Row: {
@@ -2972,6 +3061,78 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      owner_audit_log: {
+        Row: {
+          action: string
+          actor_id: string | null
+          after_value: Json | null
+          before_value: Json | null
+          created_at: string
+          id: string
+          ip: string | null
+          target_id: string | null
+          target_type: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          actor_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          id?: string
+          ip?: string | null
+          target_id?: string | null
+          target_type?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      owner_broadcasts: {
+        Row: {
+          active: boolean
+          body: string
+          created_at: string
+          created_by: string | null
+          expires_at: string | null
+          id: string
+          severity: string
+          title: string
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          severity?: string
+          title: string
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string | null
+          id?: string
+          severity?: string
+          title?: string
+        }
+        Relationships: []
       }
       payments: {
         Row: {
@@ -3345,6 +3506,7 @@ export type Database = {
           handle: string | null
           id: string
           is_premium: boolean
+          is_suspended: boolean
           is_verified: boolean
           last_checkin_at: string | null
           level: number
@@ -3356,8 +3518,13 @@ export type Database = {
           seller_rating_avg: number
           seller_reviews_count: number
           streak_days: number
+          suspended_at: string | null
+          suspended_by: string | null
+          suspended_reason: string | null
           tier: Database["public"]["Enums"]["rider_tier"]
           updated_at: string
+          verified_at: string | null
+          verified_by: string | null
           website: string | null
           xp_total: number
         }
@@ -3374,6 +3541,7 @@ export type Database = {
           handle?: string | null
           id: string
           is_premium?: boolean
+          is_suspended?: boolean
           is_verified?: boolean
           last_checkin_at?: string | null
           level?: number
@@ -3385,8 +3553,13 @@ export type Database = {
           seller_rating_avg?: number
           seller_reviews_count?: number
           streak_days?: number
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspended_reason?: string | null
           tier?: Database["public"]["Enums"]["rider_tier"]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
           website?: string | null
           xp_total?: number
         }
@@ -3403,6 +3576,7 @@ export type Database = {
           handle?: string | null
           id?: string
           is_premium?: boolean
+          is_suspended?: boolean
           is_verified?: boolean
           last_checkin_at?: string | null
           level?: number
@@ -3414,8 +3588,13 @@ export type Database = {
           seller_rating_avg?: number
           seller_reviews_count?: number
           streak_days?: number
+          suspended_at?: string | null
+          suspended_by?: string | null
+          suspended_reason?: string | null
           tier?: Database["public"]["Enums"]["rider_tier"]
           updated_at?: string
+          verified_at?: string | null
+          verified_by?: string | null
           website?: string | null
           xp_total?: number
         }
@@ -4958,6 +5137,7 @@ export type Database = {
         Args: { _ride: string; _user: string }
         Returns: boolean
       }
+      is_owner: { Args: { _user: string }; Returns: boolean }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
     }
