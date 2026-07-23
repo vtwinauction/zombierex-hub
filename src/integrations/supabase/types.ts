@@ -3309,6 +3309,7 @@ export type Database = {
           deleted_at: string | null
           id: string
           is_announcement: boolean
+          is_hidden: boolean
           is_pinned: boolean
           is_reel: boolean
           is_story: boolean
@@ -3333,6 +3334,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           is_announcement?: boolean
+          is_hidden?: boolean
           is_pinned?: boolean
           is_reel?: boolean
           is_story?: boolean
@@ -3357,6 +3359,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           is_announcement?: boolean
+          is_hidden?: boolean
           is_pinned?: boolean
           is_reel?: boolean
           is_story?: boolean
