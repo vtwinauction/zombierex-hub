@@ -118,16 +118,23 @@ export const sendMessage = createServerFn({ method: "POST" })
   .validator((raw) => z.object({
     conversationId: z.string().uuid(),
     body: z.string().min(1).max(4000),
+    mediaUrl: z.string().url().max(2048).optional(),
   }).parse(raw))
   .handler(async ({ data, context }) => {
     const { data: row, error } = await context.supabase
       .from("messages")
-      .insert({ conversation_id: data.conversationId, sender_id: context.userId, body: data.body })
-      .select("id, conversation_id, sender_id, body, created_at")
+      .insert({
+        conversation_id: data.conversationId,
+        sender_id: context.userId,
+        body: data.body,
+        media_url: data.mediaUrl ?? null,
+      })
+      .select("id, conversation_id, sender_id, body, media_url, created_at")
       .single();
     if (error) throw new Error(error.message);
     return row;
   });
+
 
 export const startDirectMessage = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
