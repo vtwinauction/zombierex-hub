@@ -2,11 +2,10 @@
  * Drag Racing — hub with entry, my runs, leaderboards.
  */
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { listMyDragRuns } from "@/lib/drag.functions";
 import { StatusBar } from "@/components/StatusBar";
-
-const mineQ = queryOptions({ queryKey: ["drag", "mine"], queryFn: () => listMyDragRuns() });
 
 export const Route = createFileRoute("/_authenticated/drag/")({
   head: () => ({
@@ -26,7 +25,14 @@ const STATUS: Record<string, { label: string; color: string }> = {
 };
 
 function DragHub() {
-  const { data } = useSuspenseQuery(mineQ);
+  const listFn = useServerFn(listMyDragRuns);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["drag", "mine"],
+    queryFn: () => listFn(),
+    staleTime: 10_000,
+  });
+  const runs = data ?? [];
+
   return (
     <div className="min-h-svh pb-24">
       <StatusBar index="07" section="DRAG · VERIFIED" />
@@ -76,12 +82,22 @@ function DragHub() {
 
         <h2 className="mono-caps mt-6 text-[10px] font-black" style={{ color: "var(--color-silver)" }}>MY RUNS</h2>
         <div className="mt-2 space-y-2">
-          {data.length === 0 && (
+          {isLoading && (
+            <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink-3)" }}>
+              Loading runs…
+            </div>
+          )}
+          {error && !isLoading && (
+            <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "#ff4d4d55", color: "#ff8c8c" }}>
+              {(error as Error)?.message ?? "Could not load runs"}
+            </div>
+          )}
+          {!isLoading && !error && runs.length === 0 && (
             <div className="rounded-lg border border-dashed p-8 text-center text-sm" style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink-3)" }}>
               No runs yet. Tap <b>NEW RUN</b> to record your first verified drag.
             </div>
           )}
-          {data.map((r: any) => {
+          {runs.map((r: any) => {
             const s = STATUS[r.status] ?? STATUS.pending;
             return (
               <Link key={r.id} to="/drag/$id" params={{ id: r.id }} className="tap block rounded-lg border p-3" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
@@ -101,6 +117,7 @@ function DragHub() {
             );
           })}
         </div>
+
       </div>
     </div>
   );
