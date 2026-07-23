@@ -360,9 +360,10 @@ export const listRecentPosts = createServerFn({ method: "GET" })
   .validator((raw) => z.object({ limit: z.number().int().min(1).max(200).default(50), search: z.string().optional() }).parse(raw ?? {}))
   .handler(async ({ data, context }) => {
     await assertOwner(context.supabase, context.userId);
-    let q = context.supabase
+    let q = (context.supabase as any)
       .from("posts")
       .select("id, author_id, caption, media_urls, likes_count, comments_count, created_at, is_hidden")
+
       .order("created_at", { ascending: false }).limit(data.limit);
     if (data.search) q = q.ilike("caption", `%${data.search}%`);
     const { data: rows, error } = await q;
