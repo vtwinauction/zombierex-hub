@@ -1,20 +1,32 @@
 import { createFileRoute, Outlet, redirect, Link } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
+
+const STORAGE_KEY = `sb-${import.meta.env.VITE_SUPABASE_PROJECT_ID}-auth-token`;
+
+function hasLocalSession(): boolean {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const parsed = JSON.parse(raw);
+    const token = parsed?.access_token ?? parsed?.currentSession?.access_token;
+    const expiresAt = parsed?.expires_at ?? parsed?.currentSession?.expires_at;
+    if (!token) return false;
+    if (typeof expiresAt === "number" && expiresAt * 1000 < Date.now()) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
-  beforeLoad: async () => {
-    // getSession() is local-only, but can occasionally stall behind the
-    // Supabase client's internal lock (token refresh in another tab, etc).
-    // Cap it so the pending screen can never stick — fall through to /auth.
-    const session = await Promise.race([
-      supabase.auth.getSession().then(({ data }) => data.session),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
-    ]);
-    if (!session) {
+  beforeLoad: () => {
+    // Synchronous localStorage check — never hangs. supabase-js refreshes the
+    // token in the background; here we just gate the render so pending never sticks.
+    if (typeof window === "undefined") return {};
+    if (!hasLocalSession()) {
       throw redirect({ to: "/auth" });
     }
-    return { user: session.user };
+    return {};
   },
   component: () => <Outlet />,
   pendingComponent: () => (
