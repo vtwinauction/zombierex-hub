@@ -1311,6 +1311,187 @@ export type Database = {
           },
         ]
       }
+      drag_run_points: {
+        Row: {
+          accuracy_m: number | null
+          altitude_m: number | null
+          created_at: string
+          heading: number | null
+          id: string
+          lat: number
+          lng: number
+          run_id: string
+          speed_kmh: number | null
+          t_ms: number
+        }
+        Insert: {
+          accuracy_m?: number | null
+          altitude_m?: number | null
+          created_at?: string
+          heading?: number | null
+          id?: string
+          lat: number
+          lng: number
+          run_id: string
+          speed_kmh?: number | null
+          t_ms: number
+        }
+        Update: {
+          accuracy_m?: number | null
+          altitude_m?: number | null
+          created_at?: string
+          heading?: number | null
+          id?: string
+          lat?: number
+          lng?: number
+          run_id?: string
+          speed_kmh?: number | null
+          t_ms?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drag_run_points_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "drag_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drag_runs: {
+        Row: {
+          anti_cheat_notes: string | null
+          aspiration: string | null
+          created_at: string
+          distance_m: number | null
+          duration_s: number | null
+          eighth_mile_s: number | null
+          eighth_mile_trap_kmh: number | null
+          ended_at: string | null
+          engine_cc: number | null
+          fuel_type: string | null
+          id: string
+          launch_g: number | null
+          location_label: string | null
+          location_lat: number | null
+          location_lng: number | null
+          modifications: string | null
+          notes: string | null
+          quarter_mile_s: number | null
+          quarter_mile_trap_kmh: number | null
+          reaction_time_s: number | null
+          sixty_to_120_kmh_s: number | null
+          started_at: string | null
+          status: string
+          temp_c: number | null
+          top_speed_kmh: number | null
+          updated_at: string
+          user_id: string
+          vehicle_id: string | null
+          vehicle_kind: string
+          vehicle_name: string | null
+          verification_score: number | null
+          verified_at: string | null
+          verified_by: string | null
+          visibility: string
+          weather: string | null
+          weight_class: string | null
+          weight_kg: number | null
+          zero_to_100_kmh_s: number | null
+          zero_to_60_kmh_s: number | null
+        }
+        Insert: {
+          anti_cheat_notes?: string | null
+          aspiration?: string | null
+          created_at?: string
+          distance_m?: number | null
+          duration_s?: number | null
+          eighth_mile_s?: number | null
+          eighth_mile_trap_kmh?: number | null
+          ended_at?: string | null
+          engine_cc?: number | null
+          fuel_type?: string | null
+          id?: string
+          launch_g?: number | null
+          location_label?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          modifications?: string | null
+          notes?: string | null
+          quarter_mile_s?: number | null
+          quarter_mile_trap_kmh?: number | null
+          reaction_time_s?: number | null
+          sixty_to_120_kmh_s?: number | null
+          started_at?: string | null
+          status?: string
+          temp_c?: number | null
+          top_speed_kmh?: number | null
+          updated_at?: string
+          user_id: string
+          vehicle_id?: string | null
+          vehicle_kind: string
+          vehicle_name?: string | null
+          verification_score?: number | null
+          verified_at?: string | null
+          verified_by?: string | null
+          visibility?: string
+          weather?: string | null
+          weight_class?: string | null
+          weight_kg?: number | null
+          zero_to_100_kmh_s?: number | null
+          zero_to_60_kmh_s?: number | null
+        }
+        Update: {
+          anti_cheat_notes?: string | null
+          aspiration?: string | null
+          created_at?: string
+          distance_m?: number | null
+          duration_s?: number | null
+          eighth_mile_s?: number | null
+          eighth_mile_trap_kmh?: number | null
+          ended_at?: string | null
+          engine_cc?: number | null
+          fuel_type?: string | null
+          id?: string
+          launch_g?: number | null
+          location_label?: string | null
+          location_lat?: number | null
+          location_lng?: number | null
+          modifications?: string | null
+          notes?: string | null
+          quarter_mile_s?: number | null
+          quarter_mile_trap_kmh?: number | null
+          reaction_time_s?: number | null
+          sixty_to_120_kmh_s?: number | null
+          started_at?: string | null
+          status?: string
+          temp_c?: number | null
+          top_speed_kmh?: number | null
+          updated_at?: string
+          user_id?: string
+          vehicle_id?: string | null
+          vehicle_kind?: string
+          vehicle_name?: string | null
+          verification_score?: number | null
+          verified_at?: string | null
+          verified_by?: string | null
+          visibility?: string
+          weather?: string | null
+          weight_class?: string | null
+          weight_kg?: number | null
+          zero_to_100_kmh_s?: number | null
+          zero_to_60_kmh_s?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drag_runs_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       emergency_contacts: {
         Row: {
           created_at: string
