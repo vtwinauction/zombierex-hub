@@ -58,6 +58,7 @@ import { Route as AuthenticatedJudgeMineRouteImport } from './routes/_authentica
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
 import { Route as AuthenticatedDragRunRouteImport } from './routes/_authenticated/drag.run'
+import { Route as AuthenticatedDragRaceRouteImport } from './routes/_authenticated/drag.race'
 import { Route as AuthenticatedDragLeaderboardsRouteImport } from './routes/_authenticated/drag.leaderboards'
 import { Route as AuthenticatedDragIdRouteImport } from './routes/_authenticated/drag.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
@@ -342,6 +343,11 @@ const AuthenticatedDragRunRoute = AuthenticatedDragRunRouteImport.update({
   path: '/drag/run',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDragRaceRoute = AuthenticatedDragRaceRouteImport.update({
+  id: '/drag/race',
+  path: '/drag/race',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDragLeaderboardsRoute =
   AuthenticatedDragLeaderboardsRouteImport.update({
     id: '/drag/leaderboards',
@@ -583,6 +589,7 @@ export interface FileRoutesByFullPath {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/drag/$id': typeof AuthenticatedDragIdRoute
   '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/drag/race': typeof AuthenticatedDragRaceRoute
   '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
@@ -664,6 +671,7 @@ export interface FileRoutesByTo {
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/drag/$id': typeof AuthenticatedDragIdRoute
   '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/drag/race': typeof AuthenticatedDragRaceRoute
   '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
@@ -749,6 +757,7 @@ export interface FileRoutesById {
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
   '/_authenticated/drag/$id': typeof AuthenticatedDragIdRoute
   '/_authenticated/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/_authenticated/drag/race': typeof AuthenticatedDragRaceRoute
   '/_authenticated/drag/run': typeof AuthenticatedDragRunRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
@@ -834,6 +843,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/drag/$id'
     | '/drag/leaderboards'
+    | '/drag/race'
     | '/drag/run'
     | '/events/$id'
     | '/events/new'
@@ -915,6 +925,7 @@ export interface FileRouteTypes {
     | '/creator/tiers'
     | '/drag/$id'
     | '/drag/leaderboards'
+    | '/drag/race'
     | '/drag/run'
     | '/events/$id'
     | '/events/new'
@@ -999,6 +1010,7 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/tiers'
     | '/_authenticated/drag/$id'
     | '/_authenticated/drag/leaderboards'
+    | '/_authenticated/drag/race'
     | '/_authenticated/drag/run'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
@@ -1402,6 +1414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDragRunRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/drag/race': {
+      id: '/_authenticated/drag/race'
+      path: '/drag/race'
+      fullPath: '/drag/race'
+      preLoaderRoute: typeof AuthenticatedDragRaceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/drag/leaderboards': {
       id: '/_authenticated/drag/leaderboards'
       path: '/drag/leaderboards'
@@ -1712,6 +1731,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
   AuthenticatedDragIdRoute: typeof AuthenticatedDragIdRoute
   AuthenticatedDragLeaderboardsRoute: typeof AuthenticatedDragLeaderboardsRoute
+  AuthenticatedDragRaceRoute: typeof AuthenticatedDragRaceRoute
   AuthenticatedDragRunRoute: typeof AuthenticatedDragRunRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
@@ -1761,6 +1781,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
   AuthenticatedDragIdRoute: AuthenticatedDragIdRoute,
   AuthenticatedDragLeaderboardsRoute: AuthenticatedDragLeaderboardsRoute,
+  AuthenticatedDragRaceRoute: AuthenticatedDragRaceRoute,
   AuthenticatedDragRunRoute: AuthenticatedDragRunRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
