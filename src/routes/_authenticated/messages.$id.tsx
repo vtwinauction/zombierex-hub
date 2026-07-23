@@ -21,7 +21,14 @@ function ChannelPage() {
   const fnGet = useServerFn(getMessages);
   const fnSend = useServerFn(sendMessage);
   const [text, setText] = useState("");
+  const [pendingMedia, setPendingMedia] = useState<{ url: string; type: "image" | "video" } | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [pct, setPct] = useState(0);
+  const [err, setErr] = useState<string | null>(null);
+  const [peerTyping, setPeerTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const chanRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  const meRef = useRef<string | null>(null);
 
   const q = useQuery({
     queryKey: ["messages", id],
@@ -30,31 +37,75 @@ function ChannelPage() {
   });
 
   const send = useMutation({
-    mutationFn: (body: string) => fnSend({ data: { conversationId: id, body } }),
-    onSuccess: () => { setText(""); qc.invalidateQueries({ queryKey: ["messages", id] }); qc.invalidateQueries({ queryKey: ["conversations"] }); },
+    mutationFn: (payload: { body: string; mediaUrl?: string }) =>
+      fnSend({ data: { conversationId: id, body: payload.body, mediaUrl: payload.mediaUrl } }),
+    onSuccess: () => {
+      setText(""); setPendingMedia(null);
+      qc.invalidateQueries({ queryKey: ["messages", id] });
+      qc.invalidateQueries({ queryKey: ["conversations"] });
+    },
+    onError: (e: any) => setErr(e?.message ?? "Send failed"),
   });
 
   useEffect(() => {
-    const ch = supabase.channel(`msg-${id}`)
+    let mounted = true;
+    supabase.auth.getUser().then(({ data }) => { if (mounted) meRef.current = data.user?.id ?? null; });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    const ch = supabase.channel(`msg-${id}`, { config: { broadcast: { self: false } } })
       .on("postgres_changes",
         { event: "INSERT", schema: "public", table: "messages", filter: `conversation_id=eq.${id}` },
         () => qc.invalidateQueries({ queryKey: ["messages", id] }),
       )
+      .on("broadcast", { event: "typing" }, (payload: any) => {
+        if (payload?.payload?.userId && payload.payload.userId !== meRef.current) {
+          setPeerTyping(true);
+          window.clearTimeout((chanRef as any).__t);
+          (chanRef as any).__t = window.setTimeout(() => setPeerTyping(false), 2500);
+        }
+      })
       .subscribe();
-    return () => { supabase.removeChannel(ch); };
+    chanRef.current = ch;
+    return () => { supabase.removeChannel(ch); chanRef.current = null; };
   }, [id, qc]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [q.data]);
 
+  function emitTyping() {
+    const ch = chanRef.current; if (!ch || !meRef.current) return;
+    ch.send({ type: "broadcast", event: "typing", payload: { userId: meRef.current } });
+  }
+
+  async function onAttach(f: File | null) {
+    if (!f) return;
+    setErr(null);
+    try {
+      setUploading(true); setPct(0);
+      const { data: sess } = await supabase.auth.getSession();
+      const uid = sess.session?.user?.id;
+      if (!uid) throw new Error("Sign in required");
+      const { uploadWithRetry, compressImage } = await import("@/lib/media-upload");
+      const blob = f.type.startsWith("image/") ? await compressImage(f) : f;
+      const res = await uploadWithRetry(blob, { userId: uid, bucket: "posts", onProgress: (p) => setPct(Math.round(p.pct * 100)) });
+      setPendingMedia({ url: res.url, type: res.contentType.startsWith("video/") ? "video" : "image" });
+    } catch (e: any) {
+      setErr(e?.message ?? "Upload failed");
+    } finally { setUploading(false); }
+  }
+
   const msgs = q.data ?? [];
+  const canSend = (text.trim().length > 0 || !!pendingMedia) && !send.isPending && !uploading;
 
   return (
     <div className="flex flex-col" style={{ minHeight: "100svh" }}>
       <header className="sticky top-0 z-10 hairline-b px-4 py-3 flex items-center gap-3" style={{ background: "var(--color-bone)" }}>
         <Link to="/messages" className="mono-tag" style={{ color: "var(--color-ash)" }}>← BACK</Link>
         <p className="mono-tag" style={{ color: "var(--color-signal)" }}>CH · {id.slice(0, 6).toUpperCase()}</p>
+        {peerTyping && <span className="mono-tag ml-auto" style={{ color: "var(--color-ash)" }}>TYPING…</span>}
       </header>
 
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
@@ -70,12 +121,21 @@ function ChannelPage() {
                   {m.sender.display_name ?? m.sender.username ?? "RIDER"}
                 </p>
               )}
-              <div className="hairline px-3 py-2 text-sm" style={{
-                background: m.mine ? "var(--color-signal)" : "transparent",
-                color: m.mine ? "var(--color-bone)" : "var(--color-ink)",
-              }}>
-                {m.body}
-              </div>
+              {m.mediaUrl && (
+                m.mediaUrl.match(/\.(mp4|webm|mov)(\?|$)/i) ? (
+                  <video src={m.mediaUrl} controls playsInline className="hairline mb-1 max-h-72 w-full object-cover" />
+                ) : (
+                  <img src={m.mediaUrl} alt="" className="hairline mb-1 max-h-72 w-full object-cover" loading="lazy" />
+                )
+              )}
+              {m.body && (
+                <div className="hairline px-3 py-2 text-sm" style={{
+                  background: m.mine ? "var(--color-signal)" : "transparent",
+                  color: m.mine ? "var(--color-bone)" : "var(--color-ink)",
+                }}>
+                  {m.body}
+                </div>
+              )}
               <p className="mono-tag mt-1 px-1 text-right" style={{ color: "var(--color-ash)" }}>
                 {new Date(m.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
               </p>
@@ -84,19 +144,41 @@ function ChannelPage() {
         ))}
       </div>
 
+      {pendingMedia && (
+        <div className="mx-3 hairline p-2 flex items-center gap-2" style={{ background: "var(--color-mist)" }}>
+          {pendingMedia.type === "video" ? (
+            <video src={pendingMedia.url} className="h-14 w-14 object-cover" muted />
+          ) : (
+            <img src={pendingMedia.url} className="h-14 w-14 object-cover" alt="" />
+          )}
+          <p className="mono-tag flex-1" style={{ color: "var(--color-ash)" }}>ATTACHMENT READY</p>
+          <button onClick={() => setPendingMedia(null)} className="mono-tag" style={{ color: "#c33" }}>REMOVE</button>
+        </div>
+      )}
+      {err && <p className="mono-tag px-4 pb-1" style={{ color: "#c33" }}>{err}</p>}
+
       <form
-        onSubmit={(e) => { e.preventDefault(); if (text.trim() && !send.isPending) send.mutate(text.trim()); }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!canSend) return;
+          send.mutate({ body: text.trim(), mediaUrl: pendingMedia?.url });
+        }}
         className="sticky bottom-0 hairline-t flex items-stretch gap-2 p-3"
         style={{ background: "var(--color-bone)", paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
       >
+        <label className="btn-solid px-3 mono-tag cursor-pointer flex items-center" title="Attach">
+          {uploading ? `${pct}%` : "＋"}
+          <input type="file" accept="image/*,video/mp4,video/webm,video/quicktime" hidden disabled={uploading}
+            onChange={(e) => { const f = e.target.files?.[0]; e.currentTarget.value = ""; onAttach(f ?? null); }} />
+        </label>
         <input
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => { setText(e.target.value); emitTyping(); }}
           placeholder="Transmit…"
           maxLength={4000}
           className="flex-1 hairline bg-transparent px-3 py-2 text-sm focus:outline-none"
         />
-        <button type="submit" disabled={!text.trim() || send.isPending} className="btn-solid px-4 mono-tag">
+        <button type="submit" disabled={!canSend} className="btn-solid px-4 mono-tag">
           {send.isPending ? "…" : "SEND"}
         </button>
       </form>
