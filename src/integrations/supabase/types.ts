@@ -5004,6 +5004,7 @@ export type Database = {
         | "creator"
         | "premium"
         | "standard"
+        | "owner"
       booking_status: "requested" | "confirmed" | "completed" | "cancelled"
       conversation_kind: "dm" | "club" | "group"
       listing_category:
@@ -5253,6 +5254,7 @@ export const Constants = {
         "creator",
         "premium",
         "standard",
+        "owner",
       ],
       booking_status: ["requested", "confirmed", "completed", "cancelled"],
       conversation_kind: ["dm", "club", "group"],
