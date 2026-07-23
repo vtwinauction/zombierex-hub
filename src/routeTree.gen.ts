@@ -58,6 +58,8 @@ import { Route as AuthenticatedJudgeMineRouteImport } from './routes/_authentica
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
 import { Route as AuthenticatedDragRunRouteImport } from './routes/_authenticated/drag.run'
+import { Route as AuthenticatedDragLeaderboardsRouteImport } from './routes/_authenticated/drag.leaderboards'
+import { Route as AuthenticatedDragIdRouteImport } from './routes/_authenticated/drag.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
 import { Route as AuthenticatedCreatorDashboardRouteImport } from './routes/_authenticated/creator.dashboard'
 import { Route as AuthenticatedCreatorCollabsRouteImport } from './routes/_authenticated/creator.collabs'
@@ -340,6 +342,17 @@ const AuthenticatedDragRunRoute = AuthenticatedDragRunRouteImport.update({
   path: '/drag/run',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDragLeaderboardsRoute =
+  AuthenticatedDragLeaderboardsRouteImport.update({
+    id: '/drag/leaderboards',
+    path: '/drag/leaderboards',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDragIdRoute = AuthenticatedDragIdRouteImport.update({
+  id: '/drag/$id',
+  path: '/drag/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCreatorTiersRoute =
   AuthenticatedCreatorTiersRouteImport.update({
     id: '/creator/tiers',
@@ -568,6 +581,8 @@ export interface FileRoutesByFullPath {
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/drag/$id': typeof AuthenticatedDragIdRoute
+  '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
   '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
@@ -647,6 +662,8 @@ export interface FileRoutesByTo {
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/drag/$id': typeof AuthenticatedDragIdRoute
+  '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
   '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
@@ -730,6 +747,8 @@ export interface FileRoutesById {
   '/_authenticated/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/_authenticated/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/_authenticated/drag/$id': typeof AuthenticatedDragIdRoute
+  '/_authenticated/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
   '/_authenticated/drag/run': typeof AuthenticatedDragRunRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
@@ -813,6 +832,8 @@ export interface FileRouteTypes {
     | '/creator/collabs'
     | '/creator/dashboard'
     | '/creator/tiers'
+    | '/drag/$id'
+    | '/drag/leaderboards'
     | '/drag/run'
     | '/events/$id'
     | '/events/new'
@@ -892,6 +913,8 @@ export interface FileRouteTypes {
     | '/creator/collabs'
     | '/creator/dashboard'
     | '/creator/tiers'
+    | '/drag/$id'
+    | '/drag/leaderboards'
     | '/drag/run'
     | '/events/$id'
     | '/events/new'
@@ -974,6 +997,8 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/collabs'
     | '/_authenticated/creator/dashboard'
     | '/_authenticated/creator/tiers'
+    | '/_authenticated/drag/$id'
+    | '/_authenticated/drag/leaderboards'
     | '/_authenticated/drag/run'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
@@ -1377,6 +1402,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDragRunRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/drag/leaderboards': {
+      id: '/_authenticated/drag/leaderboards'
+      path: '/drag/leaderboards'
+      fullPath: '/drag/leaderboards'
+      preLoaderRoute: typeof AuthenticatedDragLeaderboardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drag/$id': {
+      id: '/_authenticated/drag/$id'
+      path: '/drag/$id'
+      fullPath: '/drag/$id'
+      preLoaderRoute: typeof AuthenticatedDragIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/creator/tiers': {
       id: '/_authenticated/creator/tiers'
       path: '/creator/tiers'
@@ -1671,6 +1710,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorCollabsRoute: typeof AuthenticatedCreatorCollabsRoute
   AuthenticatedCreatorDashboardRoute: typeof AuthenticatedCreatorDashboardRoute
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
+  AuthenticatedDragIdRoute: typeof AuthenticatedDragIdRoute
+  AuthenticatedDragLeaderboardsRoute: typeof AuthenticatedDragLeaderboardsRoute
   AuthenticatedDragRunRoute: typeof AuthenticatedDragRunRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
@@ -1718,6 +1759,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorCollabsRoute: AuthenticatedCreatorCollabsRoute,
   AuthenticatedCreatorDashboardRoute: AuthenticatedCreatorDashboardRoute,
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
+  AuthenticatedDragIdRoute: AuthenticatedDragIdRoute,
+  AuthenticatedDragLeaderboardsRoute: AuthenticatedDragLeaderboardsRoute,
   AuthenticatedDragRunRoute: AuthenticatedDragRunRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
