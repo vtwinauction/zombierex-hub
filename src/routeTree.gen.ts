@@ -14,7 +14,6 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReelsRouteImport } from './routes/reels'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NotificationsRouteImport } from './routes/notifications'
-import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as EventsRouteImport } from './routes/events'
 import { Route as CreatorsRouteImport } from './routes/creators'
@@ -117,11 +116,6 @@ const ProfileRoute = ProfileRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MessagesRoute = MessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MarketplaceRoute = MarketplaceRouteImport.update({
@@ -550,7 +544,6 @@ export interface FileRoutesByFullPath {
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
-  '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
@@ -635,7 +628,6 @@ export interface FileRoutesByTo {
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
-  '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
@@ -720,7 +712,6 @@ export interface FileRoutesById {
   '/creators': typeof CreatorsRoute
   '/events': typeof EventsRoute
   '/marketplace': typeof MarketplaceRouteWithChildren
-  '/messages': typeof MessagesRoute
   '/notifications': typeof NotificationsRoute
   '/profile': typeof ProfileRoute
   '/reels': typeof ReelsRoute
@@ -807,7 +798,6 @@ export interface FileRouteTypes {
     | '/creators'
     | '/events'
     | '/marketplace'
-    | '/messages'
     | '/notifications'
     | '/profile'
     | '/reels'
@@ -892,7 +882,6 @@ export interface FileRouteTypes {
     | '/creators'
     | '/events'
     | '/marketplace'
-    | '/messages'
     | '/notifications'
     | '/profile'
     | '/reels'
@@ -976,7 +965,6 @@ export interface FileRouteTypes {
     | '/creators'
     | '/events'
     | '/marketplace'
-    | '/messages'
     | '/notifications'
     | '/profile'
     | '/reels'
@@ -1063,7 +1051,6 @@ export interface RootRouteChildren {
   CreatorsRoute: typeof CreatorsRoute
   EventsRoute: typeof EventsRoute
   MarketplaceRoute: typeof MarketplaceRouteWithChildren
-  MessagesRoute: typeof MessagesRoute
   NotificationsRoute: typeof NotificationsRoute
   ProfileRoute: typeof ProfileRoute
   ReelsRoute: typeof ReelsRoute
@@ -1116,13 +1103,6 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/messages': {
-      id: '/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/marketplace': {
@@ -1878,7 +1858,6 @@ const rootRouteChildren: RootRouteChildren = {
   CreatorsRoute: CreatorsRoute,
   EventsRoute: EventsRoute,
   MarketplaceRoute: MarketplaceRouteWithChildren,
-  MessagesRoute: MessagesRoute,
   NotificationsRoute: NotificationsRoute,
   ProfileRoute: ProfileRoute,
   ReelsRoute: ReelsRoute,
@@ -1898,13 +1877,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
