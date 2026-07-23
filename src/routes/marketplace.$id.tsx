@@ -30,7 +30,10 @@ function ListingDetail() {
   const report = useServerFn(reportListing);
   const update = useServerFn(updateListing);
   const del = useServerFn(deleteListing);
+  const startDM = useServerFn(startDirectMessage);
   const [photoIdx, setPhotoIdx] = useState(0);
+  const [dmPending, setDmPending] = useState(false);
+
   const [reportOpen, setReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("Spam");
 
