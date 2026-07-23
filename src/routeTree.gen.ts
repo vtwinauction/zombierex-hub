@@ -86,6 +86,9 @@ import { Route as AuthenticatedAdminModerationRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminJudgeRouteImport } from './routes/_authenticated/admin.judge'
 import { Route as AuthenticatedAdminHealthRouteImport } from './routes/_authenticated/admin.health'
 import { Route as AuthenticatedAtlasGroupIndexRouteImport } from './routes/_authenticated/atlas.group.index'
+import { Route as LovableEmailTransactionalPreviewRouteImport } from './routes/lovable/email/transactional/preview'
+import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
+import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
 import { Route as AuthenticatedJudgeSubmitEventSlugRouteImport } from './routes/_authenticated/judge.submit.$eventSlug'
@@ -500,6 +503,22 @@ const AuthenticatedAtlasGroupIndexRoute =
     path: '/atlas/group/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const LovableEmailTransactionalPreviewRoute =
+  LovableEmailTransactionalPreviewRouteImport.update({
+    id: '/lovable/email/transactional/preview',
+    path: '/lovable/email/transactional/preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const LovableEmailAuthWebhookRoute = LovableEmailAuthWebhookRouteImport.update({
+  id: '/lovable/email/auth/webhook',
+  path: '/lovable/email/auth/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
+  id: '/lovable/email/auth/preview',
+  path: '/lovable/email/auth/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CommunitiesSlugChallengesChallengeIdRoute =
   CommunitiesSlugChallengesChallengeIdRouteImport.update({
     id: '/challenges/$challengeId',
@@ -637,6 +656,9 @@ export interface FileRoutesByFullPath {
   '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -722,6 +744,9 @@ export interface FileRoutesByTo {
   '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/atlas/group': typeof AuthenticatedAtlasGroupIndexRoute
   '/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -811,6 +836,9 @@ export interface FileRoutesById {
   '/_authenticated/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
+  '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
+  '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
+  '/lovable/email/transactional/preview': typeof LovableEmailTransactionalPreviewRoute
   '/_authenticated/atlas/group/': typeof AuthenticatedAtlasGroupIndexRoute
   '/_authenticated/communities/$slug/challenges/new': typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   '/_authenticated/communities/$slug/events/new': typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -900,6 +928,9 @@ export interface FileRouteTypes {
     | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
+    | '/lovable/email/transactional/preview'
     | '/atlas/group/'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
@@ -985,6 +1016,9 @@ export interface FileRouteTypes {
     | '/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
+    | '/lovable/email/transactional/preview'
     | '/atlas/group'
     | '/communities/$slug/challenges/new'
     | '/communities/$slug/events/new'
@@ -1073,6 +1107,9 @@ export interface FileRouteTypes {
     | '/_authenticated/judge/submit/$eventSlug'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
+    | '/lovable/email/auth/preview'
+    | '/lovable/email/auth/webhook'
+    | '/lovable/email/transactional/preview'
     | '/_authenticated/atlas/group/'
     | '/_authenticated/communities/$slug/challenges/new'
     | '/_authenticated/communities/$slug/events/new'
@@ -1103,6 +1140,9 @@ export interface RootRouteChildren {
   JudgeEntriesIdRoute: typeof JudgeEntriesIdRoute
   JudgeEventsSlugRoute: typeof JudgeEventsSlugRoute
   ApiPublicWebhooksPaymentsRoute: typeof ApiPublicWebhooksPaymentsRoute
+  LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
+  LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
+  LovableEmailTransactionalPreviewRoute: typeof LovableEmailTransactionalPreviewRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1646,6 +1686,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAtlasGroupIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/lovable/email/transactional/preview': {
+      id: '/lovable/email/transactional/preview'
+      path: '/lovable/email/transactional/preview'
+      fullPath: '/lovable/email/transactional/preview'
+      preLoaderRoute: typeof LovableEmailTransactionalPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/webhook': {
+      id: '/lovable/email/auth/webhook'
+      path: '/lovable/email/auth/webhook'
+      fullPath: '/lovable/email/auth/webhook'
+      preLoaderRoute: typeof LovableEmailAuthWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lovable/email/auth/preview': {
+      id: '/lovable/email/auth/preview'
+      path: '/lovable/email/auth/preview'
+      fullPath: '/lovable/email/auth/preview'
+      preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/communities/$slug/challenges/$challengeId': {
       id: '/communities/$slug/challenges/$challengeId'
       path: '/challenges/$challengeId'
@@ -1947,6 +2008,9 @@ const rootRouteChildren: RootRouteChildren = {
   JudgeEntriesIdRoute: JudgeEntriesIdRoute,
   JudgeEventsSlugRoute: JudgeEventsSlugRoute,
   ApiPublicWebhooksPaymentsRoute: ApiPublicWebhooksPaymentsRoute,
+  LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
+  LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
+  LovableEmailTransactionalPreviewRoute: LovableEmailTransactionalPreviewRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
