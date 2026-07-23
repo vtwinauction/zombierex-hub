@@ -140,7 +140,7 @@ function HomePage() {
           <PulseStat label="Streak"   value="12d" />
           <PulseStat label="Rides"    value="3" />
         </div>
-        <div className="mt-3 grid grid-cols-4 gap-2">
+        <div className="mt-3 grid grid-cols-5 gap-2">
           {QUICK_ACTIONS.map((a) => (
             <Link
               key={a.to}
