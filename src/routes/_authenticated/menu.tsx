@@ -43,6 +43,7 @@ const SECTIONS: { title: string; items: Item[] }[] = [
       { to: "/atlas", label: "Atlas map", hint: "Plan · POIs · community" },
       { to: "/atlas/record", label: "Record route", hint: "Publish to the Atlas" },
       { to: "/atlas/mine", label: "My routes" },
+      { to: "/drag", label: "🏁 Drag Racing", hint: "GPS-verified runs · leaderboards" },
     ],
   },
   {

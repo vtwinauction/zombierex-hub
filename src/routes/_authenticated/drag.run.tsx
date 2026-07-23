@@ -1,0 +1,216 @@
+/**
+ * Drag — New Run wizard. Collects vehicle info, then arms GPS recorder,
+ * detects launch, captures full trace, and submits for server verification.
+ */
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { StatusBar } from "@/components/StatusBar";
+import { useDragRecorder } from "@/lib/drag-recorder";
+import { submitDragRun } from "@/lib/drag.functions";
+import { SpeedoHUD } from "@/components/SpeedoHUD";
+
+export const Route = createFileRoute("/_authenticated/drag/run")({
+  head: () => ({ meta: [{ title: "New drag run · ZOMBIEREX" }] }),
+  component: NewRun,
+});
+
+type Step = "vehicle" | "record" | "submitting" | "done";
+
+function NewRun() {
+  const nav = useNavigate();
+  const [step, setStep] = useState<Step>("vehicle");
+  const [vehicle, setVehicle] = useState({
+    vehicle_kind: "motorcycle" as "motorcycle" | "car",
+    vehicle_name: "",
+    engine_cc: "" as string,
+    aspiration: "na" as "na" | "turbo" | "supercharged" | "electric",
+    fuel_type: "gasoline" as "gasoline" | "diesel" | "e85" | "electric" | "hybrid" | "other",
+    weight_class: "",
+    weight_kg: "" as string,
+    modifications: "",
+  });
+  const rec = useDragRecorder();
+  const submit = useServerFn(submitDragRun);
+  const [result, setResult] = useState<any>(null);
+
+  const mut = useMutation({
+    mutationFn: async () => {
+      return submit({ data: {
+        vehicle_kind: vehicle.vehicle_kind,
+        vehicle_name: vehicle.vehicle_name || null,
+        engine_cc: vehicle.engine_cc ? Number(vehicle.engine_cc) : null,
+        aspiration: vehicle.aspiration,
+        fuel_type: vehicle.fuel_type,
+        weight_class: vehicle.weight_class || null,
+        weight_kg: vehicle.weight_kg ? Number(vehicle.weight_kg) : null,
+        modifications: vehicle.modifications || null,
+        visibility: "public",
+        points: rec.points,
+        started_at: new Date(Date.now() - (rec.points.at(-1)?.t_ms ?? 0)).toISOString(),
+        ended_at: new Date().toISOString(),
+      } });
+    },
+    onSuccess: (r: any) => { setResult(r); setStep("done"); },
+    onError: (e: any) => alert(e?.message ?? "Submit failed"),
+  });
+
+  return (
+    <div className="min-h-svh pb-24">
+      <StatusBar index="07" section="DRAG · NEW RUN" />
+      <div className="px-4 pt-4">
+        {step === "vehicle" && (
+          <>
+            <h1 className="serif text-3xl" style={{ color: "var(--color-ink)" }}>Vehicle</h1>
+            <p className="mt-1 text-sm" style={{ color: "var(--color-ink-3)" }}>
+              Every verified run generates a permanent digital performance record.
+            </p>
+            <div className="mt-4 space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                {(["motorcycle", "car"] as const).map((k) => (
+                  <button key={k} onClick={() => setVehicle((v) => ({ ...v, vehicle_kind: k }))}
+                    className="tap rounded-lg border p-3 text-sm font-bold"
+                    style={{
+                      borderColor: vehicle.vehicle_kind === k ? "var(--color-neon)" : "var(--color-hair)",
+                      background: vehicle.vehicle_kind === k ? "color-mix(in oklab, var(--color-neon) 12%, var(--color-graphite))" : "var(--color-graphite)",
+                      color: "var(--color-ink)",
+                    }}>
+                    {k === "motorcycle" ? "Motorcycle" : "Car"}
+                  </button>
+                ))}
+              </div>
+              <Field label="Vehicle name" value={vehicle.vehicle_name} onChange={(v) => setVehicle((s) => ({ ...s, vehicle_name: v }))} placeholder="e.g. Yamaha R1 2024" />
+              <Field label="Engine (cc)" value={vehicle.engine_cc} onChange={(v) => setVehicle((s) => ({ ...s, engine_cc: v.replace(/[^0-9]/g, "") }))} placeholder="998" inputMode="numeric" />
+              <Select label="Aspiration" value={vehicle.aspiration} onChange={(v) => setVehicle((s) => ({ ...s, aspiration: v as any }))} options={[
+                ["na", "Naturally Aspirated"], ["turbo", "Turbocharged"], ["supercharged", "Supercharged"], ["electric", "Electric"],
+              ]} />
+              <Select label="Fuel" value={vehicle.fuel_type} onChange={(v) => setVehicle((s) => ({ ...s, fuel_type: v as any }))} options={[
+                ["gasoline", "Gasoline"], ["diesel", "Diesel"], ["e85", "E85"], ["electric", "Electric"], ["hybrid", "Hybrid"], ["other", "Other"],
+              ]} />
+              <div className="grid grid-cols-2 gap-2">
+                <Field label="Weight class" value={vehicle.weight_class} onChange={(v) => setVehicle((s) => ({ ...s, weight_class: v }))} placeholder="Supersport" />
+                <Field label="Weight (kg)" value={vehicle.weight_kg} onChange={(v) => setVehicle((s) => ({ ...s, weight_kg: v.replace(/[^0-9]/g, "") }))} placeholder="200" inputMode="numeric" />
+              </div>
+              <Field label="Modifications" value={vehicle.modifications} onChange={(v) => setVehicle((s) => ({ ...s, modifications: v }))} placeholder="Full exhaust, ECU flash…" />
+            </div>
+            <button onClick={() => setStep("record")}
+              className="tap mt-6 w-full rounded-lg py-3 mono-caps text-sm font-black"
+              style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
+              CONTINUE → GPS TIMING
+            </button>
+          </>
+        )}
+
+        {step === "record" && (
+          <>
+            <h1 className="serif text-3xl" style={{ color: "var(--color-ink)" }}>GPS Timing</h1>
+            <p className="mt-1 text-sm" style={{ color: "var(--color-ink-3)" }}>
+              Arm the timer, then launch. Run auto-detects on 8 km/h and auto-stops when you coast down.
+            </p>
+            <div className="mt-4 flex justify-center"><SpeedoHUD unit="kmh" /></div>
+            {rec.error && <div className="mt-3 border border-red-500/40 bg-red-500/10 p-2 text-xs text-red-200">{rec.error}</div>}
+            <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+              <Stat label="STATE" value={rec.recording ? "REC" : rec.armed ? "ARMED" : "IDLE"} />
+              <Stat label="POINTS" value={String(rec.points.length)} />
+              <Stat label="LIVE" value={`${rec.liveKmh.toFixed(0)} km/h`} />
+            </div>
+            <div className="mt-4 flex gap-2">
+              {!rec.armed && (
+                <button onClick={rec.arm} className="tap flex-1 rounded-lg py-3 mono-caps text-sm font-black" style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
+                  ARM TIMER
+                </button>
+              )}
+              {rec.armed && (
+                <button onClick={rec.stop} className="tap flex-1 rounded-lg py-3 mono-caps text-sm font-black" style={{ background: "var(--color-heat)", color: "white" }}>
+                  STOP
+                </button>
+              )}
+              {rec.points.length > 10 && !rec.armed && (
+                <button onClick={() => { setStep("submitting"); mut.mutate(); }} className="tap flex-1 rounded-lg py-3 mono-caps text-sm font-black" style={{ background: "var(--color-ink)", color: "white" }}>
+                  SUBMIT & VERIFY
+                </button>
+              )}
+            </div>
+            <button onClick={rec.reset} className="tap mt-3 w-full text-xs" style={{ color: "var(--color-ink-3)" }}>
+              Reset trace
+            </button>
+          </>
+        )}
+
+        {step === "submitting" && (
+          <div className="py-16 text-center">
+            <p className="mono-caps text-sm font-black" style={{ color: "var(--color-neon)" }}>VERIFYING…</p>
+            <p className="mt-2 text-sm" style={{ color: "var(--color-ink-3)" }}>Recomputing splits from GPS trace and running anti-cheat checks.</p>
+          </div>
+        )}
+
+        {step === "done" && result && (
+          <div className="py-8">
+            <p className="mono-caps text-[10px] font-black" style={{ color: "var(--color-silver)" }}>RESULT</p>
+            <h1 className="serif text-3xl" style={{ color: "var(--color-ink)" }}>
+              {result.status === "verified" ? "Verified ✓" : "Flagged for review"}
+            </h1>
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <Split label="0–60 km/h" value={result.computed.zero_to_60_kmh_s} unit="s" />
+              <Split label="0–100 km/h" value={result.computed.zero_to_100_kmh_s} unit="s" />
+              <Split label="60–120 km/h" value={result.computed.sixty_to_120_kmh_s} unit="s" />
+              <Split label="1/8 mile" value={result.computed.eighth_mile_s} unit="s" />
+              <Split label="1/4 mile" value={result.computed.quarter_mile_s} unit="s" />
+              <Split label="Top speed" value={result.computed.top_speed_kmh} unit="km/h" />
+            </div>
+            <button onClick={() => nav({ to: "/drag/$id", params: { id: result.id } })}
+              className="tap mt-6 w-full rounded-lg py-3 mono-caps text-sm font-black"
+              style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
+              VIEW PERFORMANCE RECORD
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Field({ label, value, onChange, placeholder, inputMode }: { label: string; value: string; onChange: (v: string) => void; placeholder?: string; inputMode?: "text" | "numeric" }) {
+  return (
+    <label className="block">
+      <span className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>{label.toUpperCase()}</span>
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} inputMode={inputMode}
+        className="mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+        style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }} />
+    </label>
+  );
+}
+
+function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: [string, string][] }) {
+  return (
+    <label className="block">
+      <span className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>{label.toUpperCase()}</span>
+      <select value={value} onChange={(e) => onChange(e.target.value)}
+        className="mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm"
+        style={{ borderColor: "var(--color-hair-strong)", color: "var(--color-ink)" }}>
+        {options.map(([v, l]) => <option key={v} value={v}>{l}</option>)}
+      </select>
+    </label>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded border border-white/10 bg-graphite p-2">
+      <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 8 }}>{label}</p>
+      <p className="mono-num text-sm font-bold" style={{ color: "var(--color-ink)" }}>{value}</p>
+    </div>
+  );
+}
+
+function Split({ label, value, unit }: { label: string; value: number | null; unit: string }) {
+  return (
+    <div className="rounded-lg border p-3" style={{ borderColor: "var(--color-hair)", background: "var(--color-graphite)" }}>
+      <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>{label.toUpperCase()}</p>
+      <p className="mono-num mt-1 text-lg font-bold" style={{ color: "var(--color-ink)" }}>
+        {value != null ? `${Number(value).toFixed(unit === "s" ? 3 : 1)} ${unit}` : "—"}
+      </p>
+    </div>
+  );
+}

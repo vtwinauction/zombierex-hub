@@ -40,6 +40,7 @@ import { Route as AuthenticatedAssistantRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as AuthenticatedRidesIndexRouteImport } from './routes/_authenticated/rides.index'
+import { Route as AuthenticatedDragIndexRouteImport } from './routes/_authenticated/drag.index'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business.index'
 import { Route as AuthenticatedAdsIndexRouteImport } from './routes/_authenticated/ads.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -56,6 +57,9 @@ import { Route as AuthenticatedMarketplaceDashboardRouteImport } from './routes/
 import { Route as AuthenticatedJudgeMineRouteImport } from './routes/_authenticated/judge.mine'
 import { Route as AuthenticatedEventsNewRouteImport } from './routes/_authenticated/events.new'
 import { Route as AuthenticatedEventsIdRouteImport } from './routes/_authenticated/events.$id'
+import { Route as AuthenticatedDragRunRouteImport } from './routes/_authenticated/drag.run'
+import { Route as AuthenticatedDragLeaderboardsRouteImport } from './routes/_authenticated/drag.leaderboards'
+import { Route as AuthenticatedDragIdRouteImport } from './routes/_authenticated/drag.$id'
 import { Route as AuthenticatedCreatorTiersRouteImport } from './routes/_authenticated/creator.tiers'
 import { Route as AuthenticatedCreatorDashboardRouteImport } from './routes/_authenticated/creator.dashboard'
 import { Route as AuthenticatedCreatorCollabsRouteImport } from './routes/_authenticated/creator.collabs'
@@ -243,6 +247,11 @@ const AuthenticatedRidesIndexRoute = AuthenticatedRidesIndexRouteImport.update({
   path: '/rides/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDragIndexRoute = AuthenticatedDragIndexRouteImport.update({
+  id: '/drag/',
+  path: '/drag/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedBusinessIndexRoute =
   AuthenticatedBusinessIndexRouteImport.update({
     id: '/business/',
@@ -326,6 +335,22 @@ const AuthenticatedEventsNewRoute = AuthenticatedEventsNewRouteImport.update({
 const AuthenticatedEventsIdRoute = AuthenticatedEventsIdRouteImport.update({
   id: '/events/$id',
   path: '/events/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDragRunRoute = AuthenticatedDragRunRouteImport.update({
+  id: '/drag/run',
+  path: '/drag/run',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDragLeaderboardsRoute =
+  AuthenticatedDragLeaderboardsRouteImport.update({
+    id: '/drag/leaderboards',
+    path: '/drag/leaderboards',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDragIdRoute = AuthenticatedDragIdRouteImport.update({
+  id: '/drag/$id',
+  path: '/drag/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCreatorTiersRoute =
@@ -556,6 +581,9 @@ export interface FileRoutesByFullPath {
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/drag/$id': typeof AuthenticatedDragIdRoute
+  '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/judge/mine': typeof AuthenticatedJudgeMineRoute
@@ -572,6 +600,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/ads/': typeof AuthenticatedAdsIndexRoute
   '/business/': typeof AuthenticatedBusinessIndexRoute
+  '/drag/': typeof AuthenticatedDragIndexRoute
   '/rides/': typeof AuthenticatedRidesIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -633,6 +662,9 @@ export interface FileRoutesByTo {
   '/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/drag/$id': typeof AuthenticatedDragIdRoute
+  '/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/drag/run': typeof AuthenticatedDragRunRoute
   '/events/$id': typeof AuthenticatedEventsIdRoute
   '/events/new': typeof AuthenticatedEventsNewRoute
   '/judge/mine': typeof AuthenticatedJudgeMineRoute
@@ -649,6 +681,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/ads': typeof AuthenticatedAdsIndexRoute
   '/business': typeof AuthenticatedBusinessIndexRoute
+  '/drag': typeof AuthenticatedDragIndexRoute
   '/rides': typeof AuthenticatedRidesIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -714,6 +747,9 @@ export interface FileRoutesById {
   '/_authenticated/creator/collabs': typeof AuthenticatedCreatorCollabsRoute
   '/_authenticated/creator/dashboard': typeof AuthenticatedCreatorDashboardRoute
   '/_authenticated/creator/tiers': typeof AuthenticatedCreatorTiersRoute
+  '/_authenticated/drag/$id': typeof AuthenticatedDragIdRoute
+  '/_authenticated/drag/leaderboards': typeof AuthenticatedDragLeaderboardsRoute
+  '/_authenticated/drag/run': typeof AuthenticatedDragRunRoute
   '/_authenticated/events/$id': typeof AuthenticatedEventsIdRoute
   '/_authenticated/events/new': typeof AuthenticatedEventsNewRoute
   '/_authenticated/judge/mine': typeof AuthenticatedJudgeMineRoute
@@ -730,6 +766,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/ads/': typeof AuthenticatedAdsIndexRoute
   '/_authenticated/business/': typeof AuthenticatedBusinessIndexRoute
+  '/_authenticated/drag/': typeof AuthenticatedDragIndexRoute
   '/_authenticated/rides/': typeof AuthenticatedRidesIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -795,6 +832,9 @@ export interface FileRouteTypes {
     | '/creator/collabs'
     | '/creator/dashboard'
     | '/creator/tiers'
+    | '/drag/$id'
+    | '/drag/leaderboards'
+    | '/drag/run'
     | '/events/$id'
     | '/events/new'
     | '/judge/mine'
@@ -811,6 +851,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ads/'
     | '/business/'
+    | '/drag/'
     | '/rides/'
     | '/vendor/'
     | '/admin/vendors/$id'
@@ -872,6 +913,9 @@ export interface FileRouteTypes {
     | '/creator/collabs'
     | '/creator/dashboard'
     | '/creator/tiers'
+    | '/drag/$id'
+    | '/drag/leaderboards'
+    | '/drag/run'
     | '/events/$id'
     | '/events/new'
     | '/judge/mine'
@@ -888,6 +932,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ads'
     | '/business'
+    | '/drag'
     | '/rides'
     | '/vendor'
     | '/admin/vendors/$id'
@@ -952,6 +997,9 @@ export interface FileRouteTypes {
     | '/_authenticated/creator/collabs'
     | '/_authenticated/creator/dashboard'
     | '/_authenticated/creator/tiers'
+    | '/_authenticated/drag/$id'
+    | '/_authenticated/drag/leaderboards'
+    | '/_authenticated/drag/run'
     | '/_authenticated/events/$id'
     | '/_authenticated/events/new'
     | '/_authenticated/judge/mine'
@@ -968,6 +1016,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/ads/'
     | '/_authenticated/business/'
+    | '/_authenticated/drag/'
     | '/_authenticated/rides/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
@@ -1227,6 +1276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRidesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/drag/': {
+      id: '/_authenticated/drag/'
+      path: '/drag'
+      fullPath: '/drag/'
+      preLoaderRoute: typeof AuthenticatedDragIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/business/': {
       id: '/_authenticated/business/'
       path: '/business'
@@ -1337,6 +1393,27 @@ declare module '@tanstack/react-router' {
       path: '/events/$id'
       fullPath: '/events/$id'
       preLoaderRoute: typeof AuthenticatedEventsIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drag/run': {
+      id: '/_authenticated/drag/run'
+      path: '/drag/run'
+      fullPath: '/drag/run'
+      preLoaderRoute: typeof AuthenticatedDragRunRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drag/leaderboards': {
+      id: '/_authenticated/drag/leaderboards'
+      path: '/drag/leaderboards'
+      fullPath: '/drag/leaderboards'
+      preLoaderRoute: typeof AuthenticatedDragLeaderboardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drag/$id': {
+      id: '/_authenticated/drag/$id'
+      path: '/drag/$id'
+      fullPath: '/drag/$id'
+      preLoaderRoute: typeof AuthenticatedDragIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/creator/tiers': {
@@ -1633,6 +1710,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedCreatorCollabsRoute: typeof AuthenticatedCreatorCollabsRoute
   AuthenticatedCreatorDashboardRoute: typeof AuthenticatedCreatorDashboardRoute
   AuthenticatedCreatorTiersRoute: typeof AuthenticatedCreatorTiersRoute
+  AuthenticatedDragIdRoute: typeof AuthenticatedDragIdRoute
+  AuthenticatedDragLeaderboardsRoute: typeof AuthenticatedDragLeaderboardsRoute
+  AuthenticatedDragRunRoute: typeof AuthenticatedDragRunRoute
   AuthenticatedEventsIdRoute: typeof AuthenticatedEventsIdRoute
   AuthenticatedEventsNewRoute: typeof AuthenticatedEventsNewRoute
   AuthenticatedJudgeMineRoute: typeof AuthenticatedJudgeMineRoute
@@ -1642,6 +1722,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRidesIdRoute: typeof AuthenticatedRidesIdRoute
   AuthenticatedAdsIndexRoute: typeof AuthenticatedAdsIndexRoute
   AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
+  AuthenticatedDragIndexRoute: typeof AuthenticatedDragIndexRoute
   AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedAtlasGroupIdRoute: typeof AuthenticatedAtlasGroupIdRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
@@ -1678,6 +1759,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCreatorCollabsRoute: AuthenticatedCreatorCollabsRoute,
   AuthenticatedCreatorDashboardRoute: AuthenticatedCreatorDashboardRoute,
   AuthenticatedCreatorTiersRoute: AuthenticatedCreatorTiersRoute,
+  AuthenticatedDragIdRoute: AuthenticatedDragIdRoute,
+  AuthenticatedDragLeaderboardsRoute: AuthenticatedDragLeaderboardsRoute,
+  AuthenticatedDragRunRoute: AuthenticatedDragRunRoute,
   AuthenticatedEventsIdRoute: AuthenticatedEventsIdRoute,
   AuthenticatedEventsNewRoute: AuthenticatedEventsNewRoute,
   AuthenticatedJudgeMineRoute: AuthenticatedJudgeMineRoute,
@@ -1688,6 +1772,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRidesIdRoute: AuthenticatedRidesIdRoute,
   AuthenticatedAdsIndexRoute: AuthenticatedAdsIndexRoute,
   AuthenticatedBusinessIndexRoute: AuthenticatedBusinessIndexRoute,
+  AuthenticatedDragIndexRoute: AuthenticatedDragIndexRoute,
   AuthenticatedRidesIndexRoute: AuthenticatedRidesIndexRoute,
   AuthenticatedAtlasGroupIdRoute: AuthenticatedAtlasGroupIdRoute,
   AuthenticatedCommunitiesSlugManageRoute:
