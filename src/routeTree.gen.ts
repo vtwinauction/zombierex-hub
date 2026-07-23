@@ -40,6 +40,7 @@ import { Route as AuthenticatedAssistantRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedVendorIndexRouteImport } from './routes/_authenticated/vendor.index'
 import { Route as AuthenticatedRidesIndexRouteImport } from './routes/_authenticated/rides.index'
+import { Route as AuthenticatedDragIndexRouteImport } from './routes/_authenticated/drag.index'
 import { Route as AuthenticatedBusinessIndexRouteImport } from './routes/_authenticated/business.index'
 import { Route as AuthenticatedAdsIndexRouteImport } from './routes/_authenticated/ads.index'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -241,6 +242,11 @@ const AuthenticatedVendorIndexRoute =
 const AuthenticatedRidesIndexRoute = AuthenticatedRidesIndexRouteImport.update({
   id: '/rides/',
   path: '/rides/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDragIndexRoute = AuthenticatedDragIndexRouteImport.update({
+  id: '/drag/',
+  path: '/drag/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedBusinessIndexRoute =
@@ -572,6 +578,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/ads/': typeof AuthenticatedAdsIndexRoute
   '/business/': typeof AuthenticatedBusinessIndexRoute
+  '/drag/': typeof AuthenticatedDragIndexRoute
   '/rides/': typeof AuthenticatedRidesIndexRoute
   '/vendor/': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -649,6 +656,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/ads': typeof AuthenticatedAdsIndexRoute
   '/business': typeof AuthenticatedBusinessIndexRoute
+  '/drag': typeof AuthenticatedDragIndexRoute
   '/rides': typeof AuthenticatedRidesIndexRoute
   '/vendor': typeof AuthenticatedVendorIndexRoute
   '/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -730,6 +738,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/ads/': typeof AuthenticatedAdsIndexRoute
   '/_authenticated/business/': typeof AuthenticatedBusinessIndexRoute
+  '/_authenticated/drag/': typeof AuthenticatedDragIndexRoute
   '/_authenticated/rides/': typeof AuthenticatedRidesIndexRoute
   '/_authenticated/vendor/': typeof AuthenticatedVendorIndexRoute
   '/_authenticated/admin/vendors/$id': typeof AuthenticatedAdminVendorsIdRoute
@@ -811,6 +820,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/ads/'
     | '/business/'
+    | '/drag/'
     | '/rides/'
     | '/vendor/'
     | '/admin/vendors/$id'
@@ -888,6 +898,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/ads'
     | '/business'
+    | '/drag'
     | '/rides'
     | '/vendor'
     | '/admin/vendors/$id'
@@ -968,6 +979,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/'
     | '/_authenticated/ads/'
     | '/_authenticated/business/'
+    | '/_authenticated/drag/'
     | '/_authenticated/rides/'
     | '/_authenticated/vendor/'
     | '/_authenticated/admin/vendors/$id'
@@ -1225,6 +1237,13 @@ declare module '@tanstack/react-router' {
       path: '/rides'
       fullPath: '/rides/'
       preLoaderRoute: typeof AuthenticatedRidesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drag/': {
+      id: '/_authenticated/drag/'
+      path: '/drag'
+      fullPath: '/drag/'
+      preLoaderRoute: typeof AuthenticatedDragIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/business/': {
@@ -1642,6 +1661,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRidesIdRoute: typeof AuthenticatedRidesIdRoute
   AuthenticatedAdsIndexRoute: typeof AuthenticatedAdsIndexRoute
   AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
+  AuthenticatedDragIndexRoute: typeof AuthenticatedDragIndexRoute
   AuthenticatedRidesIndexRoute: typeof AuthenticatedRidesIndexRoute
   AuthenticatedAtlasGroupIdRoute: typeof AuthenticatedAtlasGroupIdRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
@@ -1688,6 +1708,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedRidesIdRoute: AuthenticatedRidesIdRoute,
   AuthenticatedAdsIndexRoute: AuthenticatedAdsIndexRoute,
   AuthenticatedBusinessIndexRoute: AuthenticatedBusinessIndexRoute,
+  AuthenticatedDragIndexRoute: AuthenticatedDragIndexRoute,
   AuthenticatedRidesIndexRoute: AuthenticatedRidesIndexRoute,
   AuthenticatedAtlasGroupIdRoute: AuthenticatedAtlasGroupIdRoute,
   AuthenticatedCommunitiesSlugManageRoute:
