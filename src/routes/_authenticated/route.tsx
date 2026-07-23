@@ -18,30 +18,7 @@ function hasLocalSession(): boolean {
 }
 
 export const Route = createFileRoute("/_authenticated")({
-  ssr: false,
-  beforeLoad: () => {
-    // Synchronous localStorage check — never hangs. supabase-js refreshes the
-    // token in the background; here we just gate the render so pending never sticks.
-    if (typeof window === "undefined") return {};
-    if (!hasLocalSession()) {
-      throw redirect({ to: "/auth" });
-    }
-    return {};
-  },
-  component: () => <Outlet />,
-  pendingComponent: () => (
-    <div className="grid min-h-svh place-items-center px-6">
-      <div className="flex flex-col items-center gap-3">
-        <div
-          className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
-          style={{ borderColor: "var(--color-neon, #00c853)", borderTopColor: "transparent" }}
-        />
-        <p className="mono-tag" style={{ fontSize: 10, letterSpacing: "0.22em", color: "var(--color-ink-3)" }}>
-          AUTHENTICATING
-        </p>
-      </div>
-    </div>
-  ),
+  component: AuthGate,
   errorComponent: ({ error, reset }) => (
     <div className="grid min-h-svh place-items-center px-6">
       <div className="card-surface max-w-sm p-6 text-center">
@@ -58,3 +35,38 @@ export const Route = createFileRoute("/_authenticated")({
     </div>
   ),
 });
+
+function AuthGate() {
+  const [state, setState] = React.useState<"checking" | "ok" | "redirecting">(
+    typeof window === "undefined" ? "checking" : (hasLocalSession() ? "ok" : "redirecting"),
+  );
+
+  React.useEffect(() => {
+    if (state === "redirecting") {
+      window.location.replace("/auth");
+    }
+  }, [state]);
+
+  // Never hangs: client-side sync check on first render.
+  React.useEffect(() => {
+    if (state === "checking" && typeof window !== "undefined") {
+      setState(hasLocalSession() ? "ok" : "redirecting");
+    }
+  }, [state]);
+
+  if (state === "ok") return <Outlet />;
+  return (
+    <div className="grid min-h-svh place-items-center px-6">
+      <div className="flex flex-col items-center gap-3">
+        <div
+          className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
+          style={{ borderColor: "var(--color-neon, #00c853)", borderTopColor: "transparent" }}
+        />
+        <p className="mono-tag" style={{ fontSize: 10, letterSpacing: "0.22em", color: "var(--color-ink-3)" }}>
+          {state === "redirecting" ? "REDIRECTING" : "AUTHENTICATING"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
