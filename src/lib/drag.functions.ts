@@ -312,3 +312,46 @@ export const deleteDragRun = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/**
+ * AI Coach — analyses a submitted run and returns concise coaching notes.
+ */
+export const coachDragRun = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ data, context }) => {
+    const { data: run, error } = await context.supabase
+      .from("drag_runs").select("*").eq("id", data.id).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!run) throw new Error("Run not found");
+
+    const { aiCompleteJson } = await import("./ai-gateway.server");
+    const summary = {
+      vehicle: {
+        kind: run.vehicle_kind, name: run.vehicle_name, cc: run.engine_cc,
+        aspiration: run.aspiration, fuel: run.fuel_type,
+        weight_kg: run.weight_kg, modifications: run.modifications,
+      },
+      splits: {
+        zero_to_60_kmh_s: run.zero_to_60_kmh_s,
+        zero_to_100_kmh_s: run.zero_to_100_kmh_s,
+        sixty_to_120_kmh_s: run.sixty_to_120_kmh_s,
+        eighth_mile_s: run.eighth_mile_s,
+        eighth_mile_trap_kmh: run.eighth_mile_trap_kmh,
+        quarter_mile_s: run.quarter_mile_s,
+        quarter_mile_trap_kmh: run.quarter_mile_trap_kmh,
+        top_speed_kmh: run.top_speed_kmh,
+        duration_s: run.duration_s,
+      },
+      verification: { status: run.status, score: run.verification_score, notes: run.anti_cheat_notes },
+    };
+    const out = await aiCompleteJson<{
+      grade: string; headline: string; launch: string; shift: string;
+      weakness: string; next_target: string; tips: string[];
+    }>([
+      { role: "system", content: "You are REX, a professional drag-racing coach. Reply as strict JSON with keys: grade (A+..F), headline, launch, shift, weakness, next_target, tips (array of 3 short strings). Be concise, technical, use km/h and seconds." },
+      { role: "user", content: `Coach this GPS-verified drag run:\n${JSON.stringify(summary)}` },
+    ], { temperature: 0.4, maxTokens: 500 });
+
+    return out;
+  });

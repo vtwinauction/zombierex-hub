@@ -38,6 +38,7 @@ const TRENDING_TAGS = [
 
 const QUICK_ACTIONS = [
   { to: "/atlas" as const,        label: "Atlas",    icon: Map },
+  { to: "/drag" as const,         label: "Drag",     icon: Gauge },
   { to: "/marketplace" as const,  label: "Vault",    icon: Store },
   { to: "/events" as const,       label: "Events",   icon: CalendarDays },
   { to: "/communities" as const,  label: "Crews",    icon: Users },
@@ -139,7 +140,7 @@ function HomePage() {
           <PulseStat label="Streak"   value="12d" />
           <PulseStat label="Rides"    value="3" />
         </div>
-        <div className="mt-3 grid grid-cols-4 gap-2">
+        <div className="mt-3 grid grid-cols-5 gap-2">
           {QUICK_ACTIONS.map((a) => (
             <Link
               key={a.to}
