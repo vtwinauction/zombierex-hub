@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet, redirect, Link } from "@tanstack/react-router";
-import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = `sb-${import.meta.env.VITE_SUPABASE_PROJECT_ID}-auth-token`;
 
