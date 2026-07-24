@@ -87,12 +87,14 @@ function NavCell({ item, active }: { item: NavItem; active: boolean }) {
       >
         {item.label}
       </span>
-      {active && (
-        <span
-          className="absolute -bottom-1 h-[3px] w-6 rounded-full"
-          style={{ background: "var(--color-ink-0)" }}
-        />
-      )}
+      <span
+        className="absolute -bottom-1 h-[3px] rounded-full transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+        style={{
+          width: active ? "22px" : "0px",
+          opacity: active ? 1 : 0,
+          background: "var(--color-ink-0)",
+        }}
+      />
     </Link>
   );
 }
