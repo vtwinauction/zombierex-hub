@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Pencil, Pencil as EditIcon, Phone, Share2, Settings as SettingsIcon } from "lucide-react";
+import { Pencil, Phone, Share2, Settings as SettingsIcon } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
