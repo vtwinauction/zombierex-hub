@@ -184,7 +184,7 @@ function ProfilePage() {
                   "conic-gradient(from 210deg, #00e5ff, var(--color-neon), #ff9500, #ff3d5a, #00e5ff)",
               }}
             >
-              <img src={me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
+              <img src={p?.avatar_url || me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
             </div>
 
             <div className="min-w-0">
