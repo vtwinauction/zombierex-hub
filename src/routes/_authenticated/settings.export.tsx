@@ -19,14 +19,15 @@ function ExportPage() {
       const user = userRes.user;
       const uid = user?.id ?? "";
 
-      const safe = async (fn: () => Promise<any>) => { try { const r = await fn(); return r?.data ?? null; } catch { return null; } };
+      const safe = async (fn: () => any) => { try { const r = await fn(); return r?.data ?? null; } catch { return null; } };
+      const sb = supabase as any;
       const [profile, posts, vehicles, routes, listings, dragRuns] = await Promise.all([
-        safe(() => supabase.from("profiles").select("*").eq("id", uid).maybeSingle()),
-        safe(() => supabase.from("posts").select("*").eq("author_id", uid)),
-        safe(() => supabase.from("vehicles").select("*").eq("owner_id", uid)),
-        safe(() => supabase.from("routes").select("*").eq("owner_id", uid)),
-        safe(() => supabase.from("listings").select("*").eq("seller_id", uid)),
-        safe(() => supabase.from("drag_runs").select("*").eq("rider_id", uid)),
+        safe(() => sb.from("profiles").select("*").eq("id", uid).maybeSingle()),
+        safe(() => sb.from("posts").select("*").eq("author_id", uid)),
+        safe(() => sb.from("vehicles").select("*").eq("owner_id", uid)),
+        safe(() => sb.from("routes").select("*").eq("owner_id", uid)),
+        safe(() => sb.from("listings").select("*").eq("seller_id", uid)),
+        safe(() => sb.from("drag_runs").select("*").eq("user_id", uid)),
       ]);
 
       const prefs: Record<string, unknown> = {};
