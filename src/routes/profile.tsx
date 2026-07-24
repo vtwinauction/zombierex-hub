@@ -948,7 +948,7 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
   const m = useMutation({
     mutationFn: (nickname: string) => upsert({ data: { nickname } }),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ["profile", "me"] });
+      qc.invalidateQueries({ queryKey: ["profile"] });
       setOpen(false);
     },
     onError: (e: unknown) => setError(e instanceof Error ? e.message : "Save failed"),
