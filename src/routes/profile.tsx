@@ -231,32 +231,58 @@ function ProfilePage() {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="mt-4 grid grid-cols-4 gap-2">
+          {/* Actions — edge-to-edge, uniform height */}
+          <div className="mt-4 grid grid-cols-4 items-stretch overflow-hidden rounded-xl"
+            style={{ border: "1px solid var(--color-line)", background: "var(--color-paper-0)" }}>
             <Link
               to="/profile/edit"
-              className="tap rounded-xl py-2.5 text-center text-[12px] font-semibold"
+              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
               style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
             >
               Edit
             </Link>
             <button
+              type="button"
               onClick={() => setContactOpen(true)}
-              className="tap rounded-xl py-2.5 text-[12px] font-semibold"
-              style={{ background: "var(--color-neon)", color: "#000" }}
+              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
+              style={{ background: "var(--color-neon)", color: "#000", borderLeft: "1px solid var(--color-line)" }}
             >
               Contact
             </button>
             <button
-              className="tap rounded-xl py-2.5 text-[12px] font-semibold"
-              style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
+              type="button"
+              onClick={async () => {
+                const url = typeof window !== "undefined"
+                  ? `${window.location.origin}/profile`
+                  : "";
+                const shareData = {
+                  title: `${displayName} · ZOMBIEREX`,
+                  text: `Check out ${displayName} on ZOMBIEREX`,
+                  url,
+                };
+                try {
+                  if (typeof navigator !== "undefined" && (navigator as any).share) {
+                    await (navigator as any).share(shareData);
+                    return;
+                  }
+                  if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    await navigator.clipboard.writeText(url);
+                    setToast("Link copied");
+                    setTimeout(() => setToast(null), 1800);
+                  }
+                } catch {
+                  /* user cancelled */
+                }
+              }}
+              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
+              style={{ color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" }}
             >
               Share
             </button>
             <Link
               to="/settings"
-              className="tap rounded-xl py-2.5 text-center text-[12px] font-semibold"
-              style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
+              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
+              style={{ color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" }}
             >
               Settings
             </Link>
