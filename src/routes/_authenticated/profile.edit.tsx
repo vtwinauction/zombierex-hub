@@ -185,7 +185,9 @@ function EditProfilePage() {
             className="input" placeholder="Your name" />
         </Field>
         <Field label="Username" hint="Letters, numbers and underscores">
-          <input value={handle} onChange={(e) => setHandle(e.target.value)} maxLength={24}
+          <input value={handle}
+            onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+            maxLength={24}
             className="input" placeholder="handle" />
         </Field>
         <Field label="Bio" hint={`${bio.length}/500`}>
