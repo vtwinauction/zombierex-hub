@@ -91,8 +91,7 @@ export const getMyPost = createServerFn({ method: "GET" })
       .eq("author_id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    if (!row) throw new Error("Post not found");
-    return row;
+    return row ?? null;
   });
 
 export const updatePost = createServerFn({ method: "POST" })
@@ -118,8 +117,9 @@ export const updatePost = createServerFn({ method: "POST" })
       .eq("id", id)
       .eq("author_id", context.userId)
       .select()
-      .single();
+      .maybeSingle();
     if (error) throw new Error(error.message);
+    if (!row) return null;
     return row;
   });
 
