@@ -14,23 +14,25 @@ export function DragTree({ state, compact = false }: { state: TreeState; compact
   const preStage = p !== "idle";
   const stage = p !== "idle" && p !== "prestage";
 
-  const size = compact ? 34 : 56;
+  const size = compact ? 34 : 54;
   return (
     <div
-      className="flex flex-col items-center gap-2 rounded-2xl border p-4"
+      className="relative flex flex-col items-center gap-2 overflow-hidden rounded-2xl p-4"
       style={{
-        borderColor: "var(--color-hair-strong)",
-        background: "linear-gradient(180deg,#050505,#0e0e0e)",
-        boxShadow: "0 20px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.03)",
+        background: "linear-gradient(90deg,#111 0 10%,#2a2a2a 10% 14%,#070707 14% 86%,#2a2a2a 86% 90%,#111 90% 100%)",
+        boxShadow: "0 24px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.08), inset 0 18px 24px rgba(255,255,255,0.04)",
       }}
     >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-10" style={{ background: "linear-gradient(180deg,rgba(255,255,255,0.10),transparent)" }} />
+      <TreeLabel text="PRE STAGE" />
       <Row>
-        <Bulb size={size * 0.55} on={preStage} color="#f8f8f8" />
-        <Bulb size={size * 0.55} on={preStage} color="#f8f8f8" />
+        <Bulb size={size * 0.52} on={preStage} color="var(--color-paper-0)" />
+        <Bulb size={size * 0.52} on={preStage} color="var(--color-paper-0)" />
       </Row>
+      <TreeLabel text="STAGE" />
       <Row>
-        <Bulb size={size * 0.55} on={stage} color="#f8f8f8" />
-        <Bulb size={size * 0.55} on={stage} color="#f8f8f8" />
+        <Bulb size={size * 0.52} on={stage} color="var(--color-paper-0)" />
+        <Bulb size={size * 0.52} on={stage} color="var(--color-paper-0)" />
       </Row>
       <Bulb size={size} on={amber1} color="#ffb020" />
       <Bulb size={size} on={amber2} color="#ffb020" />
@@ -45,6 +47,10 @@ function Row({ children }: { children: React.ReactNode }) {
   return <div className="flex items-center gap-2">{children}</div>;
 }
 
+function TreeLabel({ text }: { text: string }) {
+  return <div className="mono-caps text-[7px] font-black" style={{ color: "rgba(255,255,255,0.38)", letterSpacing: "0.2em" }}>{text}</div>;
+}
+
 function Bulb({ on, color, size = 48 }: { on: boolean; color: string; size?: number }) {
   return (
     <div
@@ -53,11 +59,11 @@ function Bulb({ on, color, size = 48 }: { on: boolean; color: string; size?: num
         height: size,
         borderRadius: "50%",
         background: on
-          ? `radial-gradient(circle at 30% 30%, #fff, ${color} 55%, ${color} 100%)`
-          : "radial-gradient(circle at 30% 30%, #202020, #0a0a0a 70%)",
+          ? `radial-gradient(circle at 28% 25%, #fff 0 12%, ${color} 44%, color-mix(in oklab, ${color} 68%, #000) 100%)`
+          : "radial-gradient(circle at 30% 24%, #333 0 10%, #111 52%, #040404 100%)",
         boxShadow: on
-          ? `0 0 ${size * 0.6}px ${color}, 0 0 ${size * 0.2}px ${color} inset, 0 0 0 2px rgba(0,0,0,0.6)`
-          : "inset 0 0 0 2px rgba(255,255,255,0.04), 0 2px 6px rgba(0,0,0,0.6)",
+          ? `0 0 ${size * 0.72}px ${color}, 0 0 ${size * 0.26}px ${color} inset, 0 0 0 5px #050505, 0 0 0 7px rgba(255,255,255,0.16)`
+          : "inset 0 0 0 2px rgba(255,255,255,0.05), 0 0 0 5px #050505, 0 0 0 7px rgba(255,255,255,0.08), 0 5px 12px rgba(0,0,0,0.65)",
         transition: "background 80ms linear, box-shadow 80ms linear",
       }}
     />

@@ -2,7 +2,7 @@
  * Drag — New Run wizard. Collects vehicle info, then arms GPS recorder,
  * detects launch, captures full trace, and submits for server verification.
  */
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -11,7 +11,19 @@ import { useDragRecorder } from "@/lib/drag-recorder";
 import { submitDragRun, coachDragRun } from "@/lib/drag.functions";
 
 export const Route = createFileRoute("/_authenticated/drag/run")({
-  head: () => ({ meta: [{ title: "New drag run · ZOMBIEREX" }] }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    step: search.step === "record" ? "record" : undefined,
+  }),
+  head: () => ({
+    meta: [
+      { title: "New GPS Drag Run · ZOMBIEREX" },
+      { name: "description", content: "Record a GPS-verified drag run with vehicle setup, live timing, anti-cheat checks and a permanent performance record." },
+      { property: "og:title", content: "New GPS Drag Run · ZOMBIEREX" },
+      { property: "og:description", content: "Record a GPS-verified drag run with live timing and verification." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: NewRun,
 });
 
@@ -19,7 +31,8 @@ type Step = "vehicle" | "record" | "submitting" | "done";
 
 function NewRun() {
   const nav = useNavigate();
-  const [step, setStep] = useState<Step>("vehicle");
+  const search = Route.useSearch();
+  const [step, setStep] = useState<Step>(search.step === "record" ? "record" : "vehicle");
   const [vehicle, setVehicle] = useState({
     vehicle_kind: "motorcycle" as "motorcycle" | "car",
     vehicle_name: "",
@@ -102,11 +115,11 @@ function NewRun() {
               </div>
               <Field label="Modifications" value={vehicle.modifications} onChange={(v) => setVehicle((s) => ({ ...s, modifications: v }))} placeholder="Full exhaust, ECU flash…" />
             </div>
-            <button onClick={() => setStep("record")}
-              className="tap mt-6 w-full rounded-lg py-3 mono-caps text-sm font-black"
+            <Link to="/drag/run" search={{ step: "record" }} onClick={() => setStep("record")}
+              className="tap mt-6 inline-flex w-full justify-center rounded-lg py-3 mono-caps text-sm font-black"
               style={{ background: "var(--color-neon)", color: "var(--color-obsidian)" }}>
               CONTINUE → GPS TIMING
-            </button>
+            </Link>
           </>
         )}
 
