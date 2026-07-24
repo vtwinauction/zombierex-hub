@@ -110,16 +110,7 @@ function ProfilePage() {
           <img
             src={p?.cover_url || bike.cover}
             alt=""
-            className="ken-burns h-full w-full object-cover"
-          />
-
-          {/* color wash */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(10,10,10,0) 30%, rgba(10,10,10,0.35) 60%, rgba(10,10,10,0.85) 100%)",
-            }}
+            className="h-full w-full object-cover"
           />
           {/* neon accent bar */}
           <div
@@ -129,44 +120,43 @@ function ProfilePage() {
                 "linear-gradient(90deg, #00e5ff, var(--color-neon) 45%, #ff9500 78%, #ff3d5a)",
             }}
           />
+        </div>
 
-          {/* Top tags */}
-          <div className="absolute inset-x-3 top-3 flex items-start justify-between">
-            <span
-              className="mono-tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1"
-              style={{
-                background: "rgba(255,255,255,0.14)",
-                backdropFilter: "blur(10px)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.22)",
-                fontSize: 9,
-              }}
-            >
-              <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
-              ACTIVE · ID-{idLabel}
-            </span>
-            <span
-              className="mono-tag rounded-md px-2 py-1"
-              style={{
-                background: "rgba(0,0,0,0.55)",
-                color: "#fff",
-                border: "1px solid rgba(255,255,255,0.15)",
-                fontSize: 9,
-              }}
-            >
-              {bike.year} · {bike.type === "Motorcycle" ? "MOTO / CUSTOM" : "AUTO / CUSTOM"}
-            </span>
-          </div>
+        {/* Meta tags — outside the image */}
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <span
+            className="mono-tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1"
+            style={{
+              background: "var(--color-paper-0)",
+              color: "var(--color-ink-0)",
+              border: "1px solid var(--color-line)",
+              fontSize: 9,
+            }}
+          >
+            <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
+            ACTIVE · ID-{idLabel}
+          </span>
+          <span
+            className="mono-tag rounded-md px-2 py-1"
+            style={{
+              background: "var(--color-paper-0)",
+              color: "var(--color-ink-2)",
+              border: "1px solid var(--color-line)",
+              fontSize: 9,
+            }}
+          >
+            {bike.year} · {bike.type === "Motorcycle" ? "MOTO / CUSTOM" : "AUTO / CUSTOM"}
+          </span>
+        </div>
 
-          {/* Designation */}
-          <div className="absolute inset-x-4 bottom-4">
-            <p className="mono-tag" style={{ color: "var(--color-neon)", fontSize: 9, letterSpacing: "0.24em" }}>
-              DESIGNATION · UNIT V·{bike.id.toUpperCase()}
-            </p>
-            <h2 className="serif mt-1 text-[26px] leading-[0.95] text-white" style={{ letterSpacing: "-0.02em" }}>
-              {bike.name}
-            </h2>
-          </div>
+        {/* Designation + name — outside the image */}
+        <div className="mt-2">
+          <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
+            DESIGNATION · UNIT V·{bike.id.toUpperCase()}
+          </p>
+          <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
+            {bike.name}
+          </h2>
         </div>
       </section>
 
