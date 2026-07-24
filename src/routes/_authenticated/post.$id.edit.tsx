@@ -142,6 +142,9 @@ function EditPostPage() {
           onChange={(e) => e.target.files?.[0] && pickImage(e.target.files[0])}
         />
       </section>
+      )}
+
+      {!q.isError && (
 
       <section className="mt-4 space-y-4 px-4">
         <label className="block">
