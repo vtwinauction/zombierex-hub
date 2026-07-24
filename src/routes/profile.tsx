@@ -172,11 +172,8 @@ function ProfilePage() {
         >
           <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
             <div
-              className="shrink-0 rounded-full p-[2.5px]"
-              style={{
-                background:
-                  "conic-gradient(from 210deg, #00e5ff, var(--color-neon), #ff9500, #ff3d5a, #00e5ff)",
-              }}
+              className="shrink-0 rounded-full p-[2px]"
+              style={{ background: "var(--color-line)" }}
             >
               <img src={p?.avatar_url || me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
             </div>
