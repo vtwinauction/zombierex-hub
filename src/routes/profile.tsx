@@ -1,10 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
-import { getMyProfileMetrics } from "@/lib/profile.functions";
+import { getMyProfileMetrics, upsertMyVehicle } from "@/lib/profile.functions";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -150,14 +150,18 @@ function ProfilePage() {
         </div>
 
         {/* Designation + name — outside the image */}
-        <div className="mt-2">
-          <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
-            DESIGNATION · UNIT V·{bike.id.toUpperCase()}
-          </p>
-          <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
-            {bike.name}
-          </h2>
+        <div className="mt-2 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
+              DESIGNATION · UNIT V·{bike.id.toUpperCase()}
+            </p>
+            <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
+              {bike.name}
+            </h2>
+          </div>
+          <RenameVehicleButton currentName={bike.name} />
         </div>
+
       </section>
 
       {/* ============ OPERATOR STRIP ============ */}
@@ -718,5 +722,94 @@ function MiniGauge({
         </div>
       </div>
     </div>
+  );
+}
+
+/* ==========================================================
+   Inline vehicle rename — upserts caller's primary vehicle
+   ========================================================== */
+function RenameVehicleButton({ currentName }: { currentName: string }) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(currentName);
+  const [error, setError] = useState<string | null>(null);
+  const qc = useQueryClient();
+  const upsert = useServerFn(upsertMyVehicle);
+  const m = useMutation({
+    mutationFn: (nickname: string) => upsert({ data: { nickname } }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["profile", "me"] });
+      setOpen(false);
+    },
+    onError: (e: unknown) => setError(e instanceof Error ? e.message : "Save failed"),
+  });
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => { setValue(currentName); setError(null); setOpen(true); }}
+        className="tap mono-tag shrink-0 rounded-md px-2 py-1"
+        style={{
+          background: "var(--color-paper-0)",
+          color: "var(--color-ink-2)",
+          border: "1px solid var(--color-line)",
+          fontSize: 9,
+        }}
+      >
+        RENAME
+      </button>
+      {open && (
+        <div
+          className="fixed inset-0 z-[70] flex items-end justify-center bg-black/60 p-4"
+          onClick={() => !m.isPending && setOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-md rounded-2xl p-4"
+            style={{ background: "var(--color-paper-0)", border: "1px solid var(--color-line)" }}
+          >
+            <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
+              RENAME VEHICLE
+            </p>
+            <input
+              autoFocus
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              maxLength={80}
+              placeholder="e.g. Nightshade MT-09"
+              className="mt-3 w-full rounded-xl px-3 py-3 text-[15px] outline-none"
+              style={{
+                background: "var(--color-paper-2)",
+                color: "var(--color-ink-0)",
+                border: "1px solid var(--color-line)",
+              }}
+            />
+            {error && <p className="mt-2 text-[12px]" style={{ color: "#ff3d5a" }}>{error}</p>}
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setOpen(false)}
+                disabled={m.isPending}
+                className="tap rounded-xl py-2.5 text-[13px] font-semibold"
+                style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => {
+                  const v = value.trim();
+                  if (!v) { setError("Name is required"); return; }
+                  m.mutate(v);
+                }}
+                disabled={m.isPending}
+                className="tap rounded-xl py-2.5 text-[13px] font-semibold"
+                style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
+              >
+                {m.isPending ? "Saving…" : "Save"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

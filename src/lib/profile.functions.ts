@@ -122,3 +122,73 @@ export const getMyRoles = createServerFn({ method: "GET" })
     if (error) throw new Error(error.message);
     return (data ?? []).map((r) => r.role);
   });
+
+/**
+ * Upsert the caller's primary vehicle — creates one if none exists, else
+ * updates the primary vehicle. Powers the Digital Garage rename flow.
+ */
+export const upsertMyVehicle = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) =>
+    z.object({
+      nickname: z.string().trim().min(1).max(80).optional(),
+      make: z.string().trim().min(1).max(60).optional(),
+      model: z.string().trim().min(1).max(80).optional(),
+      year: z.number().int().min(1900).max(2100).optional(),
+      kind: z.enum(["motorcycle", "car", "truck", "scooter", "atv", "other"]).optional(),
+      hero_image_url: z.string().url().max(2048).optional().or(z.literal("")),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const uid = context.userId;
+    const { data: existing } = await context.supabase
+      .from("vehicles")
+      .select("id")
+      .eq("owner_id", uid)
+      .is("deleted_at", null)
+      .order("is_primary", { ascending: false })
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    const patch: Record<string, unknown> = {};
+    if (data.nickname !== undefined) patch.nickname = data.nickname;
+    if (data.make !== undefined) patch.make = data.make;
+    if (data.model !== undefined) patch.model = data.model;
+    if (data.year !== undefined) patch.year = data.year;
+    if (data.kind !== undefined) patch.kind = data.kind;
+    if (data.hero_image_url !== undefined)
+      patch.hero_image_url = data.hero_image_url === "" ? null : data.hero_image_url;
+
+    if (existing?.id) {
+      const { data: row, error } = await context.supabase
+        .from("vehicles")
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .update(patch as any)
+        .eq("id", existing.id)
+        .eq("owner_id", uid)
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      return row;
+    }
+
+    const insert = {
+      owner_id: uid,
+      kind: (data.kind ?? "motorcycle") as string,
+      make: data.make ?? "Custom",
+      model: data.model ?? (data.nickname ?? "My Ride"),
+      year: data.year ?? null,
+      nickname: data.nickname ?? null,
+      hero_image_url: patch.hero_image_url ?? null,
+      is_primary: true,
+    };
+    const { data: row, error } = await context.supabase
+      .from("vehicles")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .insert(insert as any)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
