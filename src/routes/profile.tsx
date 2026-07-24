@@ -421,12 +421,12 @@ function ProfilePage() {
                 </div>
               </div>
             ))}
-            <button className="flex aspect-[3/4] items-center justify-center rounded-lg border border-dashed" style={{ borderColor: "var(--color-line-2)", background: "var(--color-paper-0)" }}>
+            <Link to="/post/new" className="tap flex aspect-[3/4] items-center justify-center rounded-lg border border-dashed" style={{ borderColor: "var(--color-line-2)", background: "var(--color-paper-0)" }}>
               <div className="text-center">
                 <div className="text-2xl font-thin" style={{ color: "var(--color-neon)" }}>+</div>
                 <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 8.5 }}>UPLOAD</span>
               </div>
-            </button>
+            </Link>
           </div>
         )}
 
