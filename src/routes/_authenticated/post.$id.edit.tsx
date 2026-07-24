@@ -103,6 +103,16 @@ function EditPostPage() {
 
       <h1 className="serif px-4 pt-3 text-3xl" style={{ color: "var(--color-ink-0)" }}>Edit post</h1>
 
+      {q.isError && (
+        <div className="mx-4 mt-4 rounded-xl p-4" style={{ border: "1px solid rgba(255,80,80,0.4)", background: "rgba(255,80,80,0.05)" }}>
+          <p className="mono-tag mb-1" style={{ color: "#ff6b6b" }}>NOT FOUND</p>
+          <p className="text-[13px]" style={{ color: "var(--color-ink-0)" }}>
+            This post no longer exists or was deleted. It may have been removed from your account.
+          </p>
+        </div>
+      )}
+
+      {!q.isError && (
       <section className="mt-4 px-4">
         <p className="mono-tag mb-2" style={{ color: "var(--color-ink-3)", fontSize: 10 }}>MEDIA</p>
         <div
