@@ -220,6 +220,43 @@ function EditProfilePage() {
             className="input" placeholder="https://" />
         </Field>
 
+        <div className="pt-4">
+          <p className="mono-tag mb-2" style={{ color: "var(--color-ink-3)", fontSize: 10, letterSpacing: "0.24em" }}>
+            CONTACT
+          </p>
+        </div>
+        <Field label="Phone">
+          <input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} maxLength={40}
+            className="input" placeholder="+1 555 000 0000" inputMode="tel" />
+        </Field>
+        <Field label="Contact email">
+          <input value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} maxLength={255}
+            className="input" placeholder="you@example.com" inputMode="email" />
+        </Field>
+        <label className="flex items-center justify-between rounded-lg px-3 py-3"
+          style={{ background: "var(--color-paper-0)", border: "1px solid var(--color-line)" }}>
+          <span className="text-[13px]" style={{ color: "var(--color-ink-0)" }}>Allow direct messages</span>
+          <input type="checkbox" checked={contactDm} onChange={(e) => setContactDm(e.target.checked)} />
+        </label>
+
+        <div className="pt-4">
+          <p className="mono-tag mb-2" style={{ color: "var(--color-ink-3)", fontSize: 10, letterSpacing: "0.24em" }}>
+            BUSINESS PROFILE
+          </p>
+        </div>
+        <label className="flex items-center justify-between rounded-lg px-3 py-3"
+          style={{ background: "var(--color-paper-0)", border: "1px solid var(--color-line)" }}>
+          <span className="text-[13px]" style={{ color: "var(--color-ink-0)" }}>This is a business profile</span>
+          <input type="checkbox" checked={isBusiness} onChange={(e) => setIsBusiness(e.target.checked)} />
+        </label>
+        {isBusiness && (
+          <Field label="Business address">
+            <input value={businessAddress} onChange={(e) => setBusinessAddress(e.target.value)} maxLength={240}
+              className="input" placeholder="123 Main St, City, Country" />
+          </Field>
+        )}
+
+
         {error && (
           <p className="text-[12px]" style={{ color: "#ff6b6b" }}>{error}</p>
         )}
