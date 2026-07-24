@@ -35,7 +35,7 @@ export const listFeed = createServerFn({ method: "GET" })
     const supabase = serverPublic();
     let q = supabase
       .from("posts")
-      .select("id, author_id, kind, caption, media_url, thumbnail_url, likes_count, comments_count, shares_count, views_count, created_at, author:profiles!posts_author_id_fkey(id, display_name, handle, avatar_url, is_verified)")
+      .select("id, author_id, kind, caption, media_url, thumbnail_url, likes_count, comments_count, shares_count, views_count, created_at, author:profiles!posts_author_id_fkey(id, display_name, handle, avatar_url, is_verified, location)")
       .order("created_at", { ascending: false })
       .limit(data.limit);
     if (data.cursor) q = q.lt("created_at", data.cursor);
