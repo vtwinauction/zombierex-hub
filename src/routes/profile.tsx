@@ -230,14 +230,21 @@ function ProfilePage() {
           </div>
 
           {/* Actions */}
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <Link
               to="/profile/edit"
               className="tap rounded-xl py-2.5 text-center text-[12px] font-semibold"
               style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
             >
-              Edit profile
+              Edit
             </Link>
+            <button
+              onClick={() => setContactOpen(true)}
+              className="tap rounded-xl py-2.5 text-[12px] font-semibold"
+              style={{ background: "var(--color-neon)", color: "#000" }}
+            >
+              Contact
+            </button>
             <button
               className="tap rounded-xl py-2.5 text-[12px] font-semibold"
               style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
