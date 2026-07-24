@@ -745,12 +745,13 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
       <button
         type="button"
         onClick={() => { setValue(currentName); setError(null); setOpen(true); }}
-        className="tap mono-tag shrink-0 rounded-md px-2 py-1"
+        className="tap mono-tag shrink-0 rounded-md px-2.5 py-1"
         style={{
-          background: "var(--color-paper-0)",
-          color: "var(--color-ink-2)",
-          border: "1px solid var(--color-line)",
+          background: "#e5253d",
+          color: "#000",
+          border: "1px solid #b81a2e",
           fontSize: 9,
+          fontWeight: 700,
         }}
       >
         RENAME
