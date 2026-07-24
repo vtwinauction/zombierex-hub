@@ -232,12 +232,13 @@ function ProfilePage() {
 
           {/* Actions */}
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <button
-              className="tap rounded-xl py-2.5 text-[12px] font-semibold"
+            <Link
+              to="/profile/edit"
+              className="tap rounded-xl py-2.5 text-center text-[12px] font-semibold"
               style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
             >
               Edit profile
-            </button>
+            </Link>
             <button
               className="tap rounded-xl py-2.5 text-[12px] font-semibold"
               style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
