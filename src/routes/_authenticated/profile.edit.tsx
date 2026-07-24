@@ -58,10 +58,12 @@ function EditProfilePage() {
 
   const save = useMutation({
     mutationFn: async () => {
+      const cleanHandle = handle.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+      const originalHandle = (q.data?.handle ?? "").toLowerCase();
       return saveFn({
         data: {
-          handle: handle || undefined,
-          display_name: displayName || undefined,
+          handle: cleanHandle && cleanHandle !== originalHandle ? cleanHandle : undefined,
+          display_name: displayName.trim() || undefined,
           bio,
           location,
           website,
@@ -185,7 +187,9 @@ function EditProfilePage() {
             className="input" placeholder="Your name" />
         </Field>
         <Field label="Username" hint="Letters, numbers and underscores">
-          <input value={handle} onChange={(e) => setHandle(e.target.value)} maxLength={24}
+          <input value={handle}
+            onChange={(e) => setHandle(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+            maxLength={24}
             className="input" placeholder="handle" />
         </Field>
         <Field label="Bio" hint={`${bio.length}/500`}>
