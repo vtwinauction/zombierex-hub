@@ -176,10 +176,19 @@ function ProfilePage() {
             aspectRatio: "16/10",
           }}
         >
+          {/* Blurred backdrop so any image aspect fits the banner cleanly */}
+          <img
+            src={p?.cover_url || bike.cover}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover"
+            style={{ filter: "blur(28px) saturate(1.1)", transform: "scale(1.15)" }}
+          />
+          <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.35)" }} />
           <img
             src={p?.cover_url || bike.cover}
             alt={bike.name}
-            className="h-full w-full object-cover"
+            className="relative h-full w-full object-contain"
           />
           {/* subtle bottom gradient — image stays the focal point */}
           <div
@@ -201,7 +210,7 @@ function ProfilePage() {
           <div className="absolute inset-x-3 top-3 flex items-center justify-between">
             <StatusBadge tone="live">
               <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
-              ACTIVE · ID-{idLabel}
+              ACTIVE
             </StatusBadge>
             <StatusBadge tone="dark">
               {bike.year} · {bike.type === "Motorcycle" ? "MOTO" : "AUTO"}
