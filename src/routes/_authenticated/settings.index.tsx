@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { StatusBar } from "@/components/StatusBar";
 
-export const Route = createFileRoute("/_authenticated/settings")({
+export const Route = createFileRoute("/_authenticated/settings/")({
   head: () => ({ meta: [
     { title: "Settings · ZOMBIEREX" },
     { name: "description", content: "Manage your ZOMBIEREX account, privacy, notifications and app preferences." },
