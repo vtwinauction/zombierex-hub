@@ -87,20 +87,20 @@ export const Route = createFileRoute("/_authenticated")({
 
 function AuthGate() {
   const navigate = useNavigate();
-  const [state, setState] = React.useState<"checking" | "ok" | "redirecting">("checking");
 
   React.useEffect(() => {
     let canceled = false;
 
     async function verify() {
       if (await hasClientSession()) {
-        if (!canceled) setState("ok");
         return;
       }
 
       const retry = window.setTimeout(async () => {
         if (canceled) return;
-        setState((await hasClientSession()) ? "ok" : "redirecting");
+        if (!(await hasClientSession())) {
+          navigate({ to: "/auth", replace: true });
+        }
       }, 500);
 
       return () => window.clearTimeout(retry);
@@ -115,26 +115,8 @@ function AuthGate() {
       canceled = true;
       cleanup?.();
     };
-  }, []);
+  }, [navigate]);
 
-  React.useEffect(() => {
-    if (state === "redirecting") navigate({ to: "/auth", replace: true });
-  }, [navigate, state]);
-
-
-  if (state !== "redirecting") return <Outlet />;
-  return (
-    <div className="grid min-h-svh place-items-center px-6">
-      <div className="flex flex-col items-center gap-3">
-        <div
-          className="h-8 w-8 animate-spin rounded-full border-2 border-t-transparent"
-          style={{ borderColor: "var(--color-neon, #00c853)", borderTopColor: "transparent" }}
-        />
-        <p className="mono-tag" style={{ fontSize: 10, letterSpacing: "0.22em", color: "var(--color-ink-3)" }}>
-          REDIRECTING
-        </p>
-      </div>
-    </div>
-  );
+  return <Outlet />;
 }
 
