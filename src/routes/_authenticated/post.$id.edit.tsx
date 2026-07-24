@@ -173,6 +173,7 @@ function EditPostPage() {
           Delete post
         </button>
       </section>
+      )}
     </div>
   );
 }
