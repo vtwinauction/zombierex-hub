@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -12,17 +12,72 @@ export const Route = createFileRoute("/_authenticated/post/$id/edit")({
     meta: [
       { title: "Edit post · ZOMBIEREX" },
       { name: "description", content: "Update the caption and media of your post." },
+      { property: "og:title", content: "Edit post · ZOMBIEREX" },
+      { property: "og:description", content: "Update the caption and media of your post." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: EditPostPage,
-  errorComponent: ({ error }) => (
-    <div className="p-6 text-center">
-      <p className="mono-tag mb-3" style={{ color: "var(--color-ink-3)" }}>POST UNAVAILABLE</p>
-      <p className="text-sm mb-4" style={{ color: "var(--color-ink-0)" }}>{error.message}</p>
-      <Link to="/posts/mine" className="mono-tag" style={{ color: "var(--color-neon)" }}>← Back to my posts</Link>
-    </div>
-  ),
+  errorComponent: EditPostError,
+  notFoundComponent: EditPostMissing,
 });
+
+function EditPostError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+  return (
+    <PostUnavailable
+      title="Post unavailable"
+      message={error.message || "This post could not be loaded."}
+      actionLabel="Try again"
+      onAction={() => {
+        router.invalidate();
+        reset();
+      }}
+    />
+  );
+}
+
+function EditPostMissing() {
+  return (
+    <PostUnavailable
+      title="Post not found"
+      message="This post no longer exists, was removed, or is not owned by this account."
+    />
+  );
+}
+
+function PostUnavailable({
+  title,
+  message,
+  actionLabel,
+  onAction,
+}: {
+  title: string;
+  message: string;
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  return (
+    <div className="grid min-h-svh place-items-center p-6" style={{ background: "var(--color-paper-1)" }}>
+      <div className="w-full max-w-sm rounded-2xl p-6 text-center" style={{ border: "1px solid var(--color-line)", background: "var(--color-paper-0)" }}>
+        <p className="mono-tag mb-3" style={{ color: "var(--color-ink-3)" }}>POST UNAVAILABLE</p>
+        <h1 className="text-2xl font-semibold" style={{ color: "var(--color-ink-0)" }}>{title}</h1>
+        <p className="mt-2 text-sm" style={{ color: "var(--color-ink-3)" }}>{message}</p>
+        <div className="mt-5 grid grid-cols-1 gap-2">
+          {onAction && (
+            <button type="button" onClick={onAction} className="tap rounded-lg px-4 py-3 text-[12px] font-semibold" style={{ background: "var(--color-neon)", color: "var(--color-paper-1)" }}>
+              {actionLabel ?? "Try again"}
+            </button>
+          )}
+          <Link to="/posts/mine" className="tap rounded-lg px-4 py-3 text-center text-[12px] font-semibold" style={{ border: "1px solid var(--color-line)", color: "var(--color-ink-0)" }}>
+            Back to my posts
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function EditPostPage() {
   const { id } = Route.useParams();
@@ -55,8 +110,13 @@ function EditPostPage() {
   const save = useMutation({
     mutationFn: () =>
       saveFn({ data: { id, caption, media_url: mediaUrl } }),
-    onSuccess: () => {
+    onSuccess: (row) => {
+      if (!row) {
+        setError("This post no longer exists or is not available to edit.");
+        return;
+      }
       qc.invalidateQueries({ queryKey: ["posts"] });
+      qc.invalidateQueries({ queryKey: ["feed"] });
       qc.invalidateQueries({ queryKey: ["post", id] });
       navigate({ to: "/posts/mine" });
     },
@@ -86,6 +146,10 @@ function EditPostPage() {
     }
   };
 
+  if (!q.isLoading && q.data === null) {
+    return <PostUnavailable title="Post not found" message="This post no longer exists, was removed, or is not owned by this account." />;
+  }
+
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
       <StatusBar index="05" section="EDIT · POST" />
@@ -112,7 +176,7 @@ function EditPostPage() {
         </div>
       )}
 
-      {!q.isError && (
+      {!q.isError && q.data !== null && (
       <section className="mt-4 px-4">
         <p className="mono-tag mb-2" style={{ color: "var(--color-ink-3)", fontSize: 10 }}>MEDIA</p>
         <div
@@ -144,7 +208,7 @@ function EditPostPage() {
       </section>
       )}
 
-      {!q.isError && (
+      {!q.isError && q.data !== null && (
 
       <section className="mt-4 space-y-4 px-4">
         <label className="block">
