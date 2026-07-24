@@ -162,6 +162,25 @@ function SettingRow({ it, prefs, update }: {
   prefs: Prefs;
   update: <K extends keyof Prefs>(k: K, v: Prefs[K]) => void;
 }) {
+  const ROUTES: Record<string, string> = {
+    profile: "/profile/edit",
+    email: "/settings/email",
+    password: "/settings/password",
+    connected: "/settings/connections",
+    blocked: "/settings/blocked",
+    "content-prefs": "/settings/content",
+    twofa: "/settings/twofa",
+    sessions: "/settings/sessions",
+    "login-activity": "/settings/activity",
+    "notif-prefs": "/settings/notifications",
+    "download-data": "/settings/export",
+    help: "/settings/help",
+    report: "/settings/report",
+    about: "/settings/about",
+    tos: "/settings/terms",
+    "privacy-policy": "/settings/privacy",
+  };
+
   const control = (() => {
     switch (it.kind) {
       case "toggle-private":     return <Toggle checked={prefs.private} onChange={(v) => update("private", v)} />;
@@ -176,8 +195,9 @@ function SettingRow({ it, prefs, update }: {
       case "select-quality":     return <Select value={prefs.downloadQuality} onChange={(v) => update("downloadQuality", v as Prefs["downloadQuality"])} options={[["auto","Auto"],["high","High"],["data-saver","Data saver"]]} />;
       case "select-autoplay":    return <Select value={prefs.autoplay} onChange={(v) => update("autoplay", v as Prefs["autoplay"])} options={[["always","Always"],["wifi","Wi-Fi only"],["never","Never"]]} />;
       case "clear-cache":        return <ActionBtn label="Clear" onClick={() => { try { caches?.keys?.().then((k) => k.forEach((n) => caches.delete(n))); } catch {} alert("Cache cleared"); }} />;
-      case "profile":            return <LinkChip to="/profile/edit" label="Open" />;
-      default:                   return <span className="mono-tag" style={{ color: "var(--color-titanium)" }}>Soon</span>;
+      default:
+        if (ROUTES[it.kind]) return <LinkChip to={ROUTES[it.kind]} label="Open" />;
+        return <span className="mono-tag" style={{ color: "var(--color-titanium)" }}>Soon</span>;
     }
   })();
 
