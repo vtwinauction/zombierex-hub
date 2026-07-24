@@ -45,6 +45,7 @@ function estimateHp(spec: Record<string, unknown> | null | undefined, kind: stri
 
 function ProfilePage() {
   const [tab, setTab] = useState<Tab>("REELS");
+  const [contactOpen, setContactOpen] = useState(false);
   const fetchMetrics = useServerFn(getMyProfileMetrics);
   const metricsQuery = useQuery({
     queryKey: ["profile", "metrics"],
