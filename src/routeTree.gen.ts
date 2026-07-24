@@ -52,6 +52,21 @@ import { Route as JudgeEntriesIdRouteImport } from './routes/judge.entries.$id'
 import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
+import { Route as AuthenticatedSettingsTwofaRouteImport } from './routes/_authenticated/settings.twofa'
+import { Route as AuthenticatedSettingsTermsRouteImport } from './routes/_authenticated/settings.terms'
+import { Route as AuthenticatedSettingsSessionsRouteImport } from './routes/_authenticated/settings.sessions'
+import { Route as AuthenticatedSettingsReportRouteImport } from './routes/_authenticated/settings.report'
+import { Route as AuthenticatedSettingsPrivacyRouteImport } from './routes/_authenticated/settings.privacy'
+import { Route as AuthenticatedSettingsPasswordRouteImport } from './routes/_authenticated/settings.password'
+import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings.notifications'
+import { Route as AuthenticatedSettingsHelpRouteImport } from './routes/_authenticated/settings.help'
+import { Route as AuthenticatedSettingsExportRouteImport } from './routes/_authenticated/settings.export'
+import { Route as AuthenticatedSettingsEmailRouteImport } from './routes/_authenticated/settings.email'
+import { Route as AuthenticatedSettingsContentRouteImport } from './routes/_authenticated/settings.content'
+import { Route as AuthenticatedSettingsConnectionsRouteImport } from './routes/_authenticated/settings.connections'
+import { Route as AuthenticatedSettingsBlockedRouteImport } from './routes/_authenticated/settings.blocked'
+import { Route as AuthenticatedSettingsActivityRouteImport } from './routes/_authenticated/settings.activity'
+import { Route as AuthenticatedSettingsAboutRouteImport } from './routes/_authenticated/settings.about'
 import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticated/rides.$id'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
 import { Route as AuthenticatedPostsMineRouteImport } from './routes/_authenticated/posts.mine'
@@ -319,6 +334,96 @@ const AuthenticatedVendorApplyRoute =
     id: '/apply',
     path: '/apply',
     getParentRoute: () => AuthenticatedVendorRoute,
+  } as any)
+const AuthenticatedSettingsTwofaRoute =
+  AuthenticatedSettingsTwofaRouteImport.update({
+    id: '/twofa',
+    path: '/twofa',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsTermsRoute =
+  AuthenticatedSettingsTermsRouteImport.update({
+    id: '/terms',
+    path: '/terms',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsSessionsRoute =
+  AuthenticatedSettingsSessionsRouteImport.update({
+    id: '/sessions',
+    path: '/sessions',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsReportRoute =
+  AuthenticatedSettingsReportRouteImport.update({
+    id: '/report',
+    path: '/report',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsPrivacyRoute =
+  AuthenticatedSettingsPrivacyRouteImport.update({
+    id: '/privacy',
+    path: '/privacy',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsPasswordRoute =
+  AuthenticatedSettingsPasswordRouteImport.update({
+    id: '/password',
+    path: '/password',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsNotificationsRoute =
+  AuthenticatedSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsHelpRoute =
+  AuthenticatedSettingsHelpRouteImport.update({
+    id: '/help',
+    path: '/help',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsExportRoute =
+  AuthenticatedSettingsExportRouteImport.update({
+    id: '/export',
+    path: '/export',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsEmailRoute =
+  AuthenticatedSettingsEmailRouteImport.update({
+    id: '/email',
+    path: '/email',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsContentRoute =
+  AuthenticatedSettingsContentRouteImport.update({
+    id: '/content',
+    path: '/content',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsConnectionsRoute =
+  AuthenticatedSettingsConnectionsRouteImport.update({
+    id: '/connections',
+    path: '/connections',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsBlockedRoute =
+  AuthenticatedSettingsBlockedRouteImport.update({
+    id: '/blocked',
+    path: '/blocked',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsActivityRoute =
+  AuthenticatedSettingsActivityRouteImport.update({
+    id: '/activity',
+    path: '/activity',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsAboutRoute =
+  AuthenticatedSettingsAboutRouteImport.update({
+    id: '/about',
+    path: '/about',
+    getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
 const AuthenticatedRidesIdRoute = AuthenticatedRidesIdRouteImport.update({
   id: '/rides/$id',
@@ -614,7 +719,7 @@ export interface FileRoutesByFullPath {
   '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/security': typeof AuthenticatedSecurityRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -659,6 +764,21 @@ export interface FileRoutesByFullPath {
   '/posts/mine': typeof AuthenticatedPostsMineRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
+  '/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
+  '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
+  '/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/settings/export': typeof AuthenticatedSettingsExportRoute
+  '/settings/help': typeof AuthenticatedSettingsHelpRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/settings/password': typeof AuthenticatedSettingsPasswordRoute
+  '/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
+  '/settings/report': typeof AuthenticatedSettingsReportRoute
+  '/settings/sessions': typeof AuthenticatedSettingsSessionsRoute
+  '/settings/terms': typeof AuthenticatedSettingsTermsRoute
+  '/settings/twofa': typeof AuthenticatedSettingsTwofaRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -706,7 +826,7 @@ export interface FileRoutesByTo {
   '/owner': typeof AuthenticatedOwnerRoute
   '/rewards': typeof AuthenticatedRewardsRoute
   '/security': typeof AuthenticatedSecurityRoute
-  '/settings': typeof AuthenticatedSettingsRoute
+  '/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
   '/creator/$id': typeof CreatorIdRoute
@@ -750,6 +870,21 @@ export interface FileRoutesByTo {
   '/posts/mine': typeof AuthenticatedPostsMineRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
+  '/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
+  '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
+  '/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/settings/export': typeof AuthenticatedSettingsExportRoute
+  '/settings/help': typeof AuthenticatedSettingsHelpRoute
+  '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/settings/password': typeof AuthenticatedSettingsPasswordRoute
+  '/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
+  '/settings/report': typeof AuthenticatedSettingsReportRoute
+  '/settings/sessions': typeof AuthenticatedSettingsSessionsRoute
+  '/settings/terms': typeof AuthenticatedSettingsTermsRoute
+  '/settings/twofa': typeof AuthenticatedSettingsTwofaRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -800,7 +935,7 @@ export interface FileRoutesById {
   '/_authenticated/owner': typeof AuthenticatedOwnerRoute
   '/_authenticated/rewards': typeof AuthenticatedRewardsRoute
   '/_authenticated/security': typeof AuthenticatedSecurityRoute
-  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRouteWithChildren
   '/_authenticated/vendor': typeof AuthenticatedVendorRouteWithChildren
   '/atlas/$id': typeof AtlasIdRoute
   '/communities/$slug': typeof CommunitiesSlugRouteWithChildren
@@ -845,6 +980,21 @@ export interface FileRoutesById {
   '/_authenticated/posts/mine': typeof AuthenticatedPostsMineRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/rides/$id': typeof AuthenticatedRidesIdRoute
+  '/_authenticated/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/_authenticated/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/_authenticated/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
+  '/_authenticated/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
+  '/_authenticated/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/_authenticated/settings/email': typeof AuthenticatedSettingsEmailRoute
+  '/_authenticated/settings/export': typeof AuthenticatedSettingsExportRoute
+  '/_authenticated/settings/help': typeof AuthenticatedSettingsHelpRoute
+  '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
+  '/_authenticated/settings/password': typeof AuthenticatedSettingsPasswordRoute
+  '/_authenticated/settings/privacy': typeof AuthenticatedSettingsPrivacyRoute
+  '/_authenticated/settings/report': typeof AuthenticatedSettingsReportRoute
+  '/_authenticated/settings/sessions': typeof AuthenticatedSettingsSessionsRoute
+  '/_authenticated/settings/terms': typeof AuthenticatedSettingsTermsRoute
+  '/_authenticated/settings/twofa': typeof AuthenticatedSettingsTwofaRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
   '/api/public/health': typeof ApiPublicHealthRoute
@@ -940,6 +1090,21 @@ export interface FileRouteTypes {
     | '/posts/mine'
     | '/profile/edit'
     | '/rides/$id'
+    | '/settings/about'
+    | '/settings/activity'
+    | '/settings/blocked'
+    | '/settings/connections'
+    | '/settings/content'
+    | '/settings/email'
+    | '/settings/export'
+    | '/settings/help'
+    | '/settings/notifications'
+    | '/settings/password'
+    | '/settings/privacy'
+    | '/settings/report'
+    | '/settings/sessions'
+    | '/settings/terms'
+    | '/settings/twofa'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -1031,6 +1196,21 @@ export interface FileRouteTypes {
     | '/posts/mine'
     | '/profile/edit'
     | '/rides/$id'
+    | '/settings/about'
+    | '/settings/activity'
+    | '/settings/blocked'
+    | '/settings/connections'
+    | '/settings/content'
+    | '/settings/email'
+    | '/settings/export'
+    | '/settings/help'
+    | '/settings/notifications'
+    | '/settings/password'
+    | '/settings/privacy'
+    | '/settings/report'
+    | '/settings/sessions'
+    | '/settings/terms'
+    | '/settings/twofa'
     | '/vendor/apply'
     | '/vendor/plans'
     | '/api/public/health'
@@ -1125,6 +1305,21 @@ export interface FileRouteTypes {
     | '/_authenticated/posts/mine'
     | '/_authenticated/profile/edit'
     | '/_authenticated/rides/$id'
+    | '/_authenticated/settings/about'
+    | '/_authenticated/settings/activity'
+    | '/_authenticated/settings/blocked'
+    | '/_authenticated/settings/connections'
+    | '/_authenticated/settings/content'
+    | '/_authenticated/settings/email'
+    | '/_authenticated/settings/export'
+    | '/_authenticated/settings/help'
+    | '/_authenticated/settings/notifications'
+    | '/_authenticated/settings/password'
+    | '/_authenticated/settings/privacy'
+    | '/_authenticated/settings/report'
+    | '/_authenticated/settings/sessions'
+    | '/_authenticated/settings/terms'
+    | '/_authenticated/settings/twofa'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
     | '/api/public/health'
@@ -1484,6 +1679,111 @@ declare module '@tanstack/react-router' {
       fullPath: '/vendor/apply'
       preLoaderRoute: typeof AuthenticatedVendorApplyRouteImport
       parentRoute: typeof AuthenticatedVendorRoute
+    }
+    '/_authenticated/settings/twofa': {
+      id: '/_authenticated/settings/twofa'
+      path: '/twofa'
+      fullPath: '/settings/twofa'
+      preLoaderRoute: typeof AuthenticatedSettingsTwofaRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/terms': {
+      id: '/_authenticated/settings/terms'
+      path: '/terms'
+      fullPath: '/settings/terms'
+      preLoaderRoute: typeof AuthenticatedSettingsTermsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/sessions': {
+      id: '/_authenticated/settings/sessions'
+      path: '/sessions'
+      fullPath: '/settings/sessions'
+      preLoaderRoute: typeof AuthenticatedSettingsSessionsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/report': {
+      id: '/_authenticated/settings/report'
+      path: '/report'
+      fullPath: '/settings/report'
+      preLoaderRoute: typeof AuthenticatedSettingsReportRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/privacy': {
+      id: '/_authenticated/settings/privacy'
+      path: '/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof AuthenticatedSettingsPrivacyRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/password': {
+      id: '/_authenticated/settings/password'
+      path: '/password'
+      fullPath: '/settings/password'
+      preLoaderRoute: typeof AuthenticatedSettingsPasswordRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/notifications': {
+      id: '/_authenticated/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof AuthenticatedSettingsNotificationsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/help': {
+      id: '/_authenticated/settings/help'
+      path: '/help'
+      fullPath: '/settings/help'
+      preLoaderRoute: typeof AuthenticatedSettingsHelpRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/export': {
+      id: '/_authenticated/settings/export'
+      path: '/export'
+      fullPath: '/settings/export'
+      preLoaderRoute: typeof AuthenticatedSettingsExportRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/email': {
+      id: '/_authenticated/settings/email'
+      path: '/email'
+      fullPath: '/settings/email'
+      preLoaderRoute: typeof AuthenticatedSettingsEmailRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/content': {
+      id: '/_authenticated/settings/content'
+      path: '/content'
+      fullPath: '/settings/content'
+      preLoaderRoute: typeof AuthenticatedSettingsContentRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/connections': {
+      id: '/_authenticated/settings/connections'
+      path: '/connections'
+      fullPath: '/settings/connections'
+      preLoaderRoute: typeof AuthenticatedSettingsConnectionsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/blocked': {
+      id: '/_authenticated/settings/blocked'
+      path: '/blocked'
+      fullPath: '/settings/blocked'
+      preLoaderRoute: typeof AuthenticatedSettingsBlockedRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/activity': {
+      id: '/_authenticated/settings/activity'
+      path: '/activity'
+      fullPath: '/settings/activity'
+      preLoaderRoute: typeof AuthenticatedSettingsActivityRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/about': {
+      id: '/_authenticated/settings/about'
+      path: '/about'
+      fullPath: '/settings/about'
+      preLoaderRoute: typeof AuthenticatedSettingsAboutRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
     }
     '/_authenticated/rides/$id': {
       id: '/_authenticated/rides/$id'
@@ -1877,6 +2177,48 @@ const AuthenticatedMessagesRouteWithChildren =
     AuthenticatedMessagesRouteChildren,
   )
 
+interface AuthenticatedSettingsRouteChildren {
+  AuthenticatedSettingsAboutRoute: typeof AuthenticatedSettingsAboutRoute
+  AuthenticatedSettingsActivityRoute: typeof AuthenticatedSettingsActivityRoute
+  AuthenticatedSettingsBlockedRoute: typeof AuthenticatedSettingsBlockedRoute
+  AuthenticatedSettingsConnectionsRoute: typeof AuthenticatedSettingsConnectionsRoute
+  AuthenticatedSettingsContentRoute: typeof AuthenticatedSettingsContentRoute
+  AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
+  AuthenticatedSettingsExportRoute: typeof AuthenticatedSettingsExportRoute
+  AuthenticatedSettingsHelpRoute: typeof AuthenticatedSettingsHelpRoute
+  AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
+  AuthenticatedSettingsPasswordRoute: typeof AuthenticatedSettingsPasswordRoute
+  AuthenticatedSettingsPrivacyRoute: typeof AuthenticatedSettingsPrivacyRoute
+  AuthenticatedSettingsReportRoute: typeof AuthenticatedSettingsReportRoute
+  AuthenticatedSettingsSessionsRoute: typeof AuthenticatedSettingsSessionsRoute
+  AuthenticatedSettingsTermsRoute: typeof AuthenticatedSettingsTermsRoute
+  AuthenticatedSettingsTwofaRoute: typeof AuthenticatedSettingsTwofaRoute
+}
+
+const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
+  AuthenticatedSettingsAboutRoute: AuthenticatedSettingsAboutRoute,
+  AuthenticatedSettingsActivityRoute: AuthenticatedSettingsActivityRoute,
+  AuthenticatedSettingsBlockedRoute: AuthenticatedSettingsBlockedRoute,
+  AuthenticatedSettingsConnectionsRoute: AuthenticatedSettingsConnectionsRoute,
+  AuthenticatedSettingsContentRoute: AuthenticatedSettingsContentRoute,
+  AuthenticatedSettingsEmailRoute: AuthenticatedSettingsEmailRoute,
+  AuthenticatedSettingsExportRoute: AuthenticatedSettingsExportRoute,
+  AuthenticatedSettingsHelpRoute: AuthenticatedSettingsHelpRoute,
+  AuthenticatedSettingsNotificationsRoute:
+    AuthenticatedSettingsNotificationsRoute,
+  AuthenticatedSettingsPasswordRoute: AuthenticatedSettingsPasswordRoute,
+  AuthenticatedSettingsPrivacyRoute: AuthenticatedSettingsPrivacyRoute,
+  AuthenticatedSettingsReportRoute: AuthenticatedSettingsReportRoute,
+  AuthenticatedSettingsSessionsRoute: AuthenticatedSettingsSessionsRoute,
+  AuthenticatedSettingsTermsRoute: AuthenticatedSettingsTermsRoute,
+  AuthenticatedSettingsTwofaRoute: AuthenticatedSettingsTwofaRoute,
+}
+
+const AuthenticatedSettingsRouteWithChildren =
+  AuthenticatedSettingsRoute._addFileChildren(
+    AuthenticatedSettingsRouteChildren,
+  )
+
 interface AuthenticatedVendorRouteChildren {
   AuthenticatedVendorApplyRoute: typeof AuthenticatedVendorApplyRoute
   AuthenticatedVendorPlansRoute: typeof AuthenticatedVendorPlansRoute
@@ -1901,7 +2243,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOwnerRoute: typeof AuthenticatedOwnerRoute
   AuthenticatedRewardsRoute: typeof AuthenticatedRewardsRoute
   AuthenticatedSecurityRoute: typeof AuthenticatedSecurityRoute
-  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRouteWithChildren
   AuthenticatedVendorRoute: typeof AuthenticatedVendorRouteWithChildren
   AuthenticatedAdsNewRoute: typeof AuthenticatedAdsNewRoute
   AuthenticatedAtlasCockpitRoute: typeof AuthenticatedAtlasCockpitRoute
@@ -1956,7 +2298,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOwnerRoute: AuthenticatedOwnerRoute,
   AuthenticatedRewardsRoute: AuthenticatedRewardsRoute,
   AuthenticatedSecurityRoute: AuthenticatedSecurityRoute,
-  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRouteWithChildren,
   AuthenticatedVendorRoute: AuthenticatedVendorRouteWithChildren,
   AuthenticatedAdsNewRoute: AuthenticatedAdsNewRoute,
   AuthenticatedAtlasCockpitRoute: AuthenticatedAtlasCockpitRoute,
