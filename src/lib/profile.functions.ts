@@ -92,13 +92,14 @@ export const updateMyProfile = createServerFn({ method: "POST" })
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const payload: Record<string, unknown> = { ...data };
+    const payload: Record<string, string | null> = { ...data };
     if (data.website === "") payload.website = null;
     if (data.avatar_url === "") payload.avatar_url = null;
     if (data.cover_url === "") payload.cover_url = null;
     const { data: row, error } = await context.supabase
       .from("profiles")
-      .update(payload)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(payload as any)
       .eq("id", context.userId)
       .select()
       .single();
