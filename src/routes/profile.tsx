@@ -506,6 +506,14 @@ function ProfilePage() {
       {contactOpen && (
         <ContactModal profile={p} onClose={() => setContactOpen(false)} />
       )}
+      {toast && (
+        <div className="fixed inset-x-0 z-[60] flex justify-center" style={{ bottom: "calc(env(safe-area-inset-bottom, 0px) + 90px)" }}>
+          <div className="rounded-full px-4 py-2 text-[12px] font-semibold"
+            style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)", boxShadow: "0 10px 30px -8px rgba(0,0,0,0.35)" }}>
+            {toast}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
