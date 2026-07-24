@@ -79,6 +79,11 @@ function EditProfilePage() {
           website,
           avatar_url: avatarUrl,
           cover_url: coverUrl,
+          contact_phone: contactPhone,
+          contact_email: contactEmail,
+          contact_dm_enabled: contactDm,
+          is_business: isBusiness,
+          business_address: businessAddress,
         },
       });
     },
