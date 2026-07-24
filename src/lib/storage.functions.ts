@@ -26,11 +26,11 @@ const PathSchema = z
   .refine((p) => !p.startsWith("/"), "Path must be relative");
 
 const MIME_ALLOWED: Record<Bucket, RegExp> = {
-  avatars: /^image\/(png|jpeg|webp|gif)$/,
-  vehicles: /^image\/(png|jpeg|webp|gif)$/,
-  posts: /^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm|quicktime))$/,
-  documents: /^(image\/(png|jpeg|webp)|application\/pdf)$/,
-  marketplace: /^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm|quicktime))$/,
+  avatars: /^image\/(png|jpeg|webp|gif|heic|heif)$/,
+  vehicles: /^image\/(png|jpeg|webp|gif|heic|heif)$/,
+  posts: /^(image\/(png|jpeg|webp|gif|heic|heif)|video\/(mp4|webm|quicktime))$/,
+  documents: /^(image\/(png|jpeg|webp|heic|heif)|application\/pdf)$/,
+  marketplace: /^(image\/(png|jpeg|webp|gif|heic|heif)|video\/(mp4|webm|quicktime))$/,
 };
 
 async function assertOwnerOfVendor(supabase: any, userId: string, vendorId: string) {
