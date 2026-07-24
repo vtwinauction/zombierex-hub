@@ -356,6 +356,11 @@ export function MediaComposer({ onDone }: Props) {
             >
               {publish.isPending ? "Publishing…" : "Publish text only"}
             </button>
+            {publish.error && (
+              <p className="mt-2 text-[12px]" style={{ color: "#ff8080" }}>
+                {(publish.error as Error).message}
+              </p>
+            )}
           </div>
         </div>
       )}
