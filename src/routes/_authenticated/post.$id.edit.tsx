@@ -15,6 +15,13 @@ export const Route = createFileRoute("/_authenticated/post/$id/edit")({
     ],
   }),
   component: EditPostPage,
+  errorComponent: ({ error }) => (
+    <div className="p-6 text-center">
+      <p className="mono-tag mb-3" style={{ color: "var(--color-ink-3)" }}>POST UNAVAILABLE</p>
+      <p className="text-sm mb-4" style={{ color: "var(--color-ink-0)" }}>{error.message}</p>
+      <Link to="/posts/mine" className="mono-tag" style={{ color: "var(--color-neon)" }}>← Back to my posts</Link>
+    </div>
+  ),
 });
 
 function EditPostPage() {
