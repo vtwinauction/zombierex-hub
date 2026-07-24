@@ -18,7 +18,7 @@
  *    surfaces scheduled drafts on the composer's drafts screen.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { blobFromCanvas, compressImage, uploadWithRetry, type UploadProgress } from "@/lib/media-upload";
@@ -130,6 +130,7 @@ export function MediaComposer({ onDone }: Props) {
   const pickVideo = useRef<HTMLInputElement>(null);
 
   const post = useServerFn(createPost);
+  const queryClient = useQueryClient();
 
   const activeItem = items[active];
 
@@ -297,7 +298,11 @@ export function MediaComposer({ onDone }: Props) {
       return { scheduled: false };
     },
     onSuccess: (r) => {
-      if (!r.scheduled) onDone?.();
+      if (!r.scheduled) {
+        queryClient.invalidateQueries({ queryKey: ["feed"] });
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        onDone?.();
+      }
     },
   });
 

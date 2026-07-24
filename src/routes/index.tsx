@@ -16,6 +16,7 @@ import { SponsoredCard } from "@/components/SponsoredCard";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listSponsoredCreatives } from "@/lib/ads.functions";
+import { listFeed } from "@/lib/feed.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,13 +75,41 @@ function HomePage() {
   const gridReels = [reels[0], reels[2], reels[3]];
   const suggestedCreators = users.slice(0, 6);
   const suggestedClubs = clubs.slice(0, 4);
-  const feedPosts = tab === "following" ? posts.filter((_, i) => i % 2 === 0) : posts;
   const listAds = useServerFn(listSponsoredCreatives);
   const sponsored = useQuery({
     queryKey: ["ads", "feed"],
     queryFn: () => listAds({ data: { placement: "feed", limit: 3 } }),
     staleTime: 5 * 60_000,
   });
+  const fetchFeed = useServerFn(listFeed);
+  const liveFeed = useQuery({
+    queryKey: ["feed", "live"],
+    queryFn: () => fetchFeed({ data: { limit: 20 } }),
+    staleTime: 30_000,
+  });
+  const realPosts = (liveFeed.data?.items ?? []).map((r: any) => {
+    const a = r.author ?? {};
+    const mins = Math.max(1, Math.round((Date.now() - new Date(r.created_at).getTime()) / 60000));
+    const timeAgo = mins < 60 ? `${mins}m` : mins < 1440 ? `${Math.round(mins/60)}h` : `${Math.round(mins/1440)}d`;
+    return {
+      id: `db:${r.id}`,
+      user: {
+        avatar: a.avatar_url || "https://api.dicebear.com/7.x/shapes/svg?seed=" + (a.id ?? r.author_id),
+        handle: a.handle || a.display_name || "rider",
+        verified: !!a.is_verified,
+        location: a.location || "",
+      },
+      timeAgo,
+      image: r.media_url || r.thumbnail_url || "",
+      vehicle: null as any,
+      likes: r.likes_count ?? 0,
+      comments: r.comments_count ?? 0,
+      caption: r.caption ?? "",
+      tags: [] as string[],
+    };
+  }).filter((p) => p.image || p.caption);
+  const baseFeed = tab === "following" ? posts.filter((_, i) => i % 2 === 0) : posts;
+  const feedPosts = [...realPosts, ...baseFeed];
 
 
 
