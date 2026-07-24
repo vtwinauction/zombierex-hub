@@ -18,21 +18,6 @@ const supabasePublishableKey =
 
 export default defineConfig({
   vite: {
-    cacheDir: "/tmp/zombierex-vite-cache",
-    // Force regeneration of the optimized dependency cache in dev; without it
-    // the preview can keep requesting stale/missing files and skip hydration.
-    optimizeDeps: {
-      force: true,
-      holdUntilCrawlEnd: false,
-      include: [
-        "react",
-        "react/jsx-runtime",
-        "react/jsx-dev-runtime",
-        "react-dom",
-        "react-dom/client",
-        "@tanstack/react-query",
-      ],
-    },
     define: {
       "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
       "import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY": JSON.stringify(supabasePublishableKey),
