@@ -291,9 +291,8 @@ function ProfilePage() {
           </div>
 
           {/* Actions — edge-to-edge, uniform height, icons + labels */}
-          <div className="mt-4 grid grid-cols-4 items-stretch overflow-hidden rounded-xl"
+          <div className="mt-4 grid grid-cols-3 items-stretch overflow-hidden rounded-xl"
             style={{ border: "1px solid var(--color-line)", background: "var(--color-paper-0)" }}>
-            <ActionBtn as={Link} to="/profile/edit" icon={<EditIcon className="h-4 w-4" />} label="Edit" primary />
             <ActionBtn onClick={() => setContactOpen(true)} icon={<Phone className="h-4 w-4" />} label="Contact" accent />
             <ActionBtn onClick={handleShareProfile} icon={<Share2 className="h-4 w-4" />} label="Share" />
             <ActionBtn as={Link} to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" />
