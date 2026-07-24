@@ -101,18 +101,28 @@ function EditProfilePage() {
     if (!userId) { setError("Not signed in"); return; }
     setError(null);
     const setBusy = kind === "avatar" ? setUploadingAvatar : setUploadingCover;
+    // Instant local preview so the user sees the pick immediately
+    const localPreview = URL.createObjectURL(file);
+    if (kind === "avatar") setAvatarUrl(localPreview);
+    else setCoverUrl(localPreview);
     setBusy(true);
     try {
       const blob = await compressImage(file);
-      const res = await uploadWithRetry(blob, { userId, bucket: "avatars" });
+      const bucket = kind === "avatar" ? "avatars" : "vehicles";
+      const res = await uploadWithRetry(blob, { userId, bucket });
       if (kind === "avatar") setAvatarUrl(res.url);
       else setCoverUrl(res.url);
     } catch (e) {
-      setError((e as Error).message);
+      setError(`Upload failed: ${(e as Error).message}`);
+      // revert preview on failure
+      if (kind === "avatar") setAvatarUrl((q.data as any)?.avatar_url ?? "");
+      else setCoverUrl((q.data as any)?.cover_url ?? "");
     } finally {
+      URL.revokeObjectURL(localPreview);
       setBusy(false);
     }
   };
+
 
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
