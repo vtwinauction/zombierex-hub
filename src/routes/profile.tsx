@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Pencil } from "lucide-react";
+import { Pencil, Pencil as EditIcon, Phone, Share2, Settings as SettingsIcon } from "lucide-react";
 import { toast as sonnerToast } from "sonner";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
@@ -157,22 +157,30 @@ function ProfilePage() {
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
       <StatusBar index="05" section="GARAGE · OPERATOR" />
 
-      {/* ============ HERO CARD ============ */}
+      {/* ============ HERO — VEHICLE ============ */}
       <section className="px-4 pt-4">
         <div
-          className="relative overflow-hidden rounded-3xl"
+          className="relative overflow-hidden rounded-3xl animate-fade-in"
           style={{
             border: "1px solid var(--color-line)",
             boxShadow: "0 1px 2px rgba(15,15,15,0.04), 0 22px 44px -22px rgba(15,15,15,0.22)",
-            aspectRatio: "16/11",
+            aspectRatio: "16/10",
           }}
         >
           <img
             src={p?.cover_url || bike.cover}
-            alt=""
+            alt={bike.name}
             className="h-full w-full object-cover"
           />
-          {/* neon accent bar */}
+          {/* subtle bottom gradient — image stays the focal point */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%)",
+            }}
+          />
+          {/* neon accent hairline */}
           <div
             className="pointer-events-none absolute inset-x-0 top-0 h-[3px]"
             style={{
@@ -180,42 +188,25 @@ function ProfilePage() {
                 "linear-gradient(90deg, #00e5ff, var(--color-neon) 45%, #ff9500 78%, #ff3d5a)",
             }}
           />
+          {/* Consistent status badges — top row on hero */}
+          <div className="absolute inset-x-3 top-3 flex items-center justify-between">
+            <StatusBadge tone="live">
+              <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
+              ACTIVE · ID-{idLabel}
+            </StatusBadge>
+            <StatusBadge tone="dark">
+              {bike.year} · {bike.type === "Motorcycle" ? "MOTO" : "AUTO"}
+            </StatusBadge>
+          </div>
         </div>
 
-        {/* Meta tags — outside the image */}
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <span
-            className="mono-tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1"
-            style={{
-              background: "var(--color-paper-0)",
-              color: "var(--color-ink-0)",
-              border: "1px solid var(--color-line)",
-              fontSize: 9,
-            }}
-          >
-            <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
-            ACTIVE · ID-{idLabel}
-          </span>
-          <span
-            className="mono-tag rounded-md px-2 py-1"
-            style={{
-              background: "var(--color-paper-0)",
-              color: "var(--color-ink-2)",
-              border: "1px solid var(--color-line)",
-              fontSize: 9,
-            }}
-          >
-            {bike.year} · {bike.type === "Motorcycle" ? "MOTO / CUSTOM" : "AUTO / CUSTOM"}
-          </span>
-        </div>
-
-        {/* Designation + name — outside the image */}
-        <div className="mt-2 flex items-start justify-between gap-3">
+        {/* Section: VEHICLE — designation + name */}
+        <div className="mt-4 flex items-end justify-between gap-3">
           <div className="min-w-0">
             <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
-              DESIGNATION · UNIT V·{bike.id.toUpperCase()}
+              VEHICLE · UNIT V·{bike.id.toUpperCase()}
             </p>
-            <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
+            <h2 className="serif mt-1 truncate text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
               {bike.name}
             </h2>
           </div>
@@ -224,10 +215,14 @@ function ProfilePage() {
 
       </section>
 
-      {/* ============ OPERATOR STRIP ============ */}
+      {/* ============ PROFILE — OPERATOR ============ */}
       <section className="mt-4 px-4">
+        <div className="mb-2 flex items-center gap-2">
+          <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>PROFILE</span>
+          <span className="etch flex-1" />
+        </div>
         <div
-          className="rounded-2xl p-4"
+          className="rounded-2xl p-4 animate-fade-in"
           style={{ background: "var(--color-paper-0)", border: "1px solid var(--color-line)" }}
         >
           <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
@@ -235,23 +230,17 @@ function ProfilePage() {
               className="shrink-0 rounded-full p-[2px]"
               style={{ background: "var(--color-line)" }}
             >
-              <img src={p?.avatar_url || me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
+              <img src={p?.avatar_url || me.avatar} alt="" className="h-16 w-16 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
             </div>
 
             <div className="min-w-0">
-              <p className="truncate text-[15px] font-semibold" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.01em" }}>
+              <p className="truncate text-[16px] font-semibold" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.01em" }}>
                 {displayName}
               </p>
-              <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
+              <p className="mono-tag mt-1 truncate" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
                 {title} · ◎ {location}
               </p>
-              {p?.bio && (
-                <p className="mt-1.5 text-[12px] leading-snug" style={{ color: "var(--color-ink-1)" }}>
-                  {p.bio}
-                </p>
-              )}
             </div>
-
 
             <div className="shrink-0 text-right">
               <div
@@ -266,6 +255,19 @@ function ProfilePage() {
                 <span className="mono-num text-[15px] font-bold leading-none">{level}</span>
               </div>
             </div>
+          </div>
+
+          {p?.bio && (
+            <p className="mt-3 text-[13px] leading-relaxed" style={{ color: "var(--color-ink-1)" }}>
+              {p.bio}
+            </p>
+          )}
+
+          {/* Quick stats — 3 up, consistent */}
+          <div className="mt-4 grid grid-cols-3 overflow-hidden rounded-xl" style={{ border: "1px solid var(--color-line)" }}>
+            <StatCell k="POSTS" v={fmt(postsCount)} />
+            <StatCell k="FOLLOWERS" v={fmt(followers)} border />
+            <StatCell k="TROPHIES" v={`${earnedCount}/${totalAch}`} border />
           </div>
 
           {/* XP bar */}
@@ -288,39 +290,13 @@ function ProfilePage() {
             </div>
           </div>
 
-          {/* Actions — edge-to-edge, uniform height */}
+          {/* Actions — edge-to-edge, uniform height, icons + labels */}
           <div className="mt-4 grid grid-cols-4 items-stretch overflow-hidden rounded-xl"
             style={{ border: "1px solid var(--color-line)", background: "var(--color-paper-0)" }}>
-            <Link
-              to="/profile/edit"
-              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
-              style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
-            >
-              Edit
-            </Link>
-            <button
-              type="button"
-              onClick={() => setContactOpen(true)}
-              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
-              style={{ background: "var(--color-neon)", color: "#000", borderLeft: "1px solid var(--color-line)" }}
-            >
-              Contact
-            </button>
-            <button
-              type="button"
-              onClick={handleShareProfile}
-              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
-              style={{ color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" }}
-            >
-              Share
-            </button>
-            <Link
-              to="/settings"
-              className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
-              style={{ color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" }}
-            >
-              Settings
-            </Link>
+            <ActionBtn as={Link} to="/profile/edit" icon={<EditIcon className="h-4 w-4" />} label="Edit" primary />
+            <ActionBtn onClick={() => setContactOpen(true)} icon={<Phone className="h-4 w-4" />} label="Contact" accent />
+            <ActionBtn onClick={handleShareProfile} icon={<Share2 className="h-4 w-4" />} label="Share" />
+            <ActionBtn as={Link} to="/settings" icon={<SettingsIcon className="h-4 w-4" />} label="Settings" />
           </div>
         </div>
       </section>
