@@ -89,13 +89,21 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       website: z.string().trim().url().max(255).optional().or(z.literal("")),
       avatar_url: z.string().url().max(2048).optional().or(z.literal("")),
       cover_url: z.string().url().max(2048).optional().or(z.literal("")),
+      contact_phone: z.string().trim().max(40).optional().or(z.literal("")),
+      contact_email: z.string().trim().email().max(255).optional().or(z.literal("")),
+      contact_dm_enabled: z.boolean().optional(),
+      is_business: z.boolean().optional(),
+      business_address: z.string().trim().max(240).optional().or(z.literal("")),
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const payload: Record<string, string | null> = { ...data };
+    const payload: Record<string, unknown> = { ...data };
     if (data.website === "") payload.website = null;
     if (data.avatar_url === "") payload.avatar_url = null;
     if (data.cover_url === "") payload.cover_url = null;
+    if (data.contact_phone === "") payload.contact_phone = null;
+    if (data.contact_email === "") payload.contact_email = null;
+    if (data.business_address === "") payload.business_address = null;
     const { data: row, error } = await context.supabase
       .from("profiles")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
