@@ -298,7 +298,11 @@ export function MediaComposer({ onDone }: Props) {
       return { scheduled: false };
     },
     onSuccess: (r) => {
-      if (!r.scheduled) onDone?.();
+      if (!r.scheduled) {
+        queryClient.invalidateQueries({ queryKey: ["feed"] });
+        queryClient.invalidateQueries({ queryKey: ["profile"] });
+        onDone?.();
+      }
     },
   });
 
