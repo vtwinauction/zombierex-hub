@@ -206,14 +206,11 @@ function ProfilePage() {
                 "linear-gradient(90deg, #00e5ff, var(--color-neon) 45%, #ff9500 78%, #ff3d5a)",
             }}
           />
-          {/* Consistent status badges — top row on hero */}
-          <div className="absolute inset-x-3 top-3 flex items-center justify-between">
+          {/* Only ACTIVE status remains on the hero */}
+          <div className="absolute inset-x-3 top-3 flex items-center">
             <StatusBadge tone="live">
               <span className="signal-pulse block h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)", boxShadow: "0 0 8px var(--color-neon)" }} />
               ACTIVE
-            </StatusBadge>
-            <StatusBadge tone="dark">
-              {bike.year} · {bike.type === "Motorcycle" ? "MOTO" : "AUTO"}
             </StatusBadge>
           </div>
         </div>
