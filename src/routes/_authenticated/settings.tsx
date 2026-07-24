@@ -176,7 +176,7 @@ function SettingRow({ it, prefs, update }: {
       case "select-quality":     return <Select value={prefs.downloadQuality} onChange={(v) => update("downloadQuality", v as Prefs["downloadQuality"])} options={[["auto","Auto"],["high","High"],["data-saver","Data saver"]]} />;
       case "select-autoplay":    return <Select value={prefs.autoplay} onChange={(v) => update("autoplay", v as Prefs["autoplay"])} options={[["always","Always"],["wifi","Wi-Fi only"],["never","Never"]]} />;
       case "clear-cache":        return <ActionBtn label="Clear" onClick={() => { try { caches?.keys?.().then((k) => k.forEach((n) => caches.delete(n))); } catch {} alert("Cache cleared"); }} />;
-      case "profile":            return <LinkChip to="/profile" label="Open" />;
+      case "profile":            return <LinkChip to="/profile/edit" label="Open" />;
       default:                   return <span className="mono-tag" style={{ color: "var(--color-titanium)" }}>Soon</span>;
     }
   })();
