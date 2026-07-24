@@ -661,6 +661,69 @@ function Ledger({ k, v, u, dot }: { k: string; v: string; u?: string; dot: strin
   );
 }
 
+function StatusBadge({ children, tone = "light" }: { children: React.ReactNode; tone?: "light" | "dark" | "live" }) {
+  const styles =
+    tone === "dark"
+      ? { background: "rgba(0,0,0,0.55)", color: "#fff", border: "1px solid rgba(255,255,255,0.14)", backdropFilter: "blur(8px)" }
+      : tone === "live"
+      ? { background: "rgba(255,255,255,0.9)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)", backdropFilter: "blur(8px)" }
+      : { background: "var(--color-paper-0)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" };
+  return (
+    <span
+      className="mono-tag inline-flex items-center gap-1.5 rounded-full px-2.5 py-1"
+      style={{ ...styles, fontSize: 9, letterSpacing: "0.18em" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+function StatCell({ k, v, border }: { k: string; v: string; border?: boolean }) {
+  return (
+    <div
+      className="px-2 py-2.5 text-center"
+      style={{ background: "var(--color-paper-0)", borderLeft: border ? "1px solid var(--color-line)" : "none" }}
+    >
+      <p className="mono-num text-[15px] font-bold leading-none tabular-nums" style={{ color: "var(--color-ink-0)" }}>
+        {v}
+      </p>
+      <p className="mono-tag mt-1" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.18em" }}>{k}</p>
+    </div>
+  );
+}
+
+type ActionBtnProps = {
+  icon: React.ReactNode;
+  label: string;
+  primary?: boolean;
+  accent?: boolean;
+  onClick?: () => void;
+  as?: typeof Link;
+  to?: string;
+};
+function ActionBtn({ icon, label, primary, accent, onClick, as: As, to }: ActionBtnProps) {
+  const style: React.CSSProperties = primary
+    ? { background: "var(--color-ink-0)", color: "var(--color-paper-0)" }
+    : accent
+    ? { background: "var(--color-neon)", color: "#000", borderLeft: "1px solid var(--color-line)" }
+    : { color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" };
+  const cls = "tap flex h-12 items-center justify-center gap-1.5 text-[12px] font-semibold transition-transform active:scale-[0.97]";
+  if (As && to) {
+    return (
+      <As to={to} className={cls} style={style}>
+        {icon}
+        <span>{label}</span>
+      </As>
+    );
+  }
+  return (
+    <button type="button" onClick={onClick} className={cls} style={style}>
+      {icon}
+      <span>{label}</span>
+    </button>
+  );
+}
+
 /* ==========================================================
    BIG SPEEDO — half-circle, multi-stop rainbow track
    ========================================================== */
