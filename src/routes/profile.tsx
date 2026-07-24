@@ -108,10 +108,11 @@ function ProfilePage() {
           }}
         >
           <img
-            src={bike.cover}
+            src={p?.cover_url || bike.cover}
             alt=""
             className="ken-burns h-full w-full object-cover"
           />
+
           {/* color wash */}
           <div
             className="absolute inset-0"
