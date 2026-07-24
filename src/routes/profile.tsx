@@ -799,8 +799,8 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
                   m.mutate(v);
                 }}
                 disabled={m.isPending}
-                className="tap rounded-xl py-2.5 text-[13px] font-semibold"
-                style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
+                className="tap rounded-xl py-2.5 text-[13px] font-bold"
+                style={{ background: "#e5253d", color: "#000", border: "1px solid #b81a2e", opacity: 1 }}
               >
                 {m.isPending ? "Saving…" : "Save"}
               </button>
