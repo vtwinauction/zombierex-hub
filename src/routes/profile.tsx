@@ -661,7 +661,7 @@ function Ledger({ k, v, u, dot }: { k: string; v: string; u?: string; dot: strin
   );
 }
 
-function StatusBadge({ children, tone = "light" }: { children: React.ReactNode; tone?: "light" | "dark" | "live" }) {
+function StatusBadge({ children, tone = "light" }: { children: ReactNode; tone?: "light" | "dark" | "live" }) {
   const styles =
     tone === "dark"
       ? { background: "rgba(0,0,0,0.55)", color: "#fff", border: "1px solid rgba(255,255,255,0.14)", backdropFilter: "blur(8px)" }
@@ -693,7 +693,7 @@ function StatCell({ k, v, border }: { k: string; v: string; border?: boolean }) 
 }
 
 type ActionBtnProps = {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   primary?: boolean;
   accent?: boolean;
@@ -702,7 +702,7 @@ type ActionBtnProps = {
   to?: string;
 };
 function ActionBtn({ icon, label, primary, accent, onClick, as: As, to }: ActionBtnProps) {
-  const style: React.CSSProperties = primary
+  const style: CSSProperties = primary
     ? { background: "var(--color-ink-0)", color: "var(--color-paper-0)" }
     : accent
     ? { background: "var(--color-neon)", color: "#000", borderLeft: "1px solid var(--color-line)" }
