@@ -417,7 +417,32 @@ function ProfilePage() {
       <div className="px-4 pt-4" style={{ background: "var(--color-paper-1)" }}>
         {tab === "REELS" && (
           <div className="grid grid-cols-3 gap-1.5">
-            {reels.map((r, i) => (
+            <Link to="/post/new" className="tap flex aspect-[3/4] items-center justify-center rounded-lg border border-dashed" style={{ borderColor: "var(--color-line-2)", background: "var(--color-paper-0)" }}>
+              <div className="text-center">
+                <div className="text-2xl font-thin" style={{ color: "var(--color-neon)" }}>+</div>
+                <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 8.5 }}>UPLOAD</span>
+              </div>
+            </Link>
+            {myPosts.map((mp) => {
+              const cover = mp.media_url || mp.thumbnail_url;
+              return (
+                <Link key={mp.id} to="/post/$id/edit" params={{ id: mp.id }} className="relative aspect-[3/4] overflow-hidden rounded-lg" style={{ background: "var(--color-paper-2)" }}>
+                  {cover ? (
+                    <img src={cover} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center p-2 text-center text-[11px]" style={{ color: "var(--color-ink-0)" }}>
+                      {mp.caption?.slice(0, 80) || "Post"}
+                    </div>
+                  )}
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1">
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: "var(--color-neon)" }} />
+                    <span className="mono-num text-[10px] font-bold text-white">{mp.likes_count}</span>
+                  </div>
+                </Link>
+              );
+            })}
+            {myPosts.length === 0 && reels.map((r, i) => (
               <div key={r.id} className="relative aspect-[3/4] overflow-hidden rounded-lg" style={{ background: "var(--color-paper-2)" }}>
                 <img src={r.poster} alt="" className="h-full w-full object-cover" />
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
@@ -430,14 +455,9 @@ function ProfilePage() {
                 </div>
               </div>
             ))}
-            <Link to="/post/new" className="tap flex aspect-[3/4] items-center justify-center rounded-lg border border-dashed" style={{ borderColor: "var(--color-line-2)", background: "var(--color-paper-0)" }}>
-              <div className="text-center">
-                <div className="text-2xl font-thin" style={{ color: "var(--color-neon)" }}>+</div>
-                <span className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 8.5 }}>UPLOAD</span>
-              </div>
-            </Link>
           </div>
         )}
+
 
         {tab === "GARAGE" && (
           <div className="space-y-3">
