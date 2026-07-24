@@ -58,10 +58,12 @@ function EditProfilePage() {
 
   const save = useMutation({
     mutationFn: async () => {
+      const cleanHandle = handle.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
+      const originalHandle = (q.data?.handle ?? "").toLowerCase();
       return saveFn({
         data: {
-          handle: handle || undefined,
-          display_name: displayName || undefined,
+          handle: cleanHandle && cleanHandle !== originalHandle ? cleanHandle : undefined,
+          display_name: displayName.trim() || undefined,
           bio,
           location,
           website,
