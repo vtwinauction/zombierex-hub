@@ -18,14 +18,19 @@ const supabasePublishableKey =
 
 export default defineConfig({
   vite: {
-    // The sandbox preview was hanging on missing optimized dependency files
-    // under node_modules/.vite/deps, which prevented React hydration and made
-    // buttons look clickable but inert. Serving deps directly is slower on cold
-    // load but keeps the preview reliable.
+    // Force regeneration of the optimized dependency cache in dev; without it
+    // the preview can keep requesting stale/missing files and skip hydration.
     optimizeDeps: {
-      disabled: "dev",
-      noDiscovery: true,
-      include: [],
+      force: true,
+      holdUntilCrawlEnd: false,
+      include: [
+        "react",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "react-dom",
+        "react-dom/client",
+        "@tanstack/react-query",
+      ],
     },
     define: {
       "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(supabaseUrl),
