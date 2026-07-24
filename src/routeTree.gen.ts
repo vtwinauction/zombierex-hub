@@ -62,10 +62,14 @@ import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes
 import { Route as AuthenticatedSettingsHelpRouteImport } from './routes/_authenticated/settings.help'
 import { Route as AuthenticatedSettingsExportRouteImport } from './routes/_authenticated/settings.export'
 import { Route as AuthenticatedSettingsEmailRouteImport } from './routes/_authenticated/settings.email'
+import { Route as AuthenticatedSettingsDataRouteImport } from './routes/_authenticated/settings.data'
 import { Route as AuthenticatedSettingsContentRouteImport } from './routes/_authenticated/settings.content'
 import { Route as AuthenticatedSettingsConnectionsRouteImport } from './routes/_authenticated/settings.connections'
 import { Route as AuthenticatedSettingsBlockedRouteImport } from './routes/_authenticated/settings.blocked'
+import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings.appearance'
 import { Route as AuthenticatedSettingsActivityRouteImport } from './routes/_authenticated/settings.activity'
+import { Route as AuthenticatedSettingsAccountPrivacyRouteImport } from './routes/_authenticated/settings.account-privacy'
+import { Route as AuthenticatedSettingsAccessibilityRouteImport } from './routes/_authenticated/settings.accessibility'
 import { Route as AuthenticatedSettingsAboutRouteImport } from './routes/_authenticated/settings.about'
 import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticated/rides.$id'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
@@ -395,6 +399,12 @@ const AuthenticatedSettingsEmailRoute =
     path: '/email',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
+const AuthenticatedSettingsDataRoute =
+  AuthenticatedSettingsDataRouteImport.update({
+    id: '/data',
+    path: '/data',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSettingsContentRoute =
   AuthenticatedSettingsContentRouteImport.update({
     id: '/content',
@@ -413,10 +423,28 @@ const AuthenticatedSettingsBlockedRoute =
     path: '/blocked',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
+const AuthenticatedSettingsAppearanceRoute =
+  AuthenticatedSettingsAppearanceRouteImport.update({
+    id: '/appearance',
+    path: '/appearance',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
 const AuthenticatedSettingsActivityRoute =
   AuthenticatedSettingsActivityRouteImport.update({
     id: '/activity',
     path: '/activity',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsAccountPrivacyRoute =
+  AuthenticatedSettingsAccountPrivacyRouteImport.update({
+    id: '/account-privacy',
+    path: '/account-privacy',
+    getParentRoute: () => AuthenticatedSettingsRoute,
+  } as any)
+const AuthenticatedSettingsAccessibilityRoute =
+  AuthenticatedSettingsAccessibilityRouteImport.update({
+    id: '/accessibility',
+    path: '/accessibility',
     getParentRoute: () => AuthenticatedSettingsRoute,
   } as any)
 const AuthenticatedSettingsAboutRoute =
@@ -765,10 +793,14 @@ export interface FileRoutesByFullPath {
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/settings/accessibility': typeof AuthenticatedSettingsAccessibilityRoute
+  '/settings/account-privacy': typeof AuthenticatedSettingsAccountPrivacyRoute
   '/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
   '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/settings/data': typeof AuthenticatedSettingsDataRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/export': typeof AuthenticatedSettingsExportRoute
   '/settings/help': typeof AuthenticatedSettingsHelpRoute
@@ -871,10 +903,14 @@ export interface FileRoutesByTo {
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/settings/accessibility': typeof AuthenticatedSettingsAccessibilityRoute
+  '/settings/account-privacy': typeof AuthenticatedSettingsAccountPrivacyRoute
   '/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
   '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/settings/data': typeof AuthenticatedSettingsDataRoute
   '/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/settings/export': typeof AuthenticatedSettingsExportRoute
   '/settings/help': typeof AuthenticatedSettingsHelpRoute
@@ -981,10 +1017,14 @@ export interface FileRoutesById {
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/rides/$id': typeof AuthenticatedRidesIdRoute
   '/_authenticated/settings/about': typeof AuthenticatedSettingsAboutRoute
+  '/_authenticated/settings/accessibility': typeof AuthenticatedSettingsAccessibilityRoute
+  '/_authenticated/settings/account-privacy': typeof AuthenticatedSettingsAccountPrivacyRoute
   '/_authenticated/settings/activity': typeof AuthenticatedSettingsActivityRoute
+  '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
   '/_authenticated/settings/blocked': typeof AuthenticatedSettingsBlockedRoute
   '/_authenticated/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/_authenticated/settings/content': typeof AuthenticatedSettingsContentRoute
+  '/_authenticated/settings/data': typeof AuthenticatedSettingsDataRoute
   '/_authenticated/settings/email': typeof AuthenticatedSettingsEmailRoute
   '/_authenticated/settings/export': typeof AuthenticatedSettingsExportRoute
   '/_authenticated/settings/help': typeof AuthenticatedSettingsHelpRoute
@@ -1091,10 +1131,14 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/rides/$id'
     | '/settings/about'
+    | '/settings/accessibility'
+    | '/settings/account-privacy'
     | '/settings/activity'
+    | '/settings/appearance'
     | '/settings/blocked'
     | '/settings/connections'
     | '/settings/content'
+    | '/settings/data'
     | '/settings/email'
     | '/settings/export'
     | '/settings/help'
@@ -1197,10 +1241,14 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/rides/$id'
     | '/settings/about'
+    | '/settings/accessibility'
+    | '/settings/account-privacy'
     | '/settings/activity'
+    | '/settings/appearance'
     | '/settings/blocked'
     | '/settings/connections'
     | '/settings/content'
+    | '/settings/data'
     | '/settings/email'
     | '/settings/export'
     | '/settings/help'
@@ -1306,10 +1354,14 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/edit'
     | '/_authenticated/rides/$id'
     | '/_authenticated/settings/about'
+    | '/_authenticated/settings/accessibility'
+    | '/_authenticated/settings/account-privacy'
     | '/_authenticated/settings/activity'
+    | '/_authenticated/settings/appearance'
     | '/_authenticated/settings/blocked'
     | '/_authenticated/settings/connections'
     | '/_authenticated/settings/content'
+    | '/_authenticated/settings/data'
     | '/_authenticated/settings/email'
     | '/_authenticated/settings/export'
     | '/_authenticated/settings/help'
@@ -1750,6 +1802,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsEmailRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
+    '/_authenticated/settings/data': {
+      id: '/_authenticated/settings/data'
+      path: '/data'
+      fullPath: '/settings/data'
+      preLoaderRoute: typeof AuthenticatedSettingsDataRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
     '/_authenticated/settings/content': {
       id: '/_authenticated/settings/content'
       path: '/content'
@@ -1771,11 +1830,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsBlockedRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
+    '/_authenticated/settings/appearance': {
+      id: '/_authenticated/settings/appearance'
+      path: '/appearance'
+      fullPath: '/settings/appearance'
+      preLoaderRoute: typeof AuthenticatedSettingsAppearanceRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
     '/_authenticated/settings/activity': {
       id: '/_authenticated/settings/activity'
       path: '/activity'
       fullPath: '/settings/activity'
       preLoaderRoute: typeof AuthenticatedSettingsActivityRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/account-privacy': {
+      id: '/_authenticated/settings/account-privacy'
+      path: '/account-privacy'
+      fullPath: '/settings/account-privacy'
+      preLoaderRoute: typeof AuthenticatedSettingsAccountPrivacyRouteImport
+      parentRoute: typeof AuthenticatedSettingsRoute
+    }
+    '/_authenticated/settings/accessibility': {
+      id: '/_authenticated/settings/accessibility'
+      path: '/accessibility'
+      fullPath: '/settings/accessibility'
+      preLoaderRoute: typeof AuthenticatedSettingsAccessibilityRouteImport
       parentRoute: typeof AuthenticatedSettingsRoute
     }
     '/_authenticated/settings/about': {
@@ -2179,10 +2259,14 @@ const AuthenticatedMessagesRouteWithChildren =
 
 interface AuthenticatedSettingsRouteChildren {
   AuthenticatedSettingsAboutRoute: typeof AuthenticatedSettingsAboutRoute
+  AuthenticatedSettingsAccessibilityRoute: typeof AuthenticatedSettingsAccessibilityRoute
+  AuthenticatedSettingsAccountPrivacyRoute: typeof AuthenticatedSettingsAccountPrivacyRoute
   AuthenticatedSettingsActivityRoute: typeof AuthenticatedSettingsActivityRoute
+  AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
   AuthenticatedSettingsBlockedRoute: typeof AuthenticatedSettingsBlockedRoute
   AuthenticatedSettingsConnectionsRoute: typeof AuthenticatedSettingsConnectionsRoute
   AuthenticatedSettingsContentRoute: typeof AuthenticatedSettingsContentRoute
+  AuthenticatedSettingsDataRoute: typeof AuthenticatedSettingsDataRoute
   AuthenticatedSettingsEmailRoute: typeof AuthenticatedSettingsEmailRoute
   AuthenticatedSettingsExportRoute: typeof AuthenticatedSettingsExportRoute
   AuthenticatedSettingsHelpRoute: typeof AuthenticatedSettingsHelpRoute
@@ -2197,10 +2281,16 @@ interface AuthenticatedSettingsRouteChildren {
 
 const AuthenticatedSettingsRouteChildren: AuthenticatedSettingsRouteChildren = {
   AuthenticatedSettingsAboutRoute: AuthenticatedSettingsAboutRoute,
+  AuthenticatedSettingsAccessibilityRoute:
+    AuthenticatedSettingsAccessibilityRoute,
+  AuthenticatedSettingsAccountPrivacyRoute:
+    AuthenticatedSettingsAccountPrivacyRoute,
   AuthenticatedSettingsActivityRoute: AuthenticatedSettingsActivityRoute,
+  AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
   AuthenticatedSettingsBlockedRoute: AuthenticatedSettingsBlockedRoute,
   AuthenticatedSettingsConnectionsRoute: AuthenticatedSettingsConnectionsRoute,
   AuthenticatedSettingsContentRoute: AuthenticatedSettingsContentRoute,
+  AuthenticatedSettingsDataRoute: AuthenticatedSettingsDataRoute,
   AuthenticatedSettingsEmailRoute: AuthenticatedSettingsEmailRoute,
   AuthenticatedSettingsExportRoute: AuthenticatedSettingsExportRoute,
   AuthenticatedSettingsHelpRoute: AuthenticatedSettingsHelpRoute,
@@ -2421,3 +2511,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
