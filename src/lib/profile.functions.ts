@@ -87,13 +87,19 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       bio: z.string().trim().max(500).optional(),
       location: z.string().trim().max(120).optional(),
       website: z.string().trim().url().max(255).optional().or(z.literal("")),
+      avatar_url: z.string().url().max(2048).optional().or(z.literal("")),
+      cover_url: z.string().url().max(2048).optional().or(z.literal("")),
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const payload = { ...data, website: data.website === "" ? null : data.website };
+    const payload: Record<string, string | null> = { ...data };
+    if (data.website === "") payload.website = null;
+    if (data.avatar_url === "") payload.avatar_url = null;
+    if (data.cover_url === "") payload.cover_url = null;
     const { data: row, error } = await context.supabase
       .from("profiles")
-      .update(payload)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(payload as any)
       .eq("id", context.userId)
       .select()
       .single();

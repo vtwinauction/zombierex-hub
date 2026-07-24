@@ -66,6 +66,75 @@ export const createPost = createServerFn({ method: "POST" })
     return row;
   });
 
+export const listMyPosts = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data, error } = await context.supabase
+      .from("posts")
+      .select("id, kind, caption, media_url, thumbnail_url, likes_count, comments_count, created_at")
+      .eq("author_id", context.userId)
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) throw new Error(error.message);
+    return data ?? [];
+  });
+
+export const getMyPost = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("posts")
+      .select("id, kind, caption, media_url, thumbnail_url, vehicle_id, is_reel, author_id")
+      .eq("id", data.id)
+      .eq("author_id", context.userId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Post not found");
+    return row;
+  });
+
+export const updatePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) =>
+    z.object({
+      id: z.string().uuid(),
+      caption: z.string().trim().max(2200).optional(),
+      media_url: z.string().url().max(2048).optional().or(z.literal("")),
+      thumbnail_url: z.string().url().max(2048).optional().or(z.literal("")),
+    }).parse(raw),
+  )
+  .handler(async ({ data, context }) => {
+    const { id, ...rest } = data;
+    const payload: Record<string, string | null> = {};
+    if (rest.caption !== undefined) payload.caption = rest.caption;
+    if (rest.media_url !== undefined) payload.media_url = rest.media_url === "" ? null : rest.media_url;
+    if (rest.thumbnail_url !== undefined) payload.thumbnail_url = rest.thumbnail_url === "" ? null : rest.thumbnail_url;
+    const { data: row, error } = await context.supabase
+      .from("posts")
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(payload as any)
+      .eq("id", id)
+      .eq("author_id", context.userId)
+      .select()
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const deletePost = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((raw) => z.object({ id: z.string().uuid() }).parse(raw))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("posts")
+      .delete()
+      .eq("id", data.id)
+      .eq("author_id", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const react = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((raw) =>

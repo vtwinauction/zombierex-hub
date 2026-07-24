@@ -53,6 +53,8 @@ import { Route as ApiPublicHealthRouteImport } from './routes/api/public/health'
 import { Route as AuthenticatedVendorPlansRouteImport } from './routes/_authenticated/vendor.plans'
 import { Route as AuthenticatedVendorApplyRouteImport } from './routes/_authenticated/vendor.apply'
 import { Route as AuthenticatedRidesIdRouteImport } from './routes/_authenticated/rides.$id'
+import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated/profile.edit'
+import { Route as AuthenticatedPostsMineRouteImport } from './routes/_authenticated/posts.mine'
 import { Route as AuthenticatedPostNewRouteImport } from './routes/_authenticated/post.new'
 import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedMarketplaceNewRouteImport } from './routes/_authenticated/marketplace.new'
@@ -91,6 +93,7 @@ import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/em
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
 import { Route as CommunitiesSlugChallengesChallengeIdRouteImport } from './routes/communities.$slug.challenges.$challengeId'
 import { Route as ApiPublicWebhooksPaymentsRouteImport } from './routes/api/public/webhooks.payments'
+import { Route as AuthenticatedPostIdEditRouteImport } from './routes/_authenticated/post.$id.edit'
 import { Route as AuthenticatedJudgeSubmitEventSlugRouteImport } from './routes/_authenticated/judge.submit.$eventSlug'
 import { Route as AuthenticatedCommunitiesSlugManageRouteImport } from './routes/_authenticated/communities.$slug.manage'
 import { Route as AuthenticatedAtlasGroupIdRouteImport } from './routes/_authenticated/atlas.group.$id'
@@ -322,6 +325,17 @@ const AuthenticatedRidesIdRoute = AuthenticatedRidesIdRouteImport.update({
   path: '/rides/$id',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedProfileEditRoute =
+  AuthenticatedProfileEditRouteImport.update({
+    id: '/profile/edit',
+    path: '/profile/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPostsMineRoute = AuthenticatedPostsMineRouteImport.update({
+  id: '/posts/mine',
+  path: '/posts/mine',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPostNewRoute = AuthenticatedPostNewRouteImport.update({
   id: '/post/new',
   path: '/post/new',
@@ -531,6 +545,11 @@ const ApiPublicWebhooksPaymentsRoute =
     path: '/api/public/webhooks/payments',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedPostIdEditRoute = AuthenticatedPostIdEditRouteImport.update({
+  id: '/post/$id/edit',
+  path: '/post/$id/edit',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedJudgeSubmitEventSlugRoute =
   AuthenticatedJudgeSubmitEventSlugRouteImport.update({
     id: '/judge/submit/$eventSlug',
@@ -637,6 +656,8 @@ export interface FileRoutesByFullPath {
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/new': typeof AuthenticatedPostNewRoute
+  '/posts/mine': typeof AuthenticatedPostsMineRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -654,6 +675,7 @@ export interface FileRoutesByFullPath {
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
+  '/post/$id/edit': typeof AuthenticatedPostIdEditRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -725,6 +747,8 @@ export interface FileRoutesByTo {
   '/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/new': typeof AuthenticatedPostNewRoute
+  '/posts/mine': typeof AuthenticatedPostsMineRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/rides/$id': typeof AuthenticatedRidesIdRoute
   '/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -742,6 +766,7 @@ export interface FileRoutesByTo {
   '/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
+  '/post/$id/edit': typeof AuthenticatedPostIdEditRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -817,6 +842,8 @@ export interface FileRoutesById {
   '/_authenticated/marketplace/new': typeof AuthenticatedMarketplaceNewRoute
   '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/post/new': typeof AuthenticatedPostNewRoute
+  '/_authenticated/posts/mine': typeof AuthenticatedPostsMineRoute
+  '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/rides/$id': typeof AuthenticatedRidesIdRoute
   '/_authenticated/vendor/apply': typeof AuthenticatedVendorApplyRoute
   '/_authenticated/vendor/plans': typeof AuthenticatedVendorPlansRoute
@@ -834,6 +861,7 @@ export interface FileRoutesById {
   '/_authenticated/atlas/group/$id': typeof AuthenticatedAtlasGroupIdRoute
   '/_authenticated/communities/$slug/manage': typeof AuthenticatedCommunitiesSlugManageRoute
   '/_authenticated/judge/submit/$eventSlug': typeof AuthenticatedJudgeSubmitEventSlugRoute
+  '/_authenticated/post/$id/edit': typeof AuthenticatedPostIdEditRoute
   '/api/public/webhooks/payments': typeof ApiPublicWebhooksPaymentsRoute
   '/communities/$slug/challenges/$challengeId': typeof CommunitiesSlugChallengesChallengeIdRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
@@ -909,6 +937,8 @@ export interface FileRouteTypes {
     | '/marketplace/new'
     | '/messages/$id'
     | '/post/new'
+    | '/posts/mine'
+    | '/profile/edit'
     | '/rides/$id'
     | '/vendor/apply'
     | '/vendor/plans'
@@ -926,6 +956,7 @@ export interface FileRouteTypes {
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
     | '/judge/submit/$eventSlug'
+    | '/post/$id/edit'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/lovable/email/auth/preview'
@@ -997,6 +1028,8 @@ export interface FileRouteTypes {
     | '/marketplace/new'
     | '/messages/$id'
     | '/post/new'
+    | '/posts/mine'
+    | '/profile/edit'
     | '/rides/$id'
     | '/vendor/apply'
     | '/vendor/plans'
@@ -1014,6 +1047,7 @@ export interface FileRouteTypes {
     | '/atlas/group/$id'
     | '/communities/$slug/manage'
     | '/judge/submit/$eventSlug'
+    | '/post/$id/edit'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/lovable/email/auth/preview'
@@ -1088,6 +1122,8 @@ export interface FileRouteTypes {
     | '/_authenticated/marketplace/new'
     | '/_authenticated/messages/$id'
     | '/_authenticated/post/new'
+    | '/_authenticated/posts/mine'
+    | '/_authenticated/profile/edit'
     | '/_authenticated/rides/$id'
     | '/_authenticated/vendor/apply'
     | '/_authenticated/vendor/plans'
@@ -1105,6 +1141,7 @@ export interface FileRouteTypes {
     | '/_authenticated/atlas/group/$id'
     | '/_authenticated/communities/$slug/manage'
     | '/_authenticated/judge/submit/$eventSlug'
+    | '/_authenticated/post/$id/edit'
     | '/api/public/webhooks/payments'
     | '/communities/$slug/challenges/$challengeId'
     | '/lovable/email/auth/preview'
@@ -1455,6 +1492,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRidesIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/profile/edit': {
+      id: '/_authenticated/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof AuthenticatedProfileEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/posts/mine': {
+      id: '/_authenticated/posts/mine'
+      path: '/posts/mine'
+      fullPath: '/posts/mine'
+      preLoaderRoute: typeof AuthenticatedPostsMineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/post/new': {
       id: '/_authenticated/post/new'
       path: '/post/new'
@@ -1721,6 +1772,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWebhooksPaymentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/post/$id/edit': {
+      id: '/_authenticated/post/$id/edit'
+      path: '/post/$id/edit'
+      fullPath: '/post/$id/edit'
+      preLoaderRoute: typeof AuthenticatedPostIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/judge/submit/$eventSlug': {
       id: '/_authenticated/judge/submit/$eventSlug'
       path: '/judge/submit/$eventSlug'
@@ -1872,6 +1930,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMarketplaceDashboardRoute: typeof AuthenticatedMarketplaceDashboardRoute
   AuthenticatedMarketplaceNewRoute: typeof AuthenticatedMarketplaceNewRoute
   AuthenticatedPostNewRoute: typeof AuthenticatedPostNewRoute
+  AuthenticatedPostsMineRoute: typeof AuthenticatedPostsMineRoute
+  AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedRidesIdRoute: typeof AuthenticatedRidesIdRoute
   AuthenticatedAdsIndexRoute: typeof AuthenticatedAdsIndexRoute
   AuthenticatedBusinessIndexRoute: typeof AuthenticatedBusinessIndexRoute
@@ -1880,6 +1940,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAtlasGroupIdRoute: typeof AuthenticatedAtlasGroupIdRoute
   AuthenticatedCommunitiesSlugManageRoute: typeof AuthenticatedCommunitiesSlugManageRoute
   AuthenticatedJudgeSubmitEventSlugRoute: typeof AuthenticatedJudgeSubmitEventSlugRoute
+  AuthenticatedPostIdEditRoute: typeof AuthenticatedPostIdEditRoute
   AuthenticatedAtlasGroupIndexRoute: typeof AuthenticatedAtlasGroupIndexRoute
   AuthenticatedCommunitiesSlugChallengesNewRoute: typeof AuthenticatedCommunitiesSlugChallengesNewRoute
   AuthenticatedCommunitiesSlugEventsNewRoute: typeof AuthenticatedCommunitiesSlugEventsNewRoute
@@ -1925,6 +1986,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedMarketplaceDashboardRoute,
   AuthenticatedMarketplaceNewRoute: AuthenticatedMarketplaceNewRoute,
   AuthenticatedPostNewRoute: AuthenticatedPostNewRoute,
+  AuthenticatedPostsMineRoute: AuthenticatedPostsMineRoute,
+  AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedRidesIdRoute: AuthenticatedRidesIdRoute,
   AuthenticatedAdsIndexRoute: AuthenticatedAdsIndexRoute,
   AuthenticatedBusinessIndexRoute: AuthenticatedBusinessIndexRoute,
@@ -1935,6 +1998,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
     AuthenticatedCommunitiesSlugManageRoute,
   AuthenticatedJudgeSubmitEventSlugRoute:
     AuthenticatedJudgeSubmitEventSlugRoute,
+  AuthenticatedPostIdEditRoute: AuthenticatedPostIdEditRoute,
   AuthenticatedAtlasGroupIndexRoute: AuthenticatedAtlasGroupIndexRoute,
   AuthenticatedCommunitiesSlugChallengesNewRoute:
     AuthenticatedCommunitiesSlugChallengesNewRoute,
@@ -2015,13 +2079,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
