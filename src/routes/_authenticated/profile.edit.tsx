@@ -36,6 +36,11 @@ function EditProfilePage() {
   const [uploadingCover, setUploadingCover] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>("");
+  const [contactPhone, setContactPhone] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [contactDm, setContactDm] = useState(true);
+  const [isBusiness, setIsBusiness] = useState(false);
+  const [businessAddress, setBusinessAddress] = useState("");
 
   const avatarInput = useRef<HTMLInputElement>(null);
   const coverInput = useRef<HTMLInputElement>(null);
