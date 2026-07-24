@@ -50,7 +50,7 @@ function EditProfilePage() {
   }, []);
 
   useEffect(() => {
-    const p = q.data;
+    const p = q.data as any;
     if (!p) return;
     setHandle(p.handle ?? "");
     setDisplayName(p.display_name ?? "");
@@ -59,12 +59,17 @@ function EditProfilePage() {
     setWebsite(p.website ?? "");
     setAvatarUrl(p.avatar_url ?? "");
     setCoverUrl(p.cover_url ?? "");
+    setContactPhone(p.contact_phone ?? "");
+    setContactEmail(p.contact_email ?? "");
+    setContactDm(p.contact_dm_enabled !== false);
+    setIsBusiness(!!p.is_business);
+    setBusinessAddress(p.business_address ?? "");
   }, [q.data]);
 
   const save = useMutation({
     mutationFn: async () => {
       const cleanHandle = handle.trim().toLowerCase().replace(/[^a-z0-9_]/g, "");
-      const originalHandle = (q.data?.handle ?? "").toLowerCase();
+      const originalHandle = ((q.data as any)?.handle ?? "").toLowerCase();
       return saveFn({
         data: {
           handle: cleanHandle && cleanHandle !== originalHandle ? cleanHandle : undefined,
