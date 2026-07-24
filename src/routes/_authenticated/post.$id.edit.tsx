@@ -15,6 +15,13 @@ export const Route = createFileRoute("/_authenticated/post/$id/edit")({
     ],
   }),
   component: EditPostPage,
+  errorComponent: ({ error }) => (
+    <div className="p-6 text-center">
+      <p className="mono-tag mb-3" style={{ color: "var(--color-ink-3)" }}>POST UNAVAILABLE</p>
+      <p className="text-sm mb-4" style={{ color: "var(--color-ink-0)" }}>{error.message}</p>
+      <Link to="/posts/mine" className="mono-tag" style={{ color: "var(--color-neon)" }}>← Back to my posts</Link>
+    </div>
+  ),
 });
 
 function EditPostPage() {
@@ -96,6 +103,16 @@ function EditPostPage() {
 
       <h1 className="serif px-4 pt-3 text-3xl" style={{ color: "var(--color-ink-0)" }}>Edit post</h1>
 
+      {q.isError && (
+        <div className="mx-4 mt-4 rounded-xl p-4" style={{ border: "1px solid rgba(255,80,80,0.4)", background: "rgba(255,80,80,0.05)" }}>
+          <p className="mono-tag mb-1" style={{ color: "#ff6b6b" }}>NOT FOUND</p>
+          <p className="text-[13px]" style={{ color: "var(--color-ink-0)" }}>
+            This post no longer exists or was deleted. It may have been removed from your account.
+          </p>
+        </div>
+      )}
+
+      {!q.isError && (
       <section className="mt-4 px-4">
         <p className="mono-tag mb-2" style={{ color: "var(--color-ink-3)", fontSize: 10 }}>MEDIA</p>
         <div
@@ -125,6 +142,9 @@ function EditPostPage() {
           onChange={(e) => e.target.files?.[0] && pickImage(e.target.files[0])}
         />
       </section>
+      )}
+
+      {!q.isError && (
 
       <section className="mt-4 space-y-4 px-4">
         <label className="block">
@@ -153,6 +173,7 @@ function EditPostPage() {
           Delete post
         </button>
       </section>
+      )}
     </div>
   );
 }
