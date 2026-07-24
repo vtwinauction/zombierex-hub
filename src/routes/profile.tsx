@@ -60,6 +60,14 @@ function ProfilePage() {
     retry: false,
     staleTime: 30_000,
   });
+  const fetchMyPosts = useServerFn(listMyPosts);
+  const myPostsQuery = useQuery({
+    queryKey: ["profile", "my-posts"],
+    queryFn: () => fetchMyPosts(),
+    retry: false,
+    staleTime: 30_000,
+  });
+  const myPosts = (myPostsQuery.data ?? []) as Array<{ id: string; kind: string; caption: string | null; media_url: string | null; thumbnail_url: string | null; likes_count: number; comments_count: number; created_at: string }>;
 
   const live = metricsQuery.data;
   const p = live?.profile;
