@@ -32,7 +32,7 @@ export const getMyProfileMetrics = createServerFn({ method: "GET" })
       context.supabase
         .from("profiles")
         .select(
-          "id, handle, display_name, avatar_url, cover_url, location, tier, is_verified, is_premium, followers_count, following_count, posts_count, listings_count, xp_total, level, streak_days"
+          "id, handle, display_name, bio, website, avatar_url, cover_url, location, tier, is_verified, is_premium, followers_count, following_count, posts_count, listings_count, xp_total, level, streak_days"
         )
         .eq("id", uid)
         .maybeSingle(),

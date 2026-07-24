@@ -108,10 +108,11 @@ function ProfilePage() {
           }}
         >
           <img
-            src={bike.cover}
+            src={p?.cover_url || bike.cover}
             alt=""
             className="ken-burns h-full w-full object-cover"
           />
+
           {/* color wash */}
           <div
             className="absolute inset-0"
@@ -183,7 +184,7 @@ function ProfilePage() {
                   "conic-gradient(from 210deg, #00e5ff, var(--color-neon), #ff9500, #ff3d5a, #00e5ff)",
               }}
             >
-              <img src={me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
+              <img src={p?.avatar_url || me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
             </div>
 
             <div className="min-w-0">
@@ -193,7 +194,13 @@ function ProfilePage() {
               <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
                 {title} · ◎ {location}
               </p>
+              {p?.bio && (
+                <p className="mt-1.5 text-[12px] leading-snug" style={{ color: "var(--color-ink-1)" }}>
+                  {p.bio}
+                </p>
+              )}
             </div>
+
 
             <div className="shrink-0 text-right">
               <div
