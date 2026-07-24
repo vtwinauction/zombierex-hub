@@ -754,7 +754,7 @@ function BigSpeedo({ topSpeed }: { topSpeed: number }) {
 
   return (
     <div className="relative">
-      <svg viewBox="0 0 260 160" className="mx-auto block h-[172px] w-full max-w-[360px]" preserveAspectRatio="xMidYMid meet">
+      <svg viewBox="0 0 260 160" className="mx-auto block h-[140px] w-full max-w-[300px]" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id="arcTrackBig" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" stopColor="rgba(255,255,255,0.06)" />
