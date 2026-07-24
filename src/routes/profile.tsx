@@ -745,17 +745,19 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
     <>
       <button
         type="button"
+        aria-label="Rename vehicle"
+        title="Rename vehicle"
         onClick={() => { setValue(currentName); setError(null); setOpen(true); }}
-        className="tap mono-tag shrink-0 rounded-md px-2.5 py-1"
+        className="tap flex shrink-0 items-center justify-center rounded-md"
         style={{
+          width: 32,
+          height: 32,
           background: "#e5253d",
           color: "#000",
           border: "1px solid #b81a2e",
-          fontSize: 9,
-          fontWeight: 700,
         }}
       >
-        RENAME
+        <Pencil size={16} strokeWidth={2.2} />
       </button>
       {open && (
         <div
