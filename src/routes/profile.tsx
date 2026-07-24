@@ -172,11 +172,8 @@ function ProfilePage() {
         >
           <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
             <div
-              className="shrink-0 rounded-full p-[2.5px]"
-              style={{
-                background:
-                  "conic-gradient(from 210deg, #00e5ff, var(--color-neon), #ff9500, #ff3d5a, #00e5ff)",
-              }}
+              className="shrink-0 rounded-full p-[2px]"
+              style={{ background: "var(--color-line)" }}
             >
               <img src={p?.avatar_url || me.avatar} alt="" className="h-14 w-14 rounded-full object-cover" style={{ border: "2px solid var(--color-paper-0)" }} />
             </div>
@@ -748,12 +745,13 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
       <button
         type="button"
         onClick={() => { setValue(currentName); setError(null); setOpen(true); }}
-        className="tap mono-tag shrink-0 rounded-md px-2 py-1"
+        className="tap mono-tag shrink-0 rounded-md px-2.5 py-1"
         style={{
-          background: "var(--color-paper-0)",
-          color: "var(--color-ink-2)",
-          border: "1px solid var(--color-line)",
+          background: "#e5253d",
+          color: "#000",
+          border: "1px solid #b81a2e",
           fontSize: 9,
+          fontWeight: 700,
         }}
       >
         RENAME
@@ -801,8 +799,8 @@ function RenameVehicleButton({ currentName }: { currentName: string }) {
                   m.mutate(v);
                 }}
                 disabled={m.isPending}
-                className="tap rounded-xl py-2.5 text-[13px] font-semibold"
-                style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
+                className="tap rounded-xl py-2.5 text-[13px] font-bold"
+                style={{ background: "#e5253d", color: "#000", border: "1px solid #b81a2e", opacity: 1 }}
               >
                 {m.isPending ? "Saving…" : "Save"}
               </button>
