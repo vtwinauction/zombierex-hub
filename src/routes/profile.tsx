@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Pencil } from "lucide-react";
+import { toast as sonnerToast } from "sonner";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
 import { getMyProfileMetrics, upsertMyVehicle } from "@/lib/profile.functions";
@@ -95,6 +96,58 @@ function ProfilePage() {
   const location = p?.location || me.location;
   const title = p ? `LEVEL ${level} · ${(p.tier || "ROOKIE").toString().toUpperCase()}` : rider.title.toUpperCase();
   const idLabel = (p?.id ?? me.id).slice(0, 8).toUpperCase();
+
+  const showToast = (message: string) => {
+    setToast(message);
+    sonnerToast(message);
+    window.setTimeout(() => setToast(null), 1800);
+  };
+
+  const copyProfileLink = async (url: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(url);
+      return true;
+    }
+    if (typeof document === "undefined") return false;
+    const input = document.createElement("textarea");
+    input.value = url;
+    input.setAttribute("readonly", "true");
+    input.style.position = "fixed";
+    input.style.opacity = "0";
+    document.body.appendChild(input);
+    input.select();
+    const copied = document.execCommand("copy");
+    document.body.removeChild(input);
+    return copied;
+  };
+
+  const handleShareProfile = async () => {
+    if (typeof window === "undefined") return;
+    const url = `${window.location.origin}/profile`;
+    const shareData = {
+      title: `${displayName} · ZOMBIEREX`,
+      text: `Check out ${displayName} on ZOMBIEREX`,
+      url,
+    };
+
+    try {
+      const canNativeShare =
+        typeof navigator !== "undefined" &&
+        typeof navigator.share === "function" &&
+        (typeof navigator.canShare !== "function" || navigator.canShare(shareData));
+
+      if (canNativeShare) {
+        await navigator.share(shareData);
+        showToast("Share opened");
+        return;
+      }
+    } catch {
+      // Some mobile preview/browser contexts expose native share but block it.
+    }
+
+    const copied = await copyProfileLink(url);
+    showToast(copied ? "Profile link copied" : "Copy this profile link: /profile");
+  };
 
   return (
     <div className="pb-24" style={{ background: "var(--color-paper-1)" }}>
@@ -251,29 +304,7 @@ function ProfilePage() {
             </button>
             <button
               type="button"
-              onClick={async () => {
-                const url = typeof window !== "undefined"
-                  ? `${window.location.origin}/profile`
-                  : "";
-                const shareData = {
-                  title: `${displayName} · ZOMBIEREX`,
-                  text: `Check out ${displayName} on ZOMBIEREX`,
-                  url,
-                };
-                try {
-                  if (typeof navigator !== "undefined" && (navigator as any).share) {
-                    await (navigator as any).share(shareData);
-                    return;
-                  }
-                  if (typeof navigator !== "undefined" && navigator.clipboard) {
-                    await navigator.clipboard.writeText(url);
-                    setToast("Link copied");
-                    setTimeout(() => setToast(null), 1800);
-                  }
-                } catch {
-                  /* user cancelled */
-                }
-              }}
+              onClick={handleShareProfile}
               className="tap flex h-11 items-center justify-center text-[12px] font-semibold"
               style={{ color: "var(--color-ink-0)", borderLeft: "1px solid var(--color-line)" }}
             >
@@ -524,7 +555,8 @@ function ContactModal({ profile, onClose }: { profile: any; onClose: () => void 
   const dm = profile?.contact_dm_enabled !== false;
   const isBiz = !!profile?.is_business;
   const address = profile?.business_address as string | null | undefined;
-  const hasAny = phone || email || address || dm;
+  const hasBusinessAddress = isBiz && !!address;
+  const hasAny = !!(phone || email || hasBusinessAddress || dm);
   const rowBase = {
     background: "var(--color-paper-0)",
     border: "1px solid var(--color-line)",
@@ -543,6 +575,7 @@ function ContactModal({ profile, onClose }: { profile: any; onClose: () => void 
           background: "var(--color-paper-1)",
           borderTop: "1px solid var(--color-line)",
           paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)",
+          boxShadow: "0 -18px 60px -30px rgba(0,0,0,0.45)",
         }}
       >
         <div className="flex items-center justify-between">
@@ -571,7 +604,7 @@ function ContactModal({ profile, onClose }: { profile: any; onClose: () => void 
               <span className="mono-tag" style={{ color: "var(--color-neon-deep)", fontSize: 10 }}>EMAIL</span>
             </a>
           )}
-          {dm && profile?.handle && (
+          {dm && (
             <Link
               to="/messages"
               className="tap flex items-center justify-between rounded-xl px-3 py-3 text-[13px]"
@@ -600,7 +633,7 @@ function ContactModal({ profile, onClose }: { profile: any; onClose: () => void 
           to="/profile/edit"
           onClick={onClose}
           className="tap mt-4 block rounded-xl py-3 text-center text-[13px] font-semibold"
-          style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
+          style={{ background: "var(--color-neon)", color: "var(--color-ink-0)", border: "1px solid var(--color-neon-deep)" }}
         >
           {hasAny ? "Edit contact info" : "Add contact info"}
         </Link>
