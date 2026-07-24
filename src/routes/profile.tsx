@@ -194,7 +194,13 @@ function ProfilePage() {
               <p className="mono-tag mt-0.5" style={{ color: "var(--color-ink-3)", fontSize: 9 }}>
                 {title} · ◎ {location}
               </p>
+              {p?.bio && (
+                <p className="mt-1.5 text-[12px] leading-snug" style={{ color: "var(--color-ink-1)" }}>
+                  {p.bio}
+                </p>
+              )}
             </div>
+
 
             <div className="shrink-0 text-right">
               <div
