@@ -66,7 +66,7 @@ function PostUnavailable({
         <p className="mt-2 text-sm" style={{ color: "var(--color-ink-3)" }}>{message}</p>
         <div className="mt-5 grid grid-cols-1 gap-2">
           {onAction && (
-            <button type="button" onClick={onAction} className="tap rounded-lg px-4 py-3 text-[12px] font-semibold" style={{ background: "var(--color-neon)", color: "var(--color-black, #050505)" }}>
+            <button type="button" onClick={onAction} className="tap rounded-lg px-4 py-3 text-[12px] font-semibold" style={{ background: "var(--color-neon)", color: "var(--color-paper-1)" }}>
               {actionLabel ?? "Try again"}
             </button>
           )}
