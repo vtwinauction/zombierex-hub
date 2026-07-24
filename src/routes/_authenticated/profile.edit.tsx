@@ -115,8 +115,8 @@ function EditProfilePage() {
     } catch (e) {
       setError(`Upload failed: ${(e as Error).message}`);
       // revert preview on failure
-      if (kind === "avatar") setAvatarUrl(q.data?.avatar_url ?? "");
-      else setCoverUrl(q.data?.cover_url ?? "");
+      if (kind === "avatar") setAvatarUrl((q.data as any)?.avatar_url ?? "");
+      else setCoverUrl((q.data as any)?.cover_url ?? "");
     } finally {
       URL.revokeObjectURL(localPreview);
       setBusy(false);
