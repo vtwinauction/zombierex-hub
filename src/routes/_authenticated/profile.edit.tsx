@@ -35,6 +35,8 @@ function EditProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [coverImageBroken, setCoverImageBroken] = useState(false);
+  const [avatarImageBroken, setAvatarImageBroken] = useState(false);
   const [userId, setUserId] = useState<string>("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
@@ -59,6 +61,8 @@ function EditProfilePage() {
     setWebsite(p.website ?? "");
     setAvatarUrl(p.avatar_url ?? "");
     setCoverUrl(p.cover_url ?? "");
+    setAvatarImageBroken(false);
+    setCoverImageBroken(false);
     setContactPhone(p.contact_phone ?? "");
     setContactEmail(p.contact_email ?? "");
     setContactDm(p.contact_dm_enabled !== false);
@@ -101,17 +105,28 @@ function EditProfilePage() {
     if (!userId) { setError("Not signed in"); return; }
     setError(null);
     const setBusy = kind === "avatar" ? setUploadingAvatar : setUploadingCover;
-    // Instant local preview so the user sees the pick immediately
+    // Instant local preview so the user sees the pick immediately. HEIC may not
+    // render in Chromium, but it is converted to JPEG before upload below.
     const localPreview = URL.createObjectURL(file);
-    if (kind === "avatar") setAvatarUrl(localPreview);
-    else setCoverUrl(localPreview);
+    if (kind === "avatar") {
+      setAvatarImageBroken(false);
+      setAvatarUrl(localPreview);
+    } else {
+      setCoverImageBroken(false);
+      setCoverUrl(localPreview);
+    }
     setBusy(true);
     try {
       const blob = await compressImage(file);
       const bucket = kind === "avatar" ? "avatars" : "vehicles";
       const res = await uploadWithRetry(blob, { userId, bucket });
-      if (kind === "avatar") setAvatarUrl(res.url);
-      else setCoverUrl(res.url);
+      if (kind === "avatar") {
+        setAvatarImageBroken(false);
+        setAvatarUrl(res.url);
+      } else {
+        setCoverImageBroken(false);
+        setCoverUrl(res.url);
+      }
     } catch (e) {
       setError(`Upload failed: ${(e as Error).message}`);
       // revert preview on failure
@@ -148,11 +163,11 @@ function EditProfilePage() {
           className="relative overflow-hidden rounded-2xl"
           style={{ aspectRatio: "16/9", border: "1px solid var(--color-line)", background: "var(--color-paper-2)" }}
         >
-          {coverUrl ? (
-            <img src={coverUrl} alt="" className="h-full w-full object-cover" />
+          {coverUrl && !coverImageBroken ? (
+            <img src={coverUrl} alt="" className="h-full w-full object-cover" onError={() => setCoverImageBroken(true)} />
           ) : (
             <div className="flex h-full w-full items-center justify-center mono-tag" style={{ color: "var(--color-ink-3)" }}>
-              NO COVER
+              {coverUrl ? "CHOOSE PHOTO AGAIN" : "NO COVER"}
             </div>
           )}
           <button
@@ -166,7 +181,7 @@ function EditProfilePage() {
         <input
           ref={coverInput}
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           className="hidden"
           onChange={(e) => e.target.files?.[0] && pickImage(e.target.files[0], "cover")}
         />
@@ -180,8 +195,8 @@ function EditProfilePage() {
             className="h-20 w-20 shrink-0 overflow-hidden rounded-full"
             style={{ border: "2px solid var(--color-line)", background: "var(--color-paper-2)" }}
           >
-            {avatarUrl ? (
-              <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+            {avatarUrl && !avatarImageBroken ? (
+              <img src={avatarUrl} alt="" className="h-full w-full object-cover" onError={() => setAvatarImageBroken(true)} />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-[10px]" style={{ color: "var(--color-ink-3)" }}>
                 NONE
@@ -199,7 +214,7 @@ function EditProfilePage() {
         <input
           ref={avatarInput}
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           className="hidden"
           onChange={(e) => e.target.files?.[0] && pickImage(e.target.files[0], "avatar")}
         />

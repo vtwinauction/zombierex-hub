@@ -53,6 +53,7 @@ function ProfilePage() {
   const [tab, setTab] = useState<Tab>("REELS");
   const [contactOpen, setContactOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [coverBroken, setCoverBroken] = useState(false);
   const fetchMetrics = useServerFn(getMyProfileMetrics);
   const metricsQuery = useQuery({
     queryKey: ["profile", "metrics"],
@@ -82,6 +83,12 @@ function ProfilePage() {
     cover: v?.hero_image_url || mockBike.cover,
     hp: v ? estimateHp(v.spec as Record<string, unknown>, v.kind) : mockBike.hp,
   };
+  const profileCover = p?.cover_url || "";
+  const heroImage = coverBroken || !profileCover ? bike.cover : profileCover;
+
+  useEffect(() => {
+    setCoverBroken(false);
+  }, [profileCover]);
 
   const level = p?.level ?? rider.level;
   const xp = p?.xp_total ?? rider.xp;
@@ -178,7 +185,7 @@ function ProfilePage() {
         >
           {/* Blurred backdrop so any image aspect fits the banner cleanly */}
           <img
-            src={p?.cover_url || bike.cover}
+            src={heroImage}
             alt=""
             aria-hidden
             className="absolute inset-0 h-full w-full object-cover"
@@ -186,9 +193,10 @@ function ProfilePage() {
           />
           <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.35)" }} />
           <img
-            src={p?.cover_url || bike.cover}
+            src={heroImage}
             alt={bike.name}
             className="relative h-full w-full object-contain"
+            onError={() => setCoverBroken(true)}
           />
           {/* subtle bottom gradient — image stays the focal point */}
           <div
