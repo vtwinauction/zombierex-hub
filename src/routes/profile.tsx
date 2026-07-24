@@ -150,14 +150,18 @@ function ProfilePage() {
         </div>
 
         {/* Designation + name — outside the image */}
-        <div className="mt-2">
-          <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
-            DESIGNATION · UNIT V·{bike.id.toUpperCase()}
-          </p>
-          <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
-            {bike.name}
-          </h2>
+        <div className="mt-2 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="mono-tag" style={{ color: "var(--color-ink-3)", fontSize: 9, letterSpacing: "0.24em" }}>
+              DESIGNATION · UNIT V·{bike.id.toUpperCase()}
+            </p>
+            <h2 className="serif mt-1 text-[26px] leading-[0.95]" style={{ color: "var(--color-ink-0)", letterSpacing: "-0.02em" }}>
+              {bike.name}
+            </h2>
+          </div>
+          <RenameVehicleButton currentName={bike.name} />
         </div>
+
       </section>
 
       {/* ============ OPERATOR STRIP ============ */}
