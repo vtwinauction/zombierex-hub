@@ -24,6 +24,10 @@ export const Route = createFileRoute("/_authenticated/drag/race")({
     meta: [
       { title: "Race Mode · Live GPS Drag · ZOMBIEREX" },
       { name: "description", content: "Immersive drag strip experience — Christmas Tree start, dual live HUD, AI ghost opponent and race analysis." },
+      { property: "og:title", content: "Race Mode · Live GPS Drag · ZOMBIEREX" },
+      { property: "og:description", content: "Christmas Tree start, dual live speedometer HUD, AI ghost opponent and race analysis." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: RacePage,
@@ -43,6 +47,31 @@ function haversine(a: { lat: number; lng: number }, b: { lat: number; lng: numbe
 }
 
 type Point = { t_ms: number; lat: number; lng: number; speed_kmh: number; accuracy_m: number | null };
+type StripMode = "gps" | "sim";
+
+const SIM_BASE = { lat: 25.2048, lng: 55.2708 };
+
+function simulatedPass(ms: number): { speedKmh: number; distanceM: number; point: Point } {
+  const t = Math.max(0, ms / 1000);
+  const vMax = 72;
+  const k = 0.95;
+  const speedMs = vMax * (1 - Math.exp(-k * t));
+  const distanceM = Math.max(0, vMax * t + (vMax / k) * (Math.exp(-k * t) - 1));
+  const lngMeters = 111_111 * Math.cos(toRad(SIM_BASE.lat));
+  const lngOffset = distanceM / Math.max(1, lngMeters);
+
+  return {
+    speedKmh: speedMs * 3.6,
+    distanceM,
+    point: {
+      t_ms: ms,
+      lat: SIM_BASE.lat,
+      lng: SIM_BASE.lng + lngOffset,
+      speed_kmh: speedMs * 3.6,
+      accuracy_m: 1,
+    },
+  };
+}
 
 function interpTimeAtDistance(points: Point[], target: number): { t: number; trap: number } | null {
   let cum = 0;
@@ -81,6 +110,7 @@ function RacePage() {
   const [preset, setPreset] = useState<GhostPreset>(GHOST_PRESETS[1]);
   const [vehicleName, setVehicleName] = useState("");
   const [vehicleKind, setVehicleKind] = useState<"motorcycle" | "car">("motorcycle");
+  const [stripMode, setStripMode] = useState<StripMode>("gps");
 
   const tree = useChristmasTree(mode);
   const ghost = useMemo(() => new Ghost(preset), [preset]);
@@ -119,7 +149,12 @@ function RacePage() {
 
   // --- GPS lifecycle ---------------------------------------------------------
   const startGps = useCallback(() => {
-    if (!("geolocation" in navigator)) { setGpsOk(false); return; }
+    if (stripMode === "sim") {
+      setGpsOk(true);
+      setGpsAcc(1);
+      return;
+    }
+    if (!("geolocation" in navigator)) { setStripMode("sim"); setGpsOk(false); return; }
     if (watchRef.current != null) return;
     watchRef.current = navigator.geolocation.watchPosition(
       (pos) => {
@@ -153,10 +188,10 @@ function RacePage() {
           rawRef.current.push(p);
         }
       },
-      () => setGpsOk(false),
+      () => { setGpsOk(false); setStripMode("sim"); },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
     );
-  }, [tree]);
+  }, [stripMode, tree]);
 
   const stopGps = useCallback(() => {
     if (watchRef.current != null && "geolocation" in navigator) {
@@ -179,6 +214,19 @@ function RacePage() {
       // Compute elapsed since GREEN
       const elapsed = st.greenAt != null ? now - st.greenAt : 0;
       setElapsedMs(Math.max(0, elapsed));
+
+      if (stripMode === "sim" && st.greenAt != null) {
+        const simMs = Math.max(0, now - st.greenAt - 180);
+        if (simMs > 0) {
+          if (st.launchedAt == null) tree.reportLaunch();
+          const sim = simulatedPass(simMs);
+          const last = rawRef.current[rawRef.current.length - 1];
+          if (!last || sim.point.t_ms - last.t_ms >= 80) rawRef.current.push(sim.point);
+          setGpsKmh(sim.speedKmh);
+          setGpsAcc(1);
+          setGpsOk(true);
+        }
+      }
 
       // Player telemetry from raw points
       const pts = rawRef.current;
@@ -265,7 +313,7 @@ function RacePage() {
     rafRef.current = requestAnimationFrame(loop);
     return () => { running = false; if (rafRef.current) cancelAnimationFrame(rafRef.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, ghost, preset, vehicleName, gpsKmh, gpsAcc]);
+  }, [phase, ghost, preset, vehicleName, gpsKmh, gpsAcc, stripMode, tree]);
 
   // --- Actions --------------------------------------------------------------
   const beginStage = useCallback(() => {
@@ -374,6 +422,23 @@ function RacePage() {
           </div>
 
           <div className="mt-4">
+            <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>TIMING SOURCE</p>
+            <div className="mt-1 grid grid-cols-2 gap-2">
+              {(["gps", "sim"] as const).map((m) => (
+                <button key={m} onClick={() => setStripMode(m)}
+                  className="tap rounded-lg border p-3 text-sm font-bold"
+                  style={{
+                    borderColor: stripMode === m ? "var(--color-neon)" : "rgba(255,255,255,0.08)",
+                    background: stripMode === m ? "rgba(0,200,83,0.10)" : "rgba(255,255,255,0.02)",
+                    color: "#f0f0f0",
+                  }}>
+                  {m === "gps" ? "Live GPS" : "Strip Demo"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4">
             <p className="mono-tag" style={{ color: "var(--color-silver)", fontSize: 9 }}>AI GHOST OPPONENT</p>
             <div className="mt-1 grid gap-2">
               {GHOST_PRESETS.map((g) => (
@@ -411,7 +476,7 @@ function RacePage() {
         <div className="px-3 pt-3">
           <div className="flex items-center justify-between">
             <span className="mono-caps text-[10px] font-black" style={{ color: gpsOk ? "#00c853" : "#ff8c1a", letterSpacing: "0.24em" }}>
-              ● {gpsOk ? "GPS LOCK" : "GPS WEAK"} {gpsAcc != null && `· ±${gpsAcc.toFixed(0)}m`}
+              ● {stripMode === "sim" ? "STRIP DEMO" : gpsOk ? "GPS LOCK" : "GPS WEAK"} {gpsAcc != null && `· ±${gpsAcc.toFixed(0)}m`}
             </span>
             <span className="mono-num tabular-nums" style={{ color: "#fff", fontSize: 12 }}>
               {(elapsedMs / 1000).toFixed(2)}s
@@ -422,6 +487,8 @@ function RacePage() {
           <div className="mt-3 flex items-start justify-center gap-3">
             <DragTree state={tree.state} />
           </div>
+
+          <StripTrack player={playerTel} ghost={ghostTel} />
 
           <div className="mt-3">
             <RaceHUD player={playerTel} ghost={ghostTel} elapsedMs={elapsedMs} finished={false} />
@@ -481,7 +548,7 @@ function RacePage() {
               REMATCH
             </button>
             {submitInfo?.id ? (
-              <button onClick={() => nav({ to: "/drag/$id", params: { id: submitInfo.id! } })}
+              <button onClick={() => { const id = submitInfo.id; if (!id) return; nav({ to: "/drag/$id", params: { id } }); }}
                 className="tap rounded-lg py-3 mono-caps text-[10px] font-black" style={{ background: "#fff", color: "#050505", letterSpacing: "0.24em" }}>
                 VIEW RECORD
               </button>
@@ -531,6 +598,36 @@ function TimeSlip({ player, ghost }: { player: LaneTelemetry; ghost: LaneTelemet
           <span className="mono-num tabular-nums font-bold">{b}</span>
         </div>
       ))}
+    </div>
+  );
+}
+
+function StripTrack({ player, ghost }: { player: LaneTelemetry; ghost: LaneTelemetry }) {
+  const playerPct = Math.min(100, (player.distanceM / 402.336) * 100);
+  const ghostPct = Math.min(100, (ghost.distanceM / 402.336) * 100);
+
+  return (
+    <div className="mt-3 overflow-hidden rounded-2xl border" style={{ borderColor: "rgba(255,255,255,0.10)", background: "linear-gradient(180deg,#050505,#111)" }}>
+      <div className="relative h-24"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 11.1%, rgba(255,255,255,0.06) 11.1% calc(11.1% + 1px), transparent calc(11.1% + 1px) 22.2%), linear-gradient(180deg,#171717 0%,#0b0b0b 48%,#171717 52%,#090909 100%)",
+          backgroundSize: "36px 100%, 100% 100%",
+        }}>
+        <div className="absolute left-0 right-0 top-1/2 h-px bg-white/20" />
+        <div className="absolute bottom-0 top-0 w-3" style={{ right: 0, background: "repeating-linear-gradient(0deg,#fff 0 5px,#050505 5px 10px)" }} />
+        <LaneMarker pct={playerPct} top="22%" color="var(--color-neon)" label="YOU" />
+        <LaneMarker pct={ghostPct} top="68%" color="#f6d84f" label="AI" />
+      </div>
+    </div>
+  );
+}
+
+function LaneMarker({ pct, top, color, label }: { pct: number; top: string; color: string; label: string }) {
+  return (
+    <div className="absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-2" style={{ left: `${pct}%`, top, color }}>
+      <div style={{ width: 26, height: 12, clipPath: "polygon(18% 0, 86% 0, 100% 50%, 86% 100%, 18% 100%, 0 50%)", background: color, boxShadow: `0 0 18px ${color}` }} />
+      <span className="mono-caps text-[9px] font-black" style={{ color }}>{label}</span>
     </div>
   );
 }
