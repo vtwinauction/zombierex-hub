@@ -181,6 +181,23 @@ function SettingRow({ it, prefs, update }: {
     "privacy-policy": "/settings/privacy",
   };
 
+  const route = ROUTES[it.kind];
+  if (route) {
+    return (
+      <Link
+        to={route as string}
+        className="tap flex items-center justify-between px-4 py-3"
+        style={{ color: "var(--color-ink)" }}
+      >
+        <div className="min-w-0">
+          <p className="text-[13px]" style={{ color: "var(--color-ink)" }}>{it.label}</p>
+          {it.hint && <p className="mono-tag mt-0.5" style={{ color: "var(--color-silver)", fontSize: 10 }}>{it.hint}</p>}
+        </div>
+        <span className="mono-tag ml-3 shrink-0" style={{ color: "var(--color-titanium)" }}>OPEN ›</span>
+      </Link>
+    );
+  }
+
   const control = (() => {
     switch (it.kind) {
       case "toggle-private":     return <Toggle checked={prefs.private} onChange={(v) => update("private", v)} />;
@@ -196,7 +213,6 @@ function SettingRow({ it, prefs, update }: {
       case "select-autoplay":    return <Select value={prefs.autoplay} onChange={(v) => update("autoplay", v as Prefs["autoplay"])} options={[["always","Always"],["wifi","Wi-Fi only"],["never","Never"]]} />;
       case "clear-cache":        return <ActionBtn label="Clear" onClick={() => { try { caches?.keys?.().then((k) => k.forEach((n) => caches.delete(n))); } catch {} alert("Cache cleared"); }} />;
       default:
-        if (ROUTES[it.kind]) return <LinkChip to={ROUTES[it.kind]} label="Open" />;
         return <span className="mono-tag" style={{ color: "var(--color-titanium)" }}>Soon</span>;
     }
   })();
@@ -212,7 +228,6 @@ function SettingRow({ it, prefs, update }: {
   );
 }
 
-function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <button onClick={() => onChange(!checked)} className="tap h-6 w-11 rounded-full transition-colors"
       style={{ background: checked ? "var(--color-neon)" : "var(--color-hair-strong)", position: "relative" }}>
