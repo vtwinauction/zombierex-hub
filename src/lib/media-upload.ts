@@ -27,7 +27,9 @@ const LONG_TTL = 60 * 60 * 24 * 365; // 1 year
 
 export async function compressImage(file: File): Promise<Blob> {
   if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
-  const bitmap = await createImageBitmap(file).catch(() => null);
+  const isHeic = /image\/(heic|heif)/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+  const source = isHeic ? await convertHeicToJpeg(file) : file;
+  const bitmap = await createImageBitmap(source).catch(() => null);
   if (!bitmap) return file;
   const { width, height } = bitmap;
   const scale = Math.min(1, MAX_IMAGE_DIM / Math.max(width, height));
@@ -42,6 +44,14 @@ export async function compressImage(file: File): Promise<Blob> {
   return await new Promise<Blob>((res) =>
     canvas.toBlob((b) => res(b || file), "image/jpeg", IMAGE_QUALITY),
   );
+}
+
+async function convertHeicToJpeg(file: File): Promise<Blob> {
+  const { default: heic2any } = await import("heic2any");
+  const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: IMAGE_QUALITY });
+  const blob = Array.isArray(converted) ? converted[0] : converted;
+  if (!blob) throw new Error("Could not convert HEIC image");
+  return new Blob([blob], { type: "image/jpeg" });
 }
 
 export async function blobFromCanvas(canvas: HTMLCanvasElement, type = "image/jpeg", q = IMAGE_QUALITY): Promise<Blob> {
@@ -59,6 +69,7 @@ function extFor(contentType: string): string {
   if (contentType === "image/png") return "png";
   if (contentType === "image/webp") return "webp";
   if (contentType === "image/gif") return "gif";
+  if (contentType === "image/heic" || contentType === "image/heif") return "jpg";
   if (contentType === "video/mp4") return "mp4";
   if (contentType === "video/webm") return "webm";
   if (contentType === "video/quicktime") return "mov";
