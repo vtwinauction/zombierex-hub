@@ -7,6 +7,7 @@ import { toast as sonnerToast } from "sonner";
 import { StatusBar } from "@/components/StatusBar";
 import { me, myVehicles, rider, achievements, workshopHistory, reels } from "@/lib/mock-data";
 import { getMyProfileMetrics, upsertMyVehicle } from "@/lib/profile.functions";
+import { listMyPosts } from "@/lib/feed.functions";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
