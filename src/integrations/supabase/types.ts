@@ -3499,6 +3499,10 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          business_address: string | null
+          contact_dm_enabled: boolean
+          contact_email: string | null
+          contact_phone: string | null
           cover_url: string | null
           created_at: string
           deleted_at: string | null
@@ -3508,6 +3512,7 @@ export type Database = {
           following_count: number
           handle: string | null
           id: string
+          is_business: boolean
           is_premium: boolean
           is_suspended: boolean
           is_verified: boolean
@@ -3534,6 +3539,10 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          business_address?: string | null
+          contact_dm_enabled?: boolean
+          contact_email?: string | null
+          contact_phone?: string | null
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -3543,6 +3552,7 @@ export type Database = {
           following_count?: number
           handle?: string | null
           id: string
+          is_business?: boolean
           is_premium?: boolean
           is_suspended?: boolean
           is_verified?: boolean
@@ -3569,6 +3579,10 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          business_address?: string | null
+          contact_dm_enabled?: boolean
+          contact_email?: string | null
+          contact_phone?: string | null
           cover_url?: string | null
           created_at?: string
           deleted_at?: string | null
@@ -3578,6 +3592,7 @@ export type Database = {
           following_count?: number
           handle?: string | null
           id?: string
+          is_business?: boolean
           is_premium?: boolean
           is_suspended?: boolean
           is_verified?: boolean

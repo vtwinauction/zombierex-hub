@@ -17,7 +17,7 @@ export const getMyProfile = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("profiles")
-      .select("id, handle, display_name, bio, avatar_url, cover_url, tier, is_verified, followers_count, following_count, posts_count, location, website")
+      .select("id, handle, display_name, bio, avatar_url, cover_url, tier, is_verified, followers_count, following_count, posts_count, location, website, contact_phone, contact_email, contact_dm_enabled, is_business, business_address")
       .eq("id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -32,7 +32,7 @@ export const getMyProfileMetrics = createServerFn({ method: "GET" })
       context.supabase
         .from("profiles")
         .select(
-          "id, handle, display_name, bio, website, avatar_url, cover_url, location, tier, is_verified, is_premium, followers_count, following_count, posts_count, listings_count, xp_total, level, streak_days"
+          "id, handle, display_name, bio, website, avatar_url, cover_url, location, tier, is_verified, is_premium, followers_count, following_count, posts_count, listings_count, xp_total, level, streak_days, contact_phone, contact_email, contact_dm_enabled, is_business, business_address"
         )
         .eq("id", uid)
         .maybeSingle(),
@@ -89,13 +89,21 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       website: z.string().trim().url().max(255).optional().or(z.literal("")),
       avatar_url: z.string().url().max(2048).optional().or(z.literal("")),
       cover_url: z.string().url().max(2048).optional().or(z.literal("")),
+      contact_phone: z.string().trim().max(40).optional().or(z.literal("")),
+      contact_email: z.string().trim().email().max(255).optional().or(z.literal("")),
+      contact_dm_enabled: z.boolean().optional(),
+      is_business: z.boolean().optional(),
+      business_address: z.string().trim().max(240).optional().or(z.literal("")),
     }).parse(raw),
   )
   .handler(async ({ data, context }) => {
-    const payload: Record<string, string | null> = { ...data };
+    const payload: Record<string, unknown> = { ...data };
     if (data.website === "") payload.website = null;
     if (data.avatar_url === "") payload.avatar_url = null;
     if (data.cover_url === "") payload.cover_url = null;
+    if (data.contact_phone === "") payload.contact_phone = null;
+    if (data.contact_email === "") payload.contact_email = null;
+    if (data.business_address === "") payload.business_address = null;
     const { data: row, error } = await context.supabase
       .from("profiles")
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -45,6 +45,7 @@ function estimateHp(spec: Record<string, unknown> | null | undefined, kind: stri
 
 function ProfilePage() {
   const [tab, setTab] = useState<Tab>("REELS");
+  const [contactOpen, setContactOpen] = useState(false);
   const fetchMetrics = useServerFn(getMyProfileMetrics);
   const metricsQuery = useQuery({
     queryKey: ["profile", "metrics"],
@@ -230,14 +231,21 @@ function ProfilePage() {
           </div>
 
           {/* Actions */}
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-4 gap-2">
             <Link
               to="/profile/edit"
               className="tap rounded-xl py-2.5 text-center text-[12px] font-semibold"
               style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
             >
-              Edit profile
+              Edit
             </Link>
+            <button
+              onClick={() => setContactOpen(true)}
+              className="tap rounded-xl py-2.5 text-[12px] font-semibold"
+              style={{ background: "var(--color-neon)", color: "#000" }}
+            >
+              Contact
+            </button>
             <button
               className="tap rounded-xl py-2.5 text-[12px] font-semibold"
               style={{ background: "var(--color-paper-2)", color: "var(--color-ink-0)", border: "1px solid var(--color-line)" }}
@@ -466,6 +474,101 @@ function ProfilePage() {
             ))}
           </ul>
         )}
+      </div>
+
+      {contactOpen && (
+        <ContactModal profile={p} onClose={() => setContactOpen(false)} />
+      )}
+    </div>
+  );
+}
+
+function ContactModal({ profile, onClose }: { profile: any; onClose: () => void }) {
+  const phone = profile?.contact_phone as string | null | undefined;
+  const email = profile?.contact_email as string | null | undefined;
+  const dm = profile?.contact_dm_enabled !== false;
+  const isBiz = !!profile?.is_business;
+  const address = profile?.business_address as string | null | undefined;
+  const hasAny = phone || email || address || dm;
+  const rowBase = {
+    background: "var(--color-paper-0)",
+    border: "1px solid var(--color-line)",
+    color: "var(--color-ink-0)",
+  } as const;
+  return (
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-end justify-center"
+      style={{ background: "rgba(0,0,0,0.55)" }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-t-2xl p-4"
+        style={{
+          background: "var(--color-paper-1)",
+          borderTop: "1px solid var(--color-line)",
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 16px)",
+        }}
+      >
+        <div className="flex items-center justify-between">
+          <h3 className="serif text-xl" style={{ color: "var(--color-ink-0)" }}>
+            Contact {isBiz && <span className="mono-tag ml-2" style={{ color: "var(--color-neon-deep)", fontSize: 9 }}>BUSINESS</span>}
+          </h3>
+          <button onClick={onClose} className="mono-tag" style={{ color: "var(--color-ink-3)" }}>CLOSE ✕</button>
+        </div>
+
+        {!hasAny && (
+          <p className="mt-4 text-[13px]" style={{ color: "var(--color-ink-3)" }}>
+            No contact info yet. Add it from Edit profile.
+          </p>
+        )}
+
+        <div className="mt-4 space-y-2">
+          {phone && (
+            <a href={`tel:${phone}`} className="tap flex items-center justify-between rounded-xl px-3 py-3 text-[13px]" style={rowBase}>
+              <span>📞 {phone}</span>
+              <span className="mono-tag" style={{ color: "var(--color-neon-deep)", fontSize: 10 }}>CALL</span>
+            </a>
+          )}
+          {email && (
+            <a href={`mailto:${email}`} className="tap flex items-center justify-between rounded-xl px-3 py-3 text-[13px]" style={rowBase}>
+              <span>✉️ {email}</span>
+              <span className="mono-tag" style={{ color: "var(--color-neon-deep)", fontSize: 10 }}>EMAIL</span>
+            </a>
+          )}
+          {dm && profile?.handle && (
+            <Link
+              to="/messages"
+              className="tap flex items-center justify-between rounded-xl px-3 py-3 text-[13px]"
+              style={rowBase}
+              onClick={onClose}
+            >
+              <span>💬 Direct message</span>
+              <span className="mono-tag" style={{ color: "var(--color-neon-deep)", fontSize: 10 }}>OPEN</span>
+            </Link>
+          )}
+          {isBiz && address && (
+            <a
+              href={`https://maps.google.com/?q=${encodeURIComponent(address)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="tap flex items-center justify-between rounded-xl px-3 py-3 text-[13px]"
+              style={rowBase}
+            >
+              <span>📍 {address}</span>
+              <span className="mono-tag" style={{ color: "var(--color-neon-deep)", fontSize: 10 }}>MAP</span>
+            </a>
+          )}
+        </div>
+
+        <Link
+          to="/profile/edit"
+          onClick={onClose}
+          className="tap mt-4 block rounded-xl py-3 text-center text-[13px] font-semibold"
+          style={{ background: "var(--color-ink-0)", color: "var(--color-paper-0)" }}
+        >
+          {hasAny ? "Edit contact info" : "Add contact info"}
+        </Link>
       </div>
     </div>
   );
