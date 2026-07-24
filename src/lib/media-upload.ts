@@ -38,7 +38,8 @@ export async function compressImage(file: File): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d")!;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return source;
   ctx.drawImage(bitmap, 0, 0, w, h);
   bitmap.close?.();
   return await new Promise<Blob>((res) =>
