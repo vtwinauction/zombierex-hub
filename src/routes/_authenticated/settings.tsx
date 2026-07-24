@@ -4,7 +4,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { StatusBar } from "@/components/StatusBar";
 
 export const Route = createFileRoute("/_authenticated/settings")({
-  head: () => ({ meta: [{ title: "Settings · ZOMBIEREX" }, { name: "description", content: "Manage your ZOMBIEREX account, privacy, notifications and app preferences." }] }),
+  head: () => ({ meta: [
+    { title: "Settings · ZOMBIEREX" },
+    { name: "description", content: "Manage your ZOMBIEREX account, privacy, notifications and app preferences." },
+    { property: "og:title", content: "Settings · ZOMBIEREX" },
+    { property: "og:description", content: "Manage your ZOMBIEREX account, privacy, notifications and app preferences." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: SettingsPage,
 });
 
@@ -167,12 +174,24 @@ function SettingRow({ it, prefs, update }: {
     email: "/settings/email",
     password: "/settings/password",
     connected: "/settings/connections",
+    "toggle-private": "/settings/account-privacy",
+    "select-messages": "/settings/account-privacy",
     blocked: "/settings/blocked",
     "content-prefs": "/settings/content",
     twofa: "/settings/twofa",
     sessions: "/settings/sessions",
     "login-activity": "/settings/activity",
+    "toggle-push": "/settings/notifications",
+    "toggle-email": "/settings/notifications",
     "notif-prefs": "/settings/notifications",
+    "select-theme": "/settings/appearance",
+    "select-language": "/settings/appearance",
+    "toggle-large-text": "/settings/appearance",
+    "toggle-motion": "/settings/accessibility",
+    "toggle-contrast": "/settings/accessibility",
+    "select-quality": "/settings/data",
+    "select-autoplay": "/settings/data",
+    "clear-cache": "/settings/data",
     "download-data": "/settings/export",
     help: "/settings/help",
     report: "/settings/report",
@@ -185,7 +204,7 @@ function SettingRow({ it, prefs, update }: {
   if (route) {
     return (
       <Link
-        to={route as string}
+        to={route as any}
         className="tap flex items-center justify-between px-4 py-3"
         style={{ color: "var(--color-ink)" }}
       >
