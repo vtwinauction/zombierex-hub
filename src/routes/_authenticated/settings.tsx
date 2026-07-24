@@ -227,7 +227,7 @@ function SettingRow({ it, prefs, update }: {
     </div>
   );
 }
-
+function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <button onClick={() => onChange(!checked)} className="tap h-6 w-11 rounded-full transition-colors"
       style={{ background: checked ? "var(--color-neon)" : "var(--color-hair-strong)", position: "relative" }}>
