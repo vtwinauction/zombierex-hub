@@ -212,6 +212,30 @@ function EditProfilePage() {
         </div>
       </section>
 
+      {/* Sticky Save bar */}
+      <div
+        className="fixed inset-x-0 z-40 px-4 py-3"
+        style={{
+          bottom: 0,
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 12px)",
+          background: "var(--color-paper-0)",
+          borderTop: "1px solid var(--color-line)",
+        }}
+      >
+        <button
+          onClick={() => save.mutate()}
+          disabled={save.isPending || uploadingAvatar || uploadingCover}
+          className="tap w-full rounded-xl py-3 text-[14px] font-bold"
+          style={{
+            background: "var(--color-neon)",
+            color: "#000",
+            opacity: save.isPending || uploadingAvatar || uploadingCover ? 0.6 : 1,
+          }}
+        >
+          {save.isPending ? "SAVING…" : "SAVE CHANGES"}
+        </button>
+      </div>
+
       <style>{`
         .input {
           width: 100%;
