@@ -16,6 +16,7 @@ import { SponsoredCard } from "@/components/SponsoredCard";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { listSponsoredCreatives } from "@/lib/ads.functions";
+import { listFeed } from "@/lib/feed.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
