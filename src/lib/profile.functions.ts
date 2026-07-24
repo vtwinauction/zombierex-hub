@@ -103,7 +103,12 @@ export const updateMyProfile = createServerFn({ method: "POST" })
       .eq("id", context.userId)
       .select()
       .single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      if (error.code === "23505" && error.message.includes("profiles_handle_key")) {
+        throw new Error("That username is already taken. Please choose another.");
+      }
+      throw new Error(error.message);
+    }
     return row;
   });
 
