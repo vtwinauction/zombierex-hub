@@ -13,6 +13,10 @@ export const Route = createFileRoute("/profile")({
     meta: [
       { title: "Digital Garage · ZOMBIEREX" },
       { name: "description", content: "The rider's digital garage — live telemetry, machine, trophies and workshop log." },
+      { property: "og:title", content: "Digital Garage · ZOMBIEREX" },
+      { property: "og:description", content: "The rider's digital garage — live telemetry, machine, trophies and workshop log." },
+      { property: "og:type", content: "profile" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ProfilePage,
